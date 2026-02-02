@@ -1,29 +1,13 @@
-import DashboardLayout from '@/components/layout/DashboardLayout';
+import StudentDashboardLayout from '@/components/layout/StudentDashboardLayout';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { 
-  Home, 
-  BookOpen, 
-  PenTool, 
-  FileText, 
-  BarChart3, 
-  Calendar, 
-  Settings,
+  Calendar,
   Clock,
   PlayCircle
 } from 'lucide-react';
 import { upcomingTests } from '@/data/mockData';
-
-const navItems = [
-  { label: 'Home', icon: <Home className="w-5 h-5" />, path: '/student' },
-  { label: 'Learning', icon: <BookOpen className="w-5 h-5" />, path: '/student/learning' },
-  { label: 'Practice', icon: <PenTool className="w-5 h-5" />, path: '/student/practice' },
-  { label: 'Tests', icon: <FileText className="w-5 h-5" />, path: '/student/tests' },
-  { label: 'Performance', icon: <BarChart3 className="w-5 h-5" />, path: '/student/performance' },
-  { label: 'Attendance', icon: <Calendar className="w-5 h-5" />, path: '/student/attendance' },
-  { label: 'Settings', icon: <Settings className="w-5 h-5" />, path: '/student/settings' },
-];
 
 const pastTests = [
   { id: 'pt1', subject: 'Mathematics', name: 'Chapter 2 Test', date: '2026-01-20', score: 85, total: 100 },
@@ -33,7 +17,7 @@ const pastTests = [
 
 const StudentTests = () => {
   return (
-    <DashboardLayout navItems={navItems} title="Tests & Exams">
+    <StudentDashboardLayout title="Tests & Exams">
       <div className="space-y-6">
         {/* Upcoming Tests */}
         <div>
@@ -102,7 +86,7 @@ const StudentTests = () => {
           </CardContent>
         </Card>
       </div>
-    </DashboardLayout>
+    </StudentDashboardLayout>
   );
 };
 

@@ -13,12 +13,14 @@ import NotFound from "./pages/NotFound";
 
 // Student Pages
 import StudentHome from "./pages/student/StudentHome";
+import StudentPlanner from "./pages/student/StudentPlanner";
 import StudentLearning from "./pages/student/StudentLearning";
 import StudentPractice from "./pages/student/StudentPractice";
 import StudentTests from "./pages/student/StudentTests";
 import StudentPerformance from "./pages/student/StudentPerformance";
 import StudentAttendance from "./pages/student/StudentAttendance";
 import StudentSettings from "./pages/student/StudentSettings";
+import StudentAchievements from "./pages/student/StudentAchievements";
 
 // Teacher Pages
 import TeacherHome from "./pages/teacher/TeacherHome";
@@ -52,6 +54,11 @@ const App = () => (
                 <StudentHome />
               </ProtectedRoute>
             } />
+            <Route path="/student/planner" element={
+              <ProtectedRoute allowedRoles={['student']}>
+                <StudentPlanner />
+              </ProtectedRoute>
+            } />
             <Route path="/student/learning" element={
               <ProtectedRoute allowedRoles={['student']}>
                 <StudentLearning />
@@ -77,9 +84,20 @@ const App = () => (
                 <StudentAttendance />
               </ProtectedRoute>
             } />
+            <Route path="/student/achievements" element={
+              <ProtectedRoute allowedRoles={['student']}>
+                <StudentAchievements />
+              </ProtectedRoute>
+            } />
             <Route path="/student/settings" element={
               <ProtectedRoute allowedRoles={['student']}>
                 <StudentSettings />
+              </ProtectedRoute>
+            } />
+            {/* Catch-all student routes */}
+            <Route path="/student/*" element={
+              <ProtectedRoute allowedRoles={['student']}>
+                <StudentHome />
               </ProtectedRoute>
             } />
 

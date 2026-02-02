@@ -1,33 +1,16 @@
 import { useState } from 'react';
-import DashboardLayout from '@/components/layout/DashboardLayout';
+import StudentDashboardLayout from '@/components/layout/StudentDashboardLayout';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Switch } from '@/components/ui/switch';
 import { 
-  Home, 
-  BookOpen, 
-  PenTool, 
-  FileText, 
-  BarChart3, 
-  Calendar, 
-  Settings,
   User,
   Bell,
   Palette
 } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
-
-const navItems = [
-  { label: 'Home', icon: <Home className="w-5 h-5" />, path: '/student' },
-  { label: 'Learning', icon: <BookOpen className="w-5 h-5" />, path: '/student/learning' },
-  { label: 'Practice', icon: <PenTool className="w-5 h-5" />, path: '/student/practice' },
-  { label: 'Tests', icon: <FileText className="w-5 h-5" />, path: '/student/tests' },
-  { label: 'Performance', icon: <BarChart3 className="w-5 h-5" />, path: '/student/performance' },
-  { label: 'Attendance', icon: <Calendar className="w-5 h-5" />, path: '/student/attendance' },
-  { label: 'Settings', icon: <Settings className="w-5 h-5" />, path: '/student/settings' },
-];
 
 const avatars = ['🎓', '👨‍🎓', '👩‍🎓', '🧑‍💻', '🦊', '🐻', '🐼', '🦁', '🐸', '🦄'];
 
@@ -38,7 +21,7 @@ const StudentSettings = () => {
   const [emailUpdates, setEmailUpdates] = useState(false);
 
   return (
-    <DashboardLayout navItems={navItems} title="Settings">
+    <StudentDashboardLayout title="Settings">
       <div className="max-w-2xl space-y-6">
         {/* Profile */}
         <Card>
@@ -126,7 +109,7 @@ const StudentSettings = () => {
 
         <Button className="w-full">Save Changes</Button>
       </div>
-    </DashboardLayout>
+    </StudentDashboardLayout>
   );
 };
 
