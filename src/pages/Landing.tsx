@@ -1,106 +1,220 @@
 import { Button } from '@/components/ui/button';
 import { useNavigate } from 'react-router-dom';
-import { GraduationCap, Sparkles, Users, Brain } from 'lucide-react';
+import { GraduationCap, Sparkles, Users, Brain, ArrowRight, Menu, X } from 'lucide-react';
+import { useState } from 'react';
 
 const Landing = () => {
   const navigate = useNavigate();
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   return (
-    <div className="min-h-screen gradient-primary relative overflow-hidden">
-      {/* Decorative Elements */}
-      <div className="absolute inset-0 overflow-hidden">
-        <div className="absolute -top-40 -right-40 w-80 h-80 rounded-full bg-white/10 blur-3xl" />
-        <div className="absolute top-1/2 -left-20 w-60 h-60 rounded-full bg-white/10 blur-3xl" />
-        <div className="absolute bottom-20 right-1/4 w-40 h-40 rounded-full bg-white/5 blur-2xl" />
-      </div>
-
-      {/* Hero Section */}
-      <div className="relative z-10 min-h-screen flex flex-col">
-        {/* Header */}
-        <header className="w-full px-6 py-4">
-          <div className="max-w-7xl mx-auto flex items-center justify-between">
-            <div className="flex items-center gap-2">
-              <div className="w-10 h-10 rounded-xl bg-white/20 backdrop-blur flex items-center justify-center">
-                <GraduationCap className="w-6 h-6 text-white" />
-              </div>
-              <span className="text-2xl font-bold text-white">EDDGE</span>
-            </div>
-            <Button 
-              onClick={() => navigate('/login')}
-              className="bg-white text-primary hover:bg-white/90 font-semibold px-6"
-            >
-              Sign In
-            </Button>
-          </div>
-        </header>
-
-        {/* Main Hero Content */}
-        <main className="flex-1 flex items-center justify-center px-6 py-12">
-          <div className="max-w-4xl mx-auto text-center">
-            {/* Badge */}
-            <div className="inline-flex items-center gap-2 bg-white/20 backdrop-blur-sm rounded-full px-4 py-2 mb-8">
-              <Sparkles className="w-4 h-4 text-white" />
-              <span className="text-white/90 text-sm font-medium">AI-Powered Learning Platform</span>
+    <div className="overflow-x-hidden bg-background">
+      {/* Header */}
+      <header className="relative py-4 md:py-6">
+        <div className="px-4 mx-auto max-w-7xl sm:px-6 lg:px-8">
+          <div className="relative flex items-center justify-between">
+            {/* Logo */}
+            <div className="flex-shrink-0">
+              <a href="#" className="flex items-center gap-2 rounded outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2">
+                <div className="w-10 h-10 rounded-xl bg-primary flex items-center justify-center">
+                  <GraduationCap className="w-6 h-6 text-primary-foreground" />
+                </div>
+                <span className="text-2xl font-bold text-foreground">EDDGE</span>
+              </a>
             </div>
 
-            {/* Headline */}
-            <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold text-white mb-6 leading-tight">
-              Your AI-Powered
-              <br />
-              <span className="text-white/90">Education Operating System</span>
-            </h1>
+            {/* Desktop Navigation */}
+            <div className="hidden lg:flex lg:items-center lg:space-x-10">
+              <a href="#" className="text-base font-medium text-muted-foreground transition-all duration-200 hover:text-primary">Features</a>
+              <a href="#" className="text-base font-medium text-muted-foreground transition-all duration-200 hover:text-primary">About</a>
+              <a href="#" className="text-base font-medium text-muted-foreground transition-all duration-200 hover:text-primary">Pricing</a>
+            </div>
 
-            {/* Subtitle */}
-            <p className="text-lg md:text-xl text-white/80 mb-10 max-w-2xl mx-auto leading-relaxed">
-              Personalized learning journeys for students, powerful tools for teachers, 
-              and real-time insights for parents and administrators. All in one platform.
-            </p>
-
-            {/* CTA Buttons */}
-            <div className="flex flex-col sm:flex-row gap-4 justify-center mb-16">
+            {/* Desktop CTA */}
+            <div className="hidden lg:flex lg:items-center lg:space-x-4">
+              <Button 
+                variant="ghost"
+                onClick={() => navigate('/login')}
+                className="text-base font-medium"
+              >
+                Sign In
+              </Button>
               <Button 
                 onClick={() => navigate('/login')}
-                size="lg"
-                className="bg-white text-primary hover:bg-white/90 font-semibold px-8 py-6 text-lg rounded-xl shadow-lg shadow-black/10"
+                className="gradient-primary text-base font-medium px-6"
               >
                 Get Started
-              </Button>
-              <Button 
-                variant="outline"
-                size="lg"
-                className="border-white/30 text-white hover:bg-white/10 font-semibold px-8 py-6 text-lg rounded-xl"
-              >
-                Learn More
+                <ArrowRight className="w-4 h-4 ml-2" />
               </Button>
             </div>
 
-            {/* Feature Pills */}
-            <div className="flex flex-wrap justify-center gap-4">
-              <div className="flex items-center gap-2 bg-white/10 backdrop-blur-sm rounded-full px-5 py-3">
-                <Brain className="w-5 h-5 text-white" />
-                <span className="text-white font-medium">Adaptive Learning</span>
+            {/* Mobile Menu Button */}
+            <button 
+              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+              className="lg:hidden p-2 rounded-lg hover:bg-accent transition-colors"
+            >
+              {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+            </button>
+          </div>
+
+          {/* Mobile Menu */}
+          {mobileMenuOpen && (
+            <div className="lg:hidden mt-4 py-4 border-t border-border">
+              <div className="flex flex-col space-y-4">
+                <a href="#" className="text-base font-medium text-muted-foreground hover:text-primary">Features</a>
+                <a href="#" className="text-base font-medium text-muted-foreground hover:text-primary">About</a>
+                <a href="#" className="text-base font-medium text-muted-foreground hover:text-primary">Pricing</a>
+                <div className="pt-4 flex flex-col gap-3">
+                  <Button 
+                    variant="outline"
+                    onClick={() => navigate('/login')}
+                    className="w-full"
+                  >
+                    Sign In
+                  </Button>
+                  <Button 
+                    onClick={() => navigate('/login')}
+                    className="w-full gradient-primary"
+                  >
+                    Get Started
+                  </Button>
+                </div>
               </div>
-              <div className="flex items-center gap-2 bg-white/10 backdrop-blur-sm rounded-full px-5 py-3">
-                <Users className="w-5 h-5 text-white" />
-                <span className="text-white font-medium">5 Role-Based Dashboards</span>
+            </div>
+          )}
+        </div>
+      </header>
+
+      {/* Hero Section */}
+      <section className="relative py-12 sm:py-16 lg:pt-20 lg:pb-36">
+        <div className="px-4 mx-auto max-w-7xl sm:px-6 lg:px-8">
+          <div className="grid grid-cols-1 gap-y-8 lg:items-center lg:grid-cols-2 sm:gap-y-20 xl:grid-cols-5">
+            {/* Left Content */}
+            <div className="text-center xl:col-span-2 lg:text-left md:px-16 lg:px-0">
+              {/* Badge */}
+              <div className="inline-flex items-center gap-2 px-4 py-2 mb-8 text-sm font-medium rounded-full bg-primary/10 text-primary">
+                <Sparkles className="w-4 h-4" />
+                AI-Powered Learning Platform
               </div>
-              <div className="flex items-center gap-2 bg-white/10 backdrop-blur-sm rounded-full px-5 py-3">
-                <Sparkles className="w-5 h-5 text-white" />
-                <span className="text-white font-medium">AI Learning Companion</span>
+
+              {/* Headline */}
+              <h1 className="text-4xl font-bold leading-tight text-foreground sm:text-5xl sm:leading-tight lg:text-6xl lg:leading-tight">
+                Your AI-Powered
+                <span className="relative inline-block mx-2">
+                  <span className="relative z-10 text-primary">Education</span>
+                </span>
+                Operating System
+              </h1>
+
+              {/* Subtitle */}
+              <p className="mt-6 text-lg text-muted-foreground sm:text-xl leading-relaxed">
+                Personalized learning journeys for students, powerful tools for teachers, 
+                and real-time insights for parents and administrators. All in one platform.
+              </p>
+
+              {/* CTA Buttons */}
+              <div className="flex flex-col sm:flex-row gap-4 mt-10 justify-center lg:justify-start">
+                <Button 
+                  onClick={() => navigate('/login')}
+                  size="lg"
+                  className="gradient-primary font-semibold px-8 py-6 text-lg rounded-xl shadow-lg"
+                >
+                  Get Started Free
+                  <ArrowRight className="w-5 h-5 ml-2" />
+                </Button>
+                <Button 
+                  variant="outline"
+                  size="lg"
+                  className="font-semibold px-8 py-6 text-lg rounded-xl"
+                >
+                  Watch Demo
+                </Button>
               </div>
+
+              {/* Trust Indicators */}
+              <div className="mt-10 flex flex-wrap justify-center lg:justify-start gap-6 text-sm text-muted-foreground">
+                <div className="flex items-center gap-2">
+                  <div className="w-2 h-2 rounded-full bg-primary" />
+                  <span>10,000+ Students</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <div className="w-2 h-2 rounded-full bg-primary" />
+                  <span>500+ Schools</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <div className="w-2 h-2 rounded-full bg-primary" />
+                  <span>98% Satisfaction</span>
+                </div>
+              </div>
+            </div>
+
+            {/* Right Illustration */}
+            <div className="xl:col-span-3">
+              <img 
+                className="object-cover object-top w-full h-auto mx-auto scale-110 2xl:max-w-screen-2xl xl:scale-100" 
+                src="https://d33wubrfki0l68.cloudfront.net/54780decfb9574945bc873b582cdc6156144a2ba/d9fa1/images/hero/4/illustration.png" 
+                alt="EDDGE Platform Illustration" 
+              />
             </div>
           </div>
-        </main>
+        </div>
+      </section>
 
-        {/* Footer */}
-        <footer className="w-full px-6 py-4">
-          <div className="max-w-7xl mx-auto text-center">
-            <p className="text-white/60 text-sm">
+      {/* Features Section */}
+      <section className="py-16 bg-muted/30">
+        <div className="px-4 mx-auto max-w-7xl sm:px-6 lg:px-8">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl font-bold text-foreground">Why Choose EDDGE?</h2>
+            <p className="mt-4 text-lg text-muted-foreground">Empowering education through intelligent technology</p>
+          </div>
+          
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            {/* Feature 1 */}
+            <div className="p-6 bg-card rounded-2xl border border-border hover:shadow-lg transition-shadow">
+              <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center mb-4">
+                <Brain className="w-6 h-6 text-primary" />
+              </div>
+              <h3 className="text-xl font-semibold text-foreground mb-2">Adaptive Learning</h3>
+              <p className="text-muted-foreground">AI-powered system that adapts to each student's learning pace and style.</p>
+            </div>
+
+            {/* Feature 2 */}
+            <div className="p-6 bg-card rounded-2xl border border-border hover:shadow-lg transition-shadow">
+              <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center mb-4">
+                <Users className="w-6 h-6 text-primary" />
+              </div>
+              <h3 className="text-xl font-semibold text-foreground mb-2">5 Role-Based Dashboards</h3>
+              <p className="text-muted-foreground">Tailored experiences for students, teachers, parents, admins, and super admins.</p>
+            </div>
+
+            {/* Feature 3 */}
+            <div className="p-6 bg-card rounded-2xl border border-border hover:shadow-lg transition-shadow">
+              <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center mb-4">
+                <Sparkles className="w-6 h-6 text-primary" />
+              </div>
+              <h3 className="text-xl font-semibold text-foreground mb-2">AI Learning Companion</h3>
+              <p className="text-muted-foreground">Personal AI assistant to help with doubts, practice, and progress tracking.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Footer */}
+      <footer className="py-8 border-t border-border">
+        <div className="px-4 mx-auto max-w-7xl sm:px-6 lg:px-8">
+          <div className="flex flex-col md:flex-row items-center justify-between gap-4">
+            <div className="flex items-center gap-2">
+              <div className="w-8 h-8 rounded-lg bg-primary flex items-center justify-center">
+                <GraduationCap className="w-5 h-5 text-primary-foreground" />
+              </div>
+              <span className="text-lg font-semibold text-foreground">EDDGE</span>
+            </div>
+            <p className="text-sm text-muted-foreground">
               © 2026 EDDGE. Empowering Education Through AI.
             </p>
           </div>
-        </footer>
-      </div>
+        </div>
+      </footer>
     </div>
   );
 };
