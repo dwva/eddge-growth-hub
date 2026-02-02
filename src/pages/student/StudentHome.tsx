@@ -1,16 +1,9 @@
-import DashboardLayout from '@/components/layout/DashboardLayout';
+import StudentDashboardLayout from '@/components/layout/StudentDashboardLayout';
 import StatCard from '@/components/shared/StatCard';
 import AIAvatar from '@/components/shared/AIAvatar';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Progress } from '@/components/ui/progress';
 import { 
-  Home, 
-  BookOpen, 
-  PenTool, 
-  FileText, 
-  BarChart3, 
-  Calendar, 
-  Settings,
   Flame,
   Star,
   Trophy,
@@ -19,16 +12,6 @@ import {
 import { subjects, studentPerformance, upcomingTests } from '@/data/mockData';
 import { useAuth } from '@/contexts/AuthContext';
 
-const navItems = [
-  { label: 'Home', icon: <Home className="w-5 h-5" />, path: '/student' },
-  { label: 'Learning', icon: <BookOpen className="w-5 h-5" />, path: '/student/learning' },
-  { label: 'Practice', icon: <PenTool className="w-5 h-5" />, path: '/student/practice' },
-  { label: 'Tests', icon: <FileText className="w-5 h-5" />, path: '/student/tests' },
-  { label: 'Performance', icon: <BarChart3 className="w-5 h-5" />, path: '/student/performance' },
-  { label: 'Attendance', icon: <Calendar className="w-5 h-5" />, path: '/student/attendance' },
-  { label: 'Settings', icon: <Settings className="w-5 h-5" />, path: '/student/settings' },
-];
-
 const StudentHome = () => {
   const { user } = useAuth();
   const firstName = user?.name?.split(' ')[0] || 'Student';
@@ -36,7 +19,7 @@ const StudentHome = () => {
   const greeting = currentHour < 12 ? 'Good morning' : currentHour < 17 ? 'Good afternoon' : 'Good evening';
 
   return (
-    <DashboardLayout navItems={navItems} title="Dashboard">
+    <StudentDashboardLayout title="Dashboard">
       <div className="space-y-6">
         {/* AI Avatar Greeting */}
         <AIAvatar 
@@ -128,7 +111,7 @@ const StudentHome = () => {
           </CardContent>
         </Card>
       </div>
-    </DashboardLayout>
+    </StudentDashboardLayout>
   );
 };
 

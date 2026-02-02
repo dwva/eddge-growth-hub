@@ -1,15 +1,8 @@
-import DashboardLayout from '@/components/layout/DashboardLayout';
+import StudentDashboardLayout from '@/components/layout/StudentDashboardLayout';
 import StatCard from '@/components/shared/StatCard';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { 
-  Home, 
-  BookOpen, 
-  PenTool, 
-  FileText, 
-  BarChart3, 
-  Calendar, 
-  Settings,
   TrendingUp,
   Target,
   Award
@@ -17,19 +10,9 @@ import {
 import { studentPerformance } from '@/data/mockData';
 import { BarChart, Bar, XAxis, YAxis, ResponsiveContainer, Tooltip } from 'recharts';
 
-const navItems = [
-  { label: 'Home', icon: <Home className="w-5 h-5" />, path: '/student' },
-  { label: 'Learning', icon: <BookOpen className="w-5 h-5" />, path: '/student/learning' },
-  { label: 'Practice', icon: <PenTool className="w-5 h-5" />, path: '/student/practice' },
-  { label: 'Tests', icon: <FileText className="w-5 h-5" />, path: '/student/tests' },
-  { label: 'Performance', icon: <BarChart3 className="w-5 h-5" />, path: '/student/performance' },
-  { label: 'Attendance', icon: <Calendar className="w-5 h-5" />, path: '/student/attendance' },
-  { label: 'Settings', icon: <Settings className="w-5 h-5" />, path: '/student/settings' },
-];
-
 const StudentPerformance = () => {
   return (
-    <DashboardLayout navItems={navItems} title="Performance">
+    <StudentDashboardLayout title="Performance">
       <div className="space-y-6">
         {/* Stats */}
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
@@ -140,7 +123,7 @@ const StudentPerformance = () => {
           </CardContent>
         </Card>
       </div>
-    </DashboardLayout>
+    </StudentDashboardLayout>
   );
 };
 
