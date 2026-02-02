@@ -1,160 +1,66 @@
 import { Button } from '@/components/ui/button';
 import { useNavigate } from 'react-router-dom';
-import { GraduationCap, Sparkles, Users, Brain, ArrowRight, Menu, X } from 'lucide-react';
-import { useState } from 'react';
+import { GraduationCap, Sparkles, Users, Brain, ArrowRight } from 'lucide-react';
 
 const Landing = () => {
   const navigate = useNavigate();
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   return (
-    <div className="overflow-x-hidden bg-background">
-      {/* Header */}
-      <header className="relative py-4 md:py-6">
-        <div className="px-4 mx-auto max-w-7xl sm:px-6 lg:px-8">
-          <div className="relative flex items-center justify-between">
-            {/* Logo */}
-            <div className="flex-shrink-0">
-              <a href="#" className="flex items-center gap-2 rounded outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2">
-                <div className="w-10 h-10 rounded-xl bg-primary flex items-center justify-center">
-                  <GraduationCap className="w-6 h-6 text-primary-foreground" />
-                </div>
-                <span className="text-2xl font-bold text-foreground">EDDGE</span>
-              </a>
+    <div className="min-h-screen bg-background font-sans">
+      {/* Hero Section - Full Center */}
+      <section className="min-h-screen flex flex-col items-center justify-center px-4 sm:px-6 lg:px-8">
+        <div className="max-w-4xl mx-auto text-center">
+          {/* Logo */}
+          <div className="flex items-center justify-center gap-3 mb-12">
+            <div className="w-14 h-14 rounded-2xl bg-primary flex items-center justify-center">
+              <GraduationCap className="w-8 h-8 text-primary-foreground" />
             </div>
-
-            {/* Desktop Navigation */}
-            <div className="hidden lg:flex lg:items-center lg:space-x-10">
-              <a href="#" className="text-base font-medium text-muted-foreground transition-all duration-200 hover:text-primary">Features</a>
-              <a href="#" className="text-base font-medium text-muted-foreground transition-all duration-200 hover:text-primary">About</a>
-              <a href="#" className="text-base font-medium text-muted-foreground transition-all duration-200 hover:text-primary">Pricing</a>
-            </div>
-
-            {/* Desktop CTA */}
-            <div className="hidden lg:flex lg:items-center lg:space-x-4">
-              <Button 
-                variant="ghost"
-                onClick={() => navigate('/login')}
-                className="text-base font-medium"
-              >
-                Sign In
-              </Button>
-              <Button 
-                onClick={() => navigate('/login')}
-                className="gradient-primary text-base font-medium px-6"
-              >
-                Get Started
-                <ArrowRight className="w-4 h-4 ml-2" />
-              </Button>
-            </div>
-
-            {/* Mobile Menu Button */}
-            <button 
-              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="lg:hidden p-2 rounded-lg hover:bg-accent transition-colors"
-            >
-              {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
-            </button>
+            <span className="text-3xl font-semibold tracking-tight text-foreground">EDDGE</span>
           </div>
 
-          {/* Mobile Menu */}
-          {mobileMenuOpen && (
-            <div className="lg:hidden mt-4 py-4 border-t border-border">
-              <div className="flex flex-col space-y-4">
-                <a href="#" className="text-base font-medium text-muted-foreground hover:text-primary">Features</a>
-                <a href="#" className="text-base font-medium text-muted-foreground hover:text-primary">About</a>
-                <a href="#" className="text-base font-medium text-muted-foreground hover:text-primary">Pricing</a>
-                <div className="pt-4 flex flex-col gap-3">
-                  <Button 
-                    variant="outline"
-                    onClick={() => navigate('/login')}
-                    className="w-full"
-                  >
-                    Sign In
-                  </Button>
-                  <Button 
-                    onClick={() => navigate('/login')}
-                    className="w-full gradient-primary"
-                  >
-                    Get Started
-                  </Button>
-                </div>
-              </div>
+          {/* Badge */}
+          <div className="inline-flex items-center gap-2 px-5 py-2.5 mb-8 text-sm font-medium rounded-full bg-primary/10 text-primary">
+            <Sparkles className="w-4 h-4" />
+            AI-Powered Learning Platform
+          </div>
+
+          {/* Headline */}
+          <h1 className="text-4xl font-semibold leading-tight text-foreground sm:text-5xl lg:text-6xl tracking-tight">
+            Your AI-Powered
+            <span className="block text-primary mt-2">Education Operating System</span>
+          </h1>
+
+          {/* Subtitle */}
+          <p className="mt-8 text-lg text-muted-foreground sm:text-xl leading-relaxed max-w-2xl mx-auto">
+            Personalized learning journeys for students, powerful tools for teachers, 
+            and real-time insights for parents and administrators. All in one platform.
+          </p>
+
+          {/* CTA Button */}
+          <div className="mt-12">
+            <Button 
+              onClick={() => navigate('/login')}
+              size="lg"
+              className="gradient-primary font-semibold px-10 py-7 text-lg rounded-full shadow-lg hover:shadow-xl transition-all duration-300"
+            >
+              Get Started
+              <ArrowRight className="w-5 h-5 ml-2" />
+            </Button>
+          </div>
+
+          {/* Trust Indicators */}
+          <div className="mt-16 flex flex-wrap justify-center gap-8 text-sm text-muted-foreground">
+            <div className="flex items-center gap-2">
+              <div className="w-2 h-2 rounded-full bg-primary" />
+              <span>10,000+ Students</span>
             </div>
-          )}
-        </div>
-      </header>
-
-      {/* Hero Section */}
-      <section className="relative py-12 sm:py-16 lg:pt-20 lg:pb-36">
-        <div className="px-4 mx-auto max-w-7xl sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 gap-y-8 lg:items-center lg:grid-cols-2 sm:gap-y-20 xl:grid-cols-5">
-            {/* Left Content */}
-            <div className="text-center xl:col-span-2 lg:text-left md:px-16 lg:px-0">
-              {/* Badge */}
-              <div className="inline-flex items-center gap-2 px-4 py-2 mb-8 text-sm font-medium rounded-full bg-primary/10 text-primary">
-                <Sparkles className="w-4 h-4" />
-                AI-Powered Learning Platform
-              </div>
-
-              {/* Headline */}
-              <h1 className="text-4xl font-bold leading-tight text-foreground sm:text-5xl sm:leading-tight lg:text-6xl lg:leading-tight">
-                Your AI-Powered
-                <span className="relative inline-block mx-2">
-                  <span className="relative z-10 text-primary">Education</span>
-                </span>
-                Operating System
-              </h1>
-
-              {/* Subtitle */}
-              <p className="mt-6 text-lg text-muted-foreground sm:text-xl leading-relaxed">
-                Personalized learning journeys for students, powerful tools for teachers, 
-                and real-time insights for parents and administrators. All in one platform.
-              </p>
-
-              {/* CTA Buttons */}
-              <div className="flex flex-col sm:flex-row gap-4 mt-10 justify-center lg:justify-start">
-                <Button 
-                  onClick={() => navigate('/login')}
-                  size="lg"
-                  className="gradient-primary font-semibold px-8 py-6 text-lg rounded-xl shadow-lg"
-                >
-                  Get Started Free
-                  <ArrowRight className="w-5 h-5 ml-2" />
-                </Button>
-                <Button 
-                  variant="outline"
-                  size="lg"
-                  className="font-semibold px-8 py-6 text-lg rounded-xl"
-                >
-                  Watch Demo
-                </Button>
-              </div>
-
-              {/* Trust Indicators */}
-              <div className="mt-10 flex flex-wrap justify-center lg:justify-start gap-6 text-sm text-muted-foreground">
-                <div className="flex items-center gap-2">
-                  <div className="w-2 h-2 rounded-full bg-primary" />
-                  <span>10,000+ Students</span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <div className="w-2 h-2 rounded-full bg-primary" />
-                  <span>500+ Schools</span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <div className="w-2 h-2 rounded-full bg-primary" />
-                  <span>98% Satisfaction</span>
-                </div>
-              </div>
+            <div className="flex items-center gap-2">
+              <div className="w-2 h-2 rounded-full bg-primary" />
+              <span>500+ Schools</span>
             </div>
-
-            {/* Right Illustration */}
-            <div className="xl:col-span-3">
-              <img 
-                className="object-cover object-top w-full h-auto mx-auto scale-110 2xl:max-w-screen-2xl xl:scale-100" 
-                src="https://d33wubrfki0l68.cloudfront.net/54780decfb9574945bc873b582cdc6156144a2ba/d9fa1/images/hero/4/illustration.png" 
-                alt="EDDGE Platform Illustration" 
-              />
+            <div className="flex items-center gap-2">
+              <div className="w-2 h-2 rounded-full bg-primary" />
+              <span>98% Satisfaction</span>
             </div>
           </div>
         </div>
