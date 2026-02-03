@@ -16,7 +16,7 @@ import {
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
-const ParentAnnouncements = () => {
+const ParentAnnouncementsContent = () => {
   const { t } = useLanguage();
   const [searchQuery, setSearchQuery] = useState('');
   const [activeFilter, setActiveFilter] = useState<string>('all');
@@ -60,130 +60,135 @@ const ParentAnnouncements = () => {
       return matchesSearch && matchesFilter;
     })
     .sort((a, b) => {
-      // Important first, then by date
       if (a.important && !b.important) return -1;
       if (!a.important && b.important) return 1;
       return new Date(b.date).getTime() - new Date(a.date).getTime();
     });
 
   return (
-    <ParentDashboardLayout>
-      <div className="space-y-6">
-        {/* Header */}
-        <div>
-          <h1 className="text-2xl font-bold">{t('nav.announcements')}</h1>
-          <p className="text-muted-foreground">Stay updated with school announcements</p>
-        </div>
+    <div className="space-y-6">
+      {/* Header */}
+      <div>
+        <h1 className="text-2xl font-bold">{t('nav.announcements')}</h1>
+        <p className="text-muted-foreground">Stay updated with school announcements</p>
+      </div>
 
-        {/* Search */}
-        <div className="relative">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-          <Input
-            placeholder="Search announcements..."
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            className="pl-9"
-          />
-        </div>
+      {/* Search */}
+      <div className="relative">
+        <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+        <Input
+          placeholder="Search announcements..."
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+          className="pl-9"
+        />
+      </div>
 
-        {/* Filters */}
-        <div className="flex flex-wrap gap-2">
-          {filters.map((filter) => (
-            <button
-              key={filter.id}
-              onClick={() => setActiveFilter(filter.id)}
+      {/* Filters */}
+      <div className="flex flex-wrap gap-2">
+        {filters.map((filter) => (
+          <button
+            key={filter.id}
+            onClick={() => setActiveFilter(filter.id)}
+            className={cn(
+              'px-3 py-1.5 rounded-full text-sm font-medium transition-colors',
+              activeFilter === filter.id
+                ? 'bg-primary text-primary-foreground'
+                : 'bg-muted hover:bg-muted/80'
+            )}
+          >
+            {filter.label}
+          </button>
+        ))}
+      </div>
+
+      {/* Announcements List */}
+      {filteredAnnouncements.length > 0 ? (
+        <div className="space-y-4">
+          {filteredAnnouncements.map((announcement) => (
+            <Card
+              key={announcement.id}
               className={cn(
-                'px-3 py-1.5 rounded-full text-sm font-medium transition-colors',
-                activeFilter === filter.id
-                  ? 'bg-primary text-primary-foreground'
-                  : 'bg-muted hover:bg-muted/80'
+                'overflow-hidden',
+                announcement.important && 'border-red-200 bg-red-50/50'
               )}
             >
-              {filter.label}
-            </button>
+              <div
+                className={cn(
+                  'absolute left-0 top-0 bottom-0 w-1',
+                  announcement.important ? 'bg-red-500' : 'bg-primary'
+                )}
+              />
+              <CardContent className="p-4 pl-6">
+                <div className="flex items-start gap-4">
+                  <div className={cn(
+                    'p-2 rounded-lg',
+                    announcement.important ? 'bg-red-100' : 'bg-primary/10'
+                  )}>
+                    {announcement.important ? (
+                      <AlertCircle className={cn(
+                        'w-5 h-5',
+                        announcement.important ? 'text-red-600' : 'text-primary'
+                      )} />
+                    ) : (
+                      getTypeIcon(announcement.type)
+                    )}
+                  </div>
+                  <div className="flex-1">
+                    <div className="flex items-start justify-between gap-2">
+                      <h3 className="font-semibold">{announcement.title}</h3>
+                      <div className="flex items-center gap-2 flex-shrink-0">
+                        <Badge className={getTypeBadge(announcement.type)}>
+                          {announcement.type}
+                        </Badge>
+                        {announcement.important && (
+                          <Badge className="bg-red-100 text-red-700">Important</Badge>
+                        )}
+                      </div>
+                    </div>
+                    <p className="text-xs text-muted-foreground mt-1">
+                      By {announcement.author}
+                    </p>
+                    <p className="text-sm text-muted-foreground mt-2">
+                      {announcement.description}
+                    </p>
+                    <p className="text-xs text-muted-foreground mt-3">
+                      {new Date(announcement.date).toLocaleDateString('en-US', {
+                        weekday: 'short',
+                        year: 'numeric',
+                        month: 'short',
+                        day: 'numeric',
+                        hour: '2-digit',
+                        minute: '2-digit',
+                      })}
+                    </p>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
           ))}
         </div>
+      ) : (
+        <Card>
+          <CardContent className="p-12 text-center">
+            <Bell className="w-12 h-12 mx-auto text-muted-foreground" />
+            <h3 className="mt-4 text-lg font-semibold">No announcements found</h3>
+            <p className="text-muted-foreground mt-1">
+              {searchQuery || activeFilter !== 'all'
+                ? 'Try adjusting your search or filters'
+                : 'No announcements available at the moment'}
+            </p>
+          </CardContent>
+        </Card>
+      )}
+    </div>
+  );
+};
 
-        {/* Announcements List */}
-        {filteredAnnouncements.length > 0 ? (
-          <div className="space-y-4">
-            {filteredAnnouncements.map((announcement) => (
-              <Card
-                key={announcement.id}
-                className={cn(
-                  'overflow-hidden',
-                  announcement.important && 'border-red-200 bg-red-50/50'
-                )}
-              >
-                <div
-                  className={cn(
-                    'absolute left-0 top-0 bottom-0 w-1',
-                    announcement.important ? 'bg-red-500' : 'bg-primary'
-                  )}
-                />
-                <CardContent className="p-4 pl-6">
-                  <div className="flex items-start gap-4">
-                    <div className={cn(
-                      'p-2 rounded-lg',
-                      announcement.important ? 'bg-red-100' : 'bg-primary/10'
-                    )}>
-                      {announcement.important ? (
-                        <AlertCircle className={cn(
-                          'w-5 h-5',
-                          announcement.important ? 'text-red-600' : 'text-primary'
-                        )} />
-                      ) : (
-                        getTypeIcon(announcement.type)
-                      )}
-                    </div>
-                    <div className="flex-1">
-                      <div className="flex items-start justify-between gap-2">
-                        <h3 className="font-semibold">{announcement.title}</h3>
-                        <div className="flex items-center gap-2 flex-shrink-0">
-                          <Badge className={getTypeBadge(announcement.type)}>
-                            {announcement.type}
-                          </Badge>
-                          {announcement.important && (
-                            <Badge className="bg-red-100 text-red-700">Important</Badge>
-                          )}
-                        </div>
-                      </div>
-                      <p className="text-xs text-muted-foreground mt-1">
-                        By {announcement.author}
-                      </p>
-                      <p className="text-sm text-muted-foreground mt-2">
-                        {announcement.description}
-                      </p>
-                      <p className="text-xs text-muted-foreground mt-3">
-                        {new Date(announcement.date).toLocaleDateString('en-US', {
-                          weekday: 'short',
-                          year: 'numeric',
-                          month: 'short',
-                          day: 'numeric',
-                          hour: '2-digit',
-                          minute: '2-digit',
-                        })}
-                      </p>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
-        ) : (
-          <Card>
-            <CardContent className="p-12 text-center">
-              <Bell className="w-12 h-12 mx-auto text-muted-foreground" />
-              <h3 className="mt-4 text-lg font-semibold">No announcements found</h3>
-              <p className="text-muted-foreground mt-1">
-                {searchQuery || activeFilter !== 'all'
-                  ? 'Try adjusting your search or filters'
-                  : 'No announcements available at the moment'}
-              </p>
-            </CardContent>
-          </Card>
-        )}
-      </div>
+const ParentAnnouncements = () => {
+  return (
+    <ParentDashboardLayout>
+      <ParentAnnouncementsContent />
     </ParentDashboardLayout>
   );
 };
