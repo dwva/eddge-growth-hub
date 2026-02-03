@@ -124,7 +124,7 @@ const StudentSidebar = ({ collapsed = false, isMobile = false, onMobileClose }: 
         {showText && (
           <div>
             <span className="text-2xl font-bold text-primary tracking-tight">EDDGE</span>
-            <span className="text-xs text-muted-foreground block -mt-0.5">Student Portal</span>
+            <span className="text-sm text-muted-foreground block -mt-0.5">Student Portal</span>
           </div>
         )}
       </div>
@@ -154,7 +154,7 @@ const StudentSidebar = ({ collapsed = false, isMobile = false, onMobileClose }: 
             </span>
             {showText && (
               <>
-                <span className="text-sm flex-1 text-left">Dashboard</span>
+                <span className="text-base flex-1 text-left">Dashboard</span>
                 {isPathActive('/student') && (
                   <span className="w-1.5 h-1.5 rounded-full bg-primary" />
                 )}
@@ -189,7 +189,7 @@ const StudentSidebar = ({ collapsed = false, isMobile = false, onMobileClose }: 
                   </span>
                   {showText && (
                     <>
-                      <span className="text-sm flex-1 text-left">{section.label}</span>
+                      <span className="text-base flex-1 text-left">{section.label}</span>
                       <ChevronDown className={cn(
                         "w-4 h-4 text-gray-400 transition-transform duration-200",
                         openSections.includes(section.label) ? "rotate-180" : ""
@@ -223,7 +223,7 @@ const StudentSidebar = ({ collapsed = false, isMobile = false, onMobileClose }: 
                         {item.icon}
                       </span>
                       {showText && (
-                        <span className="text-xs">{item.label}</span>
+                        <span className="text-sm">{item.label}</span>
                       )}
                     </button>
                   ))}
@@ -240,7 +240,7 @@ const StudentSidebar = ({ collapsed = false, isMobile = false, onMobileClose }: 
           {/* Help & Support Button */}
           <button
             onClick={() => handleNavigate('/student/help')}
-            className="w-full flex items-center justify-center gap-2 px-4 py-2.5 text-sm font-medium text-gray-700 bg-primary/5 hover:bg-primary/10 rounded-lg transition-colors"
+            className="w-full flex items-center justify-center gap-2 px-4 py-2.5 text-base font-medium text-gray-700 bg-primary/5 hover:bg-primary/10 rounded-lg transition-colors"
           >
             <HelpCircle className="w-4 h-4 text-primary" />
             Help & Support
@@ -249,7 +249,7 @@ const StudentSidebar = ({ collapsed = false, isMobile = false, onMobileClose }: 
           {/* Logout Button */}
           <button
             onClick={handleLogout}
-            className="w-full flex items-center justify-center gap-2 px-4 py-2.5 text-sm font-medium text-red-600 bg-red-50 hover:bg-red-100 rounded-lg transition-colors"
+            className="w-full flex items-center justify-center gap-2 px-4 py-2.5 text-base font-medium text-red-600 bg-red-50 hover:bg-red-100 rounded-lg transition-colors"
           >
             <LogOut className="w-4 h-4" />
             Logout
