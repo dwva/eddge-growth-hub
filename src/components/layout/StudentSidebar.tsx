@@ -239,29 +239,29 @@ const StudentSidebar = ({ collapsed = false, isMobile = false, onMobileClose }: 
 
       {/* Bottom section */}
       {showText && (
-        <div className="p-4 space-y-3 flex-shrink-0">
-          {/* Help Center Card - Planti style */}
-          <div className="bg-gradient-to-br from-green-100 via-green-50 to-emerald-100 rounded-2xl p-5 relative overflow-hidden">
+        <div className="p-3 space-y-2 flex-shrink-0">
+          {/* Help Center Card - Purple theme */}
+          <div className="bg-gradient-to-br from-primary/15 via-purple-100/50 to-violet-100/60 rounded-xl p-4 relative overflow-hidden">
             {/* Decorative background elements */}
-            <div className="absolute top-0 right-0 w-20 h-20 bg-green-200/30 rounded-full -translate-y-1/2 translate-x-1/2" />
-            <div className="absolute bottom-0 left-0 w-16 h-16 bg-green-200/20 rounded-full translate-y-1/2 -translate-x-1/2" />
+            <div className="absolute top-0 right-0 w-16 h-16 bg-primary/10 rounded-full -translate-y-1/2 translate-x-1/2" />
+            <div className="absolute bottom-0 left-0 w-12 h-12 bg-primary/5 rounded-full translate-y-1/2 -translate-x-1/2" />
             
             {/* Question mark icon - centered at top */}
-            <div className="flex justify-center -mt-8 mb-4">
-              <div className="w-10 h-10 rounded-full bg-white shadow-md flex items-center justify-center">
-                <HelpCircle className="w-5 h-5 text-gray-600" />
+            <div className="flex justify-center -mt-6 mb-3">
+              <div className="w-8 h-8 rounded-full bg-white shadow-sm flex items-center justify-center">
+                <HelpCircle className="w-4 h-4 text-primary" />
               </div>
             </div>
             
             <div className="text-center relative z-10">
-              <h4 className="font-semibold text-gray-900 text-base">Help Center</h4>
-              <p className="text-xs text-gray-600 mt-1.5 leading-relaxed">
+              <h4 className="font-semibold text-gray-900 text-sm">Help Center</h4>
+              <p className="text-[11px] text-gray-600 mt-1 leading-relaxed">
                 Having trouble in EDDGE.<br />
                 Please contact us for more questions.
               </p>
               <button
                 onClick={() => handleNavigate('/student/help')}
-                className="mt-4 w-full bg-white text-gray-800 text-sm font-semibold py-3 px-4 rounded-xl hover:bg-gray-50 transition-colors shadow-sm"
+                className="mt-3 w-full bg-white text-gray-800 text-xs font-semibold py-2.5 px-3 rounded-lg hover:bg-gray-50 transition-colors shadow-sm"
               >
                 Go To Help Center
               </button>
