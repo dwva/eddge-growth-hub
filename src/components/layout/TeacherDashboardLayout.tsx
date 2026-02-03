@@ -27,25 +27,31 @@ const ModeToggle = () => {
   const { currentMode, setCurrentMode } = useTeacherMode();
 
   return (
-    <div className="flex items-center gap-1 bg-muted rounded-lg p-1">
-      <Button
-        variant={currentMode === 'class_teacher' ? 'default' : 'ghost'}
-        size="sm"
+    <div className="flex bg-white rounded-xl shadow-sm border border-gray-200 p-1">
+      <button
         onClick={() => setCurrentMode('class_teacher')}
-        className="gap-2 h-8 text-xs"
+        className={cn(
+          "flex items-center gap-2 px-4 py-2.5 rounded-lg text-sm font-medium transition-all duration-200",
+          currentMode === 'class_teacher'
+            ? "bg-primary text-white shadow-sm"
+            : "text-gray-600 hover:bg-gray-50"
+        )}
       >
-        <Users className="w-3.5 h-3.5" />
-        Class Teacher
-      </Button>
-      <Button
-        variant={currentMode === 'subject_teacher' ? 'default' : 'ghost'}
-        size="sm"
+        <Users className="w-4 h-4" />
+        <span>Class Teacher</span>
+      </button>
+      <button
         onClick={() => setCurrentMode('subject_teacher')}
-        className="gap-2 h-8 text-xs"
+        className={cn(
+          "flex items-center gap-2 px-4 py-2.5 rounded-lg text-sm font-medium transition-all duration-200",
+          currentMode === 'subject_teacher'
+            ? "bg-primary text-white shadow-sm"
+            : "text-gray-600 hover:bg-gray-50"
+        )}
       >
-        <BookOpen className="w-3.5 h-3.5" />
-        Subject Teacher
-      </Button>
+        <BookOpen className="w-4 h-4" />
+        <span>Subject Teacher</span>
+      </button>
     </div>
   );
 };

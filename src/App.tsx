@@ -146,13 +146,19 @@ const App = () => (
             } />
             <Route path="/teacher/my-class/students" element={<ProtectedRoute allowedRoles={['teacher']}><TeacherStudents /></ProtectedRoute>} />
             <Route path="/teacher/my-class/behaviour" element={<ProtectedRoute allowedRoles={['teacher']}><TeacherBehaviour /></ProtectedRoute>} />
-            <Route path="/teacher/class-analytics/*" element={<ProtectedRoute allowedRoles={['teacher']}><TeacherClassAnalytics /></ProtectedRoute>} />
+            <Route path="/teacher/class-analytics" element={<ProtectedRoute allowedRoles={['teacher']}><TeacherClassAnalytics /></ProtectedRoute>} />
+            <Route path="/teacher/class-analytics/overall" element={<ProtectedRoute allowedRoles={['teacher']}><TeacherClassAnalytics /></ProtectedRoute>} />
+            <Route path="/teacher/class-analytics/subject-wise" element={<ProtectedRoute allowedRoles={['teacher']}><TeacherClassAnalytics /></ProtectedRoute>} />
+            <Route path="/teacher/class-analytics/at-risk" element={<ProtectedRoute allowedRoles={['teacher']}><TeacherClassAnalytics /></ProtectedRoute>} />
             <Route path="/teacher/assessments" element={<ProtectedRoute allowedRoles={['teacher']}><TeacherAssessments /></ProtectedRoute>} />
             <Route path="/teacher/communication" element={<ProtectedRoute allowedRoles={['teacher']}><TeacherCommunication /></ProtectedRoute>} />
             <Route path="/teacher/communication/students" element={<ProtectedRoute allowedRoles={['teacher']}><TeacherCommunication /></ProtectedRoute>} />
             <Route path="/teacher/announcements/events" element={<ProtectedRoute allowedRoles={['teacher']}><TeacherEvents /></ProtectedRoute>} />
             <Route path="/teacher/meetings" element={<ProtectedRoute allowedRoles={['teacher']}><TeacherMeetings /></ProtectedRoute>} />
-            <Route path="/teacher/reports/*" element={<ProtectedRoute allowedRoles={['teacher']}><TeacherReports /></ProtectedRoute>} />
+            <Route path="/teacher/reports" element={<ProtectedRoute allowedRoles={['teacher']}><TeacherReports /></ProtectedRoute>} />
+            <Route path="/teacher/reports/students" element={<ProtectedRoute allowedRoles={['teacher']}><TeacherReports /></ProtectedRoute>} />
+            <Route path="/teacher/reports/class-summary" element={<ProtectedRoute allowedRoles={['teacher']}><TeacherReports /></ProtectedRoute>} />
+            <Route path="/teacher/reports/subject-performance" element={<ProtectedRoute allowedRoles={['teacher']}><TeacherReports /></ProtectedRoute>} />
             <Route path="/teacher/settings" element={<ProtectedRoute allowedRoles={['teacher']}><TeacherSettings /></ProtectedRoute>} />
             <Route path="/teacher/support" element={<ProtectedRoute allowedRoles={['teacher']}><TeacherSupport /></ProtectedRoute>} />
             <Route path="/teacher/my-subject/classes" element={<ProtectedRoute allowedRoles={['teacher']}><TeacherSubjectClasses /></ProtectedRoute>} />

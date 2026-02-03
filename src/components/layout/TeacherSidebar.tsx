@@ -144,7 +144,29 @@ const TeacherSidebar = ({ collapsed = false, isMobile = false, onMobileClose }: 
   const location = useLocation();
   const { logout } = useAuth();
   const { currentMode } = useTeacherMode();
-  const [openSections, setOpenSections] = useState<string[]>(['my-class', 'my-subject', 'class-analytics', 'subject-analytics']);
+  
+  // Keep all parent sections open by default and maintain based on active path
+  const getActiveSections = () => {
+    const sections: string[] = [];
+    const navItems = currentMode === 'class_teacher' ? classTeacherNavItems : subjectTeacherNavItems;
+    
+    navItems.forEach(item => {
+      if (item.children) {
+        // Check if any child path matches current location
+        const hasActiveChild = item.children.some(child => 
+          child.path && location.pathname.startsWith(child.path.split('/').slice(0, -1).join('/'))
+        );
+        if (hasActiveChild || item.children.some(child => child.path === location.pathname)) {
+          sections.push(item.id);
+        }
+      }
+    });
+    
+    // Always keep these sections open by default
+    return [...new Set([...sections, 'my-class', 'my-subject', 'class-analytics', 'subject-analytics', 'communication', 'reports', 'ai-tools'])];
+  };
+  
+  const [openSections, setOpenSections] = useState<string[]>(getActiveSections());
 
   const navItems = currentMode === 'class_teacher' ? classTeacherNavItems : subjectTeacherNavItems;
   const showText = !collapsed || isMobile;

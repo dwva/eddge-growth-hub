@@ -1,5 +1,5 @@
-import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useEffect, useState } from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
 import TeacherDashboardLayout from '@/components/layout/TeacherDashboardLayout';
 import { useTeacherMode } from '@/contexts/TeacherModeContext';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -17,7 +17,34 @@ import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContaine
 
 const TeacherReportsContent = () => {
   const navigate = useNavigate();
+  const location = useLocation();
   const { currentMode } = useTeacherMode();
+  
+  // Determine active tab from URL path
+  const getTabFromPath = () => {
+    if (location.pathname.includes('class-summary')) return 'class-summary';
+    if (location.pathname.includes('subject-performance')) return 'subject-performance';
+    return 'student-reports';
+  };
+  
+  const [activeTab, setActiveTab] = useState(getTabFromPath());
+  
+  // Update tab when URL changes
+  useEffect(() => {
+    setActiveTab(getTabFromPath());
+  }, [location.pathname]);
+  
+  // Handle tab change and update URL
+  const handleTabChange = (value: string) => {
+    setActiveTab(value);
+    const routeMap: Record<string, string> = {
+      'student-reports': '/teacher/reports/students',
+      'class-summary': '/teacher/reports/class-summary',
+      'subject-performance': '/teacher/reports/subject-performance',
+    };
+    navigate(routeMap[value] || '/teacher/reports/students');
+  };
+  
   const [studentReport, setStudentReport] = useState({
     studentId: '',
     reportType: '',
@@ -56,7 +83,7 @@ const TeacherReportsContent = () => {
         </div>
       </div>
 
-      <Tabs defaultValue="student-reports">
+      <Tabs value={activeTab} onValueChange={handleTabChange}>
         <TabsList className="grid w-full grid-cols-3 lg:w-auto lg:inline-grid">
           <TabsTrigger value="student-reports">Student Reports</TabsTrigger>
           <TabsTrigger value="class-summary">Class Summary</TabsTrigger>
