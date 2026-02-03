@@ -187,7 +187,7 @@ const StudentHome = () => {
             <ArrowRight className="w-4 h-4 text-gray-400" />
           </div>
 
-          {/* Main Content Grid - Left (My Learning + Stats) + Right (Recent Activity) */}
+          {/* Main Content Grid - Left (My Learning + Stats) + Right (AI Study Suggestions) */}
           <div className="grid grid-cols-1 lg:grid-cols-[1fr_340px] gap-6">
             
             {/* Left Column */}
@@ -293,44 +293,69 @@ const StudentHome = () => {
               </div>
             </div>
 
-            {/* Right Column - Recent Activity */}
+            {/* Right Column - AI Study Suggestions */}
             <div>
-              <div className="flex items-center justify-between mb-4">
-                <h3 className="text-base font-semibold text-gray-900">Recent Activity</h3>
-                <button 
-                  className="text-xs text-gray-500 hover:text-primary flex items-center gap-1"
-                  onClick={() => navigate('/student/performance')}
-                >
-                  View All <ArrowRight className="w-3.5 h-3.5" />
-                </button>
+              <div className="mb-4">
+                <h3 className="text-base font-semibold text-gray-900 flex items-center gap-2">
+                  <Brain className="w-4 h-4 text-primary" />
+                  AI Study Suggestions
+                </h3>
+                <p className="text-xs text-gray-500 mt-1">
+                  Based on your recent learning
+                </p>
               </div>
-              
+
               <Card className="border border-gray-100 shadow-sm rounded-2xl bg-white">
-                <CardContent className="p-0">
-                  <div className="divide-y divide-gray-50">
-                    {[
-                      { icon: '📐', title: 'Quadratic Equations', desc: 'Completed chapter quiz', time: '2 min ago', color: 'bg-blue-50' },
-                      { icon: '🔬', title: 'Newton\'s Laws', desc: 'Watched video lesson', time: '15 min ago', color: 'bg-emerald-50' },
-                      { icon: '🧠', title: 'Logical Reasoning', desc: 'Practiced 10 questions', time: '1 hr ago', color: 'bg-purple-50' },
-                      { icon: '📚', title: 'Study Resources', desc: 'Downloaded notes', time: '2 hrs ago', color: 'bg-amber-50' },
-                      { icon: '✅', title: 'Math Homework', desc: 'Submitted assignment', time: '3 hrs ago', color: 'bg-green-50' },
-                      { icon: '🎯', title: 'Practice Test', desc: 'Scored 92%', time: '5 hrs ago', color: 'bg-pink-50' },
-                      { icon: '💡', title: 'AI Doubt Solver', desc: 'Asked 3 questions', time: '6 hrs ago', color: 'bg-violet-50' },
-                    ].map((activity, index) => (
-                      <div key={index} className="flex items-center justify-between px-4 py-3 hover:bg-gray-50/50 cursor-pointer">
-                        <div className="flex items-center gap-3">
-                          <div className={`w-9 h-9 rounded-full ${activity.color} flex items-center justify-center text-base`}>
-                            {activity.icon}
-                          </div>
-                          <div>
-                            <p className="text-sm font-medium text-gray-900">{activity.title}</p>
-                            <p className="text-xs text-gray-500">{activity.desc}</p>
-                          </div>
+                <CardContent className="p-4 space-y-2">
+                  {[
+                    {
+                      id: 'learn',
+                      label: 'Continue learning: Quadratic Equations',
+                      icon: <BookOpen className="w-4 h-4 text-primary" />,
+                      path: '/student/learning',
+                    },
+                    {
+                      id: 'revise',
+                      label: 'Revise: Algebra basics from last week',
+                      icon: <Target className="w-4 h-4 text-purple-500" />,
+                      path: '/student/revision',
+                    },
+                    {
+                      id: 'practice',
+                      label: 'Practice: 10 quick math questions',
+                      icon: <Calculator className="w-4 h-4 text-emerald-500" />,
+                      path: '/student/practice',
+                    },
+                    {
+                      id: 'planner',
+                      label: 'Update today’s plan in your Planner',
+                      icon: <CalendarDays className="w-4 h-4 text-blue-500" />,
+                      path: '/student/planner',
+                    },
+                    {
+                      id: 'doubt',
+                      label: 'Ask a doubt you still feel unsure about',
+                      icon: <MessageSquare className="w-4 h-4 text-amber-500" />,
+                      path: '/student/doubt-solver',
+                    },
+                  ].map((suggestion) => (
+                    <button
+                      key={suggestion.id}
+                      type="button"
+                      className="w-full flex items-center justify-between px-3 py-2.5 rounded-xl hover:bg-gray-50 transition-colors text-left"
+                      onClick={() => navigate(suggestion.path)}
+                    >
+                      <div className="flex items-center gap-3">
+                        <div className="w-8 h-8 rounded-full bg-gray-100 flex items-center justify-center">
+                          {suggestion.icon}
                         </div>
-                        <span className="text-xs text-gray-400 whitespace-nowrap">{activity.time}</span>
+                        <span className="text-sm font-medium text-gray-900">
+                          {suggestion.label}
+                        </span>
                       </div>
-                    ))}
-                  </div>
+                      <ArrowRight className="w-3.5 h-3.5 text-gray-400" />
+                    </button>
+                  ))}
                 </CardContent>
               </Card>
             </div>
