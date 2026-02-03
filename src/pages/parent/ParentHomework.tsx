@@ -14,7 +14,7 @@ import {
 } from 'lucide-react';
 import { differenceInDays, parseISO, isToday, isPast } from 'date-fns';
 
-const ParentHomework = () => {
+const ParentHomeworkContent = () => {
   const { t } = useLanguage();
   const [activeTab, setActiveTab] = useState('all');
 
@@ -54,88 +54,94 @@ const ParentHomework = () => {
   };
 
   return (
-    <ParentDashboardLayout>
-      <div className="space-y-6">
-        {/* Header */}
-        <div>
-          <h1 className="text-2xl font-bold">{t('nav.homework')}</h1>
-          <p className="text-muted-foreground">View your child's homework assignments</p>
-        </div>
+    <div className="space-y-6">
+      {/* Header */}
+      <div>
+        <h1 className="text-2xl font-bold">{t('nav.homework')}</h1>
+        <p className="text-muted-foreground">View your child's homework assignments</p>
+      </div>
 
-        {/* Tabs */}
-        <Tabs defaultValue="all" onValueChange={setActiveTab}>
-          <TabsList>
-            <TabsTrigger value="all">{t('homework.all')}</TabsTrigger>
-            <TabsTrigger value="pending">{t('homework.pending')}</TabsTrigger>
-            <TabsTrigger value="completed">{t('homework.completed')}</TabsTrigger>
-          </TabsList>
+      {/* Tabs */}
+      <Tabs defaultValue="all" onValueChange={setActiveTab}>
+        <TabsList>
+          <TabsTrigger value="all">{t('homework.all')}</TabsTrigger>
+          <TabsTrigger value="pending">{t('homework.pending')}</TabsTrigger>
+          <TabsTrigger value="completed">{t('homework.completed')}</TabsTrigger>
+        </TabsList>
 
-          <TabsContent value={activeTab} className="mt-4">
-            {filteredHomework.length > 0 ? (
-              <div className="space-y-3">
-                {filteredHomework.map((homework) => {
-                  const statusInfo = getStatusInfo(homework);
-                  const StatusIcon = statusInfo.icon;
+        <TabsContent value={activeTab} className="mt-4">
+          {filteredHomework.length > 0 ? (
+            <div className="space-y-3">
+              {filteredHomework.map((homework) => {
+                const statusInfo = getStatusInfo(homework);
+                const StatusIcon = statusInfo.icon;
 
-                  return (
-                    <Card key={homework.id} className="hover:shadow-md transition-shadow">
-                      <CardContent className="p-4">
-                        <div className="flex items-start gap-4">
-                          <div className={`p-2 rounded-lg ${homework.status === 'completed' ? 'bg-green-100' : 'bg-muted'}`}>
-                            {homework.status === 'completed' ? (
-                              <CheckCircle2 className="w-5 h-5 text-green-600" />
-                            ) : (
-                              <Circle className="w-5 h-5 text-muted-foreground" />
-                            )}
-                          </div>
-                          <div className="flex-1">
-                            <div className="flex items-start justify-between">
-                              <div>
-                                <h3 className="font-semibold">{homework.title}</h3>
-                                <div className="flex items-center gap-2 mt-1">
-                                  <Badge className={subjectColors[homework.subject] || 'bg-gray-100 text-gray-700'}>
-                                    {homework.subject}
-                                  </Badge>
-                                  <span className="text-xs text-muted-foreground">{homework.teacher}</span>
-                                </div>
+                return (
+                  <Card key={homework.id} className="hover:shadow-md transition-shadow">
+                    <CardContent className="p-4">
+                      <div className="flex items-start gap-4">
+                        <div className={`p-2 rounded-lg ${homework.status === 'completed' ? 'bg-green-100' : 'bg-muted'}`}>
+                          {homework.status === 'completed' ? (
+                            <CheckCircle2 className="w-5 h-5 text-green-600" />
+                          ) : (
+                            <Circle className="w-5 h-5 text-muted-foreground" />
+                          )}
+                        </div>
+                        <div className="flex-1">
+                          <div className="flex items-start justify-between">
+                            <div>
+                              <h3 className="font-semibold">{homework.title}</h3>
+                              <div className="flex items-center gap-2 mt-1">
+                                <Badge className={subjectColors[homework.subject] || 'bg-gray-100 text-gray-700'}>
+                                  {homework.subject}
+                                </Badge>
+                                <span className="text-xs text-muted-foreground">{homework.teacher}</span>
                               </div>
-                              <Badge className={statusInfo.className}>
-                                <StatusIcon className="w-3 h-3 mr-1" />
-                                {statusInfo.label}
-                              </Badge>
                             </div>
-                            <p className="text-sm text-muted-foreground mt-2">{homework.description}</p>
-                            <div className="flex items-center gap-4 mt-3 text-xs text-muted-foreground">
-                              <span>Assigned: {homework.assignedDate}</span>
-                              <span>Due: {homework.dueDate}</span>
-                            </div>
+                            <Badge className={statusInfo.className}>
+                              <StatusIcon className="w-3 h-3 mr-1" />
+                              {statusInfo.label}
+                            </Badge>
+                          </div>
+                          <p className="text-sm text-muted-foreground mt-2">{homework.description}</p>
+                          <div className="flex items-center gap-4 mt-3 text-xs text-muted-foreground">
+                            <span>Assigned: {homework.assignedDate}</span>
+                            <span>Due: {homework.dueDate}</span>
                           </div>
                         </div>
-                      </CardContent>
-                    </Card>
-                  );
-                })}
-              </div>
-            ) : (
-              <Card>
-                <CardContent className="p-12 text-center">
-                  <BookOpen className="w-12 h-12 mx-auto text-muted-foreground" />
-                  <h3 className="mt-4 text-lg font-semibold">
-                    {activeTab === 'pending' ? 'No pending homework' :
-                     activeTab === 'completed' ? 'No completed homework' :
-                     'No homework assignments'}
-                  </h3>
-                  <p className="text-muted-foreground mt-1">
-                    {activeTab === 'pending' ? 'All homework has been completed!' :
-                     activeTab === 'completed' ? 'No homework completed yet.' :
-                     'No homework assignments available.'}
-                  </p>
-                </CardContent>
-              </Card>
-            )}
-          </TabsContent>
-        </Tabs>
-      </div>
+                      </div>
+                    </CardContent>
+                  </Card>
+                );
+              })}
+            </div>
+          ) : (
+            <Card>
+              <CardContent className="p-12 text-center">
+                <BookOpen className="w-12 h-12 mx-auto text-muted-foreground" />
+                <h3 className="mt-4 text-lg font-semibold">
+                  {activeTab === 'pending' ? 'No pending homework' :
+                   activeTab === 'completed' ? 'No completed homework' :
+                   'No homework assignments'}
+                </h3>
+                <p className="text-muted-foreground mt-1">
+                  {activeTab === 'pending' ? 'All homework has been completed!' :
+                   activeTab === 'completed' ? 'No homework completed yet.' :
+                   'No homework assignments available.'}
+                </p>
+              </CardContent>
+            </Card>
+          )}
+        </TabsContent>
+      </Tabs>
+    </div>
+  );
+};
+
+const ParentHomework = () => {
+  return (
+    <ParentDashboardLayout>
+      <ParentHomeworkContent />
     </ParentDashboardLayout>
   );
 };
