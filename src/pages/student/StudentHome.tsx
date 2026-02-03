@@ -17,7 +17,8 @@ import {
   FileText,
   Clock,
   CalendarDays,
-  Target
+  Target,
+  Sparkles
 } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
 
@@ -54,6 +55,19 @@ const subjects = [
 const StudentHome = () => {
   const { user } = useAuth();
   const navigate = useNavigate();
+  
+  // Calculate overall progress from subjects
+  const overallProgress = Math.round(
+    subjects.reduce((acc, subject) => acc + subject.progress, 0) / subjects.length
+  );
+  
+  // Get progress status message
+  const getProgressMessage = (progress: number) => {
+    if (progress >= 80) return "Excellent! Almost there!";
+    if (progress >= 60) return "Great progress! Keep going!";
+    if (progress >= 40) return "Good start! Stay consistent!";
+    return "Let's pick up the pace!";
+  };
 
   return (
     <StudentDashboardLayout>
@@ -143,27 +157,57 @@ const StudentHome = () => {
             </Card>
           </div>
 
-          {/* Overall Progress Tracker Bar */}
+          {/* Overall Progress Tracker Bar - Enhanced */}
           <div 
-            className="bg-white rounded-2xl shadow-sm px-5 py-3 flex items-center justify-between cursor-pointer hover:shadow-md transition-shadow"
+            className="group relative bg-gradient-to-r from-white via-white to-primary/5 rounded-2xl shadow-sm border border-gray-100 px-5 py-4 flex items-center justify-between cursor-pointer hover:shadow-lg hover:border-primary/20 transition-all duration-300 overflow-hidden"
             onClick={() => navigate('/student/performance')}
           >
-            <div className="flex items-center gap-3">
-              <div className="w-8 h-8 rounded-xl bg-primary/10 flex items-center justify-center">
-                <Target className="w-4 h-4 text-primary" />
+            {/* Subtle animated background glow */}
+            <div className="absolute inset-0 bg-gradient-to-r from-transparent via-primary/5 to-primary/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+            
+            {/* Left section - Icon and text */}
+            <div className="relative flex items-center gap-4">
+              <div className="relative">
+                <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-primary to-purple-600 flex items-center justify-center shadow-md shadow-primary/20">
+                  <Target className="w-5 h-5 text-white" />
+                </div>
+                {/* Pulse indicator */}
+                <div className="absolute -top-0.5 -right-0.5 w-3 h-3 bg-green-400 rounded-full border-2 border-white">
+                  <span className="absolute inset-0 rounded-full bg-green-400 animate-ping opacity-75" />
+                </div>
               </div>
               <div>
-                <p className="text-xs font-medium text-gray-900">Overall Progress</p>
-                <p className="text-[10px] text-gray-500">You're 62% through your syllabus</p>
+                <div className="flex items-center gap-2">
+                  <p className="text-sm font-semibold text-gray-900">Overall Progress</p>
+                  <Sparkles className="w-3.5 h-3.5 text-amber-500" />
+                </div>
+                <p className="text-xs text-gray-500 mt-0.5">{getProgressMessage(overallProgress)}</p>
               </div>
             </div>
-            <div className="flex items-center gap-4 flex-1 max-w-md mx-6">
-              <div className="flex-1 h-2 bg-gray-100 rounded-full overflow-hidden">
-                <div className="h-full bg-gradient-to-r from-primary to-purple-500 rounded-full" style={{ width: '62%' }} />
+            
+            {/* Center section - Progress bar */}
+            <div className="relative flex items-center gap-4 flex-1 max-w-lg mx-8">
+              <div className="flex-1 h-3 bg-gray-100 rounded-full overflow-hidden shadow-inner">
+                <div 
+                  className="h-full bg-gradient-to-r from-primary via-purple-500 to-violet-500 rounded-full relative transition-all duration-1000 ease-out"
+                  style={{ width: `${overallProgress}%` }}
+                >
+                  {/* Animated shimmer effect */}
+                  <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent animate-shimmer" />
+                </div>
               </div>
-              <span className="text-xs font-semibold text-gray-700">62%</span>
+              
+              {/* Percentage badge */}
+              <div className="flex items-center gap-1 bg-primary/10 px-2.5 py-1 rounded-lg">
+                <span className="text-sm font-bold text-primary">{overallProgress}%</span>
+              </div>
             </div>
-            <ArrowRight className="w-4 h-4 text-gray-400" />
+            
+            {/* Right section - Arrow */}
+            <div className="relative flex items-center gap-2 text-gray-400 group-hover:text-primary transition-colors">
+              <span className="text-xs font-medium hidden sm:block">View Details</span>
+              <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+            </div>
           </div>
 
           {/* My Learning Section - 3 Card Grid */}
