@@ -37,15 +37,37 @@ import {
   Trash2,
   ChevronLeft,
   ChevronRight,
+  ChevronDown,
   Grid3X3,
   List,
   Clock,
   CheckCircle2,
+  Brain,
+  Swords,
+  RotateCcw,
+  FlaskConical,
+  Wrench,
+  Play,
+  Bot,
+  Pencil,
 } from 'lucide-react';
 import { format, addMonths, subMonths, isSameDay } from 'date-fns';
 import { Calendar as CalendarComponent } from '@/components/ui/calendar';
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
 import { useAuth } from '@/contexts/AuthContext';
 import type { DayContentProps } from 'react-day-picker';
+
+type TaskIntent = 'learn' | 'practice' | 'revision' | 'test' | 'fixWeakArea';
+type TaskOrigin = 'ai' | 'user';
+type CognitiveLoad = 'low' | 'balanced' | 'high';
+
+const intentConfig: Record<TaskIntent, { label: string; short: string; icon: React.ReactNode; pillClass: string }> = {
+  learn: { label: 'Learn', short: 'L', icon: <Brain className="w-3 h-3" />, pillClass: 'bg-blue-100 text-blue-700 border-blue-200' },
+  practice: { label: 'Practice', short: 'P', icon: <Swords className="w-3 h-3" />, pillClass: 'bg-amber-100 text-amber-700 border-amber-200' },
+  revision: { label: 'Revise', short: 'R', icon: <RotateCcw className="w-3 h-3" />, pillClass: 'bg-green-100 text-green-700 border-green-200' },
+  test: { label: 'Test', short: 'T', icon: <FlaskConical className="w-3 h-3" />, pillClass: 'bg-purple-100 text-purple-700 border-purple-200' },
+  fixWeakArea: { label: 'Fix Weak Area', short: 'W', icon: <Wrench className="w-3 h-3" />, pillClass: 'bg-red-100 text-red-700 border-red-200' },
+};
 
 type Priority = 'high' | 'medium' | 'low';
 const priorityColors: Record<Priority, string> = {
@@ -59,11 +81,16 @@ const priorityBarColors: Record<Priority, string> = {
   low: 'bg-green-500',
 };
 
-// Stub data
+// Stub data (UI only – no backend)
 const stubTasks = [
-  { id: '1', name: 'Quadratic Equations practice', subject: 'Mathematics', type: 'Practice', duration: '30 min', priority: 'high' as Priority, completed: false, aiRecommended: true },
-  { id: '2', name: 'Laws of Motion revision', subject: 'Science', type: 'Revision', duration: '15 min', priority: 'medium' as Priority, completed: true, aiRecommended: false },
+  { id: '1', name: 'Quadratic Equations practice', subject: 'Mathematics', type: 'Practice', duration: '30 min', priority: 'high' as Priority, completed: false, aiRecommended: true, intent: 'practice' as TaskIntent, reason: 'Weak area identified', origin: 'ai' as TaskOrigin },
+  { id: '2', name: 'Laws of Motion revision', subject: 'Science', type: 'Revision', duration: '15 min', priority: 'medium' as Priority, completed: true, aiRecommended: false, intent: 'revision' as TaskIntent, reason: 'Upcoming exam topic', origin: 'user' as TaskOrigin },
+  { id: '3', name: 'Algebra basics', subject: 'Mathematics', type: 'Learn', duration: '25 min', priority: 'high' as Priority, completed: false, aiRecommended: true, intent: 'learn' as TaskIntent, reason: 'New topic this week', origin: 'ai' as TaskOrigin },
 ];
+const stubNextBestAction = { title: 'Continue Quadratic Equations practice (30 min)', hint: 'You already learned the concept yesterday' };
+const stubCognitiveLoad: CognitiveLoad = 'balanced';
+const stubLearningBlocksToday = { completed: 2, total: 3 };
+const stubStreakDays = 7;
 const stubDeadlines = [
   { date: 'Feb 15', month: 'Feb', day: '15', name: 'Math assignment', subject: 'Mathematics', priority: 'high' as Priority },
   { date: 'Feb 20', month: 'Feb', day: '20', name: 'Science project', subject: 'Science', priority: 'medium' as Priority },
@@ -75,15 +102,17 @@ const stubSuggestions = [
 ];
 
 // Calendar events (stub) – empty array = empty state; with items = events on calendar
+// Softer saturation for study planner: readable, calm (red / amber / green)
 const calendarEventColors: Record<Priority, string> = {
-  high: '#ef4444',
-  medium: '#eab308',
-  low: '#22c55e',
+  high: '#c2410c',   // softer red (orange-700)
+  medium: '#a16207', // softer amber
+  low: '#15803d',    // softer green (green-700)
 };
+const subjectAccent: Record<string, string> = { Mathematics: '#6366f1', Physics: '#0ea5e9', Chemistry: '#10b981', Science: '#f59e0b' };
 const stubCalendarEvents = [
-  { id: 'e1', title: 'Algebra - linear equations', date: new Date(2026, 1, 3), priority: 'high' as Priority, subject: 'Mathematics', type: 'Practice', duration: '30 min', status: 'pending' as const, allocatedDate: new Date(2026, 1, 3), startTime: '09:00', endTime: '09:30', resources: [{ label: 'Calculator', status: 'required' as const }], aiInsight: 'Focus on quadratic formula today.', performanceScore: 85 },
-  { id: 'e2', title: 'Mechanics - numerical pra', date: new Date(2026, 1, 3), priority: 'medium' as Priority, subject: 'Physics', type: 'Practice', duration: '45 min', status: 'pending' as const, resources: [{ label: 'Quiet room', status: 'recommended' as const }] },
-  { id: 'e3', title: 'Organic chemistry revision', date: new Date(2026, 1, 3), priority: 'low' as Priority, subject: 'Chemistry', type: 'Revision', duration: '20 min', status: 'pending' as const },
+  { id: 'e1', title: 'Algebra – Linear Eq', date: new Date(2026, 1, 3), priority: 'high' as Priority, subject: 'Mathematics', type: 'Practice', duration: '30 min', durationShort: '30m', intent: 'learn' as TaskIntent, status: 'pending' as const, allocatedDate: new Date(2026, 1, 3), startTime: '09:00', endTime: '09:30', resources: [{ label: 'Calculator', status: 'required' as const }], aiInsight: 'Focus on quadratic formula today.', performanceScore: 85 },
+  { id: 'e2', title: 'Mechanics – numerical', date: new Date(2026, 1, 3), priority: 'medium' as Priority, subject: 'Physics', type: 'Practice', duration: '45 min', durationShort: '45m', intent: 'practice' as TaskIntent, status: 'pending' as const, resources: [{ label: 'Quiet room', status: 'recommended' as const }] },
+  { id: 'e3', title: 'Organic chemistry', date: new Date(2026, 1, 3), priority: 'low' as Priority, subject: 'Chemistry', type: 'Revision', duration: '20 min', durationShort: '20m', intent: 'revision' as TaskIntent, status: 'pending' as const },
 ];
 
 type CalendarViewValue = 'dayGridMonth' | 'timeGridWeek' | 'timeGridDay';
@@ -128,41 +157,48 @@ const StudentPlanner = () => {
   const CalendarDayContent = (props: DayContentProps) => {
     const { date } = props;
     const events = getEventsForDay(date).slice(0, 3);
+    const durationShort = (d: string) => (d.replace(/\s*min\s*/i, 'm').replace(/\s*minute(s)?\s*/i, 'm') || d);
     return (
-      <div className="flex h-full min-h-[4.5rem] w-full flex-col items-stretch p-1 text-left">
-        <span className="text-left text-sm font-medium tabular-nums">
+      <div className="flex h-full min-h-[4.25rem] w-full flex-col p-1.5 text-left">
+        <span className="mb-1 block text-left text-sm font-medium tabular-nums leading-none">
           {date.getDate()}
         </span>
-        <div className="mt-1 flex min-h-0 flex-1 flex-col gap-1 overflow-hidden">
-          {events.map((ev) => (
-            <button
-              key={ev.id}
-              type="button"
-              className="cursor-pointer truncate rounded-md px-1 py-0.5 text-xs font-medium text-white hover:opacity-90"
-              style={{ backgroundColor: calendarEventColors[ev.priority] }}
-              onClick={(e) => {
-                e.stopPropagation();
-                setSelectedEvent({
-                  id: ev.id,
-                  name: ev.title,
-                  subject: ev.subject,
-                  type: ev.type,
-                  priority: ev.priority,
-                  duration: ev.duration,
-                  due: format(ev.date, 'MMM d, yyyy'),
-                  status: ev.status,
-                  allocatedDate: ev.allocatedDate,
-                  startTime: ev.startTime,
-                  endTime: ev.endTime,
-                  resources: ev.resources,
-                  aiInsight: ev.aiInsight,
-                  performanceScore: ev.performanceScore,
-                });
-              }}
-            >
-              {ev.title}
-            </button>
-          ))}
+        <div className="flex min-h-0 flex-1 flex-col gap-1 overflow-hidden">
+          {events.map((ev) => {
+            const intentShort = intentConfig[ev.intent]?.short ?? 'P';
+            const dur = (ev as { durationShort?: string }).durationShort ?? durationShort(ev.duration);
+            const accent = subjectAccent[ev.subject] ?? calendarEventColors[ev.priority];
+            return (
+              <button
+                key={ev.id}
+                type="button"
+                className="flex min-h-[1.75rem] cursor-pointer flex-col justify-center rounded-lg border-l-2 pl-2 pr-1.5 py-0.5 text-left text-xs font-medium hover:opacity-90 bg-white/95 border-gray-200 shadow-sm"
+                style={{ borderLeftColor: accent }}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setSelectedEvent({
+                    id: ev.id,
+                    name: ev.title,
+                    subject: ev.subject,
+                    type: ev.type,
+                    priority: ev.priority,
+                    duration: ev.duration,
+                    due: format(ev.date, 'MMM d, yyyy'),
+                    status: ev.status,
+                    allocatedDate: ev.allocatedDate,
+                    startTime: ev.startTime,
+                    endTime: ev.endTime,
+                    resources: ev.resources,
+                    aiInsight: ev.aiInsight,
+                    performanceScore: ev.performanceScore,
+                  });
+                }}
+              >
+                <span className="truncate font-medium text-gray-900" style={{ color: accent }}>{ev.subject} – {ev.title}</span>
+                <span className="text-[10px] text-muted-foreground mt-0.5">{intentConfig[ev.intent]?.label ?? 'Learn'} · {dur}</span>
+              </button>
+            );
+          })}
         </div>
       </div>
     );
@@ -243,7 +279,7 @@ const StudentPlanner = () => {
                 {/* Main content ~3/4 */}
                 <div className="space-y-6 min-w-0">
                   <TabsContent value="dashboard" className="mt-0 space-y-6">
-                    {/* Top row: 3 stat cards */}
+                    {/* Learning signals: 3 cards */}
                     <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                       <Card className="border border-blue-100 bg-gradient-to-br from-blue-50 to-indigo-50 rounded-2xl overflow-hidden">
                         <CardContent className="p-5">
@@ -253,13 +289,15 @@ const StudentPlanner = () => {
                                 <Target className="w-5 h-5 text-blue-600" />
                               </div>
                               <div>
-                                <p className="text-2xl font-bold text-gray-900">1 / 2</p>
-                                <p className="text-xs text-gray-500">Tasks completed today</p>
+                                <p className="text-2xl font-bold text-gray-900">{stubLearningBlocksToday.completed} / {stubLearningBlocksToday.total}</p>
+                                <p className="text-xs text-gray-500">Learning blocks completed today</p>
                               </div>
                             </div>
-                            <Badge className="rounded-full bg-blue-100 text-blue-700 border-0">50%</Badge>
+                            <Badge className="rounded-full bg-blue-100 text-blue-700 border-0">
+                              {Math.round((stubLearningBlocksToday.completed / stubLearningBlocksToday.total) * 100)}%
+                            </Badge>
                           </div>
-                          <Progress value={50} className="h-1.5 mt-3 bg-blue-200 [&>div]:bg-blue-500" />
+                          <Progress value={(stubLearningBlocksToday.completed / stubLearningBlocksToday.total) * 100} className="h-1.5 mt-3 bg-blue-200 [&>div]:bg-blue-500" />
                         </CardContent>
                       </Card>
                       <Card className="border border-purple-100 bg-gradient-to-br from-purple-50 to-pink-50 rounded-2xl overflow-hidden">
@@ -269,8 +307,8 @@ const StudentPlanner = () => {
                               <Zap className="w-5 h-5 text-purple-600" />
                             </div>
                             <div>
-                              <p className="text-2xl font-bold text-gray-900">7</p>
-                              <p className="text-xs text-gray-500">Loading streak data...</p>
+                              <p className="text-2xl font-bold text-gray-900">{stubStreakDays}</p>
+                              <p className="text-xs text-gray-500">Days studied without breaking flow</p>
                             </div>
                           </div>
                         </CardContent>
@@ -279,16 +317,32 @@ const StudentPlanner = () => {
                         <CardContent className="p-5">
                           <div className="flex items-center gap-3">
                             <div className="w-10 h-10 rounded-xl bg-green-100 flex items-center justify-center">
-                              <TrendingUp className="w-5 h-5 text-green-600" />
+                              <Brain className="w-5 h-5 text-green-600" />
                             </div>
                             <div>
-                              <p className="text-2xl font-bold text-gray-900">--</p>
-                              <p className="text-xs text-gray-500">Based on task completion & timing</p>
+                              <p className="text-lg font-bold text-gray-900 capitalize">{stubCognitiveLoad}</p>
+                              <p className="text-xs text-gray-500">Cognitive load indicator</p>
                             </div>
                           </div>
                         </CardContent>
                       </Card>
                     </div>
+
+                    {/* Next Best Action (AI Suggested) */}
+                    <Card className="border border-purple-200 bg-gradient-to-br from-purple-50/80 to-indigo-50/80 rounded-2xl overflow-hidden shadow-sm">
+                      <CardContent className="p-5">
+                        <h3 className="text-sm font-semibold text-gray-900 mb-1 flex items-center gap-2">
+                          <Brain className="w-4 h-4 text-purple-600" />
+                          Next Best Action (AI Suggested)
+                        </h3>
+                        <p className="text-base font-medium text-gray-900 mt-2">{stubNextBestAction.title}</p>
+                        <p className="text-xs text-muted-foreground mt-1">{stubNextBestAction.hint}</p>
+                        <Button className="mt-4 gap-2 bg-purple-600 hover:bg-purple-700 text-white font-medium rounded-lg">
+                          <Play className="w-4 h-4" />
+                          Start Now
+                        </Button>
+                      </CardContent>
+                    </Card>
 
                     {/* Today's Schedule */}
                     <Card className="border border-gray-200 shadow-sm rounded-2xl overflow-hidden">
@@ -307,28 +361,35 @@ const StudentPlanner = () => {
                           </div>
                         ) : (
                           <ul className="space-y-0 divide-y divide-gray-100">
-                            {stubTasks.map((task) => (
-                              <li key={task.id} className="flex items-center gap-4 py-3 group">
-                                <div className={`w-1.5 h-12 rounded-full flex-shrink-0 ${priorityBarColors[task.priority]}`} />
-                                <div className="flex-1 min-w-0">
-                                  <p className={`text-sm font-medium ${task.completed ? 'line-through text-gray-500' : 'text-gray-900'}`}>{task.name}</p>
-                                  <p className="text-xs text-gray-500">{task.subject} · {task.duration}</p>
-                                  {task.aiRecommended && (
-                                    <span className="inline-flex items-center gap-1 text-xs text-blue-600 mt-0.5">
-                                      <Zap className="w-3 h-3" /> AI Recommended
-                                    </span>
-                                  )}
-                                </div>
-                                <div className="flex items-center gap-2">
-                                  {task.completed ? (
-                                    <Badge className="bg-green-100 text-green-700 border-0">Completed</Badge>
-                                  ) : (
-                                    <span className="text-xs text-gray-500">{task.duration}</span>
-                                  )}
-                                  <Button variant="ghost" size="sm" className="opacity-0 group-hover:opacity-100 transition-opacity">Start</Button>
-                                </div>
-                              </li>
-                            ))}
+                            {stubTasks.map((task) => {
+                              const config = intentConfig[task.intent];
+                              return (
+                                <li key={task.id} className="flex items-center gap-4 py-3 group">
+                                  <div className={`w-1.5 h-12 rounded-full flex-shrink-0 ${priorityBarColors[task.priority]}`} />
+                                  <div className="flex-1 min-w-0">
+                                    <div className="flex flex-wrap items-center gap-1.5 mb-0.5">
+                                      <span className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-md text-xs font-medium border ${config.pillClass}`}>
+                                        {config.icon}
+                                        {config.label}
+                                      </span>
+                                    </div>
+                                    <p className={`text-sm font-medium ${task.completed ? 'line-through text-gray-500' : 'text-gray-900'}`}>{task.name}</p>
+                                    <p className="text-xs text-muted-foreground mt-0.5">Why: {task.reason}</p>
+                                    <p className="text-xs text-gray-500">{task.subject} · {task.duration}</p>
+                                  </div>
+                                  <div className="flex items-center gap-2">
+                                    {task.completed ? (
+                                      <Badge className="bg-green-100 text-green-700 border-0">Completed</Badge>
+                                    ) : (
+                                      <>
+                                        <span className="text-xs text-gray-500">{task.duration}</span>
+                                        <Button variant="ghost" size="sm" className="opacity-0 group-hover:opacity-100 transition-opacity">Start</Button>
+                                      </>
+                                    )}
+                                  </div>
+                                </li>
+                              );
+                            })}
                           </ul>
                         )}
                       </CardContent>
@@ -384,11 +445,11 @@ const StudentPlanner = () => {
                   </TabsContent>
 
                   <TabsContent value="calendar" className="mt-0">
-                    <div className="flex flex-col gap-4 w-full min-h-[600px]">
-                      {/* Toolbar */}
-                      <div className="bg-card p-4 rounded-xl border shadow-sm flex flex-nowrap items-center justify-between gap-4 w-full">
-                        <div className="flex flex-nowrap items-center gap-3 min-w-0">
-                          <div className="flex items-center bg-muted/50 p-1 rounded-lg flex-shrink-0">
+                    <div className="flex flex-col gap-4 w-full min-h-[600px] max-w-5xl mx-auto">
+                      {/* Toolbar: left nav | centered month | right controls */}
+                      <div className="relative bg-card p-4 rounded-xl border shadow-sm flex items-center justify-between gap-4 w-full">
+                        <div className="flex items-center gap-3 flex-shrink-0 h-9">
+                          <div className="flex items-center bg-muted/50 p-1 rounded-lg">
                             <Button variant="ghost" size="icon" className="h-8 w-8" onClick={goToPrevMonth} aria-label="Previous month">
                               <ChevronLeft className="w-4 h-4" />
                             </Button>
@@ -399,11 +460,11 @@ const StudentPlanner = () => {
                               <ChevronRight className="w-4 h-4" />
                             </Button>
                           </div>
-                          <h2 className="text-xl font-bold text-foreground flex-shrink-0 whitespace-nowrap">
-                            {format(calendarDate, 'MMMM yyyy')}
-                          </h2>
                         </div>
-                        <div className="flex flex-nowrap items-center gap-2 flex-shrink-0">
+                        <h2 className="text-xl font-bold text-foreground absolute left-1/2 -translate-x-1/2 pointer-events-none">
+                          {format(calendarDate, 'MMMM yyyy')}
+                        </h2>
+                        <div className="flex items-center gap-2 flex-shrink-0 h-9">
                           <Select value={calendarView} onValueChange={(v) => setCalendarView(v as CalendarViewValue)}>
                             <SelectTrigger className="w-[140px] h-9">
                               <SelectValue />
@@ -436,7 +497,7 @@ const StudentPlanner = () => {
                           </div>
                         </div>
                       </div>
-                      {/* Calendar card */}
+                      {/* Calendar card: centered, equal cells */}
                       <Card className="flex-1 p-4 overflow-hidden border shadow-md bg-card relative min-h-[500px]">
                         {stubCalendarEvents.length === 0 ? (
                           <div className="absolute inset-0 bg-background/60 backdrop-blur-sm z-10 flex flex-col items-center justify-center gap-3 p-6">
@@ -446,22 +507,26 @@ const StudentPlanner = () => {
                             <p className="text-xs text-muted-foreground">Create a task to get started with your study plan.</p>
                           </div>
                         ) : null}
-                        <div className="relative">
+                        <div className="relative w-full">
                           <CalendarComponent
                             mode="single"
                             month={calendarDate}
                             onMonthChange={(date) => date && setCalendarDate(date)}
                             selected={calendarDate}
                             onSelect={(date) => date && setCalendarDate(date)}
-                            className="rounded-lg border-0"
+                            className="rounded-lg border-0 w-full"
                             classNames={{
                               caption: 'hidden',
                               nav: 'hidden',
-                              head_cell: 'text-muted-foreground rounded-md w-full font-semibold text-foreground text-[0.8rem] text-center',
-                              row: 'flex w-full mt-1',
-                              cell: 'h-auto min-h-[4.5rem] w-full p-0.5 align-top text-left text-sm [&:has([aria-selected])]:bg-accent/50 first:[&:has([aria-selected])]:rounded-l-md last:[&:has([aria-selected])]:rounded-r-md focus-within:relative focus-within:z-20',
-                              day: 'h-full min-h-[4.5rem] w-full flex flex-col items-start p-0 font-normal aria-selected:opacity-100 rounded-md text-left',
-                              day_today: 'bg-transparent text-foreground font-semibold',
+                              months: 'w-full',
+                              month: 'w-full',
+                              table: 'w-full',
+                              head_row: 'flex w-full',
+                              head_cell: 'flex-1 min-w-0 text-muted-foreground rounded-md font-semibold text-foreground text-[0.8rem] text-center py-2',
+                              row: 'flex w-full mt-0 border-t border-border/50',
+                              cell: 'flex-1 min-w-0 min-h-[4.25rem] p-0 align-top text-left text-sm border-r border-border/50 last:border-r-0 [&:has([aria-selected])]:bg-accent/50 first:[&:has([aria-selected])]:rounded-l-md last:[&:has([aria-selected])]:rounded-r-md focus-within:relative focus-within:z-20',
+                              day: 'h-full min-h-[4.25rem] w-full flex flex-col items-stretch overflow-hidden p-0 font-normal aria-selected:opacity-100 rounded-none text-left',
+                              day_today: 'bg-amber-50/70 ring-1 ring-amber-200/50 text-foreground font-semibold',
                               day_selected:
                                 'bg-primary text-primary-foreground hover:bg-primary hover:text-primary-foreground focus:bg-primary focus:text-primary-foreground',
                               day_outside:
@@ -502,25 +567,55 @@ const StudentPlanner = () => {
                             <p className="font-medium text-gray-600">No tasks found matching your filter.</p>
                           </div>
                         ) : (
-                          <ul className="space-y-2">
-                            {stubTasks.map((task) => (
-                              <li key={task.id} className="flex items-center gap-4 p-3 rounded-xl border border-gray-100 hover:bg-gray-50 group">
-                                <div className="w-5 h-5 rounded-full border-2 border-gray-300 flex items-center justify-center flex-shrink-0">
-                                  {task.completed && <span className="text-green-600 text-xs">✓</span>}
-                                </div>
-                                <div className="flex-1 min-w-0">
-                                  <p className={`text-sm font-medium ${task.completed ? 'line-through text-gray-500' : 'text-gray-900'}`}>{task.name}</p>
-                                  <div className="flex flex-wrap gap-1.5 mt-1">
-                                    <Badge variant="secondary" className="text-xs rounded-md">{task.subject}</Badge>
-                                    <Badge variant="outline" className="text-xs rounded-md">{task.type}</Badge>
-                                    <span className="text-xs text-gray-500">{task.duration}</span>
-                                  </div>
-                                </div>
-                                <div className={`w-2 h-2 rounded-full flex-shrink-0 ${priorityColors[task.priority]}`} />
-                                <Button variant="ghost" size="icon" className="h-8 w-8 text-gray-400 hover:text-destructive opacity-0 group-hover:opacity-100"><Trash2 className="w-4 h-4" /></Button>
-                              </li>
-                            ))}
-                          </ul>
+                          <div className="space-y-3">
+                            {(['learn', 'practice', 'revision', 'test', 'fixWeakArea'] as TaskIntent[]).map((intent) => {
+                              const tasksInSection = stubTasks.filter((t) => t.intent === intent);
+                              if (tasksInSection.length === 0) return null;
+                              const config = intentConfig[intent];
+                              const sectionTitle = config.label + ' Tasks';
+                              return (
+                                <Collapsible key={intent} defaultOpen className="group">
+                                  <CollapsibleTrigger className="flex w-full items-center justify-between rounded-lg border border-gray-200 bg-gray-50/80 px-3 py-2 text-left text-sm font-medium text-gray-900 hover:bg-gray-100">
+                                    <span className="flex items-center gap-2">
+                                      {config.icon}
+                                      {sectionTitle}
+                                    </span>
+                                    <ChevronDown className="w-4 h-4 shrink-0 transition-transform group-data-[state=open]:rotate-180" />
+                                  </CollapsibleTrigger>
+                                  <CollapsibleContent>
+                                    <ul className="mt-2 space-y-2 pl-1">
+                                      {tasksInSection.map((task) => (
+                                        <li key={task.id} className="flex items-center gap-4 p-3 rounded-xl border border-gray-100 hover:bg-gray-50 group">
+                                          <div className="w-5 h-5 rounded-full border-2 border-gray-300 flex items-center justify-center flex-shrink-0">
+                                            {task.completed && <span className="text-green-600 text-xs">✓</span>}
+                                          </div>
+                                          <div className="flex-1 min-w-0">
+                                            <div className="flex flex-wrap items-center gap-1.5 mb-0.5">
+                                              <span className="text-[10px] text-muted-foreground">
+                                                {task.origin === 'ai' ? (
+                                                  <span className="inline-flex items-center gap-0.5"><Bot className="w-3 h-3" /> AI Suggested</span>
+                                                ) : (
+                                                  <span className="inline-flex items-center gap-0.5"><Pencil className="w-3 h-3" /> Added by You</span>
+                                                )}
+                                              </span>
+                                            </div>
+                                            <p className={`text-sm font-medium ${task.completed ? 'line-through text-gray-500' : 'text-gray-900'}`}>{task.name}</p>
+                                            <div className="flex flex-wrap gap-1.5 mt-1">
+                                              <Badge variant="secondary" className="text-xs rounded-md">{task.subject}</Badge>
+                                              <Badge variant="outline" className="text-xs rounded-md">{task.type}</Badge>
+                                              <span className="text-xs text-gray-500">{task.duration}</span>
+                                            </div>
+                                          </div>
+                                          <div className={`w-2 h-2 rounded-full flex-shrink-0 ${priorityColors[task.priority]}`} />
+                                          <Button variant="ghost" size="icon" className="h-8 w-8 text-gray-400 hover:text-destructive opacity-0 group-hover:opacity-100"><Trash2 className="w-4 h-4" /></Button>
+                                        </li>
+                                      ))}
+                                    </ul>
+                                  </CollapsibleContent>
+                                </Collapsible>
+                              );
+                            })}
+                          </div>
                         )}
                       </CardContent>
                     </Card>
@@ -529,23 +624,38 @@ const StudentPlanner = () => {
 
                 {/* Right sidebar ~1/4 */}
                 <div className="space-y-4 lg:max-w-[320px]">
-                  {/* AI Study Planner card */}
+                  {/* AI Study Planner card – intelligence cues */}
                   <Card className="border-0 shadow-lg rounded-2xl overflow-hidden bg-gradient-to-br from-indigo-600 to-violet-600 text-white">
                     <CardContent className="p-5">
-                      <div className="flex items-center gap-2 mb-2">
+                      <div className="flex items-center gap-2 mb-3">
                         <div className="w-10 h-10 rounded-xl bg-white/20 flex items-center justify-center">
-                          <Sparkles className="w-5 h-5 text-yellow-300" />
+                          <Brain className="w-5 h-5 text-yellow-300" />
                         </div>
                         <div>
                           <h3 className="text-lg font-bold">AI Study Planner</h3>
                           <p className="text-xs text-white/90">Personalized for {user?.name?.split(' ')[0] || 'You'}</p>
                         </div>
                       </div>
-                      <p className="text-sm text-white/90 mt-2">
-                        Generate a custom study plan based on your weak areas and learning style.
-                      </p>
-                      <Button className="w-full mt-4 bg-white text-indigo-600 hover:bg-white/90 hover:scale-[1.02] transition-transform font-semibold rounded-xl">
-                        Auto-Generate Plan
+                      <div className="space-y-3 text-sm">
+                        <div className="rounded-xl bg-white/10 backdrop-blur-sm p-3">
+                          <p className="font-semibold text-white mb-1">Today&apos;s Risk</p>
+                          <p className="text-white/90 text-xs">Skipping today may affect Algebra accuracy.</p>
+                        </div>
+                        <div className="rounded-xl bg-white/10 backdrop-blur-sm p-3">
+                          <p className="font-semibold text-white mb-2">Weak Areas Detected</p>
+                          <ul className="space-y-1">
+                            {stubWeakAreas.map((area, i) => (
+                              <li key={i} className="text-xs text-white/90 flex items-center gap-1.5">
+                                <span className="w-1.5 h-1.5 rounded-full bg-amber-300" />
+                                {area}
+                              </li>
+                            ))}
+                          </ul>
+                        </div>
+                      </div>
+                      <Button className="w-full mt-4 bg-white text-indigo-600 hover:bg-white/90 font-semibold rounded-xl gap-2">
+                        <Sparkles className="w-4 h-4" />
+                        Auto-Generate Today&apos;s Plan
                       </Button>
                       {hasSuggestions && (
                         <div className="mt-4 p-3 rounded-xl bg-white/10 backdrop-blur-sm">
@@ -560,7 +670,6 @@ const StudentPlanner = () => {
                                 <div className="flex flex-wrap items-center gap-1.5 mt-1">
                                   <Badge variant="secondary" className="text-[10px] rounded bg-white/20 text-white border-0">{s.subject}</Badge>
                                   <span className="text-xs text-white/80">{s.duration}</span>
-                                  <span className={`w-1.5 h-1.5 rounded-full ${priorityColors[s.priority]}`} />
                                 </div>
                                 {s.why && <p className="text-xs text-white/70 mt-1">Why: {s.why}</p>}
                                 <Button size="sm" className="mt-2 h-7 text-indigo-600 bg-white hover:bg-white/90 rounded-lg text-xs">Add to Schedule</Button>
@@ -781,11 +890,25 @@ const StudentPlanner = () => {
           <DialogContent className="sm:max-w-md rounded-xl">
             <DialogHeader>
               <DialogTitle>Add New Task</DialogTitle>
+              <p className="text-xs text-muted-foreground font-normal">Some fields may be auto-suggested by AI.</p>
             </DialogHeader>
             <div className="grid gap-4 py-4">
               <div className="grid gap-2">
                 <Label htmlFor="task-name">Task Name</Label>
                 <Input id="task-name" placeholder="e.g. Complete chapter 5" />
+              </div>
+              <div className="grid gap-2">
+                <Label>Task Intent <span className="text-destructive">*</span></Label>
+                <Select>
+                  <SelectTrigger><SelectValue placeholder="Select intent" /></SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="learn">Learn (new topic)</SelectItem>
+                    <SelectItem value="practice">Practice</SelectItem>
+                    <SelectItem value="revision">Revision</SelectItem>
+                    <SelectItem value="test">Test / Mock</SelectItem>
+                    <SelectItem value="fixWeakArea">Fix Weak Area</SelectItem>
+                  </SelectContent>
+                </Select>
               </div>
               <div className="grid gap-2">
                 <Label>Subject</Label>
@@ -798,24 +921,13 @@ const StudentPlanner = () => {
                 </Select>
               </div>
               <div className="grid gap-2">
-                <Label>Type</Label>
+                <Label>Exam Impact</Label>
                 <Select>
-                  <SelectTrigger><SelectValue placeholder="Select" /></SelectTrigger>
+                  <SelectTrigger><SelectValue placeholder="Select weight" /></SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="learn">Learn</SelectItem>
-                    <SelectItem value="practice">Practice</SelectItem>
-                    <SelectItem value="revision">Revision</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-              <div className="grid gap-2">
-                <Label>Priority</Label>
-                <Select>
-                  <SelectTrigger><SelectValue placeholder="Select" /></SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="high">High</SelectItem>
-                    <SelectItem value="medium">Medium</SelectItem>
-                    <SelectItem value="low">Low</SelectItem>
+                    <SelectItem value="high"><span className="flex items-center gap-1.5"><span className="w-2 h-2 rounded-full bg-red-500" /> High exam weight</span></SelectItem>
+                    <SelectItem value="medium"><span className="flex items-center gap-1.5"><span className="w-2 h-2 rounded-full bg-amber-500" /> Medium exam weight</span></SelectItem>
+                    <SelectItem value="low"><span className="flex items-center gap-1.5"><span className="w-2 h-2 rounded-full bg-green-500" /> Low exam weight</span></SelectItem>
                   </SelectContent>
                 </Select>
               </div>
