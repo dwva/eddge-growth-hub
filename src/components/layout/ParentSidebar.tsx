@@ -1,167 +1,262 @@
-import { useState } from 'react';
-import { NavLink, useLocation } from 'react-router-dom';
-import { cn } from '@/lib/utils';
-import { useLanguage } from '@/contexts/LanguageContext';
+import { ReactNode, useState } from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
+import { useAuth } from '@/contexts/AuthContext';
 import { useChild } from '@/contexts/ChildContext';
-import {
-  Home,
+import { cn } from '@/lib/utils';
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
+import { 
+  LayoutDashboard,
   TrendingUp,
   Award,
   Calendar,
   MessageSquare,
   BookOpen,
   Bell,
-  Settings,
   HelpCircle,
+  LogOut,
   ChevronDown,
-  ChevronRight,
-  Menu,
-  X,
+  Sparkles,
+  Users,
+  Settings
 } from 'lucide-react';
 
-interface ParentSidebarProps {
-  isCollapsed: boolean;
-  onToggle: () => void;
+interface NavSection {
+  title: string;
+  icon: ReactNode;
+  items: {
+    label: string;
+    icon: ReactNode;
+    path: string;
+  }[];
 }
 
-const ParentSidebar = ({ isCollapsed, onToggle }: ParentSidebarProps) => {
-  const location = useLocation();
-  const { t } = useLanguage();
-  const { selectedChild } = useChild();
-  const [expandedGroups, setExpandedGroups] = useState<string[]>(['performance', 'communication', 'learning']);
+interface ParentSidebarProps {
+  collapsed?: boolean;
+  isMobile?: boolean;
+  onMobileClose?: () => void;
+}
 
-  const toggleGroup = (group: string) => {
-    setExpandedGroups(prev =>
-      prev.includes(group) ? prev.filter(g => g !== group) : [...prev, group]
+const ParentSidebar = ({ collapsed = false, isMobile = false, onMobileClose }: ParentSidebarProps) => {
+  const { logout } = useAuth();
+  const { selectedChild } = useChild();
+  const navigate = useNavigate();
+  const location = useLocation();
+  const [openSections, setOpenSections] = useState<string[]>(['Performance', 'Communication', 'Learning']);
+
+  const navSections: NavSection[] = [
+    {
+      title: 'Performance',
+      icon: <TrendingUp className="w-3.5 h-3.5" />,
+      items: [
+        { label: 'Progress', icon: <TrendingUp className="w-3 h-3" />, path: `/parent/child-progress/${selectedChild?.id || '1'}` },
+        { label: 'Achievements', icon: <Award className="w-3 h-3" />, path: '/parent/achievements' },
+      ],
+    },
+    {
+      title: 'Communication',
+      icon: <MessageSquare className="w-3.5 h-3.5" />,
+      items: [
+        { label: 'Meetings', icon: <Calendar className="w-3 h-3" />, path: '/parent/meetings' },
+        { label: 'Messages', icon: <MessageSquare className="w-3 h-3" />, path: '/parent/communications' },
+      ],
+    },
+    {
+      title: 'Learning',
+      icon: <BookOpen className="w-3.5 h-3.5" />,
+      items: [
+        { label: 'Homework', icon: <BookOpen className="w-3 h-3" />, path: '/parent/homework' },
+        { label: 'Announcements', icon: <Bell className="w-3 h-3" />, path: '/parent/announcements' },
+      ],
+    },
+  ];
+
+  const handleLogout = () => {
+    logout();
+    navigate('/');
+  };
+
+  const handleNavigate = (path: string) => {
+    navigate(path);
+    if (isMobile && onMobileClose) {
+      onMobileClose();
+    }
+  };
+
+  const toggleSection = (title: string) => {
+    setOpenSections(prev => 
+      prev.includes(title) 
+        ? prev.filter(s => s !== title)
+        : [...prev, title]
     );
   };
 
-  const navGroups = [
-    {
-      id: 'main',
-      items: [
-        { label: t('nav.home'), icon: Home, path: '/parent' },
-      ],
-    },
-    {
-      id: 'performance',
-      title: 'Student Performance',
-      items: [
-        { label: t('nav.progress'), icon: TrendingUp, path: `/parent/child-progress/${selectedChild?.id || '1'}` },
-        { label: t('nav.achievements'), icon: Award, path: '/parent/achievements' },
-      ],
-    },
-    {
-      id: 'communication',
-      title: 'Communication',
-      items: [
-        { label: t('nav.meetings'), icon: Calendar, path: '/parent/meetings' },
-        { label: t('nav.messages'), icon: MessageSquare, path: '/parent/communications' },
-      ],
-    },
-    {
-      id: 'learning',
-      title: 'Learning',
-      items: [
-        { label: t('nav.homework'), icon: BookOpen, path: '/parent/homework' },
-        { label: t('nav.announcements'), icon: Bell, path: '/parent/announcements' },
-      ],
-    },
-  ];
-
-  const bottomItems = [
-    { label: t('nav.support'), icon: HelpCircle, path: '/parent/support' },
-    { label: t('nav.settings'), icon: Settings, path: '/parent/settings' },
-  ];
-
-  const isActive = (path: string) => {
+  const isPathActive = (path: string) => {
     if (path === '/parent') return location.pathname === '/parent';
     return location.pathname.startsWith(path);
   };
+  
+  const isSectionActive = (section: NavSection) => 
+    section.items.some(item => location.pathname.startsWith(item.path.split('/').slice(0, 3).join('/')));
+
+  const showText = !collapsed || isMobile;
 
   return (
-    <aside
-      className={cn(
-        'fixed left-0 top-0 z-40 h-screen bg-gradient-to-b from-primary via-primary to-primary/90 text-white transition-all duration-300 flex flex-col',
-        isCollapsed ? 'w-14' : 'w-56'
-      )}
-    >
-      {/* Header */}
-      <div className="flex items-center justify-between p-3 border-b border-white/10">
-        {!isCollapsed && (
-          <span className="text-lg font-bold tracking-tight">EDDGE</span>
+    <div className="flex flex-col h-full gradient-sidebar font-sans">
+      {/* Logo */}
+      <div className={cn(
+        "flex items-center gap-2 px-3 py-4 border-b border-white/10",
+        collapsed && !isMobile && "justify-center px-2"
+      )}>
+        <div className={cn(
+          "rounded-lg bg-white/20 flex items-center justify-center flex-shrink-0",
+          collapsed && !isMobile ? "w-7 h-7" : "w-8 h-8"
+        )}>
+          <Sparkles className={cn(collapsed && !isMobile ? "w-3.5 h-3.5" : "w-4 h-4", "text-white")} />
+        </div>
+        {showText && (
+          <div>
+            <span className="text-sm font-bold text-white tracking-tight">EDDGE</span>
+            <p className="text-[9px] text-white/60">Parent Portal</p>
+          </div>
         )}
-        <button
-          onClick={onToggle}
-          className="p-1.5 rounded-lg hover:bg-white/10 transition-colors"
-        >
-          {isCollapsed ? <Menu className="w-5 h-5" /> : <X className="w-5 h-5" />}
-        </button>
       </div>
 
       {/* Navigation */}
-      <nav className="flex-1 overflow-y-auto py-2 px-2 space-y-1 scrollbar-hide">
-        {navGroups.map((group) => (
-          <div key={group.id}>
-            {group.title && !isCollapsed && (
-              <button
-                onClick={() => toggleGroup(group.id)}
-                className="w-full flex items-center justify-between px-2 py-1.5 text-[10px] font-medium text-white/60 uppercase tracking-wider hover:text-white/80"
-              >
-                <span>{group.title}</span>
-                {expandedGroups.includes(group.id) ? (
-                  <ChevronDown className="w-3 h-3" />
-                ) : (
-                  <ChevronRight className="w-3 h-3" />
-                )}
-              </button>
-            )}
-            
-            {(group.id === 'main' || expandedGroups.includes(group.id) || isCollapsed) && (
+      <nav className={cn(
+        "flex-1 py-2 space-y-0.5 overflow-y-auto scrollbar-hide",
+        collapsed && !isMobile ? "px-1.5" : "px-2"
+      )}>
+        {/* Dashboard */}
+        <button
+          onClick={() => handleNavigate('/parent')}
+          className={cn(
+            "w-full flex items-center gap-2 rounded-lg transition-all duration-200",
+            collapsed && !isMobile ? "justify-center p-2" : "px-2.5 py-2",
+            isPathActive('/parent') && location.pathname === '/parent'
+              ? "bg-white/20 text-white" 
+              : "text-white/70 hover:bg-white/10 hover:text-white"
+          )}
+        >
+          <LayoutDashboard className="w-4 h-4 flex-shrink-0" />
+          {showText && (
+            <>
+              <span className="text-[11px] font-medium">Dashboard</span>
+              {isPathActive('/parent') && location.pathname === '/parent' && (
+                <div className="ml-auto w-1.5 h-1.5 rounded-full bg-white" />
+              )}
+            </>
+          )}
+        </button>
+
+        {/* Spacer */}
+        <div className="h-1" />
+
+        {/* Collapsible Sections */}
+        {navSections.map((section) => (
+          <div key={section.title}>
+            {collapsed && !isMobile ? (
+              // Collapsed: Show only icons
               <div className="space-y-0.5">
-                {group.items.map((item) => (
-                  <NavLink
+                <div className="w-full flex justify-center py-1.5 text-white/40">
+                  <span className="flex-shrink-0">{section.icon}</span>
+                </div>
+                {section.items.map((item) => (
+                  <button
                     key={item.path}
-                    to={item.path}
+                    onClick={() => handleNavigate(item.path)}
                     className={cn(
-                      'flex items-center gap-2 px-2 py-1.5 rounded-lg transition-all text-[11px]',
-                      isActive(item.path)
-                        ? 'bg-white/20 text-white font-medium'
-                        : 'text-white/70 hover:bg-white/10 hover:text-white'
+                      "w-full flex justify-center p-2 rounded-lg transition-all duration-200",
+                      isPathActive(item.path)
+                        ? "bg-white/20 text-white" 
+                        : "text-white/60 hover:bg-white/10 hover:text-white"
                     )}
                   >
-                    <item.icon className="w-4 h-4 flex-shrink-0" />
-                    {!isCollapsed && <span>{item.label}</span>}
-                    {isActive(item.path) && !isCollapsed && (
-                      <div className="ml-auto w-1.5 h-1.5 rounded-full bg-white" />
-                    )}
-                  </NavLink>
+                    <span className="flex-shrink-0">{item.icon}</span>
+                  </button>
                 ))}
               </div>
+            ) : (
+              // Expanded: Full collapsible
+              <Collapsible
+                open={openSections.includes(section.title)}
+                onOpenChange={() => toggleSection(section.title)}
+              >
+                <CollapsibleTrigger asChild>
+                  <button
+                    className={cn(
+                      "w-full flex items-center gap-2 px-2.5 py-1.5 rounded-lg transition-all duration-200",
+                      isSectionActive(section)
+                        ? "text-white"
+                        : "text-white/60 hover:bg-white/10 hover:text-white"
+                    )}
+                  >
+                    <span className="flex-shrink-0">{section.icon}</span>
+                    <span className="text-[11px] font-medium">{section.title}</span>
+                    <ChevronDown className={cn(
+                      "ml-auto w-3 h-3 transition-transform duration-200",
+                      openSections.includes(section.title) && "rotate-180"
+                    )} />
+                  </button>
+                </CollapsibleTrigger>
+                <CollapsibleContent className="space-y-0 ml-2.5 pl-2.5 border-l border-white/10">
+                  {section.items.map((item) => (
+                    <button
+                      key={item.path}
+                      onClick={() => handleNavigate(item.path)}
+                      className={cn(
+                        "w-full flex items-center gap-2 px-2.5 py-1.5 rounded-lg transition-all duration-200",
+                        isPathActive(item.path)
+                          ? "bg-white/20 text-white" 
+                          : "text-white/50 hover:bg-white/10 hover:text-white"
+                      )}
+                    >
+                      <span className="flex-shrink-0">{item.icon}</span>
+                      <span className="text-[10px]">{item.label}</span>
+                    </button>
+                  ))}
+                </CollapsibleContent>
+              </Collapsible>
             )}
           </div>
         ))}
       </nav>
 
-      {/* Bottom Items */}
+      {/* Bottom Section */}
       <div className="border-t border-white/10 p-2 space-y-0.5">
-        {bottomItems.map((item) => (
-          <NavLink
-            key={item.path}
-            to={item.path}
-            className={cn(
-              'flex items-center gap-2 px-2 py-1.5 rounded-lg transition-all text-[11px]',
-              isActive(item.path)
-                ? 'bg-white/20 text-white font-medium'
-                : 'text-white/70 hover:bg-white/10 hover:text-white'
-            )}
-          >
-            <item.icon className="w-4 h-4 flex-shrink-0" />
-            {!isCollapsed && <span>{item.label}</span>}
-          </NavLink>
-        ))}
+        <button
+          onClick={() => handleNavigate('/parent/support')}
+          className={cn(
+            "w-full flex items-center gap-2 rounded-lg transition-all duration-200 text-white/60 hover:bg-white/10 hover:text-white",
+            collapsed && !isMobile ? "justify-center p-2" : "px-2.5 py-1.5"
+          )}
+        >
+          <HelpCircle className="w-4 h-4 flex-shrink-0" />
+          {showText && <span className="text-[10px]">Help & Support</span>}
+        </button>
+
+        <button
+          onClick={() => handleNavigate('/parent/settings')}
+          className={cn(
+            "w-full flex items-center gap-2 rounded-lg transition-all duration-200 text-white/60 hover:bg-white/10 hover:text-white",
+            collapsed && !isMobile ? "justify-center p-2" : "px-2.5 py-1.5"
+          )}
+        >
+          <Settings className="w-4 h-4 flex-shrink-0" />
+          {showText && <span className="text-[10px]">Settings</span>}
+        </button>
+
+        <button
+          onClick={handleLogout}
+          className={cn(
+            "w-full flex items-center gap-2 rounded-lg transition-all duration-200 text-white/60 hover:bg-white/10 hover:text-white",
+            collapsed && !isMobile ? "justify-center p-2" : "px-2.5 py-1.5"
+          )}
+        >
+          <LogOut className="w-4 h-4 flex-shrink-0" />
+          {showText && <span className="text-[10px]">Logout</span>}
+        </button>
       </div>
-    </aside>
+    </div>
   );
 };
 
