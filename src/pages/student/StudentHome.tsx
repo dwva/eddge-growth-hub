@@ -17,8 +17,7 @@ import {
   FileText,
   Clock,
   CalendarDays,
-  Target,
-  Sparkles
+  Target
 } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
 
@@ -157,45 +156,35 @@ const StudentHome = () => {
             </Card>
           </div>
 
-          {/* Overall Progress Tracker Bar - Enhanced */}
+          {/* Overall Progress Tracker Bar */}
           <div 
-            className="group relative bg-gradient-to-r from-white via-white to-primary/5 rounded-2xl shadow-sm border border-gray-100 px-5 py-4 flex items-center justify-between cursor-pointer hover:shadow-lg hover:border-primary/20 transition-all duration-300"
+            className="bg-white rounded-2xl shadow-sm border border-gray-100 px-5 py-4 flex items-center justify-between cursor-pointer"
             onClick={() => navigate('/student/performance')}
           >
             {/* Left section - Icon and text */}
-            <div className="relative flex items-center gap-4">
-              <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-primary to-purple-600 flex items-center justify-center shadow-md shadow-primary/20">
+            <div className="flex items-center gap-4">
+              <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-primary to-purple-600 flex items-center justify-center">
                 <Target className="w-5 h-5 text-white" />
               </div>
               <div>
-                <div className="flex items-center gap-2">
-                  <p className="text-sm font-semibold text-gray-900">Overall Progress</p>
-                  <Sparkles className="w-3.5 h-3.5 text-amber-500" />
-                </div>
+                <p className="text-sm font-medium text-gray-900">Overall Progress</p>
                 <p className="text-xs text-gray-500 mt-0.5">{getProgressMessage(overallProgress)}</p>
               </div>
             </div>
             
             {/* Center section - Progress bar */}
-            <div className="relative flex items-center gap-4 flex-1 max-w-lg mx-8">
-              <div className="flex-1 h-3 bg-gray-100 rounded-full overflow-hidden shadow-inner">
+            <div className="flex items-center gap-4 flex-1 max-w-lg mx-8">
+              <div className="flex-1 h-2.5 bg-gray-100 rounded-full overflow-hidden">
                 <div 
-                  className="h-full bg-gradient-to-r from-primary via-purple-500 to-violet-500 rounded-full"
+                  className="h-full bg-gradient-to-r from-primary to-purple-500 rounded-full"
                   style={{ width: `${overallProgress}%` }}
                 />
               </div>
-              
-              {/* Percentage badge */}
-              <div className="flex items-center gap-1 bg-primary/10 px-2.5 py-1 rounded-lg">
-                <span className="text-sm font-bold text-primary">{overallProgress}%</span>
-              </div>
+              <span className="text-sm font-semibold text-gray-700">{overallProgress}%</span>
             </div>
             
             {/* Right section - Arrow */}
-            <div className="relative flex items-center gap-2 text-gray-400 group-hover:text-primary transition-colors">
-              <span className="text-xs font-medium hidden sm:block">View Details</span>
-              <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-            </div>
+            <ArrowRight className="w-4 h-4 text-gray-400" />
           </div>
 
           {/* My Learning Section - 3 Card Grid */}
