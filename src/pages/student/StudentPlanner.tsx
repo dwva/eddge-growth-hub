@@ -81,16 +81,7 @@ const priorityBarColors: Record<Priority, string> = {
   low: 'bg-green-500',
 };
 
-// Stub data (UI only – no backend)
-const stubTasks = [
-  { id: '1', name: 'Quadratic Equations practice', subject: 'Mathematics', type: 'Practice', duration: '30 min', priority: 'high' as Priority, completed: false, aiRecommended: true, intent: 'practice' as TaskIntent, reason: 'Weak area identified', origin: 'ai' as TaskOrigin },
-  { id: '2', name: 'Laws of Motion revision', subject: 'Science', type: 'Revision', duration: '15 min', priority: 'medium' as Priority, completed: true, aiRecommended: false, intent: 'revision' as TaskIntent, reason: 'Upcoming exam topic', origin: 'user' as TaskOrigin },
-  { id: '3', name: 'Algebra basics', subject: 'Mathematics', type: 'Learn', duration: '25 min', priority: 'high' as Priority, completed: false, aiRecommended: true, intent: 'learn' as TaskIntent, reason: 'New topic this week', origin: 'ai' as TaskOrigin },
-];
-const stubNextBestAction = { title: 'Continue Quadratic Equations practice (30 min)', hint: 'You already learned the concept yesterday' };
 const stubCognitiveLoad: CognitiveLoad = 'balanced';
-const stubLearningBlocksToday = { completed: 2, total: 3 };
-const stubStreakDays = 7;
 const stubDeadlines = [
   { date: 'Feb 15', month: 'Feb', day: '15', name: 'Math assignment', subject: 'Mathematics', priority: 'high' as Priority },
   { date: 'Feb 20', month: 'Feb', day: '20', name: 'Science project', subject: 'Science', priority: 'medium' as Priority },
@@ -109,24 +100,23 @@ const calendarEventColors: Record<Priority, string> = {
   low: '#15803d',    // softer green (green-700)
 };
 const subjectAccent: Record<string, string> = { Mathematics: '#6366f1', Physics: '#0ea5e9', Chemistry: '#10b981', Science: '#f59e0b' };
-const stubCalendarEvents = [
-  { id: 'e1', title: 'Algebra – Linear Eq', date: new Date(2026, 1, 3), priority: 'high' as Priority, subject: 'Mathematics', type: 'Practice', duration: '30 min', durationShort: '30m', intent: 'learn' as TaskIntent, status: 'pending' as const, allocatedDate: new Date(2026, 1, 3), startTime: '09:00', endTime: '09:30', resources: [{ label: 'Calculator', status: 'required' as const }], aiInsight: 'Focus on quadratic formula today.', performanceScore: 85 },
-  { id: 'e2', title: 'Mechanics – numerical', date: new Date(2026, 1, 3), priority: 'medium' as Priority, subject: 'Physics', type: 'Practice', duration: '45 min', durationShort: '45m', intent: 'practice' as TaskIntent, status: 'pending' as const, resources: [{ label: 'Quiet room', status: 'recommended' as const }] },
-  { id: 'e3', title: 'Organic chemistry', date: new Date(2026, 1, 3), priority: 'low' as Priority, subject: 'Chemistry', type: 'Revision', duration: '20 min', durationShort: '20m', intent: 'revision' as TaskIntent, status: 'pending' as const },
-];
 
 type CalendarViewValue = 'dayGridMonth' | 'timeGridWeek' | 'timeGridDay';
 type ViewToggleType = 'grid' | 'list';
 
-type TaskDetail = {
+// Single source of truth for all planner tasks (list + calendar)
+type Task = {
   id: string;
   name: string;
   subject: string;
   type: string;
-  priority: Priority;
   duration: string;
-  due: string;
-  status: 'pending' | 'completed';
+  priority: Priority;
+  completed: boolean;
+  intent: TaskIntent;
+  reason: string;
+  origin: TaskOrigin;
+  dueDate?: Date;
   allocatedDate?: Date;
   startTime?: string;
   endTime?: string;
@@ -135,29 +125,188 @@ type TaskDetail = {
   performanceScore?: number;
 };
 
+const initialTasks: Task[] = [
+  { id: '1', name: 'Quadratic Equations practice', subject: 'Mathematics', type: 'Practice', duration: '30 min', priority: 'high', completed: false, intent: 'practice', reason: 'Weak area identified', origin: 'ai', dueDate: new Date(2026, 1, 3), allocatedDate: new Date(2026, 1, 3), startTime: '09:00', endTime: '09:30', resources: [{ label: 'Calculator', status: 'required' }], aiInsight: 'Focus on quadratic formula today.', performanceScore: 85 },
+  { id: '2', name: 'Laws of Motion revision', subject: 'Science', type: 'Revision', duration: '15 min', priority: 'medium', completed: true, intent: 'revision', reason: 'Upcoming exam topic', origin: 'user', dueDate: new Date(2026, 1, 3) },
+  { id: '3', name: 'Algebra basics', subject: 'Mathematics', type: 'Learn', duration: '25 min', priority: 'high', completed: false, intent: 'learn', reason: 'New topic this week', origin: 'ai', dueDate: new Date(2026, 1, 3) },
+  { id: '4', name: 'Mechanics – numerical', subject: 'Physics', type: 'Practice', duration: '45 min', priority: 'medium', completed: false, intent: 'practice', reason: 'Practice set', origin: 'ai', dueDate: new Date(2026, 1, 3), resources: [{ label: 'Quiet room', status: 'recommended' }] },
+  { id: '5', name: 'Organic chemistry', subject: 'Chemistry', type: 'Revision', duration: '20 min', priority: 'low', completed: false, intent: 'revision', reason: 'Revision', origin: 'user', dueDate: new Date(2026, 1, 3) },
+];
+
 const StudentPlanner = () => {
   const { user } = useAuth();
   const [loading, setLoading] = useState(false);
   const [loadError, setLoadError] = useState<string | null>(null);
+  const [tasks, setTasks] = useState<Task[]>(initialTasks);
+  const [taskFilter, setTaskFilter] = useState<'all' | 'pending' | 'completed'>('all');
+  const [activeTab, setActiveTab] = useState<string>('dashboard');
   const [calendarDate, setCalendarDate] = useState<Date>(() => new Date(2026, 1, 1));
   const [calendarView, setCalendarView] = useState<CalendarViewValue>('dayGridMonth');
   const [viewToggle, setViewToggle] = useState<ViewToggleType>('grid');
-  const [selectedEvent, setSelectedEvent] = useState<TaskDetail | null>(null);
+  const [selectedTaskId, setSelectedTaskId] = useState<string | null>(null);
   const [addTaskOpen, setAddTaskOpen] = useState(false);
+  const [allocateDate, setAllocateDate] = useState('');
+  const [allocateStart, setAllocateStart] = useState('');
+  const [allocateEnd, setAllocateEnd] = useState('');
+  const [newTaskName, setNewTaskName] = useState('');
+  const [newTaskIntent, setNewTaskIntent] = useState<TaskIntent>('practice');
+  const [newTaskSubject, setNewTaskSubject] = useState('Mathematics');
+  const [newTaskPriority, setNewTaskPriority] = useState<Priority>('medium');
+  const [newTaskDuration, setNewTaskDuration] = useState('');
+  const [newTaskDue, setNewTaskDue] = useState('');
   const [examState, setExamState] = useState<'loading' | 'error' | 'success' | 'none'>('success');
-  const [hasSuggestions] = useState(true);
+  const [hasSuggestions, setHasSuggestions] = useState(true);
+  const [streakDays, setStreakDays] = useState(7);
+
+  const addSuggestionAsTask = (s: (typeof stubSuggestions)[0]) => {
+    const dueDate = new Date();
+    dueDate.setHours(0, 0, 0, 0);
+    setTasks((prev) => [
+      ...prev,
+      {
+        id: `task-${Date.now()}`,
+        name: s.name,
+        subject: s.subject,
+        type: 'Practice',
+        duration: s.duration,
+        priority: s.priority,
+        completed: false,
+        intent: 'practice',
+        reason: s.why ?? 'Added from suggestion',
+        origin: 'ai',
+        dueDate,
+        allocatedDate: dueDate,
+      },
+    ]);
+    setHasSuggestions(false);
+  };
+
+  const handleAutoGeneratePlan = () => {
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    const newTasks: Task[] = stubWeakAreas.slice(0, 3).map((area, i) => ({
+      id: `auto-${Date.now()}-${i}`,
+      name: `${area} practice`,
+      subject: area.includes('Motion') ? 'Science' : 'Mathematics',
+      type: 'Practice',
+      duration: '25 min',
+      priority: 'high' as Priority,
+      completed: false,
+      intent: 'practice' as TaskIntent,
+      reason: 'Auto-generated from weak area',
+      origin: 'ai' as TaskOrigin,
+      dueDate: today,
+      allocatedDate: today,
+    }));
+    setTasks((prev) => [...prev, ...newTasks]);
+  };
+
+  const handleGeneratePracticeSet = () => {
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    const newTasks: Task[] = stubWeakAreas.map((area, i) => ({
+      id: `practice-${Date.now()}-${i}`,
+      name: `${area} – practice set`,
+      subject: area.includes('Motion') ? 'Science' : 'Mathematics',
+      type: 'Practice',
+      duration: '30 min',
+      priority: 'high' as Priority,
+      completed: false,
+      intent: 'practice' as TaskIntent,
+      reason: 'Focus area practice',
+      origin: 'user' as TaskOrigin,
+      dueDate: today,
+      allocatedDate: today,
+    }));
+    setTasks((prev) => [...prev, ...newTasks]);
+  };
 
   const goToPrevMonth = () => setCalendarDate((d) => subMonths(d, 1));
   const goToNextMonth = () => setCalendarDate((d) => addMonths(d, 1));
   const goToToday = () => setCalendarDate(new Date());
 
+  const getTaskDate = (t: Task) => t.allocatedDate ?? t.dueDate;
   const getEventsForDay = (date: Date) =>
-    stubCalendarEvents.filter((e) => isSameDay(e.date, date));
+    tasks.filter((t) => {
+      const d = getTaskDate(t);
+      return d && isSameDay(d, date);
+    });
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+  const tasksToday = tasks.filter((t) => {
+    const d = getTaskDate(t);
+    return d && isSameDay(d, today);
+  });
+  const completedToday = tasksToday.filter((t) => t.completed).length;
+  const nextBestTask = tasksToday.find((t) => !t.completed) ?? tasks.find((t) => !t.completed);
+  const selectedTask = selectedTaskId ? tasks.find((t) => t.id === selectedTaskId) : null;
+
+  const updateTask = (id: string, updates: Partial<Task>) => {
+    setTasks((prev) => prev.map((t) => (t.id === id ? { ...t, ...updates } : t)));
+  };
+  const removeTask = (id: string) => {
+    setTasks((prev) => prev.filter((t) => t.id !== id));
+    if (selectedTaskId === id) setSelectedTaskId(null);
+  };
+  const toggleCompleted = (id: string) => {
+    setTasks((prev) => prev.map((t) => (t.id === id ? { ...t, completed: !t.completed } : t)));
+  };
+  const openTaskDetail = (task: Task) => {
+    setSelectedTaskId(task.id);
+    setAllocateDate(task.allocatedDate ? format(task.allocatedDate, 'yyyy-MM-dd') : '');
+    setAllocateStart(task.startTime ?? '');
+    setAllocateEnd(task.endTime ?? '');
+  };
+  const handleAllocateTime = () => {
+    if (!selectedTaskId || !allocateDate || !allocateStart) return;
+    const d = new Date(allocateDate);
+    updateTask(selectedTaskId, { allocatedDate: d, startTime: allocateStart, endTime: allocateEnd || undefined });
+  };
+  const handleStartTask = () => {
+    if (selectedTaskId) {
+      updateTask(selectedTaskId, { completed: true });
+      setSelectedTaskId(null);
+    }
+  };
+  const handleAddTask = () => {
+    if (!newTaskName.trim()) return;
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    const dueDate = newTaskDue ? new Date(newTaskDue) : today;
+    const allocatedDate = dueDate;
+    setTasks((prev) => [
+      ...prev,
+      {
+        id: `task-${Date.now()}`,
+        name: newTaskName.trim(),
+        subject: newTaskSubject,
+        type: newTaskIntent === 'learn' ? 'Learn' : newTaskIntent === 'practice' ? 'Practice' : newTaskIntent === 'revision' ? 'Revision' : newTaskIntent === 'test' ? 'Test' : 'Fix Weak Area',
+        duration: newTaskDuration ? `${newTaskDuration} min` : '30 min',
+        priority: newTaskPriority,
+        completed: false,
+        intent: newTaskIntent,
+        reason: 'Added by you',
+        origin: 'user',
+        dueDate: allocatedDate,
+        allocatedDate,
+      },
+    ]);
+    setNewTaskName('');
+    setNewTaskIntent('practice');
+    setNewTaskSubject('Mathematics');
+    setNewTaskPriority('medium');
+    setNewTaskDuration('');
+    setNewTaskDue('');
+    setAddTaskOpen(false);
+  };
+  const filteredTasks = tasks.filter((t) => (taskFilter === 'all' ? true : taskFilter === 'completed' ? t.completed : !t.completed));
+
+  const durationShort = (d: string) => (d.replace(/\s*min\s*/i, 'm').replace(/\s*minute(s)?\s*/i, 'm') || d);
+  const calendarHasEvents = tasks.some((t) => getTaskDate(t));
 
   const CalendarDayContent = (props: DayContentProps) => {
     const { date, activeModifiers } = props;
-    const events = getEventsForDay(date).slice(0, 3);
-    const durationShort = (d: string) => (d.replace(/\s*min\s*/i, 'm').replace(/\s*minute(s)?\s*/i, 'm') || d);
+    const dayTasks = getEventsForDay(date).slice(0, 3);
     const isToday = isSameDay(date, new Date());
     const isSelected = activeModifiers?.selected;
     return (
@@ -171,38 +320,23 @@ const StudentPlanner = () => {
           )}
         </div>
         <div className="flex min-h-0 flex-1 flex-col gap-1.5 overflow-hidden">
-          {events.map((ev) => {
-            const dur = (ev as { durationShort?: string }).durationShort ?? durationShort(ev.duration);
-            const accent = subjectAccent[ev.subject] ?? calendarEventColors[ev.priority];
+          {dayTasks.map((task) => {
+            const dur = durationShort(task.duration);
+            const accent = subjectAccent[task.subject] ?? calendarEventColors[task.priority];
             return (
               <button
-                key={ev.id}
+                key={task.id}
                 type="button"
                 className={`group flex h-8 min-h-8 w-full cursor-pointer items-center gap-2 rounded-lg border-0 px-2.5 py-1.5 text-left text-xs transition-all hover:shadow-sm ${
                   isSelected ? 'bg-white/20 text-white hover:bg-white/30' : 'bg-gray-50/90 hover:bg-gray-100'
                 }`}
                 onClick={(e) => {
                   e.stopPropagation();
-                  setSelectedEvent({
-                    id: ev.id,
-                    name: ev.title,
-                    subject: ev.subject,
-                    type: ev.type,
-                    priority: ev.priority,
-                    duration: ev.duration,
-                    due: format(ev.date, 'MMM d, yyyy'),
-                    status: ev.status,
-                    allocatedDate: ev.allocatedDate,
-                    startTime: ev.startTime,
-                    endTime: ev.endTime,
-                    resources: ev.resources,
-                    aiInsight: ev.aiInsight,
-                    performanceScore: ev.performanceScore,
-                  });
+                  openTaskDetail(task);
                 }}
               >
                 <span className="h-2 w-2 shrink-0 rounded-full" style={{ backgroundColor: isSelected ? 'rgba(255,255,255,0.9)' : accent }} />
-                <span className={`min-w-0 flex-1 truncate font-medium ${isSelected ? 'text-white' : 'text-foreground'}`}>{ev.title}</span>
+                <span className={`min-w-0 flex-1 truncate font-medium ${isSelected ? 'text-white' : 'text-foreground'}`}>{task.name}</span>
                 <span className={`shrink-0 text-[10px] font-medium ${isSelected ? 'text-white/80' : 'text-muted-foreground'}`}>{dur}</span>
               </button>
             );
@@ -267,7 +401,7 @@ const StudentPlanner = () => {
             </div>
 
             {/* Tab bar */}
-            <Tabs defaultValue="dashboard" className="w-full">
+            <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
               <TabsList className="max-w-[400px] w-full bg-white border border-gray-200 shadow-sm rounded-xl p-1 h-auto">
                 <TabsTrigger value="dashboard" className="gap-2 data-[state=active]:bg-purple-500 data-[state=active]:text-white data-[state=active]:shadow-sm rounded-lg px-4 py-2">
                   <LayoutDashboard className="w-4 h-4" />
@@ -297,15 +431,15 @@ const StudentPlanner = () => {
                                 <Target className="w-5 h-5 text-blue-600" />
                               </div>
                               <div>
-                                <p className="text-2xl font-bold text-gray-900">{stubLearningBlocksToday.completed} / {stubLearningBlocksToday.total}</p>
+                                <p className="text-2xl font-bold text-gray-900">{completedToday} / {tasksToday.length || 1}</p>
                                 <p className="text-xs text-gray-500">Learning blocks completed today</p>
                               </div>
                             </div>
                             <Badge className="rounded-full bg-blue-100 text-blue-700 border-0">
-                              {Math.round((stubLearningBlocksToday.completed / stubLearningBlocksToday.total) * 100)}%
+                              {tasksToday.length ? Math.round((completedToday / tasksToday.length) * 100) : 0}%
                             </Badge>
                           </div>
-                          <Progress value={(stubLearningBlocksToday.completed / stubLearningBlocksToday.total) * 100} className="h-1.5 mt-3 bg-blue-200 [&>div]:bg-blue-500" />
+                          <Progress value={tasksToday.length ? (completedToday / tasksToday.length) * 100 : 0} className="h-1.5 mt-3 bg-blue-200 [&>div]:bg-blue-500" />
                         </CardContent>
                       </Card>
                       <Card className="border border-purple-100 bg-gradient-to-br from-purple-50 to-pink-50 rounded-2xl overflow-hidden">
@@ -315,7 +449,7 @@ const StudentPlanner = () => {
                               <Zap className="w-5 h-5 text-purple-600" />
                             </div>
                             <div>
-                              <p className="text-2xl font-bold text-gray-900">{stubStreakDays}</p>
+                              <p className="text-2xl font-bold text-gray-900">{streakDays}</p>
                               <p className="text-xs text-gray-500">Days studied without breaking flow</p>
                             </div>
                           </div>
@@ -337,20 +471,22 @@ const StudentPlanner = () => {
                     </div>
 
                     {/* Next Best Action (AI Suggested) */}
-                    <Card className="border border-purple-200 bg-gradient-to-br from-purple-50/80 to-indigo-50/80 rounded-2xl overflow-hidden shadow-sm">
-                      <CardContent className="p-5">
-                        <h3 className="text-sm font-semibold text-gray-900 mb-1 flex items-center gap-2">
-                          <Brain className="w-4 h-4 text-purple-600" />
-                          Next Best Action (AI Suggested)
-                        </h3>
-                        <p className="text-base font-medium text-gray-900 mt-2">{stubNextBestAction.title}</p>
-                        <p className="text-xs text-muted-foreground mt-1">{stubNextBestAction.hint}</p>
-                        <Button className="mt-4 gap-2 bg-purple-600 hover:bg-purple-700 text-white font-medium rounded-lg">
-                          <Play className="w-4 h-4" />
-                          Start Now
-                        </Button>
-                      </CardContent>
-                    </Card>
+                    {nextBestTask && (
+                      <Card className="border border-purple-200 bg-gradient-to-br from-purple-50/80 to-indigo-50/80 rounded-2xl overflow-hidden shadow-sm">
+                        <CardContent className="p-5">
+                          <h3 className="text-sm font-semibold text-gray-900 mb-1 flex items-center gap-2">
+                            <Brain className="w-4 h-4 text-purple-600" />
+                            Next Best Action (AI Suggested)
+                          </h3>
+                          <p className="text-base font-medium text-gray-900 mt-2">{nextBestTask.name} ({nextBestTask.duration})</p>
+                          <p className="text-xs text-muted-foreground mt-1">Why: {nextBestTask.reason}</p>
+                          <Button className="mt-4 gap-2 bg-purple-600 hover:bg-purple-700 text-white font-medium rounded-lg" onClick={() => toggleCompleted(nextBestTask.id)}>
+                            <Play className="w-4 h-4" />
+                            Start Now
+                          </Button>
+                        </CardContent>
+                      </Card>
+                    )}
 
                     {/* Today's Schedule */}
                     <Card className="border border-gray-200 shadow-sm rounded-2xl overflow-hidden">
@@ -360,16 +496,16 @@ const StudentPlanner = () => {
                             <CalendarDays className="w-5 h-5 text-gray-700" />
                             <h3 className="text-base font-semibold text-gray-900">Today's Schedule</h3>
                           </div>
-                          <Button variant="outline" size="sm" className="rounded-lg">View Full Calendar</Button>
+                          <Button variant="outline" size="sm" className="rounded-lg" onClick={() => setActiveTab('calendar')}>View Full Calendar</Button>
                         </div>
-                        {stubTasks.length === 0 ? (
+                        {tasksToday.length === 0 ? (
                           <div className="py-10 text-center">
                             <p className="font-medium text-gray-700">No tasks scheduled for today.</p>
-                            <button className="text-sm text-primary hover:underline mt-1">Add a task</button>
+                            <button type="button" className="text-sm text-primary hover:underline mt-1" onClick={() => setAddTaskOpen(true)}>Add a task</button>
                           </div>
                         ) : (
                           <ul className="space-y-0 divide-y divide-gray-100">
-                            {stubTasks.map((task) => {
+                            {tasksToday.map((task) => {
                               const config = intentConfig[task.intent];
                               return (
                                 <li key={task.id} className="flex items-center gap-4 py-3 group">
@@ -391,7 +527,7 @@ const StudentPlanner = () => {
                                     ) : (
                                       <>
                                         <span className="text-xs text-gray-500">{task.duration}</span>
-                                        <Button variant="ghost" size="sm" className="opacity-0 group-hover:opacity-100 transition-opacity">Start</Button>
+                                        <Button variant="ghost" size="sm" className="opacity-0 group-hover:opacity-100 transition-opacity" onClick={() => toggleCompleted(task.id)}>Start</Button>
                                       </>
                                     )}
                                   </div>
@@ -442,7 +578,7 @@ const StudentPlanner = () => {
                                   <span key={i} className="px-3 py-1 rounded-full text-xs font-medium bg-red-50 text-red-700">{area}</span>
                                 ))}
                               </div>
-                              <Button variant="outline" size="sm" className="text-red-700 border-red-200 hover:bg-red-50">Generate Practice Set</Button>
+                              <Button variant="outline" size="sm" className="text-red-700 border-red-200 hover:bg-red-50" onClick={handleGeneratePracticeSet}>Generate Practice Set</Button>
                             </>
                           ) : (
                             <p className="text-sm text-gray-500">No weak areas identified yet.</p>
@@ -508,7 +644,7 @@ const StudentPlanner = () => {
 
                       {/* Calendar – clean card, minimal grid */}
                       <Card className="relative flex-1 overflow-hidden rounded-2xl border border-gray-200/80 bg-white shadow-sm min-h-[540px]">
-                        {stubCalendarEvents.length === 0 && (
+                        {!calendarHasEvents && (
                           <div className="absolute inset-0 z-10 flex flex-col items-center justify-center gap-4 rounded-2xl bg-white/95 p-12 backdrop-blur-[2px]">
                             <div className="flex h-20 w-20 items-center justify-center rounded-2xl bg-gray-100">
                               <CalendarIcon className="h-10 w-10 text-gray-400" />
@@ -556,7 +692,7 @@ const StudentPlanner = () => {
                     <Card className="border border-gray-200 shadow-sm rounded-2xl overflow-hidden">
                       <CardContent className="p-5">
                         <div className="flex flex-wrap items-center justify-between gap-3 mb-4">
-                          <Select defaultValue="all">
+                          <Select value={taskFilter} onValueChange={(v) => setTaskFilter(v as 'all' | 'pending' | 'completed')}>
                             <SelectTrigger className="w-[150px] gap-2">
                               <Filter className="w-4 h-4" />
                               <SelectValue placeholder="All" />
@@ -572,14 +708,14 @@ const StudentPlanner = () => {
                             Add Task
                           </Button>
                         </div>
-                        {stubTasks.length === 0 ? (
+                        {filteredTasks.length === 0 ? (
                           <div className="py-12 text-center text-gray-500">
                             <p className="font-medium text-gray-600">No tasks found matching your filter.</p>
                           </div>
                         ) : (
                           <div className="space-y-3">
                             {(['learn', 'practice', 'revision', 'test', 'fixWeakArea'] as TaskIntent[]).map((intent) => {
-                              const tasksInSection = stubTasks.filter((t) => t.intent === intent);
+                              const tasksInSection = filteredTasks.filter((t) => t.intent === intent);
                               if (tasksInSection.length === 0) return null;
                               const config = intentConfig[intent];
                               const sectionTitle = config.label + ' Tasks';
@@ -595,8 +731,8 @@ const StudentPlanner = () => {
                                   <CollapsibleContent>
                                     <ul className="mt-2 space-y-2 pl-1">
                                       {tasksInSection.map((task) => (
-                                        <li key={task.id} className="flex items-center gap-4 p-3 rounded-xl border border-gray-100 hover:bg-gray-50 group">
-                                          <div className="w-5 h-5 rounded-full border-2 border-gray-300 flex items-center justify-center flex-shrink-0">
+                                        <li key={task.id} className="flex items-center gap-4 p-3 rounded-xl border border-gray-100 hover:bg-gray-50 group cursor-pointer" onClick={() => openTaskDetail(task)}>
+                                          <div className="w-5 h-5 rounded-full border-2 border-gray-300 flex items-center justify-center flex-shrink-0" onClick={(e) => { e.stopPropagation(); toggleCompleted(task.id); }}>
                                             {task.completed && <span className="text-green-600 text-xs">✓</span>}
                                           </div>
                                           <div className="flex-1 min-w-0">
@@ -617,7 +753,7 @@ const StudentPlanner = () => {
                                             </div>
                                           </div>
                                           <div className={`w-2 h-2 rounded-full flex-shrink-0 ${priorityColors[task.priority]}`} />
-                                          <Button variant="ghost" size="icon" className="h-8 w-8 text-gray-400 hover:text-destructive opacity-0 group-hover:opacity-100"><Trash2 className="w-4 h-4" /></Button>
+                                          <Button variant="ghost" size="icon" className="h-8 w-8 text-gray-400 hover:text-destructive opacity-0 group-hover:opacity-100" onClick={(e) => { e.stopPropagation(); removeTask(task.id); }}><Trash2 className="w-4 h-4" /></Button>
                                         </li>
                                       ))}
                                     </ul>
@@ -663,7 +799,7 @@ const StudentPlanner = () => {
                           </ul>
                         </div>
                       </div>
-                      <Button className="w-full mt-4 bg-white text-indigo-600 hover:bg-white/90 font-semibold rounded-xl gap-2">
+                      <Button className="w-full mt-4 bg-white text-indigo-600 hover:bg-white/90 font-semibold rounded-xl gap-2" onClick={handleAutoGeneratePlan}>
                         <Sparkles className="w-4 h-4" />
                         Auto-Generate Today&apos;s Plan
                       </Button>
@@ -682,7 +818,7 @@ const StudentPlanner = () => {
                                   <span className="text-xs text-white/80">{s.duration}</span>
                                 </div>
                                 {s.why && <p className="text-xs text-white/70 mt-1">Why: {s.why}</p>}
-                                <Button size="sm" className="mt-2 h-7 text-indigo-600 bg-white hover:bg-white/90 rounded-lg text-xs">Add to Schedule</Button>
+                                <Button size="sm" className="mt-2 h-7 text-indigo-600 bg-white hover:bg-white/90 rounded-lg text-xs" onClick={() => addSuggestionAsTask(s)}>Add to Schedule</Button>
                               </li>
                             ))}
                           </ul>
@@ -734,10 +870,10 @@ const StudentPlanner = () => {
           </>
         )}
 
-        {/* Task detail modal (Calendar – on event click) */}
-        <Dialog open={!!selectedEvent} onOpenChange={() => setSelectedEvent(null)}>
+        {/* Task detail modal (Calendar / list – on event or task click) */}
+        <Dialog open={!!selectedTaskId} onOpenChange={(open) => !open && setSelectedTaskId(null)}>
           <DialogContent className="sm:max-w-[600px] p-6 max-h-[90vh] overflow-y-auto rounded-xl">
-            {selectedEvent && (
+            {selectedTask && (
               <>
                 <DialogHeader>
                   <div className="flex items-center gap-2">
@@ -745,56 +881,56 @@ const StudentPlanner = () => {
                       className="w-4 h-4 rounded-full flex-shrink-0"
                       style={{
                         backgroundColor:
-                          selectedEvent.priority === 'high'
+                          selectedTask.priority === 'high'
                             ? '#ef4444'
-                            : selectedEvent.priority === 'medium'
+                            : selectedTask.priority === 'medium'
                               ? '#eab308'
                               : '#22c55e',
                       }}
                     />
-                    <DialogTitle className="text-xl">{selectedEvent.name}</DialogTitle>
+                    <DialogTitle className="text-xl">{selectedTask.name}</DialogTitle>
                   </div>
-                  <p className="sr-only">Task details: {selectedEvent.subject}, {selectedEvent.type}, {selectedEvent.duration}</p>
+                  <p className="sr-only">Task details: {selectedTask.subject}, {selectedTask.type}, {selectedTask.duration}</p>
                 </DialogHeader>
                 <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 py-4">
                   <div>
                     <Label className="text-sm text-muted-foreground">Subject</Label>
-                    <p className="font-semibold truncate">{selectedEvent.subject}</p>
+                    <p className="font-semibold truncate">{selectedTask.subject}</p>
                   </div>
                   <div>
                     <Label className="text-sm text-muted-foreground">Type</Label>
                     <div className="mt-0.5">
-                      <Badge variant="secondary" className="capitalize">{selectedEvent.type}</Badge>
+                      <Badge variant="secondary" className="capitalize">{selectedTask.type}</Badge>
                     </div>
                   </div>
                   <div>
                     <Label className="text-sm text-muted-foreground">Duration</Label>
                     <p className="flex items-center gap-1 mt-0.5">
                       <Clock className="w-3 h-3" />
-                      {selectedEvent.duration}
+                      {selectedTask.duration}
                     </p>
                   </div>
                   <div>
                     <Label className="text-sm text-muted-foreground">Status</Label>
                     <div className="mt-0.5">
-                      <Badge variant={selectedEvent.status === 'completed' ? 'default' : 'outline'} className="capitalize">
-                        {selectedEvent.status}
+                      <Badge variant={selectedTask.completed ? 'default' : 'outline'} className="capitalize">
+                        {selectedTask.completed ? 'completed' : 'pending'}
                       </Badge>
                     </div>
                   </div>
                 </div>
-                {selectedEvent.allocatedDate && (selectedEvent.startTime ?? selectedEvent.endTime) && (
+                {selectedTask.allocatedDate && (selectedTask.startTime ?? selectedTask.endTime) && (
                   <div className="bg-blue-50 p-4 rounded-xl border border-blue-100 mb-4">
                     <div className="flex items-center gap-2 text-blue-600 text-sm font-bold mb-2">
                       <CalendarIcon className="w-4 h-4" />
                       Current Allocation
                     </div>
                     <p className="text-sm text-blue-900">
-                      Date: {format(selectedEvent.allocatedDate, 'EEE, MMM d')}
+                      Date: {format(selectedTask.allocatedDate, 'EEE, MMM d')}
                     </p>
                     <p className="text-sm text-blue-900">
-                      Time: {selectedEvent.startTime ?? '—'}
-                      {selectedEvent.endTime ? ` – ${selectedEvent.endTime}` : ''}
+                      Time: {selectedTask.startTime ?? '—'}
+                      {selectedTask.endTime ? ` – ${selectedTask.endTime}` : ''}
                     </p>
                   </div>
                 )}
@@ -806,18 +942,18 @@ const StudentPlanner = () => {
                   <div className="grid grid-cols-3 gap-2">
                     <div>
                       <Label className="text-xs text-muted-foreground">Date</Label>
-                      <Input type="date" className="mt-0.5 h-9" />
+                      <Input type="date" className="mt-0.5 h-9" value={allocateDate} onChange={(e) => setAllocateDate(e.target.value)} />
                     </div>
                     <div>
                       <Label className="text-xs text-muted-foreground">Start Time</Label>
-                      <Input type="time" className="mt-0.5 h-9" />
+                      <Input type="time" className="mt-0.5 h-9" value={allocateStart} onChange={(e) => setAllocateStart(e.target.value)} />
                     </div>
                     <div>
                       <Label className="text-xs text-muted-foreground">End Time</Label>
-                      <Input type="time" className="mt-0.5 h-9" />
+                      <Input type="time" className="mt-0.5 h-9" value={allocateEnd} onChange={(e) => setAllocateEnd(e.target.value)} />
                     </div>
                   </div>
-                  <Button className="w-full bg-purple-600 hover:bg-purple-700 text-white gap-2" disabled>
+                  <Button className="w-full bg-purple-600 hover:bg-purple-700 text-white gap-2" disabled={!allocateDate || !allocateStart} onClick={handleAllocateTime}>
                     <CalendarIcon className="w-4 h-4" />
                     Allocate Time Slot
                   </Button>
@@ -827,9 +963,9 @@ const StudentPlanner = () => {
                     <CheckCircle2 className="w-4 h-4 text-muted-foreground" />
                     Required Resources & Environment
                   </div>
-                  {selectedEvent.resources && selectedEvent.resources.length > 0 ? (
+                  {selectedTask.resources && selectedTask.resources.length > 0 ? (
                     <ul className="space-y-2">
-                      {selectedEvent.resources.map((r, i) => (
+                      {selectedTask.resources.map((r, i) => (
                         <li
                           key={i}
                           className={`flex items-center gap-3 p-3 rounded-lg border ${
@@ -853,28 +989,28 @@ const StudentPlanner = () => {
                     </div>
                   )}
                 </div>
-                {selectedEvent.aiInsight && (
+                {selectedTask.aiInsight && (
                   <div className="bg-indigo-50 p-4 rounded-xl border border-indigo-100 text-sm text-indigo-900 mb-4">
                     <p className="font-bold text-indigo-700 flex items-center gap-1 mb-1">
                       <AlertCircle className="w-4 h-4" />
                       AI Insight:
                     </p>
-                    <p className="text-indigo-800">{selectedEvent.aiInsight}</p>
+                    <p className="text-indigo-800">{selectedTask.aiInsight}</p>
                   </div>
                 )}
-                {selectedEvent.performanceScore != null && (
+                {selectedTask.performanceScore != null && (
                   <div className="mb-4">
                     <Label className="text-sm text-muted-foreground">Performance Score</Label>
-                    <p className="font-medium mt-0.5">{selectedEvent.performanceScore}%</p>
+                    <p className="font-medium mt-0.5">{selectedTask.performanceScore}%</p>
                     <div className="h-2 bg-gray-200 rounded-full mt-1 overflow-hidden">
                       <div
                         className="h-full rounded-full"
                         style={{
-                          width: `${selectedEvent.performanceScore}%`,
+                          width: `${selectedTask.performanceScore}%`,
                           backgroundColor:
-                            selectedEvent.performanceScore >= 80
+                            selectedTask.performanceScore >= 80
                               ? '#22c55e'
-                              : selectedEvent.performanceScore >= 60
+                              : selectedTask.performanceScore >= 60
                                 ? '#eab308'
                                 : '#ef4444',
                         }}
@@ -883,11 +1019,11 @@ const StudentPlanner = () => {
                   </div>
                 )}
                 <DialogFooter>
-                  <Button variant="outline" onClick={() => setSelectedEvent(null)}>
+                  <Button variant="outline" onClick={() => setSelectedTaskId(null)}>
                     Close
                   </Button>
-                  <Button className="bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 text-white font-medium">
-                    Start Task
+                  <Button className="bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 text-white font-medium" onClick={handleStartTask} disabled={selectedTask.completed}>
+                    {selectedTask.completed ? 'Completed' : 'Start Task'}
                   </Button>
                 </DialogFooter>
               </>
@@ -905,11 +1041,11 @@ const StudentPlanner = () => {
             <div className="grid gap-4 py-4">
               <div className="grid gap-2">
                 <Label htmlFor="task-name">Task Name</Label>
-                <Input id="task-name" placeholder="e.g. Complete chapter 5" />
+                <Input id="task-name" placeholder="e.g. Complete chapter 5" value={newTaskName} onChange={(e) => setNewTaskName(e.target.value)} />
               </div>
               <div className="grid gap-2">
                 <Label>Task Intent <span className="text-destructive">*</span></Label>
-                <Select>
+                <Select value={newTaskIntent} onValueChange={(v) => setNewTaskIntent(v as TaskIntent)}>
                   <SelectTrigger><SelectValue placeholder="Select intent" /></SelectTrigger>
                   <SelectContent>
                     <SelectItem value="learn">Learn (new topic)</SelectItem>
@@ -922,17 +1058,19 @@ const StudentPlanner = () => {
               </div>
               <div className="grid gap-2">
                 <Label>Subject</Label>
-                <Select>
+                <Select value={newTaskSubject} onValueChange={setNewTaskSubject}>
                   <SelectTrigger><SelectValue placeholder="Select" /></SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="math">Mathematics</SelectItem>
-                    <SelectItem value="science">Science</SelectItem>
+                    <SelectItem value="Mathematics">Mathematics</SelectItem>
+                    <SelectItem value="Science">Science</SelectItem>
+                    <SelectItem value="Physics">Physics</SelectItem>
+                    <SelectItem value="Chemistry">Chemistry</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
               <div className="grid gap-2">
                 <Label>Exam Impact</Label>
-                <Select>
+                <Select value={newTaskPriority} onValueChange={(v) => setNewTaskPriority(v as Priority)}>
                   <SelectTrigger><SelectValue placeholder="Select weight" /></SelectTrigger>
                   <SelectContent>
                     <SelectItem value="high"><span className="flex items-center gap-1.5"><span className="w-2 h-2 rounded-full bg-red-500" /> High exam weight</span></SelectItem>
@@ -943,20 +1081,16 @@ const StudentPlanner = () => {
               </div>
               <div className="grid gap-2">
                 <Label htmlFor="duration">Duration (min)</Label>
-                <Input id="duration" type="number" placeholder="30" />
+                <Input id="duration" type="number" placeholder="30" value={newTaskDuration} onChange={(e) => setNewTaskDuration(e.target.value)} />
               </div>
               <div className="grid gap-2">
                 <Label htmlFor="due">Due Date</Label>
-                <Input id="due" type="date" />
-              </div>
-              <div className="grid gap-2">
-                <Label htmlFor="attachment" className="text-gray-500">Attachment (optional)</Label>
-                <Input id="attachment" type="text" placeholder="Optional" />
+                <Input id="due" type="date" value={newTaskDue} onChange={(e) => setNewTaskDue(e.target.value)} />
               </div>
             </div>
             <DialogFooter>
               <Button variant="outline" onClick={() => setAddTaskOpen(false)}>Cancel</Button>
-              <Button onClick={() => setAddTaskOpen(false)}>Create</Button>
+              <Button onClick={handleAddTask} disabled={!newTaskName.trim()}>Create</Button>
             </DialogFooter>
           </DialogContent>
         </Dialog>
