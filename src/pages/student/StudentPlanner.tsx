@@ -29,7 +29,14 @@ import {
   Sparkles,
   Target,
   Zap,
-  TrendingUp,
+  Brain,
+  Swords,
+  RotateCcw,
+  FlaskConical,
+  Wrench,
+  Play,
+  Bot,
+  Pencil,
   CalendarDays,
   AlertCircle,
   Filter,
@@ -42,14 +49,6 @@ import {
   List,
   Clock,
   CheckCircle2,
-  Brain,
-  Swords,
-  RotateCcw,
-  FlaskConical,
-  Wrench,
-  Play,
-  Bot,
-  Pencil,
 } from 'lucide-react';
 import { format, addMonths, subMonths, isSameDay } from 'date-fns';
 import { Calendar as CalendarComponent } from '@/components/ui/calendar';
@@ -92,19 +91,16 @@ const stubSuggestions = [
   { id: 's1', name: 'Algebra drill', subject: 'Mathematics', duration: '20 min', priority: 'high' as Priority, why: 'Weak area practice' },
 ];
 
-// Calendar events (stub) – empty array = empty state; with items = events on calendar
-// Softer saturation for study planner: readable, calm (red / amber / green)
 const calendarEventColors: Record<Priority, string> = {
-  high: '#c2410c',   // softer red (orange-700)
-  medium: '#a16207', // softer amber
-  low: '#15803d',    // softer green (green-700)
+  high: '#c2410c',
+  medium: '#a16207',
+  low: '#15803d',
 };
 const subjectAccent: Record<string, string> = { Mathematics: '#6366f1', Physics: '#0ea5e9', Chemistry: '#10b981', Science: '#f59e0b' };
 
 type CalendarViewValue = 'dayGridMonth' | 'timeGridWeek' | 'timeGridDay';
 type ViewToggleType = 'grid' | 'list';
 
-// Single source of truth for all planner tasks (list + calendar)
 type Task = {
   id: string;
   name: string;
@@ -270,9 +266,9 @@ const StudentPlanner = () => {
   };
   const handleAddTask = () => {
     if (!newTaskName.trim()) return;
-    const today = new Date();
-    today.setHours(0, 0, 0, 0);
-    const dueDate = newTaskDue ? new Date(newTaskDue) : today;
+    const todayDate = new Date();
+    todayDate.setHours(0, 0, 0, 0);
+    const dueDate = newTaskDue ? new Date(newTaskDue) : todayDate;
     const allocatedDate = dueDate;
     setTasks((prev) => [
       ...prev,
@@ -349,7 +345,6 @@ const StudentPlanner = () => {
   return (
     <StudentDashboardLayout>
       <div className="space-y-6">
-        {/* Page-level load error */}
         {loadError && (
           <div className="rounded-xl border border-red-200 bg-red-50 px-4 py-3 flex items-center justify-between gap-4">
             <div className="flex items-center gap-2">
@@ -365,7 +360,6 @@ const StudentPlanner = () => {
           </div>
         )}
 
-        {/* Initial load skeleton */}
         {loading ? (
           <div className="space-y-6">
             <div className="flex items-center gap-3">
@@ -389,7 +383,6 @@ const StudentPlanner = () => {
           </div>
         ) : (
           <>
-            {/* Page header */}
             <div className="flex items-center gap-3">
               <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-purple-500 to-indigo-600 flex items-center justify-center shadow-sm">
                 <Sparkles className="w-6 h-6 text-white" />
@@ -400,7 +393,6 @@ const StudentPlanner = () => {
               </div>
             </div>
 
-            {/* Tab bar */}
             <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
               <TabsList className="max-w-[400px] w-full bg-white border border-gray-200 shadow-sm rounded-xl p-1 h-auto">
                 <TabsTrigger value="dashboard" className="gap-2 data-[state=active]:bg-purple-500 data-[state=active]:text-white data-[state=active]:shadow-sm rounded-lg px-4 py-2">
@@ -418,10 +410,8 @@ const StudentPlanner = () => {
               </TabsList>
 
               <div className="grid grid-cols-1 lg:grid-cols-[1fr_320px] gap-6 mt-6">
-                {/* Main content ~3/4 */}
                 <div className="space-y-6 min-w-0">
                   <TabsContent value="dashboard" className="mt-0 space-y-6">
-                    {/* Learning signals: 3 cards */}
                     <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                       <Card className="border border-blue-100 bg-gradient-to-br from-blue-50 to-indigo-50 rounded-2xl overflow-hidden">
                         <CardContent className="p-5">
@@ -470,7 +460,6 @@ const StudentPlanner = () => {
                       </Card>
                     </div>
 
-                    {/* Next Best Action (AI Suggested) */}
                     {nextBestTask && (
                       <Card className="border border-purple-200 bg-gradient-to-br from-purple-50/80 to-indigo-50/80 rounded-2xl overflow-hidden shadow-sm">
                         <CardContent className="p-5">
@@ -488,13 +477,12 @@ const StudentPlanner = () => {
                       </Card>
                     )}
 
-                    {/* Today's Schedule */}
                     <Card className="border border-gray-200 shadow-sm rounded-2xl overflow-hidden">
                       <CardContent className="p-6">
                         <div className="flex items-center justify-between mb-4">
                           <div className="flex items-center gap-2">
                             <CalendarDays className="w-5 h-5 text-gray-700" />
-                            <h3 className="text-base font-semibold text-gray-900">Today's Schedule</h3>
+                            <h3 className="text-base font-semibold text-gray-900">Today&apos;s Schedule</h3>
                           </div>
                           <Button variant="outline" size="sm" className="rounded-lg" onClick={() => setActiveTab('calendar')}>View Full Calendar</Button>
                         </div>
@@ -539,7 +527,6 @@ const StudentPlanner = () => {
                       </CardContent>
                     </Card>
 
-                    {/* Bottom row: Upcoming Deadlines + Focus Areas */}
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                       <Card className="border border-gray-200 shadow-sm rounded-2xl overflow-hidden">
                         <CardContent className="p-5">
@@ -590,7 +577,6 @@ const StudentPlanner = () => {
 
                   <TabsContent value="calendar" className="mt-0">
                     <div className="flex flex-col gap-5 w-full min-h-[620px]">
-                      {/* Toolbar – minimal, clean */}
                       <div className="flex flex-wrap items-center justify-between gap-4">
                         <div className="flex items-center gap-2">
                           <div className="flex items-center gap-0.5 rounded-full bg-gray-100 p-0.5">
@@ -620,29 +606,16 @@ const StudentPlanner = () => {
                             </SelectContent>
                           </Select>
                           <div className="flex rounded-lg border border-gray-200 bg-gray-50/80 p-0.5">
-                            <Button
-                              variant={viewToggle === 'grid' ? 'secondary' : 'ghost'}
-                              size="icon"
-                              className="h-8 w-8 rounded-md"
-                              onClick={() => setViewToggle('grid')}
-                              aria-label="Monthly view"
-                            >
+                            <Button variant={viewToggle === 'grid' ? 'secondary' : 'ghost'} size="icon" className="h-8 w-8 rounded-md" onClick={() => setViewToggle('grid')} aria-label="Monthly view">
                               <Grid3X3 className="h-4 w-4" />
                             </Button>
-                            <Button
-                              variant={viewToggle === 'list' ? 'secondary' : 'ghost'}
-                              size="icon"
-                              className="h-8 w-8 rounded-md"
-                              onClick={() => setViewToggle('list')}
-                              aria-label="Weekly view"
-                            >
+                            <Button variant={viewToggle === 'list' ? 'secondary' : 'ghost'} size="icon" className="h-8 w-8 rounded-md" onClick={() => setViewToggle('list')} aria-label="Weekly view">
                               <List className="h-4 w-4" />
                             </Button>
                           </div>
                         </div>
                       </div>
 
-                      {/* Calendar – clean card, minimal grid */}
                       <Card className="relative flex-1 overflow-hidden rounded-2xl border border-gray-200/80 bg-white shadow-sm min-h-[540px]">
                         {!calendarHasEvents && (
                           <div className="absolute inset-0 z-10 flex flex-col items-center justify-center gap-4 rounded-2xl bg-white/95 p-12 backdrop-blur-[2px]">
@@ -768,9 +741,7 @@ const StudentPlanner = () => {
                   </TabsContent>
                 </div>
 
-                {/* Right sidebar ~1/4 */}
                 <div className="space-y-4 lg:max-w-[320px]">
-                  {/* AI Study Planner card – intelligence cues */}
                   <Card className="border-0 shadow-lg rounded-2xl overflow-hidden bg-gradient-to-br from-indigo-600 to-violet-600 text-white">
                     <CardContent className="p-5">
                       <div className="flex items-center gap-2 mb-3">
@@ -827,7 +798,6 @@ const StudentPlanner = () => {
                     </CardContent>
                   </Card>
 
-                  {/* Exam Countdown card */}
                   {examState === 'loading' && (
                     <Card className="border border-gray-200 rounded-2xl overflow-hidden">
                       <CardContent className="p-5">
@@ -870,7 +840,6 @@ const StudentPlanner = () => {
           </>
         )}
 
-        {/* Task detail modal (Calendar / list – on event or task click) */}
         <Dialog open={!!selectedTaskId} onOpenChange={(open) => !open && setSelectedTaskId(null)}>
           <DialogContent className="sm:max-w-[600px] p-6 max-h-[90vh] overflow-y-auto rounded-xl">
             {selectedTask && (
@@ -890,7 +859,6 @@ const StudentPlanner = () => {
                     />
                     <DialogTitle className="text-xl">{selectedTask.name}</DialogTitle>
                   </div>
-                  <p className="sr-only">Task details: {selectedTask.subject}, {selectedTask.type}, {selectedTask.duration}</p>
                 </DialogHeader>
                 <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 py-4">
                   <div>
@@ -1031,7 +999,6 @@ const StudentPlanner = () => {
           </DialogContent>
         </Dialog>
 
-        {/* Add Task modal */}
         <Dialog open={addTaskOpen} onOpenChange={setAddTaskOpen}>
           <DialogContent className="sm:max-w-md rounded-xl">
             <DialogHeader>
