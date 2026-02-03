@@ -8,7 +8,6 @@ import {
   CreditCard,
   Activity,
   Shield,
-  HelpCircle,
   Sparkles,
   LogOut
 } from 'lucide-react';
@@ -117,32 +116,7 @@ const InternalAdminSidebar = ({ collapsed = false, isMobile = false, onMobileClo
 
       {/* Bottom section */}
       {showText && (
-        <div className="p-3 space-y-2 flex-shrink-0">
-          {/* Help Center Card */}
-          <div className="bg-gradient-to-br from-primary/15 via-purple-100/50 to-violet-100/60 rounded-xl p-4 relative overflow-hidden">
-            <div className="absolute top-0 right-0 w-16 h-16 bg-primary/10 rounded-full -translate-y-1/2 translate-x-1/2" />
-            <div className="absolute bottom-0 left-0 w-12 h-12 bg-primary/5 rounded-full translate-y-1/2 -translate-x-1/2" />
-            
-            <div className="flex justify-center -mt-6 mb-3">
-              <div className="w-8 h-8 rounded-full bg-white shadow-sm flex items-center justify-center">
-                <HelpCircle className="w-4 h-4 text-primary" />
-              </div>
-            </div>
-            
-            <div className="text-center relative z-10">
-              <h4 className="font-semibold text-gray-900 text-sm">Admin Support</h4>
-              <p className="text-[11px] text-gray-600 mt-1 leading-relaxed">
-                Need help with platform<br />
-                management? Contact support.
-              </p>
-              <button
-                className="mt-3 w-full bg-white text-gray-800 text-xs font-semibold py-2.5 px-3 rounded-lg hover:bg-gray-50 transition-colors shadow-sm"
-              >
-                Contact Support
-              </button>
-            </div>
-          </div>
-
+        <div className="p-3 flex-shrink-0">
           {/* Logout */}
           <button
             onClick={handleLogout}
@@ -156,12 +130,7 @@ const InternalAdminSidebar = ({ collapsed = false, isMobile = false, onMobileClo
 
       {/* Collapsed Icons */}
       {!showText && (
-        <div className="p-3 border-t border-gray-100 space-y-2 flex-shrink-0">
-          <button
-            className="w-full flex justify-center items-center py-2.5 rounded-xl text-gray-400 hover:bg-gray-50 hover:text-primary transition-colors"
-          >
-            <HelpCircle className="w-5 h-5" />
-          </button>
+        <div className="p-3 border-t border-gray-100 flex-shrink-0">
           <button
             onClick={handleLogout}
             className="w-full flex justify-center items-center py-3 rounded-xl text-red-400 hover:bg-red-50 hover:text-red-600 transition-colors"
