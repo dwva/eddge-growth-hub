@@ -54,6 +54,7 @@ const subjects = [
 const StudentHome = () => {
   const { user } = useAuth();
   const navigate = useNavigate();
+  const [completedSuggestions, setCompletedSuggestions] = useState<string[]>([]);
   
   // Calculate overall progress from subjects
   const overallProgress = Math.round(
@@ -294,7 +295,7 @@ const StudentHome = () => {
             </div>
 
             {/* Right Column - AI Study Suggestions */}
-            <div>
+            <div className="lg:pl-2">
               <div className="mb-4">
                 <h3 className="text-base font-semibold text-gray-900 flex items-center gap-2">
                   <Brain className="w-4 h-4 text-primary" />
@@ -313,49 +314,79 @@ const StudentHome = () => {
                       label: 'Continue learning: Quadratic Equations',
                       icon: <BookOpen className="w-4 h-4 text-primary" />,
                       path: '/student/learning',
+                      priority: 'High',
                     },
                     {
                       id: 'revise',
                       label: 'Revise: Algebra basics from last week',
                       icon: <Target className="w-4 h-4 text-purple-500" />,
                       path: '/student/revision',
+                      priority: 'Medium',
                     },
                     {
                       id: 'practice',
                       label: 'Practice: 10 quick math questions',
                       icon: <Calculator className="w-4 h-4 text-emerald-500" />,
                       path: '/student/practice',
+                      priority: 'High',
                     },
                     {
                       id: 'planner',
                       label: 'Update today’s plan in your Planner',
                       icon: <CalendarDays className="w-4 h-4 text-blue-500" />,
                       path: '/student/planner',
+                      priority: 'Medium',
                     },
                     {
                       id: 'doubt',
                       label: 'Ask a doubt you still feel unsure about',
                       icon: <MessageSquare className="w-4 h-4 text-amber-500" />,
                       path: '/student/doubt-solver',
+                      priority: 'Low',
                     },
-                  ].map((suggestion) => (
-                    <button
-                      key={suggestion.id}
-                      type="button"
-                      className="w-full flex items-center justify-between gap-4 px-4 py-4 rounded-xl hover:bg-gray-50 transition-colors text-left min-h-[56px]"
-                      onClick={() => navigate(suggestion.path)}
-                    >
-                      <div className="flex items-center gap-3 min-w-0 flex-1">
-                        <div className="w-9 h-9 rounded-full bg-gray-100 flex items-center justify-center flex-shrink-0">
-                          {suggestion.icon}
+                  ].map((suggestion) => {
+                    const isCompleted = completedSuggestions.includes(suggestion.id);
+
+                    const handleClick = () => {
+                      if (!isCompleted) {
+                        setCompletedSuggestions((prev) =>
+                          prev.includes(suggestion.id) ? prev : [...prev, suggestion.id]
+                        );
+                      }
+                      navigate(suggestion.path);
+                    };
+
+                    return (
+                      <button
+                        key={suggestion.id}
+                        type="button"
+                        className={`w-full flex items-center justify-between gap-4 px-4 py-4 rounded-xl text-left min-h-[56px] transition-colors ${
+                          isCompleted ? 'bg-gray-50' : 'hover:bg-gray-50'
+                        }`}
+                        onClick={handleClick}
+                      >
+                        <div className="flex items-center gap-3 min-w-0 flex-1">
+                          <div className="w-9 h-9 rounded-full bg-gray-100 flex items-center justify-center flex-shrink-0">
+                            {suggestion.icon}
+                          </div>
+                          <div className="min-w-0">
+                            <p className="text-sm font-medium text-gray-900 leading-snug text-left truncate">
+                              {suggestion.label}
+                            </p>
+                            <p className="text-xs text-gray-500 mt-0.5">
+                              Priority: {suggestion.priority}
+                              {isCompleted && ' • Completed'}
+                            </p>
+                          </div>
                         </div>
-                        <span className="text-sm font-medium text-gray-900 leading-snug text-left">
-                          {suggestion.label}
-                        </span>
-                      </div>
-                      <ArrowRight className="w-4 h-4 text-gray-400 flex-shrink-0" />
-                    </button>
-                  ))}
+                        {isCompleted ? (
+                          <CheckCircle className="w-4 h-4 text-emerald-500 flex-shrink-0" />
+                        ) : (
+                          <ArrowRight className="w-4 h-4 text-gray-400 flex-shrink-0" />
+                        )}
+                      </button>
+                    );
+                  })}
                 </CardContent>
               </Card>
             </div>
