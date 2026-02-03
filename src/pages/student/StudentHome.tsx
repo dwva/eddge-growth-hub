@@ -20,42 +20,62 @@ import {
   Target
 } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
+import { chapters as chaptersData } from '@/data/mockData';
 
-// Subject cards data
+// Subject names for chapter list
+const subjectNames: Record<string, string> = {
+  '1': 'Mathematics',
+  '2': 'Science',
+  '3': 'Aptitude',
+};
 
-// Subject cards data
+// Build flat list of studied chapters (completed) from mockData + placeholder Aptitude
+function buildStudiedChapters(): { key: string; subjectId: string; subjectName: string; chapterId: string; chapterName: string }[] {
+  const list: { key: string; subjectId: string; subjectName: string; chapterId: string; chapterName: string }[] = [];
+  (Object.keys(chaptersData) as (keyof typeof chaptersData)[]).forEach((subjectId) => {
+    const subjectName = subjectNames[subjectId] ?? 'Subject';
+    chaptersData[subjectId].forEach((ch) => {
+      if (ch.completed) {
+        list.push({
+          key: `${subjectId}-${ch.id}`,
+          subjectId,
+          subjectName,
+          chapterId: ch.id,
+          chapterName: ch.name,
+        });
+      }
+    });
+  });
+  // Placeholder studied chapters for Aptitude (no chapters in mockData)
+  list.push({ key: '3-a1', subjectId: '3', subjectName: 'Aptitude', chapterId: 'a1', chapterName: 'Logical Reasoning' });
+  list.push({ key: '3-a2', subjectId: '3', subjectName: 'Aptitude', chapterId: 'a2', chapterName: 'Patterns & Sequences' });
+  return list;
+}
+
+const initialStudiedChapters = buildStudiedChapters();
+
 const subjects = [
-  { 
-    id: 1, 
-    name: 'Mathematics', 
-    icon: <Calculator className="w-8 h-8" />,
-    color: 'bg-blue-50',
-    iconColor: 'text-blue-500',
-    progress: 65
-  },
-  { 
-    id: 2, 
-    name: 'Science', 
-    icon: <Atom className="w-8 h-8" />,
-    color: 'bg-emerald-50',
-    iconColor: 'text-emerald-500',
-    progress: 48
-  },
-  { 
-    id: 3, 
-    name: 'Aptitude', 
-    icon: <Brain className="w-8 h-8" />,
-    color: 'bg-purple-50',
-    iconColor: 'text-purple-500',
-    progress: 72
-  },
+  { id: 1, name: 'Mathematics', icon: <Calculator className="w-8 h-8" />, color: 'bg-blue-50', iconColor: 'text-blue-500', progress: 65 },
+  { id: 2, name: 'Science', icon: <Atom className="w-8 h-8" />, color: 'bg-emerald-50', iconColor: 'text-emerald-500', progress: 48 },
+  { id: 3, name: 'Aptitude', icon: <Brain className="w-8 h-8" />, color: 'bg-purple-50', iconColor: 'text-purple-500', progress: 72 },
 ];
 
 const StudentHome = () => {
   const { user } = useAuth();
   const navigate = useNavigate();
   const [completedSuggestions, setCompletedSuggestions] = useState<string[]>([]);
-  
+  const [studiedChapters, setStudiedChapters] = useState(initialStudiedChapters);
+
+  const handleStudiedAgain = (key: string) => {
+    setStudiedChapters((prev) => {
+      const idx = prev.findIndex((c) => c.key === key);
+      if (idx <= 0) return prev;
+      const item = prev[idx];
+      return [item, ...prev.slice(0, idx), ...prev.slice(idx + 1)];
+    });
+    navigate('/student/learning');
+  };
+
   // Calculate overall progress from subjects
   const overallProgress = Math.round(
     subjects.reduce((acc, subject) => acc + subject.progress, 0) / subjects.length
@@ -193,10 +213,10 @@ const StudentHome = () => {
             
             {/* Left Column */}
             <div className="space-y-6">
-              {/* My Learning Section - 3 Card Grid */}
+              {/* Continue Learn - chapters studied, scrollable, updates when studied again */}
               <div>
                 <div className="flex items-center justify-between mb-4">
-                  <h3 className="text-base font-semibold text-gray-900">My Learning</h3>
+                  <h3 className="text-base font-semibold text-gray-900">Continue Learn</h3>
                   <button 
                     className="flex items-center gap-1 text-xs text-gray-500 hover:text-primary transition-colors"
                     onClick={() => navigate('/student/learning')}
@@ -204,31 +224,29 @@ const StudentHome = () => {
                     View All <ArrowRight className="w-3.5 h-3.5" />
                   </button>
                 </div>
-                
-                <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                  {subjects.map((subject) => (
-                    <Card 
-                      key={subject.id} 
-                      className="border border-gray-100 shadow-sm rounded-2xl cursor-pointer group bg-white"
-                      onClick={() => navigate('/student/learning')}
-                    >
-                      <CardContent className="p-5">
-                        <div className={`w-14 h-14 ${subject.color} rounded-xl flex items-center justify-center mb-3`}>
-                          <span className={subject.iconColor}>{subject.icon}</span>
+
+                <div 
+                  className="rounded-2xl border border-gray-100 bg-white shadow-sm overflow-hidden"
+                  style={{ scrollBehavior: 'smooth' }}
+                >
+                  <div className="max-h-[220px] overflow-y-auto overflow-x-hidden scroll-smooth py-1 pr-1 [scrollbar-gutter:stable]">
+                    {studiedChapters.map((item) => (
+                      <button
+                        key={item.key}
+                        type="button"
+                        className="w-full flex items-center justify-between gap-3 px-4 py-3 rounded-xl hover:bg-gray-50 transition-colors text-left group"
+                        onClick={() => handleStudiedAgain(item.key)}
+                      >
+                        <div className="min-w-0 flex-1">
+                          <p className="text-sm font-medium text-gray-900 truncate">
+                            {item.subjectName} · {item.chapterName}
+                          </p>
+                          <p className="text-xs text-gray-500 mt-0.5">Continue</p>
                         </div>
-                        <h4 className="text-sm font-medium text-gray-900">{subject.name}</h4>
-                        <div className="flex items-center gap-2 mt-2">
-                          <div className="flex-1 h-1.5 bg-gray-100 rounded-full overflow-hidden">
-                            <div 
-                              className="h-full bg-primary rounded-full"
-                              style={{ width: `${subject.progress}%` }}
-                            />
-                          </div>
-                          <span className="text-xs text-gray-500">{subject.progress}%</span>
-                        </div>
-                      </CardContent>
-                    </Card>
-                  ))}
+                        <ArrowRight className="w-4 h-4 text-gray-400 flex-shrink-0 group-hover:translate-x-0.5 transition-transform" />
+                      </button>
+                    ))}
+                  </div>
                 </div>
               </div>
 
