@@ -20,7 +20,7 @@ import {
   Target
 } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
-import lionMascot from '@/assets/lion-mascot-clean.png';
+import lionMascot from '@/assets/lion-mascot.jpg';
 
 // Subject cards data
 
@@ -101,12 +101,16 @@ const StudentHome = () => {
                 <div className="absolute -top-6 -right-6 w-24 h-24 bg-primary/10 rounded-full" />
                 <div className="absolute bottom-0 right-0 w-40 h-40 bg-orange-200/50 rounded-full translate-y-1/3 translate-x-1/4" />
                 
-                {/* Lion mascot - half-body, bottom-right, head reaches title level */}
-                <div className="absolute -bottom-8 -right-4 h-[95%] w-auto pointer-events-none">
+                {/* Lion mascot - half-body, bottom-right, behind content */}
+                <div className="absolute bottom-0 right-0 h-[70%] w-auto overflow-hidden pointer-events-none">
                   <img 
                     src={lionMascot} 
                     alt=""
-                    className="h-full w-auto object-contain object-bottom opacity-95"
+                    className="h-full w-auto object-cover object-top opacity-90"
+                    style={{ 
+                      clipPath: 'inset(0 0 35% 0)',
+                      transform: 'translateY(35%)'
+                    }}
                   />
                 </div>
                 
