@@ -41,33 +41,6 @@ import {
   BarChart,
   Bar
 } from 'recharts';
-
-const navSections = [
-  {
-    items: [
-      { label: 'Dashboard', icon: <LayoutDashboard className="w-5 h-5" />, path: '/admin' },
-    ]
-  },
-  {
-    title: 'Management',
-    items: [
-      { label: 'Teachers', icon: <Users className="w-5 h-5" />, path: '/admin/teachers', badge: '48' },
-      { label: 'Students', icon: <GraduationCap className="w-5 h-5" />, path: '/admin/students' },
-      { label: 'Classes', icon: <BookOpen className="w-5 h-5" />, path: '/admin/classes' },
-      { label: 'Attendance', icon: <ClipboardList className="w-5 h-5" />, path: '/admin/attendance' },
-    ]
-  },
-  {
-    title: 'Administration',
-    items: [
-      { label: 'Reports', icon: <FileText className="w-5 h-5" />, path: '/admin/reports' },
-      { label: 'Announcements', icon: <Bell className="w-5 h-5" />, path: '/admin/announcements', badge: '3' },
-      { label: 'Finance', icon: <DollarSign className="w-5 h-5" />, path: '/admin/finance' },
-      { label: 'Settings', icon: <Settings className="w-5 h-5" />, path: '/admin/settings' },
-    ]
-  }
-];
-
 // Chart data
 const performanceData = [
   { name: 'Jan', score: 75 },
@@ -79,33 +52,24 @@ const performanceData = [
   { name: 'Jul', score: 84 },
 ];
 
-const attendanceData = [
-  { name: 'Mon', present: 92, absent: 8 },
-  { name: 'Tue', present: 88, absent: 12 },
-  { name: 'Wed', present: 95, absent: 5 },
-  { name: 'Thu', present: 90, absent: 10 },
-  { name: 'Fri', present: 85, absent: 15 },
-];
-
 const AdminHome = () => {
   const { user } = useAuth();
   const [chartPeriod, setChartPeriod] = useState('monthly');
 
   return (
     <AdminDashboardLayout 
-      navSections={navSections} 
       pageTitle="Dashboard"
       pageDescription="Overview of your school's performance"
       headerActions={
-        <Button className="bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white rounded-xl shadow-lg shadow-blue-500/25 hidden sm:flex">
+        <Button className="bg-primary hover:bg-primary/90 text-primary-foreground rounded-xl shadow-lg hidden sm:flex">
           <Plus className="w-4 h-4 mr-2" />
           Quick Add
         </Button>
       }
     >
-      <div className="space-y-8">
+      <div className="space-y-6">
         {/* Welcome Banner */}
-        <div className="relative overflow-hidden rounded-2xl p-6 md:p-8 bg-gradient-to-r from-blue-600 via-indigo-600 to-violet-600 text-white">
+        <div className="relative overflow-hidden rounded-2xl p-6 md:p-8 gradient-primary text-white">
           <div className="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full -translate-y-1/2 translate-x-1/3 blur-3xl" />
           <div className="absolute bottom-0 left-0 w-48 h-48 bg-white/5 rounded-full translate-y-1/2 -translate-x-1/4 blur-2xl" />
           
@@ -113,12 +77,12 @@ const AdminHome = () => {
             <h2 className="text-2xl md:text-3xl font-bold mb-2">
               Welcome back, {user?.name?.split(' ')[0]}! 👋
             </h2>
-            <p className="text-blue-100 text-lg max-w-xl">
+            <p className="text-white/80 text-lg max-w-xl">
               Here's what's happening at your school today. You have 3 pending approvals and 2 new announcements to review.
             </p>
             
             <div className="flex flex-wrap gap-3 mt-6">
-              <Button className="bg-white text-blue-600 hover:bg-blue-50 rounded-xl font-semibold shadow-lg">
+              <Button className="bg-white text-primary hover:bg-white/90 rounded-xl font-semibold shadow-lg">
                 <ClipboardList className="w-4 h-4 mr-2" />
                 View Approvals
               </Button>
