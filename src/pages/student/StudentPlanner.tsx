@@ -37,9 +37,15 @@ import {
   Trash2,
   ChevronLeft,
   ChevronRight,
+  Grid3X3,
+  List,
+  Clock,
+  CheckCircle2,
 } from 'lucide-react';
+import { format, addMonths, subMonths, isSameDay } from 'date-fns';
 import { Calendar as CalendarComponent } from '@/components/ui/calendar';
 import { useAuth } from '@/contexts/AuthContext';
+import type { DayContentProps } from 'react-day-picker';
 
 type Priority = 'high' | 'medium' | 'low';
 const priorityColors: Record<Priority, string> = {
@@ -68,15 +74,99 @@ const stubSuggestions = [
   { id: 's1', name: 'Algebra drill', subject: 'Mathematics', duration: '20 min', priority: 'high' as Priority, why: 'Weak area practice' },
 ];
 
+// Calendar events (stub) – empty array = empty state; with items = events on calendar
+const calendarEventColors: Record<Priority, string> = {
+  high: '#ef4444',
+  medium: '#eab308',
+  low: '#22c55e',
+};
+const stubCalendarEvents = [
+  { id: 'e1', title: 'Algebra - linear equations', date: new Date(2026, 1, 3), priority: 'high' as Priority, subject: 'Mathematics', type: 'Practice', duration: '30 min', status: 'pending' as const, allocatedDate: new Date(2026, 1, 3), startTime: '09:00', endTime: '09:30', resources: [{ label: 'Calculator', status: 'required' as const }], aiInsight: 'Focus on quadratic formula today.', performanceScore: 85 },
+  { id: 'e2', title: 'Mechanics - numerical pra', date: new Date(2026, 1, 3), priority: 'medium' as Priority, subject: 'Physics', type: 'Practice', duration: '45 min', status: 'pending' as const, resources: [{ label: 'Quiet room', status: 'recommended' as const }] },
+  { id: 'e3', title: 'Organic chemistry revision', date: new Date(2026, 1, 3), priority: 'low' as Priority, subject: 'Chemistry', type: 'Revision', duration: '20 min', status: 'pending' as const },
+];
+
+type CalendarViewValue = 'dayGridMonth' | 'timeGridWeek' | 'timeGridDay';
+type ViewToggleType = 'grid' | 'list';
+
+type TaskDetail = {
+  id: string;
+  name: string;
+  subject: string;
+  type: string;
+  priority: Priority;
+  duration: string;
+  due: string;
+  status: 'pending' | 'completed';
+  allocatedDate?: Date;
+  startTime?: string;
+  endTime?: string;
+  resources?: { label: string; status: 'required' | 'recommended' }[];
+  aiInsight?: string;
+  performanceScore?: number;
+};
+
 const StudentPlanner = () => {
   const { user } = useAuth();
   const [loading, setLoading] = useState(false);
   const [loadError, setLoadError] = useState<string | null>(null);
-  const [calendarDate, setCalendarDate] = useState<Date | undefined>(new Date());
-  const [selectedEvent, setSelectedEvent] = useState<{ name: string; subject: string; type: string; priority: Priority; duration: string; due: string; why?: string; env?: string } | null>(null);
+  const [calendarDate, setCalendarDate] = useState<Date>(() => new Date(2026, 1, 1));
+  const [calendarView, setCalendarView] = useState<CalendarViewValue>('dayGridMonth');
+  const [viewToggle, setViewToggle] = useState<ViewToggleType>('grid');
+  const [selectedEvent, setSelectedEvent] = useState<TaskDetail | null>(null);
   const [addTaskOpen, setAddTaskOpen] = useState(false);
   const [examState, setExamState] = useState<'loading' | 'error' | 'success' | 'none'>('success');
   const [hasSuggestions] = useState(true);
+
+  const goToPrevMonth = () => setCalendarDate((d) => subMonths(d, 1));
+  const goToNextMonth = () => setCalendarDate((d) => addMonths(d, 1));
+  const goToToday = () => setCalendarDate(new Date());
+
+  const getEventsForDay = (date: Date) =>
+    stubCalendarEvents.filter((e) => isSameDay(e.date, date));
+
+  const CalendarDayContent = (props: DayContentProps) => {
+    const { date } = props;
+    const events = getEventsForDay(date).slice(0, 3);
+    return (
+      <div className="flex h-full min-h-[4.5rem] w-full flex-col items-stretch p-0.5 text-left">
+        <span className="text-right text-sm font-medium tabular-nums">
+          {date.getDate()}
+        </span>
+        <div className="mt-0.5 flex min-h-0 flex-1 flex-col gap-0.5 overflow-hidden">
+          {events.map((ev) => (
+            <button
+              key={ev.id}
+              type="button"
+              className="cursor-pointer truncate rounded-md px-1 py-0.5 text-xs font-medium text-white hover:opacity-90"
+              style={{ backgroundColor: calendarEventColors[ev.priority] }}
+              onClick={(e) => {
+                e.stopPropagation();
+                setSelectedEvent({
+                  id: ev.id,
+                  name: ev.title,
+                  subject: ev.subject,
+                  type: ev.type,
+                  priority: ev.priority,
+                  duration: ev.duration,
+                  due: format(ev.date, 'MMM d, yyyy'),
+                  status: ev.status,
+                  allocatedDate: ev.allocatedDate,
+                  startTime: ev.startTime,
+                  endTime: ev.endTime,
+                  resources: ev.resources,
+                  aiInsight: ev.aiInsight,
+                  performanceScore: ev.performanceScore,
+                });
+              }}
+            >
+              {ev.title}
+            </button>
+          ))}
+        </div>
+      </div>
+    );
+  };
 
   return (
     <StudentDashboardLayout>
@@ -294,27 +384,97 @@ const StudentPlanner = () => {
                   </TabsContent>
 
                   <TabsContent value="calendar" className="mt-0">
-                    <Card className="border border-gray-200 shadow-sm rounded-2xl overflow-hidden">
-                      <CardContent className="p-0">
-                        <div className="flex flex-wrap items-center justify-between gap-3 px-4 py-3 border-b border-gray-100">
-                          <div className="flex items-center gap-2">
-                            <Button variant="outline" size="icon" className="h-9 w-9"><ChevronLeft className="w-4 h-4" /></Button>
-                            <Button variant="outline" size="icon" className="h-9 w-9"><ChevronRight className="w-4 h-4" /></Button>
-                            <Button variant="outline" size="sm" className="h-9">Today</Button>
-                            <span className="text-base font-semibold text-gray-900 px-2">February 2026</span>
+                    <div className="flex flex-col gap-4 w-full min-h-[600px]">
+                      {/* Toolbar */}
+                      <div className="bg-card p-4 rounded-xl border shadow-sm flex flex-wrap items-center justify-between gap-3">
+                        <div className="flex flex-wrap items-center gap-3">
+                          <div className="flex items-center bg-muted/50 p-1 rounded-lg">
+                            <Button variant="ghost" size="icon" className="h-8 w-8" onClick={goToPrevMonth} aria-label="Previous month">
+                              <ChevronLeft className="w-4 h-4" />
+                            </Button>
+                            <Button variant="ghost" size="sm" className="h-8 px-3 font-medium" onClick={goToToday}>
+                              Today
+                            </Button>
+                            <Button variant="ghost" size="icon" className="h-8 w-8" onClick={goToNextMonth} aria-label="Next month">
+                              <ChevronRight className="w-4 h-4" />
+                            </Button>
+                          </div>
+                          <h2 className="text-xl font-bold text-foreground">
+                            {format(calendarDate, 'MMMM yyyy')}
+                          </h2>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <Select value={calendarView} onValueChange={(v) => setCalendarView(v as CalendarViewValue)}>
+                            <SelectTrigger className="w-[140px] h-9">
+                              <SelectValue />
+                            </SelectTrigger>
+                            <SelectContent>
+                              <SelectItem value="dayGridMonth">Monthly</SelectItem>
+                              <SelectItem value="timeGridWeek">Weekly</SelectItem>
+                              <SelectItem value="timeGridDay">Daily</SelectItem>
+                            </SelectContent>
+                          </Select>
+                          <div className="flex items-center bg-muted/50 p-1 rounded-lg border">
+                            <Button
+                              variant={viewToggle === 'grid' ? 'secondary' : 'ghost'}
+                              size="icon"
+                              className="h-8 w-8"
+                              onClick={() => setViewToggle('grid')}
+                              aria-label="Monthly view"
+                            >
+                              <Grid3X3 className="w-4 h-4" />
+                            </Button>
+                            <Button
+                              variant={viewToggle === 'list' ? 'secondary' : 'ghost'}
+                              size="icon"
+                              className="h-8 w-8"
+                              onClick={() => setViewToggle('list')}
+                              aria-label="Weekly view"
+                            >
+                              <List className="w-4 h-4" />
+                            </Button>
                           </div>
                         </div>
-                        <div className="p-4">
-                          <CalendarComponent mode="single" selected={calendarDate} onSelect={setCalendarDate} className="rounded-lg border-0" />
-                          <div className="mt-4 flex flex-wrap gap-2">
-                            <span className="text-xs text-gray-500">Events:</span>
-                            <span className="inline-flex items-center gap-1.5 text-xs"><span className="w-2 h-2 rounded-full bg-[#ef4444]" /> High</span>
-                            <span className="inline-flex items-center gap-1.5 text-xs"><span className="w-2 h-2 rounded-full bg-[#eab308]" /> Medium</span>
-                            <span className="inline-flex items-center gap-1.5 text-xs"><span className="w-2 h-2 rounded-full bg-[#22c55e]" /> Low</span>
+                      </div>
+                      {/* Calendar card */}
+                      <Card className="flex-1 p-4 overflow-hidden border shadow-md bg-card relative min-h-[500px]">
+                        {stubCalendarEvents.length === 0 ? (
+                          <div className="absolute inset-0 bg-background/60 backdrop-blur-sm z-10 flex flex-col items-center justify-center gap-3 p-6">
+                            <CalendarIcon className="w-16 h-16 text-muted-foreground opacity-50" />
+                            <p className="text-lg font-semibold text-foreground">No tasks scheduled</p>
+                            <p className="text-sm text-muted-foreground">No tasks found for the visible date range.</p>
+                            <p className="text-xs text-muted-foreground">Create a task to get started with your study plan.</p>
                           </div>
+                        ) : null}
+                        <div className="relative">
+                          <CalendarComponent
+                            mode="single"
+                            month={calendarDate}
+                            onMonthChange={(date) => date && setCalendarDate(date)}
+                            selected={calendarDate}
+                            onSelect={(date) => date && setCalendarDate(date)}
+                            className="rounded-lg border-0"
+                            classNames={{
+                              caption: 'hidden',
+                              nav: 'hidden',
+                              head_cell: 'text-muted-foreground rounded-md w-full font-semibold text-foreground text-[0.8rem]',
+                              row: 'flex w-full mt-1',
+                              cell: 'h-auto min-h-[4.5rem] w-full p-0.5 align-top text-center text-sm [&:has([aria-selected])]:bg-accent/50 first:[&:has([aria-selected])]:rounded-l-md last:[&:has([aria-selected])]:rounded-r-md focus-within:relative focus-within:z-20',
+                              day: 'h-full min-h-[4.5rem] w-full flex flex-col p-0 font-normal aria-selected:opacity-100 rounded-md',
+                              day_today: 'bg-transparent text-foreground font-semibold',
+                              day_selected:
+                                'bg-primary text-primary-foreground hover:bg-primary hover:text-primary-foreground focus:bg-primary focus:text-primary-foreground',
+                              day_outside:
+                                'text-muted-foreground opacity-50 aria-selected:bg-accent/50 aria-selected:text-muted-foreground aria-selected:opacity-30',
+                            }}
+                            components={{
+                              Caption: () => null,
+                              DayContent: CalendarDayContent,
+                            }}
+                          />
                         </div>
-                      </CardContent>
-                    </Card>
+                      </Card>
+                    </div>
                   </TabsContent>
 
                   <TabsContent value="tasks" className="mt-0">
@@ -455,31 +615,164 @@ const StudentPlanner = () => {
           </>
         )}
 
-        {/* Event detail modal (Calendar tab) */}
+        {/* Task detail modal (Calendar – on event click) */}
         <Dialog open={!!selectedEvent} onOpenChange={() => setSelectedEvent(null)}>
-          <DialogContent className="sm:max-w-md rounded-xl">
-            <DialogHeader>
-              <DialogTitle>{selectedEvent?.name}</DialogTitle>
-            </DialogHeader>
+          <DialogContent className="sm:max-w-[600px] p-6 max-h-[90vh] overflow-y-auto rounded-xl">
             {selectedEvent && (
-              <div className="space-y-3 text-sm">
-                <p><span className="text-gray-500">Subject:</span> {selectedEvent.subject}</p>
-                <p><span className="text-gray-500">Type:</span> {selectedEvent.type}</p>
-                <p><span className="text-gray-500">Priority:</span> {selectedEvent.priority}</p>
-                <p><span className="text-gray-500">Duration:</span> {selectedEvent.duration}</p>
-                <p><span className="text-gray-500">Due:</span> {selectedEvent.due}</p>
-                {selectedEvent.why && <p><span className="text-gray-500">Why:</span> {selectedEvent.why}</p>}
-                {selectedEvent.env && <p><span className="text-gray-500">Environment:</span> {selectedEvent.env}</p>}
-                <div className="pt-2">
-                  <Label className="text-xs">Time slot</Label>
-                  <Input type="text" placeholder="Edit time" className="mt-1" />
+              <>
+                <DialogHeader>
+                  <div className="flex items-center gap-2">
+                    <span
+                      className="w-4 h-4 rounded-full flex-shrink-0"
+                      style={{
+                        backgroundColor:
+                          selectedEvent.priority === 'high'
+                            ? '#ef4444'
+                            : selectedEvent.priority === 'medium'
+                              ? '#eab308'
+                              : '#22c55e',
+                      }}
+                    />
+                    <DialogTitle className="text-xl">{selectedEvent.name}</DialogTitle>
+                  </div>
+                  <p className="sr-only">Task details: {selectedEvent.subject}, {selectedEvent.type}, {selectedEvent.duration}</p>
+                </DialogHeader>
+                <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 py-4">
+                  <div>
+                    <Label className="text-sm text-muted-foreground">Subject</Label>
+                    <p className="font-semibold truncate">{selectedEvent.subject}</p>
+                  </div>
+                  <div>
+                    <Label className="text-sm text-muted-foreground">Type</Label>
+                    <div className="mt-0.5">
+                      <Badge variant="secondary" className="capitalize">{selectedEvent.type}</Badge>
+                    </div>
+                  </div>
+                  <div>
+                    <Label className="text-sm text-muted-foreground">Duration</Label>
+                    <p className="flex items-center gap-1 mt-0.5">
+                      <Clock className="w-3 h-3" />
+                      {selectedEvent.duration}
+                    </p>
+                  </div>
+                  <div>
+                    <Label className="text-sm text-muted-foreground">Status</Label>
+                    <div className="mt-0.5">
+                      <Badge variant={selectedEvent.status === 'completed' ? 'default' : 'outline'} className="capitalize">
+                        {selectedEvent.status}
+                      </Badge>
+                    </div>
+                  </div>
                 </div>
-              </div>
+                {selectedEvent.allocatedDate && (selectedEvent.startTime ?? selectedEvent.endTime) && (
+                  <div className="bg-blue-50 p-4 rounded-xl border border-blue-100 mb-4">
+                    <div className="flex items-center gap-2 text-blue-600 text-sm font-bold mb-2">
+                      <CalendarIcon className="w-4 h-4" />
+                      Current Allocation
+                    </div>
+                    <p className="text-sm text-blue-900">
+                      Date: {format(selectedEvent.allocatedDate, 'EEE, MMM d')}
+                    </p>
+                    <p className="text-sm text-blue-900">
+                      Time: {selectedEvent.startTime ?? '—'}
+                      {selectedEvent.endTime ? ` – ${selectedEvent.endTime}` : ''}
+                    </p>
+                  </div>
+                )}
+                <div className="space-y-3 mb-4">
+                  <div className="flex items-center gap-2 text-sm font-medium">
+                    <CalendarIcon className="w-4 h-4 text-muted-foreground" />
+                    Allocate Task Time
+                  </div>
+                  <div className="grid grid-cols-3 gap-2">
+                    <div>
+                      <Label className="text-xs text-muted-foreground">Date</Label>
+                      <Input type="date" className="mt-0.5 h-9" />
+                    </div>
+                    <div>
+                      <Label className="text-xs text-muted-foreground">Start Time</Label>
+                      <Input type="time" className="mt-0.5 h-9" />
+                    </div>
+                    <div>
+                      <Label className="text-xs text-muted-foreground">End Time</Label>
+                      <Input type="time" className="mt-0.5 h-9" />
+                    </div>
+                  </div>
+                  <Button className="w-full bg-purple-600 hover:bg-purple-700 text-white gap-2" disabled>
+                    <CalendarIcon className="w-4 h-4" />
+                    Allocate Time Slot
+                  </Button>
+                </div>
+                <div className="space-y-2 mb-4">
+                  <div className="flex items-center gap-2 text-sm font-medium">
+                    <CheckCircle2 className="w-4 h-4 text-muted-foreground" />
+                    Required Resources & Environment
+                  </div>
+                  {selectedEvent.resources && selectedEvent.resources.length > 0 ? (
+                    <ul className="space-y-2">
+                      {selectedEvent.resources.map((r, i) => (
+                        <li
+                          key={i}
+                          className={`flex items-center gap-3 p-3 rounded-lg border ${
+                            r.status === 'required'
+                              ? 'bg-red-50 border-red-200'
+                              : 'bg-amber-50 border-amber-200'
+                          }`}
+                        >
+                          <span className={`w-4 h-4 rounded-full flex-shrink-0 ${r.status === 'required' ? 'bg-red-500' : 'bg-amber-500'}`} />
+                          <span className="text-sm font-medium">{r.label}</span>
+                          <Badge variant={r.status === 'required' ? 'destructive' : 'secondary'} className="capitalize ml-auto">
+                            {r.status}
+                          </Badge>
+                        </li>
+                      ))}
+                    </ul>
+                  ) : (
+                    <div className="flex items-center gap-3 p-3 rounded-lg border bg-gray-50 border-gray-200">
+                      <AlertCircle className="w-4 h-4 text-muted-foreground flex-shrink-0" />
+                      <span className="text-sm text-muted-foreground">No specific requirements for this task</span>
+                    </div>
+                  )}
+                </div>
+                {selectedEvent.aiInsight && (
+                  <div className="bg-indigo-50 p-4 rounded-xl border border-indigo-100 text-sm text-indigo-900 mb-4">
+                    <p className="font-bold text-indigo-700 flex items-center gap-1 mb-1">
+                      <AlertCircle className="w-4 h-4" />
+                      AI Insight:
+                    </p>
+                    <p className="text-indigo-800">{selectedEvent.aiInsight}</p>
+                  </div>
+                )}
+                {selectedEvent.performanceScore != null && (
+                  <div className="mb-4">
+                    <Label className="text-sm text-muted-foreground">Performance Score</Label>
+                    <p className="font-medium mt-0.5">{selectedEvent.performanceScore}%</p>
+                    <div className="h-2 bg-gray-200 rounded-full mt-1 overflow-hidden">
+                      <div
+                        className="h-full rounded-full"
+                        style={{
+                          width: `${selectedEvent.performanceScore}%`,
+                          backgroundColor:
+                            selectedEvent.performanceScore >= 80
+                              ? '#22c55e'
+                              : selectedEvent.performanceScore >= 60
+                                ? '#eab308'
+                                : '#ef4444',
+                        }}
+                      />
+                    </div>
+                  </div>
+                )}
+                <DialogFooter>
+                  <Button variant="outline" onClick={() => setSelectedEvent(null)}>
+                    Close
+                  </Button>
+                  <Button className="bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 text-white font-medium">
+                    Start Task
+                  </Button>
+                </DialogFooter>
+              </>
             )}
-            <DialogFooter>
-              <Button variant="outline" onClick={() => setSelectedEvent(null)}>Close</Button>
-              <Button>Mark complete</Button>
-            </DialogFooter>
           </DialogContent>
         </Dialog>
 
