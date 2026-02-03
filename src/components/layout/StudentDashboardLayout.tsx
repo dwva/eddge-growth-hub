@@ -30,10 +30,10 @@ const StudentDashboardLayout = ({ children, title }: StudentDashboardLayoutProps
 
   return (
     <div className="h-screen bg-background flex overflow-hidden font-sans">
-      {/* Desktop Sidebar - Fixed width: 176px expanded, 56px collapsed */}
+      {/* Desktop Sidebar - Fixed width: 224px expanded, 56px collapsed */}
       <aside className={cn(
         "hidden md:flex flex-col transition-all duration-300 h-screen sticky top-0 flex-shrink-0 relative",
-        collapsed ? "w-14" : "w-44"
+        collapsed ? "w-14" : "w-56"
       )}>
         <StudentSidebar collapsed={collapsed} />
       </aside>
