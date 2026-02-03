@@ -26,7 +26,7 @@ const StudentHome = () => {
   return (
     <StudentDashboardLayout>
       {/* Max width container with consistent horizontal centering */}
-      <div className="max-w-5xl mx-auto space-y-6">
+      <div className="w-full space-y-6">
         
         {/* Hero Section - General Focus */}
         <Card className="relative overflow-hidden border-0 shadow-lg rounded-2xl">
