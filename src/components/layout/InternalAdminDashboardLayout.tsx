@@ -4,8 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { Input } from '@/components/ui/input';
-import { Menu, Bell, MessageSquare, Settings, LogOut, Search, SlidersHorizontal } from 'lucide-react';
+import { Menu, Bell, MessageSquare, Settings, LogOut } from 'lucide-react';
 import InternalAdminSidebar from './InternalAdminSidebar';
 import { useAuth } from '@/contexts/AuthContext';
 import { useNavigate } from 'react-router-dom';
@@ -73,20 +72,6 @@ const InternalAdminDashboardLayout = ({ children }: InternalAdminDashboardLayout
             <div className="hidden sm:block">
               <h1 className="text-xl md:text-2xl font-bold text-gray-900">Internal Admin</h1>
               <p className="text-sm text-gray-500">EDDGE Platform Management</p>
-            </div>
-          </div>
-          
-          {/* Center: Search Bar */}
-          <div className="hidden lg:flex items-center flex-1 justify-center max-w-md mx-8">
-            <div className="relative w-full">
-              <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
-              <Input 
-                placeholder="Search schools, users, logs..." 
-                className="pl-10 pr-12 w-full h-11 bg-gray-50 border-gray-200 rounded-xl text-sm focus-visible:ring-1 focus-visible:ring-primary/30"
-              />
-              <button className="absolute right-3 top-1/2 -translate-y-1/2 p-1.5 hover:bg-gray-100 rounded-lg transition-colors">
-                <SlidersHorizontal className="w-4 h-4 text-gray-400" />
-              </button>
             </div>
           </div>
           
