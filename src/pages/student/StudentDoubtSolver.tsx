@@ -14,7 +14,6 @@ import {
   BookOpen,
   Calculator,
   FlaskConical,
-  Globe,
   PenTool,
   Share,
   ThumbsUp,
@@ -86,10 +85,10 @@ const mockConversations: Conversation[] = [
 
 // Suggestion chips
 const suggestions = [
-  { icon: Calculator, label: 'Help with Math', color: 'text-blue-400' },
-  { icon: FlaskConical, label: 'Explain Science', color: 'text-green-400' },
-  { icon: BookOpen, label: 'Study Tips', color: 'text-amber-400' },
-  { icon: PenTool, label: 'Writing Help', color: 'text-pink-400' },
+  { icon: Calculator, label: 'Help with Math', color: 'text-blue-500' },
+  { icon: FlaskConical, label: 'Explain Science', color: 'text-emerald-500' },
+  { icon: BookOpen, label: 'Study Tips', color: 'text-amber-500' },
+  { icon: PenTool, label: 'Writing Help', color: 'text-pink-500' },
 ];
 
 // Mock AI responses
@@ -134,7 +133,6 @@ const StudentDoubtSolver = () => {
   const simulateAIResponse = (userMessage: string) => {
     setIsTyping(true);
     
-    // Simulate typing delay
     setTimeout(() => {
       const randomResponse = mockResponses[Math.floor(Math.random() * mockResponses.length)];
       const aiMessage: Message = {
@@ -161,7 +159,6 @@ const StudentDoubtSolver = () => {
     setMessages(prev => [...prev, userMessage]);
     setInput('');
     
-    // Reset textarea height
     if (textareaRef.current) {
       textareaRef.current.style.height = 'auto';
     }
@@ -179,7 +176,6 @@ const StudentDoubtSolver = () => {
   const handleTextareaChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     setInput(e.target.value);
     
-    // Auto-resize textarea
     if (textareaRef.current) {
       textareaRef.current.style.height = 'auto';
       textareaRef.current.style.height = Math.min(textareaRef.current.scrollHeight, 200) + 'px';
@@ -218,7 +214,7 @@ const StudentDoubtSolver = () => {
     if (convs.length === 0) return null;
     return (
       <div className="mb-4">
-        <p className="text-xs text-zinc-500 px-3 mb-2 font-medium">{title}</p>
+        <p className="text-xs text-muted-foreground px-3 mb-2 font-medium">{title}</p>
         {convs.map(conv => (
           <button
             key={conv.id}
@@ -226,8 +222,8 @@ const StudentDoubtSolver = () => {
             className={cn(
               "w-full text-left px-3 py-2 rounded-lg text-sm transition-colors truncate",
               activeConversation?.id === conv.id
-                ? "bg-zinc-700 text-white"
-                : "text-zinc-300 hover:bg-zinc-800"
+                ? "bg-primary/10 text-primary font-medium"
+                : "text-foreground hover:bg-muted"
             )}
           >
             {conv.title}
@@ -238,26 +234,35 @@ const StudentDoubtSolver = () => {
   };
 
   return (
-    <div className="flex h-screen bg-zinc-900 text-white overflow-hidden">
+    <div className="flex h-screen bg-background text-foreground overflow-hidden">
       {/* Mobile sidebar overlay */}
       {mobileSidebarOpen && (
         <div 
-          className="fixed inset-0 bg-black/50 z-40 lg:hidden"
+          className="fixed inset-0 bg-black/20 z-40 lg:hidden"
           onClick={() => setMobileSidebarOpen(false)}
         />
       )}
 
       {/* Sidebar */}
       <aside className={cn(
-        "fixed lg:relative z-50 h-full bg-zinc-950 flex flex-col transition-all duration-300",
+        "fixed lg:relative z-50 h-full bg-card border-r border-border flex flex-col transition-all duration-300",
         sidebarOpen ? "w-64" : "w-0 lg:w-0",
         mobileSidebarOpen ? "translate-x-0" : "-translate-x-full lg:translate-x-0"
       )}>
-        <div className="flex-shrink-0 p-3 border-b border-zinc-800">
+        {/* Logo */}
+        <div className="flex-shrink-0 p-4 border-b border-border">
+          <div className="flex items-center gap-3 mb-4">
+            <div className="w-10 h-10 rounded-xl bg-primary flex items-center justify-center">
+              <Sparkles className="w-5 h-5 text-white" />
+            </div>
+            <div>
+              <span className="text-xl font-bold text-primary">EDDGE</span>
+              <span className="text-xs text-muted-foreground block">Doubt Solver</span>
+            </div>
+          </div>
           <Button
             onClick={handleNewChat}
-            variant="outline"
-            className="w-full justify-start gap-2 bg-transparent border-zinc-700 text-white hover:bg-zinc-800 hover:text-white"
+            className="w-full justify-start gap-2 bg-primary hover:bg-primary/90 text-white"
           >
             <Plus className="w-4 h-4" />
             New chat
@@ -267,11 +272,11 @@ const StudentDoubtSolver = () => {
         {/* Search */}
         <div className="p-3">
           <div className="relative">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-500" />
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
             <input
               type="text"
               placeholder="Search chats..."
-              className="w-full bg-zinc-800 border-0 rounded-lg pl-9 pr-3 py-2 text-sm text-white placeholder:text-zinc-500 focus:outline-none focus:ring-1 focus:ring-zinc-600"
+              className="w-full bg-muted border-0 rounded-lg pl-9 pr-3 py-2 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/20"
             />
           </div>
         </div>
@@ -285,26 +290,26 @@ const StudentDoubtSolver = () => {
         </ScrollArea>
 
         {/* User section */}
-        <div className="flex-shrink-0 p-3 border-t border-zinc-800">
-          <button className="w-full flex items-center gap-3 p-2 rounded-lg hover:bg-zinc-800 transition-colors">
-            <div className="w-8 h-8 rounded-full bg-gradient-to-br from-purple-500 to-pink-500 flex items-center justify-center text-sm font-medium">
+        <div className="flex-shrink-0 p-3 border-t border-border">
+          <button className="w-full flex items-center gap-3 p-2 rounded-lg hover:bg-muted transition-colors">
+            <div className="w-8 h-8 rounded-full bg-gradient-to-br from-primary to-purple-600 flex items-center justify-center text-sm font-medium text-white">
               S
             </div>
-            <span className="text-sm text-zinc-300 truncate flex-1 text-left">Student</span>
-            <MoreHorizontal className="w-4 h-4 text-zinc-500" />
+            <span className="text-sm text-foreground truncate flex-1 text-left">Student</span>
+            <MoreHorizontal className="w-4 h-4 text-muted-foreground" />
           </button>
         </div>
       </aside>
 
       {/* Main content */}
-      <main className="flex-1 flex flex-col min-w-0">
+      <main className="flex-1 flex flex-col min-w-0 bg-gradient-to-b from-background to-muted/30">
         {/* Header */}
-        <header className="flex-shrink-0 h-14 border-b border-zinc-800 flex items-center justify-between px-4">
+        <header className="flex-shrink-0 h-14 border-b border-border bg-card/80 backdrop-blur-sm flex items-center justify-between px-4">
           <div className="flex items-center gap-2">
             <Button
               variant="ghost"
               size="icon"
-              className="lg:hidden text-zinc-400 hover:text-white hover:bg-zinc-800"
+              className="lg:hidden text-muted-foreground hover:text-foreground hover:bg-muted"
               onClick={() => setMobileSidebarOpen(true)}
             >
               <Menu className="w-5 h-5" />
@@ -312,21 +317,21 @@ const StudentDoubtSolver = () => {
             <Button
               variant="ghost"
               size="icon"
-              className="hidden lg:flex text-zinc-400 hover:text-white hover:bg-zinc-800"
+              className="hidden lg:flex text-muted-foreground hover:text-foreground hover:bg-muted"
               onClick={() => setSidebarOpen(!sidebarOpen)}
             >
               <Menu className="w-5 h-5" />
             </Button>
-            <button className="flex items-center gap-1 text-lg font-semibold hover:bg-zinc-800 rounded-lg px-2 py-1 transition-colors">
+            <button className="flex items-center gap-1 text-lg font-semibold hover:bg-muted rounded-lg px-2 py-1 transition-colors text-foreground">
               <span>Doubt Solver</span>
-              <ChevronDown className="w-4 h-4 text-zinc-500" />
+              <ChevronDown className="w-4 h-4 text-muted-foreground" />
             </button>
           </div>
           <div className="flex items-center gap-2">
             <Button
               variant="ghost"
               size="icon"
-              className="text-zinc-400 hover:text-white hover:bg-zinc-800"
+              className="text-muted-foreground hover:text-foreground hover:bg-muted"
             >
               <Share className="w-5 h-5" />
             </Button>
@@ -341,15 +346,18 @@ const StudentDoubtSolver = () => {
               <div className="max-w-2xl w-full text-center space-y-8">
                 {/* Logo/Icon */}
                 <div className="flex justify-center">
-                  <div className="w-16 h-16 rounded-full bg-gradient-to-br from-primary to-purple-600 flex items-center justify-center">
-                    <Sparkles className="w-8 h-8 text-white" />
+                  <div className="w-20 h-20 rounded-2xl bg-gradient-to-br from-primary to-purple-600 flex items-center justify-center shadow-lg shadow-primary/25">
+                    <Sparkles className="w-10 h-10 text-white" />
                   </div>
                 </div>
 
                 {/* Main heading */}
-                <h1 className="text-3xl md:text-4xl font-medium text-white">
-                  What can I help with?
-                </h1>
+                <div>
+                  <h1 className="text-3xl md:text-4xl font-bold text-foreground mb-2">
+                    What can I help with?
+                  </h1>
+                  <p className="text-muted-foreground">Ask me anything about your studies</p>
+                </div>
 
                 {/* Suggestions */}
                 <div className="flex flex-wrap justify-center gap-2">
@@ -357,7 +365,7 @@ const StudentDoubtSolver = () => {
                     <button
                       key={index}
                       onClick={() => setInput(`${suggestion.label}: `)}
-                      className="flex items-center gap-2 px-4 py-2 rounded-full bg-zinc-800 hover:bg-zinc-700 text-sm text-zinc-300 transition-colors border border-zinc-700"
+                      className="flex items-center gap-2 px-4 py-2.5 rounded-full bg-card hover:bg-muted text-sm text-foreground transition-colors border border-border shadow-sm"
                     >
                       <suggestion.icon className={cn("w-4 h-4", suggestion.color)} />
                       {suggestion.label}
@@ -379,40 +387,40 @@ const StudentDoubtSolver = () => {
                     )}
                   >
                     {message.role === 'assistant' && (
-                      <div className="flex-shrink-0 w-8 h-8 rounded-full bg-gradient-to-br from-primary to-purple-600 flex items-center justify-center">
+                      <div className="flex-shrink-0 w-9 h-9 rounded-xl bg-gradient-to-br from-primary to-purple-600 flex items-center justify-center shadow-sm">
                         <Sparkles className="w-4 h-4 text-white" />
                       </div>
                     )}
                     <div
                       className={cn(
-                        "max-w-[80%] rounded-2xl px-4 py-3",
+                        "max-w-[80%] rounded-2xl px-4 py-3 shadow-sm",
                         message.role === 'user'
-                          ? "bg-zinc-700 text-white"
-                          : "bg-zinc-800 text-zinc-100"
+                          ? "bg-primary text-white"
+                          : "bg-card border border-border text-foreground"
                       )}
                     >
                       <div className="text-sm whitespace-pre-wrap">{message.content}</div>
                       
                       {/* Action buttons for assistant messages */}
                       {message.role === 'assistant' && (
-                        <div className="flex items-center gap-1 mt-3 pt-2 border-t border-zinc-700">
-                          <Button variant="ghost" size="icon" className="h-7 w-7 text-zinc-500 hover:text-white hover:bg-zinc-700">
+                        <div className="flex items-center gap-1 mt-3 pt-2 border-t border-border">
+                          <Button variant="ghost" size="icon" className="h-7 w-7 text-muted-foreground hover:text-foreground hover:bg-muted">
                             <Copy className="w-3.5 h-3.5" />
                           </Button>
-                          <Button variant="ghost" size="icon" className="h-7 w-7 text-zinc-500 hover:text-white hover:bg-zinc-700">
+                          <Button variant="ghost" size="icon" className="h-7 w-7 text-muted-foreground hover:text-foreground hover:bg-muted">
                             <ThumbsUp className="w-3.5 h-3.5" />
                           </Button>
-                          <Button variant="ghost" size="icon" className="h-7 w-7 text-zinc-500 hover:text-white hover:bg-zinc-700">
+                          <Button variant="ghost" size="icon" className="h-7 w-7 text-muted-foreground hover:text-foreground hover:bg-muted">
                             <ThumbsDown className="w-3.5 h-3.5" />
                           </Button>
-                          <Button variant="ghost" size="icon" className="h-7 w-7 text-zinc-500 hover:text-white hover:bg-zinc-700">
+                          <Button variant="ghost" size="icon" className="h-7 w-7 text-muted-foreground hover:text-foreground hover:bg-muted">
                             <RotateCcw className="w-3.5 h-3.5" />
                           </Button>
                         </div>
                       )}
                     </div>
                     {message.role === 'user' && (
-                      <div className="flex-shrink-0 w-8 h-8 rounded-full bg-zinc-600 flex items-center justify-center text-sm font-medium">
+                      <div className="flex-shrink-0 w-9 h-9 rounded-xl bg-muted flex items-center justify-center text-sm font-medium text-foreground">
                         S
                       </div>
                     )}
@@ -422,14 +430,14 @@ const StudentDoubtSolver = () => {
                 {/* Typing indicator */}
                 {isTyping && (
                   <div className="flex gap-4">
-                    <div className="flex-shrink-0 w-8 h-8 rounded-full bg-gradient-to-br from-primary to-purple-600 flex items-center justify-center">
+                    <div className="flex-shrink-0 w-9 h-9 rounded-xl bg-gradient-to-br from-primary to-purple-600 flex items-center justify-center shadow-sm">
                       <Sparkles className="w-4 h-4 text-white" />
                     </div>
-                    <div className="bg-zinc-800 rounded-2xl px-4 py-3">
+                    <div className="bg-card border border-border rounded-2xl px-4 py-3 shadow-sm">
                       <div className="flex gap-1">
-                        <span className="w-2 h-2 bg-zinc-500 rounded-full animate-bounce" style={{ animationDelay: '0ms' }} />
-                        <span className="w-2 h-2 bg-zinc-500 rounded-full animate-bounce" style={{ animationDelay: '150ms' }} />
-                        <span className="w-2 h-2 bg-zinc-500 rounded-full animate-bounce" style={{ animationDelay: '300ms' }} />
+                        <span className="w-2 h-2 bg-primary/50 rounded-full animate-bounce" style={{ animationDelay: '0ms' }} />
+                        <span className="w-2 h-2 bg-primary/50 rounded-full animate-bounce" style={{ animationDelay: '150ms' }} />
+                        <span className="w-2 h-2 bg-primary/50 rounded-full animate-bounce" style={{ animationDelay: '300ms' }} />
                       </div>
                     </div>
                   </div>
@@ -441,30 +449,30 @@ const StudentDoubtSolver = () => {
           )}
 
           {/* Input area */}
-          <div className="flex-shrink-0 p-4">
+          <div className="flex-shrink-0 p-4 bg-gradient-to-t from-background to-transparent">
             <div className="max-w-3xl mx-auto">
-              <div className="relative bg-zinc-800 rounded-2xl border border-zinc-700 focus-within:border-zinc-600 transition-colors">
+              <div className="relative bg-card rounded-2xl border border-border shadow-lg focus-within:border-primary/50 focus-within:ring-2 focus-within:ring-primary/20 transition-all">
                 <Textarea
                   ref={textareaRef}
                   value={input}
                   onChange={handleTextareaChange}
                   onKeyDown={handleKeyDown}
                   placeholder="Ask me anything about your studies..."
-                  className="w-full min-h-[52px] max-h-[200px] bg-transparent border-0 resize-none px-4 py-3 pr-24 text-white placeholder:text-zinc-500 focus-visible:ring-0 focus-visible:ring-offset-0"
+                  className="w-full min-h-[52px] max-h-[200px] bg-transparent border-0 resize-none px-4 py-3 pr-28 text-foreground placeholder:text-muted-foreground focus-visible:ring-0 focus-visible:ring-offset-0"
                   rows={1}
                 />
                 <div className="absolute right-2 bottom-2 flex items-center gap-1">
                   <Button
                     variant="ghost"
                     size="icon"
-                    className="h-8 w-8 text-zinc-500 hover:text-white hover:bg-zinc-700"
+                    className="h-8 w-8 text-muted-foreground hover:text-foreground hover:bg-muted"
                   >
                     <Paperclip className="w-4 h-4" />
                   </Button>
                   <Button
                     variant="ghost"
                     size="icon"
-                    className="h-8 w-8 text-zinc-500 hover:text-white hover:bg-zinc-700"
+                    className="h-8 w-8 text-muted-foreground hover:text-foreground hover:bg-muted"
                   >
                     <Mic className="w-4 h-4" />
                   </Button>
@@ -475,15 +483,15 @@ const StudentDoubtSolver = () => {
                     className={cn(
                       "h-8 w-8 rounded-lg transition-colors",
                       input.trim()
-                        ? "bg-white text-zinc-900 hover:bg-zinc-200"
-                        : "bg-zinc-700 text-zinc-500"
+                        ? "bg-primary text-white hover:bg-primary/90"
+                        : "bg-muted text-muted-foreground"
                     )}
                   >
                     <Send className="w-4 h-4" />
                   </Button>
                 </div>
               </div>
-              <p className="text-center text-xs text-zinc-600 mt-2">
+              <p className="text-center text-xs text-muted-foreground mt-2">
                 AI-powered doubt solving for students. Responses are for educational purposes.
               </p>
             </div>
