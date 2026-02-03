@@ -142,7 +142,7 @@ const StudentHomework = () => {
                   <Clock className="w-5 h-5 text-amber-600" />
                 </div>
                 <div>
-                  <p className="text-2xl font-bold">{homeworkStats.pending}</p>
+                  <p className="text-xl font-semibold">{homeworkStats.pending}</p>
                   <p className="text-xs text-muted-foreground">Pending</p>
                 </div>
               </div>
@@ -155,7 +155,7 @@ const StudentHomework = () => {
                   <Upload className="w-5 h-5 text-blue-600" />
                 </div>
                 <div>
-                  <p className="text-2xl font-bold">{homeworkStats.submitted}</p>
+                  <p className="text-xl font-semibold">{homeworkStats.submitted}</p>
                   <p className="text-xs text-muted-foreground">Submitted</p>
                 </div>
               </div>
@@ -168,7 +168,7 @@ const StudentHomework = () => {
                   <CheckCircle2 className="w-5 h-5 text-green-600" />
                 </div>
                 <div>
-                  <p className="text-2xl font-bold">{homeworkStats.graded}</p>
+                  <p className="text-xl font-semibold">{homeworkStats.graded}</p>
                   <p className="text-xs text-muted-foreground">Graded</p>
                 </div>
               </div>
@@ -181,7 +181,7 @@ const StudentHomework = () => {
                   <AlertCircle className="w-5 h-5 text-red-600" />
                 </div>
                 <div>
-                  <p className="text-2xl font-bold">{homeworkStats.overdue}</p>
+                  <p className="text-xl font-semibold">{homeworkStats.overdue}</p>
                   <p className="text-xs text-muted-foreground">Overdue</p>
                 </div>
               </div>
@@ -208,7 +208,7 @@ const StudentHomework = () => {
                       <div className={`w-1.5 h-16 rounded-full ${getSubjectColor(homework.subject)}`} />
                       <div className="flex-1 min-w-0">
                         <div className="flex items-center gap-2 mb-1 flex-wrap">
-                          <h3 className="font-medium">{homework.title}</h3>
+                          <h3 className="text-sm font-medium">{homework.title}</h3>
                           <Badge className={`text-xs capitalize ${getStatusColor(homework.status)}`}>
                             {getStatusIcon(homework.status)}
                             <span className="ml-1">{homework.status}</span>
@@ -280,9 +280,9 @@ const StudentHomework = () => {
 
         {filteredHomework.length === 0 && (
           <div className="text-center py-12">
-            <BookOpen className="w-12 h-12 mx-auto text-muted-foreground mb-4" />
-            <h3 className="font-medium text-lg mb-2">No homework found</h3>
-            <p className="text-muted-foreground">No {selectedTab} homework at the moment</p>
+            <BookOpen className="w-10 h-10 mx-auto text-muted-foreground mb-3" />
+            <h3 className="text-sm font-medium mb-1">No homework found</h3>
+            <p className="text-xs text-muted-foreground">No {selectedTab} homework at the moment</p>
           </div>
         )}
       </div>

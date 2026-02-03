@@ -26,7 +26,7 @@ const StudentSettings = () => {
         {/* Profile */}
         <Card>
           <CardHeader>
-            <CardTitle className="text-lg flex items-center gap-2">
+            <CardTitle className="text-sm flex items-center gap-2">
               <User className="w-5 h-5" />
               Profile
             </CardTitle>
@@ -37,8 +37,8 @@ const StudentSettings = () => {
                 {selectedAvatar}
               </div>
               <div>
-                <p className="font-semibold">{user?.name}</p>
-                <p className="text-sm text-muted-foreground">{user?.email}</p>
+                <p className="text-sm font-medium">{user?.name}</p>
+                <p className="text-xs text-muted-foreground">{user?.email}</p>
               </div>
             </div>
             <div className="grid gap-4">
@@ -57,7 +57,7 @@ const StudentSettings = () => {
         {/* Avatar Selection */}
         <Card>
           <CardHeader>
-            <CardTitle className="text-lg flex items-center gap-2">
+            <CardTitle className="text-sm flex items-center gap-2">
               <Palette className="w-5 h-5" />
               Choose Avatar
             </CardTitle>
@@ -84,7 +84,7 @@ const StudentSettings = () => {
         {/* Notifications */}
         <Card>
           <CardHeader>
-            <CardTitle className="text-lg flex items-center gap-2">
+            <CardTitle className="text-sm flex items-center gap-2">
               <Bell className="w-5 h-5" />
               Notifications
             </CardTitle>
@@ -92,15 +92,15 @@ const StudentSettings = () => {
           <CardContent className="space-y-4">
             <div className="flex items-center justify-between">
               <div>
-                <p className="font-medium">Push Notifications</p>
-                <p className="text-sm text-muted-foreground">Receive reminders and updates</p>
+                <p className="text-sm font-medium">Push Notifications</p>
+                <p className="text-xs text-muted-foreground">Receive reminders and updates</p>
               </div>
               <Switch checked={notifications} onCheckedChange={setNotifications} />
             </div>
             <div className="flex items-center justify-between">
               <div>
-                <p className="font-medium">Email Updates</p>
-                <p className="text-sm text-muted-foreground">Weekly progress reports</p>
+                <p className="text-sm font-medium">Email Updates</p>
+                <p className="text-xs text-muted-foreground">Weekly progress reports</p>
               </div>
               <Switch checked={emailUpdates} onCheckedChange={setEmailUpdates} />
             </div>
