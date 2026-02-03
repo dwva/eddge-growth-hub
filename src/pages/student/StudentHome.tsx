@@ -60,12 +60,11 @@ const StudentHome = () => {
         {/* Main Grid - Full Width */}
         <div className="space-y-6">
           
-          {/* Hero Row: Focus Card + Stats Card - aligned to main content edges */}
-          <div>
-            <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 items-stretch">
-              
-              {/* Hero Card - Today's Focus (7/12 width on desktop) */}
-              <Card className="lg:col-span-7 relative overflow-hidden border-0 shadow-sm rounded-3xl bg-gradient-to-br from-primary via-primary to-purple-700">
+          {/* Hero Row: Focus Card + Stats Card */}
+          <div className="grid grid-cols-1 lg:grid-cols-[1fr_360px] gap-4 items-stretch">
+            
+            {/* Hero Card - Today's Focus (flexible width) */}
+            <Card className="relative overflow-hidden border-0 shadow-sm rounded-3xl bg-gradient-to-br from-primary via-primary to-purple-700 min-w-0">
                 {/* Decorative elements - balanced, not distracting */}
                 <div className="absolute top-0 right-0 w-48 h-48 bg-white/5 rounded-full -translate-y-1/4 translate-x-1/4" />
                 <div className="absolute top-1/2 right-1/4 w-32 h-32 bg-white/5 rounded-full" />
@@ -92,46 +91,45 @@ const StudentHome = () => {
                     </Button>
                   </div>
                 </CardContent>
-              </Card>
+            </Card>
 
-              {/* Stats Card - My Stats (5/12 width on desktop) */}
-              <Card className="lg:col-span-5 relative overflow-hidden border-0 shadow-sm rounded-3xl bg-gradient-to-br from-amber-100 via-amber-50 to-orange-100">
-                {/* Decorative elements - balanced */}
-                <div className="absolute -top-6 -right-6 w-24 h-24 bg-primary/10 rounded-full" />
-                <div className="absolute bottom-0 right-0 w-40 h-40 bg-orange-200/50 rounded-full translate-y-1/3 translate-x-1/4" />
-                
-                <CardContent className="relative p-8 flex flex-col justify-between h-full min-h-[240px]">
-                  {/* Top section - Title aligned with Today's Focus */}
-                  <div className="pt-2">
-                    <h3 className="text-2xl font-bold text-gray-900 leading-tight">My Stats</h3>
-                    
-                    {/* Stats row - evenly aligned */}
-                    <div className="flex gap-10 mt-5">
-                      <div>
-                        <p className="text-xs text-gray-500 font-medium">Today</p>
-                        <p className="text-2xl font-bold text-gray-900 mt-1">2.5 hrs</p>
-                      </div>
-                      <div>
-                        <p className="text-xs text-gray-500 font-medium">This Week</p>
-                        <p className="text-2xl font-bold text-gray-900 mt-1">12 hrs</p>
-                      </div>
+            {/* Stats Card - My Stats (fixed width) */}
+            <Card className="relative overflow-hidden border-0 shadow-sm rounded-3xl bg-gradient-to-br from-amber-100 via-amber-50 to-orange-100 min-w-0">
+              {/* Decorative elements - balanced */}
+              <div className="absolute -top-6 -right-6 w-24 h-24 bg-primary/10 rounded-full" />
+              <div className="absolute bottom-0 right-0 w-40 h-40 bg-orange-200/50 rounded-full translate-y-1/3 translate-x-1/4" />
+              
+              <CardContent className="relative p-8 flex flex-col justify-between h-full min-h-[240px]">
+                {/* Top section - Title aligned with Today's Focus */}
+                <div className="pt-2">
+                  <h3 className="text-2xl font-bold text-gray-900 leading-tight">My Stats</h3>
+                  
+                  {/* Stats row - evenly aligned */}
+                  <div className="flex gap-10 mt-5">
+                    <div>
+                      <p className="text-xs text-gray-500 font-medium">Today</p>
+                      <p className="text-2xl font-bold text-gray-900 mt-1">2.5 hrs</p>
                     </div>
-                    
-                    {/* Streak - aligned with stats content */}
-                    <div className="flex items-center gap-1.5 mt-4">
-                      <Flame className="w-4 h-4 text-orange-500" />
-                      <span className="text-sm font-semibold text-gray-700">7 day streak</span>
+                    <div>
+                      <p className="text-xs text-gray-500 font-medium">This Week</p>
+                      <p className="text-2xl font-bold text-gray-900 mt-1">12 hrs</p>
                     </div>
                   </div>
                   
-                  {/* Bottom section - CTA aligned with buttons baseline */}
-                  <button className="flex items-center gap-2 text-sm font-medium text-gray-700 hover:text-primary transition-colors group pt-6">
-                    Go to my progress
-                    <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-                  </button>
-                </CardContent>
-              </Card>
-            </div>
+                  {/* Streak - aligned with stats content */}
+                  <div className="flex items-center gap-1.5 mt-4">
+                    <Flame className="w-4 h-4 text-orange-500" />
+                    <span className="text-sm font-semibold text-gray-700">7 day streak</span>
+                  </div>
+                </div>
+                
+                {/* Bottom section - CTA aligned with buttons baseline */}
+                <button className="flex items-center gap-2 text-sm font-medium text-gray-700 hover:text-primary transition-colors group pt-6">
+                  Go to my progress
+                  <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                </button>
+              </CardContent>
+            </Card>
           </div>
 
           {/* My Learning Section - 3 Card Grid */}
