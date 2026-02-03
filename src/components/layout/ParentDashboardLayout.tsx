@@ -42,7 +42,7 @@ const ParentDashboardLayoutInner = ({ children, title = "Parent Dashboard" }: Pa
       {/* Desktop Sidebar - Fixed */}
       <aside className={cn(
         "hidden md:flex flex-col transition-all duration-300 h-screen sticky top-0 flex-shrink-0 relative",
-        collapsed ? "w-12" : "w-48"
+        collapsed ? "w-14" : "w-56"
       )}>
         <ParentSidebar collapsed={collapsed} />
         {/* Collapse Toggle */}
