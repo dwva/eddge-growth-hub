@@ -6,7 +6,6 @@ import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { Input } from '@/components/ui/input';
 import { useAuth } from '@/contexts/AuthContext';
 import { useNavigate } from 'react-router-dom';
 import { 
@@ -17,8 +16,6 @@ import {
   MessageSquare, 
   Settings, 
   LogOut, 
-  Search, 
-  SlidersHorizontal,
   HelpCircle
 } from 'lucide-react';
 
@@ -87,7 +84,7 @@ const TeacherDashboardContent = ({ children }: TeacherDashboardLayoutProps) => {
       <div className="flex-1 flex flex-col min-w-0">
         {/* Top Bar */}
         <header className="h-16 bg-white px-4 md:px-6 flex items-center justify-between sticky top-0 z-10 flex-shrink-0 border-b border-gray-100">
-          {/* Left: Menu + Welcome */}
+          {/* Left: Menu + Mode Toggle */}
           <div className="flex items-center gap-3">
             {/* Mobile Menu */}
             <Sheet open={mobileOpen} onOpenChange={setMobileOpen}>
@@ -108,25 +105,9 @@ const TeacherDashboardContent = ({ children }: TeacherDashboardLayoutProps) => {
               <Menu className="w-5 h-5 text-gray-500" />
             </Button>
 
-            {/* Welcome Text */}
-            <div className="hidden sm:block">
-              <h1 className="text-lg font-bold text-gray-900">Welcome to EDDGE.</h1>
-              <p className="text-xs text-gray-500">Hello {firstName}, welcome back!</p>
-            </div>
-          </div>
-          
-          {/* Center: Mode Toggle + Search */}
-          <div className="hidden lg:flex items-center gap-4 flex-1 justify-center max-w-2xl mx-4">
-            <ModeToggle />
-            <div className="relative w-full max-w-xs">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
-              <Input 
-                placeholder="Search..." 
-                className="pl-9 pr-10 w-full h-9 bg-gray-50 border-gray-200 rounded-lg text-sm focus-visible:ring-1 focus-visible:ring-primary/30"
-              />
-              <button className="absolute right-2.5 top-1/2 -translate-y-1/2 p-1 hover:bg-gray-100 rounded transition-colors">
-                <SlidersHorizontal className="w-3.5 h-3.5 text-gray-400" />
-              </button>
+            {/* Mode Toggle - Desktop */}
+            <div className="hidden lg:block">
+              <ModeToggle />
             </div>
           </div>
 
