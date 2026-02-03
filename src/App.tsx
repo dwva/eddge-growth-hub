@@ -39,6 +39,14 @@ import ParentChildDetails from "./pages/parent/ParentChildDetails";
 
 // Admin Pages
 import AdminHome from "./pages/admin/AdminHome";
+import AdminTeachers from "./pages/admin/AdminTeachers";
+import AdminStudents from "./pages/admin/AdminStudents";
+import AdminClasses from "./pages/admin/AdminClasses";
+import AdminAttendance from "./pages/admin/AdminAttendance";
+import AdminReports from "./pages/admin/AdminReports";
+import AdminAnnouncements from "./pages/admin/AdminAnnouncements";
+import AdminFinance from "./pages/admin/AdminFinance";
+import AdminSettings from "./pages/admin/AdminSettings";
 
 // Super Admin Pages
 import SuperAdminHome from "./pages/superadmin/SuperAdminHome";
@@ -183,6 +191,46 @@ const App = () => (
             <Route path="/admin" element={
               <ProtectedRoute allowedRoles={['admin']}>
                 <AdminHome />
+              </ProtectedRoute>
+            } />
+            <Route path="/admin/teachers" element={
+              <ProtectedRoute allowedRoles={['admin']}>
+                <AdminTeachers />
+              </ProtectedRoute>
+            } />
+            <Route path="/admin/students" element={
+              <ProtectedRoute allowedRoles={['admin']}>
+                <AdminStudents />
+              </ProtectedRoute>
+            } />
+            <Route path="/admin/classes" element={
+              <ProtectedRoute allowedRoles={['admin']}>
+                <AdminClasses />
+              </ProtectedRoute>
+            } />
+            <Route path="/admin/attendance" element={
+              <ProtectedRoute allowedRoles={['admin']}>
+                <AdminAttendance />
+              </ProtectedRoute>
+            } />
+            <Route path="/admin/reports" element={
+              <ProtectedRoute allowedRoles={['admin']}>
+                <AdminReports />
+              </ProtectedRoute>
+            } />
+            <Route path="/admin/announcements" element={
+              <ProtectedRoute allowedRoles={['admin']}>
+                <AdminAnnouncements />
+              </ProtectedRoute>
+            } />
+            <Route path="/admin/finance" element={
+              <ProtectedRoute allowedRoles={['admin']}>
+                <AdminFinance />
+              </ProtectedRoute>
+            } />
+            <Route path="/admin/settings" element={
+              <ProtectedRoute allowedRoles={['admin']}>
+                <AdminSettings />
               </ProtectedRoute>
             } />
             <Route path="/admin/*" element={
