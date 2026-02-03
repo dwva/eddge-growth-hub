@@ -159,22 +159,13 @@ const StudentHome = () => {
 
           {/* Overall Progress Tracker Bar - Enhanced */}
           <div 
-            className="group relative bg-gradient-to-r from-white via-white to-primary/5 rounded-2xl shadow-sm border border-gray-100 px-5 py-4 flex items-center justify-between cursor-pointer hover:shadow-lg hover:border-primary/20 transition-all duration-300 overflow-hidden"
+            className="group relative bg-gradient-to-r from-white via-white to-primary/5 rounded-2xl shadow-sm border border-gray-100 px-5 py-4 flex items-center justify-between cursor-pointer hover:shadow-lg hover:border-primary/20 transition-all duration-300"
             onClick={() => navigate('/student/performance')}
           >
-            {/* Subtle animated background glow */}
-            <div className="absolute inset-0 bg-gradient-to-r from-transparent via-primary/5 to-primary/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-            
             {/* Left section - Icon and text */}
             <div className="relative flex items-center gap-4">
-              <div className="relative">
-                <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-primary to-purple-600 flex items-center justify-center shadow-md shadow-primary/20">
-                  <Target className="w-5 h-5 text-white" />
-                </div>
-                {/* Pulse indicator */}
-                <div className="absolute -top-0.5 -right-0.5 w-3 h-3 bg-green-400 rounded-full border-2 border-white">
-                  <span className="absolute inset-0 rounded-full bg-green-400 animate-ping opacity-75" />
-                </div>
+              <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-primary to-purple-600 flex items-center justify-center shadow-md shadow-primary/20">
+                <Target className="w-5 h-5 text-white" />
               </div>
               <div>
                 <div className="flex items-center gap-2">
@@ -189,12 +180,9 @@ const StudentHome = () => {
             <div className="relative flex items-center gap-4 flex-1 max-w-lg mx-8">
               <div className="flex-1 h-3 bg-gray-100 rounded-full overflow-hidden shadow-inner">
                 <div 
-                  className="h-full bg-gradient-to-r from-primary via-purple-500 to-violet-500 rounded-full relative transition-all duration-1000 ease-out"
+                  className="h-full bg-gradient-to-r from-primary via-purple-500 to-violet-500 rounded-full"
                   style={{ width: `${overallProgress}%` }}
-                >
-                  {/* Animated shimmer effect */}
-                  <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent animate-shimmer" />
-                </div>
+                />
               </div>
               
               {/* Percentage badge */}
