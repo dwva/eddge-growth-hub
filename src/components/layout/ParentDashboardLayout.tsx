@@ -6,7 +6,7 @@ import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Input } from '@/components/ui/input';
-import { Menu, Bell, ChevronLeft, User, Settings, LogOut, Search } from 'lucide-react';
+import { Menu, Bell, User, Settings, LogOut, Search } from 'lucide-react';
 import ParentSidebar from './ParentSidebar';
 import { ChildProvider, useChild } from '@/contexts/ChildContext';
 import { LanguageProvider } from '@/contexts/LanguageContext';
@@ -41,17 +41,10 @@ const ParentDashboardLayoutInner = ({ children, title = "Parent Dashboard" }: Pa
     <div className="h-screen bg-background flex overflow-hidden font-sans">
       {/* Desktop Sidebar - Fixed */}
       <aside className={cn(
-        "hidden md:flex flex-col transition-all duration-300 h-screen sticky top-0 flex-shrink-0 relative",
-        collapsed ? "w-14" : "w-56"
+        "hidden md:flex flex-col transition-all duration-300 h-screen sticky top-0 flex-shrink-0 overflow-hidden",
+        collapsed ? "w-0" : "w-56"
       )}>
         <ParentSidebar collapsed={collapsed} />
-        {/* Collapse Toggle */}
-        <button
-          onClick={() => setCollapsed(!collapsed)}
-          className="absolute top-16 -right-3 w-6 h-6 bg-white border border-border rounded-full flex items-center justify-center shadow-md hover:bg-accent hover:scale-110 transition-all duration-200 z-10"
-        >
-          <ChevronLeft className={cn("w-4 h-4 text-muted-foreground transition-transform duration-200", collapsed && "rotate-180")} />
-        </button>
       </aside>
 
       {/* Mobile Sidebar */}
@@ -73,6 +66,16 @@ const ParentDashboardLayoutInner = ({ children, title = "Parent Dashboard" }: Pa
                 </Button>
               </SheetTrigger>
             </Sheet>
+            
+            {/* Desktop Collapse Toggle */}
+            <Button 
+              variant="ghost" 
+              size="icon" 
+              className="hidden md:flex h-9 w-9"
+              onClick={() => setCollapsed(!collapsed)}
+            >
+              <Menu className="w-5 h-5 text-muted-foreground" />
+            </Button>
             
             {/* Search Bar */}
             <div className="hidden md:flex items-center relative">
