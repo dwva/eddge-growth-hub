@@ -1,3 +1,4 @@
+import { useNavigate } from 'react-router-dom';
 import StudentDashboardLayout from '@/components/layout/StudentDashboardLayout';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -5,9 +6,11 @@ import { Badge } from '@/components/ui/badge';
 import { 
   Calendar,
   Clock,
-  PlayCircle
+  PlayCircle,
+  Eye
 } from 'lucide-react';
 import { upcomingTests } from '@/data/mockData';
+import { toast } from 'sonner';
 
 const pastTests = [
   { id: 'pt1', subject: 'Mathematics', name: 'Chapter 2 Test', date: '2026-01-20', score: 85, total: 100 },
@@ -16,6 +19,18 @@ const pastTests = [
 ];
 
 const StudentTests = () => {
+  const navigate = useNavigate();
+
+  const handleStartMockTest = (testName: string) => {
+    toast.info(`Starting mock test for ${testName}...`);
+    // In a real app, this would navigate to the test interface
+  };
+
+  const handleViewResult = (testId: string) => {
+    toast.info('Opening detailed result...');
+    // In a real app, this would navigate to the result details
+  };
+
   return (
     <StudentDashboardLayout title="Tests & Exams">
       <div className="space-y-6">
@@ -45,7 +60,10 @@ const StudentTests = () => {
                         </span>
                       </div>
                     </div>
-                    <Button className="w-full sm:w-auto">
+                    <Button 
+                      className="w-full sm:w-auto"
+                      onClick={() => handleStartMockTest(test.name)}
+                    >
                       <PlayCircle className="w-4 h-4 mr-2" />
                       Start Mock Test
                     </Button>
@@ -66,7 +84,8 @@ const StudentTests = () => {
               {pastTests.map((test) => (
                 <div 
                   key={test.id} 
-                  className="flex items-center justify-between p-4 bg-secondary/50 rounded-lg"
+                  className="flex items-center justify-between p-4 bg-secondary/50 rounded-lg hover:bg-secondary/70 transition-colors cursor-pointer"
+                  onClick={() => handleViewResult(test.id)}
                 >
                   <div>
                     <p className="font-medium">{test.name}</p>
