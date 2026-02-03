@@ -1,5 +1,5 @@
+import { useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { useAuth } from '@/contexts/AuthContext';
 import { cn } from '@/lib/utils';
 import { 
   LayoutDashboard,
@@ -11,22 +11,66 @@ import {
   TrendingUp,
   Award,
   HelpCircle,
-  Sparkles
+  Sparkles,
+  GraduationCap,
+  BarChart3,
+  Bell,
+  FileText,
+  ChevronDown
 } from 'lucide-react';
+import {
+  Collapsible,
+  CollapsibleContent,
+  CollapsibleTrigger,
+} from "@/components/ui/collapsible";
 
-// Flat nav items - Planti style (no collapsible sections)
-const navItems = [
-  { label: 'Dashboard', icon: <LayoutDashboard className="w-5 h-5" />, path: '/student' },
-  { label: 'Learning', icon: <BookOpen className="w-5 h-5" />, path: '/student/learning' },
-  { label: 'Planner', icon: <CalendarCheck className="w-5 h-5" />, path: '/student/planner' },
-  { label: 'AI Doubt Solver', icon: <MessageSquare className="w-5 h-5" />, path: '/student/doubts' },
-  { label: 'Homework', icon: <ClipboardCheck className="w-5 h-5" />, path: '/student/homework' },
-  { label: 'Resources', icon: <FolderOpen className="w-5 h-5" />, path: '/student/resources' },
-];
+interface NavItem {
+  label: string;
+  icon: React.ReactNode;
+  path: string;
+}
 
-const progressItems = [
-  { label: 'Progress', icon: <TrendingUp className="w-5 h-5" />, path: '/student/performance' },
-  { label: 'Achievements', icon: <Award className="w-5 h-5" />, path: '/student/achievements' },
+interface NavSection {
+  label: string;
+  icon: React.ReactNode;
+  items: NavItem[];
+}
+
+// Collapsible sections matching the reference
+const navSections: NavSection[] = [
+  {
+    label: 'Learning',
+    icon: <GraduationCap className="w-5 h-5" />,
+    items: [
+      { label: 'Planner', icon: <CalendarCheck className="w-4 h-4" />, path: '/student/planner' },
+      { label: 'Personalized Learn', icon: <BookOpen className="w-4 h-4" />, path: '/student/learning' },
+      { label: 'AI Doubt Solver', icon: <MessageSquare className="w-4 h-4" />, path: '/student/doubts' },
+    ],
+  },
+  {
+    label: 'Resources',
+    icon: <BarChart3 className="w-5 h-5" />,
+    items: [
+      { label: 'Study Resources', icon: <FolderOpen className="w-4 h-4" />, path: '/student/resources' },
+      { label: 'PYQ Papers', icon: <FileText className="w-4 h-4" />, path: '/student/pyq' },
+    ],
+  },
+  {
+    label: 'Updates',
+    icon: <Bell className="w-5 h-5" />,
+    items: [
+      { label: 'Events & Announcements', icon: <CalendarCheck className="w-4 h-4" />, path: '/student/announcements' },
+      { label: 'Homework', icon: <ClipboardCheck className="w-4 h-4" />, path: '/student/homework' },
+    ],
+  },
+  {
+    label: 'Progress',
+    icon: <TrendingUp className="w-5 h-5" />,
+    items: [
+      { label: 'Performance', icon: <TrendingUp className="w-4 h-4" />, path: '/student/performance' },
+      { label: 'Achievements', icon: <Award className="w-4 h-4" />, path: '/student/achievements' },
+    ],
+  },
 ];
 
 interface StudentSidebarProps {
@@ -38,6 +82,7 @@ interface StudentSidebarProps {
 const StudentSidebar = ({ collapsed = false, isMobile = false, onMobileClose }: StudentSidebarProps) => {
   const navigate = useNavigate();
   const location = useLocation();
+  const [openSections, setOpenSections] = useState<string[]>(['Learning', 'Resources', 'Updates', 'Progress']);
 
   const handleNavigate = (path: string) => {
     navigate(path);
@@ -46,7 +91,16 @@ const StudentSidebar = ({ collapsed = false, isMobile = false, onMobileClose }: 
     }
   };
 
+  const toggleSection = (label: string) => {
+    setOpenSections(prev => 
+      prev.includes(label) 
+        ? prev.filter(s => s !== label)
+        : [...prev, label]
+    );
+  };
+
   const isPathActive = (path: string) => location.pathname === path;
+  const isSectionActive = (section: NavSection) => section.items.some(item => isPathActive(item.path));
   const showText = !collapsed || isMobile;
 
   return (
@@ -64,81 +118,115 @@ const StudentSidebar = ({ collapsed = false, isMobile = false, onMobileClose }: 
         )}
       </div>
 
-      {/* Navigation - Planti flat style */}
+      {/* Navigation */}
       <nav className={cn(
         "flex-1 py-4 overflow-y-auto scrollbar-hide",
         collapsed && !isMobile ? "px-2" : "px-3"
       )}>
-        {/* Main Nav Items */}
-        <div className="space-y-1">
-          {navItems.map((item) => (
-            <button
-              key={item.path}
-              onClick={() => handleNavigate(item.path)}
-              className={cn(
-                "w-full flex items-center rounded-xl transition-all duration-200 h-11",
-                collapsed && !isMobile ? "justify-center px-2" : "gap-3 px-4",
-                isPathActive(item.path)
-                  ? "bg-primary/10 text-primary font-medium" 
-                  : "text-gray-600 hover:bg-gray-50 hover:text-gray-900"
-              )}
-            >
-              <span className={cn(
-                "flex-shrink-0",
-                isPathActive(item.path) ? "text-primary" : "text-gray-400"
-              )}>
-                {item.icon}
-              </span>
-              {showText && (
-                <span className="text-sm">{item.label}</span>
-              )}
-            </button>
-          ))}
+        {/* Dashboard - Standalone */}
+        <div className="mb-2">
+          <button
+            onClick={() => handleNavigate('/student')}
+            className={cn(
+              "w-full flex items-center rounded-xl transition-all duration-200 h-11",
+              collapsed && !isMobile ? "justify-center px-2" : "gap-3 px-4",
+              isPathActive('/student')
+                ? "bg-primary/10 text-primary font-medium" 
+                : "text-gray-600 hover:bg-gray-50 hover:text-gray-900"
+            )}
+          >
+            <span className={cn(
+              "flex-shrink-0",
+              isPathActive('/student') ? "text-primary" : "text-gray-400"
+            )}>
+              <LayoutDashboard className="w-5 h-5" />
+            </span>
+            {showText && (
+              <>
+                <span className="text-sm flex-1 text-left">Dashboard</span>
+                {isPathActive('/student') && (
+                  <span className="w-2 h-2 rounded-full bg-primary" />
+                )}
+              </>
+            )}
+          </button>
         </div>
 
-        {/* Divider + Section Label */}
-        {showText && (
-          <div className="mt-6 mb-3 px-4">
-            <span className="text-xs font-semibold text-gray-400 uppercase tracking-wider">
-              Progress
-            </span>
-          </div>
-        )}
-        {!showText && <div className="h-6" />}
-
-        {/* Progress Items */}
+        {/* Collapsible Sections */}
         <div className="space-y-1">
-          {progressItems.map((item) => (
-            <button
-              key={item.path}
-              onClick={() => handleNavigate(item.path)}
-              className={cn(
-                "w-full flex items-center rounded-xl transition-all duration-200 h-11",
-                collapsed && !isMobile ? "justify-center px-2" : "gap-3 px-4",
-                isPathActive(item.path)
-                  ? "bg-primary/10 text-primary font-medium" 
-                  : "text-gray-600 hover:bg-gray-50 hover:text-gray-900"
-              )}
+          {navSections.map((section) => (
+            <Collapsible
+              key={section.label}
+              open={openSections.includes(section.label)}
+              onOpenChange={() => toggleSection(section.label)}
             >
-              <span className={cn(
-                "flex-shrink-0",
-                isPathActive(item.path) ? "text-primary" : "text-gray-400"
-              )}>
-                {item.icon}
-              </span>
-              {showText && (
-                <span className="text-sm">{item.label}</span>
-              )}
-            </button>
+              <CollapsibleTrigger asChild>
+                <button
+                  className={cn(
+                    "w-full flex items-center rounded-xl transition-all duration-200 h-11",
+                    collapsed && !isMobile ? "justify-center px-2" : "gap-3 px-4",
+                    isSectionActive(section)
+                      ? "text-primary font-medium" 
+                      : "text-gray-600 hover:bg-gray-50 hover:text-gray-900"
+                  )}
+                >
+                  <span className={cn(
+                    "flex-shrink-0",
+                    isSectionActive(section) ? "text-primary" : "text-gray-400"
+                  )}>
+                    {section.icon}
+                  </span>
+                  {showText && (
+                    <>
+                      <span className="text-sm flex-1 text-left">{section.label}</span>
+                      <ChevronDown className={cn(
+                        "w-4 h-4 text-gray-400 transition-transform duration-200",
+                        openSections.includes(section.label) ? "rotate-180" : ""
+                      )} />
+                    </>
+                  )}
+                </button>
+              </CollapsibleTrigger>
+              
+              <CollapsibleContent>
+                <div className={cn(
+                  "mt-1 space-y-0.5",
+                  collapsed && !isMobile ? "" : "ml-4 pl-4 border-l border-gray-100"
+                )}>
+                  {section.items.map((item) => (
+                    <button
+                      key={item.path}
+                      onClick={() => handleNavigate(item.path)}
+                      className={cn(
+                        "w-full flex items-center rounded-lg transition-all duration-200 h-9",
+                        collapsed && !isMobile ? "justify-center px-2" : "gap-3 px-3",
+                        isPathActive(item.path)
+                          ? "bg-primary/10 text-primary font-medium" 
+                          : "text-gray-500 hover:bg-gray-50 hover:text-gray-700"
+                      )}
+                    >
+                      <span className={cn(
+                        "flex-shrink-0",
+                        isPathActive(item.path) ? "text-primary" : "text-gray-400"
+                      )}>
+                        {item.icon}
+                      </span>
+                      {showText && (
+                        <span className="text-sm">{item.label}</span>
+                      )}
+                    </button>
+                  ))}
+                </div>
+              </CollapsibleContent>
+            </Collapsible>
           ))}
         </div>
       </nav>
 
-      {/* Bottom Help Card - Planti style */}
+      {/* Bottom Help Card */}
       {showText && (
         <div className="p-4">
           <div className="bg-primary/5 rounded-2xl p-4 relative overflow-hidden">
-            {/* Decorative circle */}
             <div className="absolute -top-4 -left-4 w-12 h-12 rounded-full bg-primary/10" />
             <div className="absolute top-2 left-2 w-8 h-8 rounded-full bg-white flex items-center justify-center shadow-sm">
               <HelpCircle className="w-4 h-4 text-primary" />
