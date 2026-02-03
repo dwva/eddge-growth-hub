@@ -13,7 +13,7 @@ const Login = () => {
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const { login } = useAuth();
+  const { login, loginWithJWT } = useAuth();
   const navigate = useNavigate();
   const { toast } = useToast();
 
@@ -22,20 +22,43 @@ const Login = () => {
     setIsLoading(true);
 
     try {
-      const result = await login(email, password);
+      // Use JWT flow for SuperAdmin
+      const isSuperAdmin = email.toLowerCase() === 'superadmin@eddge.com';
       
-      if (result.success && result.redirectTo) {
-        toast({
-          title: 'Welcome back!',
-          description: 'Login successful. Redirecting to your dashboard...',
-        });
-        navigate(result.redirectTo);
+      if (isSuperAdmin) {
+        // Use JWT authentication for SuperAdmin
+        const result = await loginWithJWT(email, password, 'ROOT');
+        
+        if (result.success && result.redirectTo) {
+          toast({
+            title: 'Welcome back!',
+            description: 'Login successful. Redirecting to SuperAdmin dashboard...',
+          });
+          navigate(result.redirectTo);
+        } else {
+          toast({
+            title: 'Login failed',
+            description: result.error || 'Please check your credentials',
+            variant: 'destructive',
+          });
+        }
       } else {
-        toast({
-          title: 'Login failed',
-          description: result.error || 'Please check your credentials',
-          variant: 'destructive',
-        });
+        // Use regular login for other roles
+        const result = await login(email, password);
+        
+        if (result.success && result.redirectTo) {
+          toast({
+            title: 'Welcome back!',
+            description: 'Login successful. Redirecting to your dashboard...',
+          });
+          navigate(result.redirectTo);
+        } else {
+          toast({
+            title: 'Login failed',
+            description: result.error || 'Please check your credentials',
+            variant: 'destructive',
+          });
+        }
       }
     } catch (error) {
       toast({

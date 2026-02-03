@@ -5,6 +5,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { AuthProvider } from "@/contexts/AuthContext";
 import ProtectedRoute from "@/components/auth/ProtectedRoute";
+import SuperAdminProtectedRoute from "@/components/auth/SuperAdminProtectedRoute";
 
 // Public Pages
 import Landing from "./pages/Landing";
@@ -79,6 +80,14 @@ import InternalAdminAnalytics from "./pages/internal-admin/InternalAdminAnalytic
 import InternalAdminBilling from "./pages/internal-admin/InternalAdminBilling";
 import InternalAdminHealth from "./pages/internal-admin/InternalAdminHealth";
 import InternalAdminSecurity from "./pages/internal-admin/InternalAdminSecurity";
+
+// SuperAdmin Dashboard Pages
+import SuperAdminOverview from "./pages/superadmin-dashboard/SuperAdminOverview";
+import SuperAdminSchools from "./pages/superadmin-dashboard/SuperAdminSchools";
+import SuperAdminAnalytics from "./pages/superadmin-dashboard/SuperAdminAnalytics";
+import SuperAdminBilling from "./pages/superadmin-dashboard/SuperAdminBilling";
+import SuperAdminHealth from "./pages/superadmin-dashboard/SuperAdminHealth";
+import SuperAdminSecurity from "./pages/superadmin-dashboard/SuperAdminSecurity";
 
 const queryClient = new QueryClient();
 
@@ -367,6 +376,43 @@ const App = () => (
               <ProtectedRoute allowedRoles={['superadmin']}>
                 <InternalAdminOverview />
               </ProtectedRoute>
+            } />
+
+            {/* SuperAdmin Dashboard Routes */}
+            <Route path="/dashboard/superadmin" element={
+              <SuperAdminProtectedRoute>
+                <SuperAdminOverview />
+              </SuperAdminProtectedRoute>
+            } />
+            <Route path="/dashboard/superadmin/schools" element={
+              <SuperAdminProtectedRoute>
+                <SuperAdminSchools />
+              </SuperAdminProtectedRoute>
+            } />
+            <Route path="/dashboard/superadmin/analytics" element={
+              <SuperAdminProtectedRoute>
+                <SuperAdminAnalytics />
+              </SuperAdminProtectedRoute>
+            } />
+            <Route path="/dashboard/superadmin/billing" element={
+              <SuperAdminProtectedRoute>
+                <SuperAdminBilling />
+              </SuperAdminProtectedRoute>
+            } />
+            <Route path="/dashboard/superadmin/health" element={
+              <SuperAdminProtectedRoute>
+                <SuperAdminHealth />
+              </SuperAdminProtectedRoute>
+            } />
+            <Route path="/dashboard/superadmin/security" element={
+              <SuperAdminProtectedRoute>
+                <SuperAdminSecurity />
+              </SuperAdminProtectedRoute>
+            } />
+            <Route path="/dashboard/superadmin/*" element={
+              <SuperAdminProtectedRoute>
+                <SuperAdminOverview />
+              </SuperAdminProtectedRoute>
             } />
 
             {/* Catch-all */}
