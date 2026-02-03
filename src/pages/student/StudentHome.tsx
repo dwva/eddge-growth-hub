@@ -60,9 +60,9 @@ const StudentHome = () => {
         {/* Main Grid - Full Width */}
         <div className="space-y-6">
           
-          {/* Hero Row: Focus Card + Stats Card - BLEED LAYOUT (extends to container edges) */}
-          <div className="-mx-6 md:-mx-8">
-            <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 items-stretch px-0">
+          {/* Hero Row: Focus Card + Stats Card - aligned to main content edges */}
+          <div>
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 items-stretch">
               
               {/* Hero Card - Today's Focus (7/12 width on desktop) */}
               <Card className="lg:col-span-7 relative overflow-hidden border-0 shadow-sm rounded-3xl bg-gradient-to-br from-primary via-primary to-purple-700">
