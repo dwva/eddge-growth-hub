@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import SuperAdminDashboardLayout from '@/components/layout/SuperAdminDashboardLayout';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -9,15 +9,20 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@
 import { LoadingState } from '@/components/shared/LoadingState';
 import { EmptyState } from '@/components/shared/EmptyState';
 import { superAdminApi, BillingPlan, BillingRenewal, Invoice } from '@/services/superAdminApi';
-import { CreditCard, Calendar, CheckCircle2 } from 'lucide-react';
+import { CreditCard, Calendar, CheckCircle2, Building2 } from 'lucide-react';
 
 const SuperAdminBilling = () => {
-  const [activeTab, setActiveTab] = useState('plans');
+  const [activeTab, setActiveTab] = useState('overview');
   const [invoicePage, setInvoicePage] = useState(1);
 
   const { data: plansData, isLoading: plansLoading } = useQuery<BillingPlan[]>({
     queryKey: ["superadmin", "billing-plans"],
     queryFn: () => superAdminApi.getBillingPlans(),
+  });
+
+  const { data: schoolsData } = useQuery({
+    queryKey: ["superadmin", "schools", 1, ''],
+    queryFn: () => superAdminApi.getSchools(1, 1000, ''),
   });
 
   const { data: renewalsData, isLoading: renewalsLoading } = useQuery<BillingRenewal[]>({
@@ -29,6 +34,31 @@ const SuperAdminBilling = () => {
     queryKey: ["superadmin", "billing-invoices", invoicePage],
     queryFn: () => superAdminApi.getBillingInvoices(invoicePage, 50),
   });
+
+  // Calculate subscription overview
+  const subscriptionOverview = useMemo(() => {
+    if (!schoolsData?.schools) return { Basic: 0, Standard: 0, Premium: 0 };
+    const overview = { Basic: 0, Standard: 0, Premium: 0 };
+    schoolsData.schools.forEach(school => {
+      const plan = school.subscription_status as 'Basic' | 'Standard' | 'Premium';
+      if (overview.hasOwnProperty(plan)) {
+        overview[plan]++;
+      }
+    });
+    return overview;
+  }, [schoolsData]);
+
+  // Calculate invoice status counts
+  const invoiceStatusCounts = useMemo(() => {
+    if (!invoicesData?.invoices) return { paid: 0, pending: 0, overdue: 0 };
+    const counts = { paid: 0, pending: 0, overdue: 0 };
+    invoicesData.invoices.forEach((invoice: Invoice) => {
+      if (invoice.status === 'paid') counts.paid++;
+      else if (invoice.status === 'pending') counts.pending++;
+      else if (invoice.status === 'overdue') counts.overdue++;
+    });
+    return counts;
+  }, [invoicesData]);
 
   return (
     <SuperAdminDashboardLayout>
@@ -42,10 +72,88 @@ const SuperAdminBilling = () => {
         {/* Tabs */}
         <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-4">
           <TabsList>
-            <TabsTrigger value="plans">Subscription Plans</TabsTrigger>
+            <TabsTrigger value="overview">Subscription Overview</TabsTrigger>
+            <TabsTrigger value="plans">Plans</TabsTrigger>
             <TabsTrigger value="renewals">Renewals</TabsTrigger>
             <TabsTrigger value="invoices">Invoice History</TabsTrigger>
           </TabsList>
+
+          {/* Subscription Overview Tab */}
+          <TabsContent value="overview" className="space-y-4">
+            <div className="grid gap-4 md:grid-cols-3">
+              <Card>
+                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                  <CardTitle className="text-sm font-medium">Basic Plan</CardTitle>
+                  <Building2 className="h-4 w-4 text-muted-foreground" />
+                </CardHeader>
+                <CardContent>
+                  <div className="text-3xl font-bold">{subscriptionOverview.Basic}</div>
+                  <p className="text-xs text-muted-foreground mt-1">Total schools</p>
+                </CardContent>
+              </Card>
+              <Card>
+                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                  <CardTitle className="text-sm font-medium">Standard Plan</CardTitle>
+                  <Building2 className="h-4 w-4 text-muted-foreground" />
+                </CardHeader>
+                <CardContent>
+                  <div className="text-3xl font-bold">{subscriptionOverview.Standard}</div>
+                  <p className="text-xs text-muted-foreground mt-1">Total schools</p>
+                </CardContent>
+              </Card>
+              <Card>
+                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                  <CardTitle className="text-sm font-medium">Premium Plan</CardTitle>
+                  <Building2 className="h-4 w-4 text-muted-foreground" />
+                </CardHeader>
+                <CardContent>
+                  <div className="text-3xl font-bold">{subscriptionOverview.Premium}</div>
+                  <p className="text-xs text-muted-foreground mt-1">Total schools</p>
+                </CardContent>
+              </Card>
+            </div>
+
+            {/* Renewals Summary */}
+            <Card>
+              <CardHeader>
+                <CardTitle>Upcoming Renewals (Next 30 Days)</CardTitle>
+                <CardDescription>Subscriptions renewing soon</CardDescription>
+              </CardHeader>
+              <CardContent>
+                {renewalsLoading ? (
+                  <LoadingState message="Loading renewals..." />
+                ) : !renewalsData || renewalsData.length === 0 ? (
+                  <p className="text-sm text-muted-foreground">No renewals scheduled in the next 30 days</p>
+                ) : (
+                  <div className="text-2xl font-bold">{renewalsData.length}</div>
+                )}
+              </CardContent>
+            </Card>
+
+            {/* Invoice Status Summary */}
+            <Card>
+              <CardHeader>
+                <CardTitle>Invoice Status Summary</CardTitle>
+                <CardDescription>Current invoice status counts</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="grid gap-4 md:grid-cols-3">
+                  <div>
+                    <div className="text-2xl font-bold text-green-600">{invoiceStatusCounts.paid}</div>
+                    <p className="text-xs text-muted-foreground mt-1">Paid</p>
+                  </div>
+                  <div>
+                    <div className="text-2xl font-bold text-yellow-600">{invoiceStatusCounts.pending}</div>
+                    <p className="text-xs text-muted-foreground mt-1">Pending</p>
+                  </div>
+                  <div>
+                    <div className="text-2xl font-bold text-red-600">{invoiceStatusCounts.overdue}</div>
+                    <p className="text-xs text-muted-foreground mt-1">Overdue</p>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          </TabsContent>
 
           {/* Plans Tab */}
           <TabsContent value="plans" className="space-y-4">

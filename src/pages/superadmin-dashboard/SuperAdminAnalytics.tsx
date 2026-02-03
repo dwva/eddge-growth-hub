@@ -5,6 +5,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { Badge } from '@/components/ui/badge';
 import { LoadingState } from '@/components/shared/LoadingState';
 import { EmptyState } from '@/components/shared/EmptyState';
 import { superAdminApi, UsageAnalytics } from '@/services/superAdminApi';
@@ -117,15 +118,31 @@ const SuperAdminAnalytics = () => {
               <p className="text-xs text-muted-foreground">
                 {data?.user_growth?.length || 0} days tracked
               </p>
-              {data?.user_growth && data.user_growth.length > 0 && (
-                <div className="mt-4 space-y-1">
-                  <p className="text-xs text-muted-foreground">Recent growth:</p>
-                  {data.user_growth.slice(-5).map((day, idx) => (
-                    <div key={idx} className="flex justify-between text-xs">
-                      <span>{new Date(day.date).toLocaleDateString()}</span>
-                      <span className="font-medium text-green-600">+{day.count}</span>
-                    </div>
-                  ))}
+              {data?.user_growth && data.user_growth.length > 1 && (
+                <div className="mt-4 space-y-2">
+                  <div className="flex items-center justify-between">
+                    <span className="text-xs text-muted-foreground">Trend:</span>
+                    {(() => {
+                      const recent = data.user_growth.slice(-7);
+                      const avgRecent = recent.reduce((sum, d) => sum + d.count, 0) / recent.length;
+                      const avgEarlier = data.user_growth.slice(0, 7).reduce((sum, d) => sum + d.count, 0) / Math.min(7, data.user_growth.length);
+                      const isGrowing = avgRecent > avgEarlier;
+                      return (
+                        <Badge variant={isGrowing ? "default" : "secondary"} className="text-xs">
+                          {isGrowing ? "↗ Growing" : "→ Stable"}
+                        </Badge>
+                      );
+                    })()}
+                  </div>
+                  <div className="space-y-1">
+                    <p className="text-xs text-muted-foreground">Recent growth:</p>
+                    {data.user_growth.slice(-5).map((day, idx) => (
+                      <div key={idx} className="flex justify-between text-xs">
+                        <span>{new Date(day.date).toLocaleDateString()}</span>
+                        <span className="font-medium text-green-600">+{day.count}</span>
+                      </div>
+                    ))}
+                  </div>
                 </div>
               )}
             </CardContent>
@@ -193,6 +210,14 @@ const SuperAdminAnalytics = () => {
                   <p className="text-sm font-medium text-muted-foreground mb-1">Cost (USD)</p>
                   <p className="text-2xl font-bold text-green-600">
                     ${data?.ai_consumption?.cost_usd?.toFixed(2) || "0.00"}
+                  </p>
+                  <p className="text-xs text-muted-foreground mt-1">
+                    {(() => {
+                      const cost = data?.ai_consumption?.cost_usd || 0;
+                      if (cost < 500) return "Low";
+                      if (cost < 2000) return "Medium";
+                      return "High";
+                    })()} consumption
                   </p>
                 </div>
               </div>

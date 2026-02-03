@@ -165,11 +165,25 @@ export const superAdminApi = {
   getPlatformOverview: async (): Promise<PlatformOverview> => {
     await delay(500);
     validateJWTToken(); // Simulate token validation
+    
+    // Simulate real-time system status (mock data)
+    const systemStatuses: Array<'operational' | 'degraded' | 'down'> = ['operational', 'operational', 'operational', 'degraded'];
+    const randomStatus = systemStatuses[Math.floor(Math.random() * systemStatuses.length)];
+    
     return {
       total_schools: 150,
+      schools_breakdown: {
+        active: 142,
+        trial: 5,
+        suspended: 3
+      },
       total_users: 45000,
       daily_active_users: 12000,
-      system_uptime_days: 365
+      system_uptime_percentage: 99.8,
+      system_status: randomStatus,
+      new_schools_today: 2,
+      new_users_today: 127,
+      total_errors_24h: 3
     };
   },
 

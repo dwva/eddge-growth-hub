@@ -2,9 +2,18 @@
 
 export interface PlatformOverview {
   total_schools: number;
+  schools_breakdown: {
+    active: number;
+    trial: number;
+    suspended: number;
+  };
   total_users: number;
   daily_active_users: number;
-  system_uptime_days: number;
+  system_uptime_percentage: number;
+  system_status: 'operational' | 'degraded' | 'down';
+  new_schools_today?: number;
+  new_users_today?: number;
+  total_errors_24h?: number;
 }
 
 export interface School {
@@ -205,9 +214,18 @@ export const internalAdminApi = {
     await delay(500);
     return {
       total_schools: 150,
+      schools_breakdown: {
+        active: 142,
+        trial: 5,
+        suspended: 3
+      },
       total_users: 45000,
       daily_active_users: 12000,
-      system_uptime_days: 365
+      system_uptime_percentage: 99.8,
+      system_status: 'operational',
+      new_schools_today: 2,
+      new_users_today: 127,
+      total_errors_24h: 3
     };
   },
 

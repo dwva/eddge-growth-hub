@@ -38,10 +38,12 @@ const SuperAdminSecurity = () => {
     queryFn: () => superAdminApi.getComplianceLogs(compliancePage, 20, complianceType || undefined),
   });
 
+  // Read-only: Export is disabled for security compliance
   const handleExport = (type: string) => {
     toast({
-      title: "Export Started",
-      description: `Exporting ${type} logs...`,
+      title: "Export Unavailable",
+      description: "Log exports are read-only and require additional authorization.",
+      variant: "default",
     });
   };
 

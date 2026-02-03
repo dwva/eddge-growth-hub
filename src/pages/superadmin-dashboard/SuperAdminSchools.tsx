@@ -1,10 +1,11 @@
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import SuperAdminDashboardLayout from '@/components/layout/SuperAdminDashboardLayout';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { LoadingState } from '@/components/shared/LoadingState';
@@ -14,6 +15,8 @@ import { useToast } from '@/hooks/use-toast';
 
 const SuperAdminSchools = () => {
   const [search, setSearch] = useState('');
+  const [statusFilter, setStatusFilter] = useState<string>('all');
+  const [planFilter, setPlanFilter] = useState<string>('all');
   const [page, setPage] = useState(1);
   const [selectedSchool, setSelectedSchool] = useState<School | null>(null);
   const [dialogOpen, setDialogOpen] = useState(false);
@@ -24,6 +27,19 @@ const SuperAdminSchools = () => {
     queryKey: ["superadmin", "schools", page, search],
     queryFn: () => superAdminApi.getSchools(page, 50, search),
   });
+
+  // Filter schools client-side by status and plan
+  const filteredSchools = useMemo(() => {
+    if (!data?.schools) return [];
+    return data.schools.filter(school => {
+      const matchesStatus = statusFilter === 'all' || 
+        (statusFilter === 'active' && school.is_active) ||
+        (statusFilter === 'suspended' && !school.is_active) ||
+        (statusFilter === 'trial' && school.subscription_status === 'Trial');
+      const matchesPlan = planFilter === 'all' || school.subscription_status === planFilter;
+      return matchesStatus && matchesPlan;
+    });
+  }, [data?.schools, statusFilter, planFilter]);
 
   const { data: subscriptionData } = useQuery({
     queryKey: ["superadmin", "school-subscription", selectedSchool?.id],
@@ -77,11 +93,11 @@ const SuperAdminSchools = () => {
                 <CardTitle>All Schools</CardTitle>
                 <CardDescription>View and manage school accounts</CardDescription>
               </div>
-              <div className="flex items-center gap-2">
+              <div className="flex items-center gap-2 flex-wrap">
                 <div className="relative">
                   <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
                   <Input
-                    placeholder="Search schools..."
+                    placeholder="Search by name or email..."
                     value={search}
                     onChange={(e) => {
                       setSearch(e.target.value);
@@ -90,15 +106,39 @@ const SuperAdminSchools = () => {
                     className="pl-8 w-64"
                   />
                 </div>
+                <Select value={statusFilter} onValueChange={(value) => { setStatusFilter(value); setPage(1); }}>
+                  <SelectTrigger className="w-40">
+                    <SelectValue placeholder="Filter by status" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="all">All Status</SelectItem>
+                    <SelectItem value="active">Active</SelectItem>
+                    <SelectItem value="suspended">Suspended</SelectItem>
+                    <SelectItem value="trial">Trial</SelectItem>
+                  </SelectContent>
+                </Select>
+                <Select value={planFilter} onValueChange={(value) => { setPlanFilter(value); setPage(1); }}>
+                  <SelectTrigger className="w-40">
+                    <SelectValue placeholder="Filter by plan" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="all">All Plans</SelectItem>
+                    <SelectItem value="Basic">Basic</SelectItem>
+                    <SelectItem value="Standard">Standard</SelectItem>
+                    <SelectItem value="Premium">Premium</SelectItem>
+                  </SelectContent>
+                </Select>
               </div>
             </div>
           </CardHeader>
           <CardContent>
             {isLoading ? (
               <LoadingState message="Loading schools..." />
-            ) : data?.schools.length === 0 ? (
+            ) : filteredSchools.length === 0 ? (
               <div className="text-center py-8 text-muted-foreground">
-                {search ? "No schools found matching your search" : "No schools found"}
+                {search || statusFilter !== 'all' || planFilter !== 'all' 
+                  ? "No schools found matching your filters" 
+                  : "No schools found"}
               </div>
             ) : (
               <>
@@ -106,29 +146,29 @@ const SuperAdminSchools = () => {
                   <TableHeader>
                     <TableRow>
                       <TableHead>School Name</TableHead>
-                      <TableHead>Email</TableHead>
+                      <TableHead>Contact Email</TableHead>
                       <TableHead>Phone</TableHead>
+                      <TableHead>Address</TableHead>
+                      <TableHead>Subscription Plan</TableHead>
                       <TableHead>Status</TableHead>
-                      <TableHead>Subscription</TableHead>
-                      <TableHead>Created</TableHead>
                       <TableHead>Actions</TableHead>
                     </TableRow>
                   </TableHeader>
                   <TableBody>
-                    {data?.schools.map((school) => (
+                    {filteredSchools.map((school) => (
                       <TableRow key={school.id}>
                         <TableCell className="font-medium">{school.name}</TableCell>
                         <TableCell>{school.email || "N/A"}</TableCell>
                         <TableCell>{school.phone || "N/A"}</TableCell>
+                        <TableCell className="max-w-[150px] truncate">{school.address || "N/A"}</TableCell>
+                        <TableCell>
+                          <Badge variant="outline">{school.subscription_status}</Badge>
+                        </TableCell>
                         <TableCell>
                           <Badge variant={school.is_active ? "default" : "secondary"}>
                             {school.is_active ? "Active" : "Suspended"}
                           </Badge>
                         </TableCell>
-                        <TableCell>
-                          <Badge variant="outline">{school.subscription_status}</Badge>
-                        </TableCell>
-                        <TableCell>{formatDate(school.created_at)}</TableCell>
                         <TableCell>
                           <div className="flex gap-2">
                             <Button
@@ -158,10 +198,11 @@ const SuperAdminSchools = () => {
                 </Table>
 
                 {/* Pagination */}
-                {data && data.total > 50 && (
+                {filteredSchools.length > 0 && (
                   <div className="flex items-center justify-between mt-4">
                     <div className="text-sm text-muted-foreground">
-                      Showing {(page - 1) * 50 + 1} to {Math.min(page * 50, data.total)} of {data.total} schools
+                      Showing {filteredSchools.length} of {data?.total || 0} schools
+                      {(statusFilter !== 'all' || planFilter !== 'all') && ' (filtered)'}
                     </div>
                     <div className="flex gap-2">
                       <Button
