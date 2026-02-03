@@ -1,5 +1,7 @@
+import { useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { cn } from '@/lib/utils';
+import { useAuth } from '@/contexts/AuthContext';
 import { 
   LayoutDashboard,
   Users,
@@ -10,26 +12,51 @@ import {
   Bell,
   DollarSign,
   Settings,
-  HelpCircle,
-  Sparkles
+  Sparkles,
+  ChevronDown,
+  LogOut
 } from 'lucide-react';
+import {
+  Collapsible,
+  CollapsibleContent,
+  CollapsibleTrigger,
+} from "@/components/ui/collapsible";
 
-const mainNavItems = [
-  { label: 'Dashboard', icon: <LayoutDashboard className="w-5 h-5" />, path: '/admin' },
-];
+interface NavItem {
+  label: string;
+  icon: React.ReactNode;
+  path: string;
+  badge?: string;
+}
 
-const managementItems = [
-  { label: 'Teachers', icon: <Users className="w-5 h-5" />, path: '/admin/teachers', badge: '48' },
-  { label: 'Students', icon: <GraduationCap className="w-5 h-5" />, path: '/admin/students' },
-  { label: 'Classes', icon: <BookOpen className="w-5 h-5" />, path: '/admin/classes' },
-  { label: 'Attendance', icon: <ClipboardList className="w-5 h-5" />, path: '/admin/attendance' },
-];
+interface NavSection {
+  label: string;
+  icon: React.ReactNode;
+  items: NavItem[];
+}
 
-const administrationItems = [
-  { label: 'Reports', icon: <FileText className="w-5 h-5" />, path: '/admin/reports' },
-  { label: 'Announcements', icon: <Bell className="w-5 h-5" />, path: '/admin/announcements', badge: '3' },
-  { label: 'Finance', icon: <DollarSign className="w-5 h-5" />, path: '/admin/finance' },
-  { label: 'Settings', icon: <Settings className="w-5 h-5" />, path: '/admin/settings' },
+// Collapsible sections
+const navSections: NavSection[] = [
+  {
+    label: 'Management',
+    icon: <Users className="w-4 h-4" />,
+    items: [
+      { label: 'Teachers', icon: <Users className="w-4 h-4" />, path: '/admin/teachers', badge: '48' },
+      { label: 'Students', icon: <GraduationCap className="w-4 h-4" />, path: '/admin/students' },
+      { label: 'Classes', icon: <BookOpen className="w-4 h-4" />, path: '/admin/classes' },
+      { label: 'Attendance', icon: <ClipboardList className="w-4 h-4" />, path: '/admin/attendance' },
+    ],
+  },
+  {
+    label: 'Administration',
+    icon: <Settings className="w-4 h-4" />,
+    items: [
+      { label: 'Reports', icon: <FileText className="w-4 h-4" />, path: '/admin/reports' },
+      { label: 'Announcements', icon: <Bell className="w-4 h-4" />, path: '/admin/announcements', badge: '3' },
+      { label: 'Finance', icon: <DollarSign className="w-4 h-4" />, path: '/admin/finance' },
+      { label: 'Settings', icon: <Settings className="w-4 h-4" />, path: '/admin/settings' },
+    ],
+  },
 ];
 
 interface AdminSidebarProps {
@@ -41,6 +68,8 @@ interface AdminSidebarProps {
 const AdminSidebar = ({ collapsed = false, isMobile = false, onMobileClose }: AdminSidebarProps) => {
   const navigate = useNavigate();
   const location = useLocation();
+  const { logout } = useAuth();
+  const [openSections, setOpenSections] = useState<string[]>(['Management', 'Administration']);
 
   const handleNavigate = (path: string) => {
     navigate(path);
@@ -49,128 +78,174 @@ const AdminSidebar = ({ collapsed = false, isMobile = false, onMobileClose }: Ad
     }
   };
 
-  const isPathActive = (path: string) => location.pathname === path;
-  const showText = !collapsed || isMobile;
+  const handleLogout = () => {
+    logout();
+    navigate('/');
+  };
 
-  const renderNavItem = (item: { label: string; icon: React.ReactNode; path: string; badge?: string }) => (
-    <button
-      key={item.path}
-      onClick={() => handleNavigate(item.path)}
-      className={cn(
-        "w-full flex items-center rounded-xl transition-all duration-200 h-11",
-        collapsed && !isMobile ? "justify-center px-2" : "gap-3 px-4",
-        isPathActive(item.path)
-          ? "bg-primary/10 text-primary font-medium" 
-          : "text-gray-600 hover:bg-gray-50 hover:text-gray-900"
-      )}
-    >
-      <span className={cn(
-        "flex-shrink-0",
-        isPathActive(item.path) ? "text-primary" : "text-gray-400"
-      )}>
-        {item.icon}
-      </span>
-      {showText && (
-        <>
-          <span className="text-sm flex-1 text-left">{item.label}</span>
-          {item.badge && (
-            <span className="px-2 py-0.5 rounded-full text-xs font-medium bg-primary/10 text-primary">
-              {item.badge}
-            </span>
-          )}
-        </>
-      )}
-    </button>
-  );
+  const toggleSection = (label: string) => {
+    setOpenSections(prev => 
+      prev.includes(label) 
+        ? prev.filter(s => s !== label)
+        : [...prev, label]
+    );
+  };
+
+  const isPathActive = (path: string) => location.pathname === path;
+  const isSectionActive = (section: NavSection) => section.items.some(item => isPathActive(item.path));
+  const showText = !collapsed || isMobile;
 
   return (
     <div className="flex flex-col h-full bg-white border-r border-gray-100 font-sans">
       {/* Logo */}
       <div className={cn(
-        "flex items-center h-16 border-b border-gray-100",
-        collapsed && !isMobile ? "justify-center px-3" : "gap-3 px-5"
+        "flex items-center h-14 border-b border-gray-100",
+        collapsed && !isMobile ? "justify-center px-2" : "gap-2.5 px-4"
       )}>
-        <div className="w-9 h-9 rounded-xl bg-primary flex items-center justify-center flex-shrink-0">
-          <Sparkles className="w-5 h-5 text-white" />
+        <div className="w-8 h-8 rounded-lg bg-primary flex items-center justify-center flex-shrink-0">
+          <Sparkles className="w-4 h-4 text-white" />
         </div>
         {showText && (
           <div>
-            <span className="text-xl font-bold text-primary tracking-tight">EDDGE</span>
-            <span className="text-xs text-muted-foreground block -mt-1">Admin Portal</span>
+            <span className="text-lg font-bold text-primary tracking-tight">EDDGE</span>
+            <span className="text-[10px] text-muted-foreground block -mt-1">Admin Portal</span>
           </div>
         )}
       </div>
 
       {/* Navigation */}
       <nav className={cn(
-        "flex-1 py-4 overflow-y-auto scrollbar-hide",
+        "flex-1 py-3 overflow-hidden",
         collapsed && !isMobile ? "px-2" : "px-3"
       )}>
-        {/* Main Nav */}
-        <div className="space-y-1">
-          {mainNavItems.map(renderNavItem)}
+        {/* Dashboard - Standalone */}
+        <div className="mb-1">
+          <button
+            onClick={() => handleNavigate('/admin')}
+            className={cn(
+              "w-full flex items-center rounded-lg transition-all duration-200 h-9",
+              collapsed && !isMobile ? "justify-center px-2" : "gap-2.5 px-4",
+              isPathActive('/admin')
+                ? "bg-primary/10 text-primary font-medium" 
+                : "text-gray-600 hover:bg-gray-50 hover:text-gray-900"
+            )}
+          >
+            <span className={cn(
+              "flex-shrink-0",
+              isPathActive('/admin') ? "text-primary" : "text-gray-400"
+            )}>
+              <LayoutDashboard className="w-4 h-4" />
+            </span>
+            {showText && (
+              <>
+                <span className="text-xs flex-1 text-left">Dashboard</span>
+                {isPathActive('/admin') && (
+                  <span className="w-1.5 h-1.5 rounded-full bg-primary" />
+                )}
+              </>
+            )}
+          </button>
         </div>
 
-        {/* Management Section */}
-        {showText && (
-          <div className="mt-6 mb-3 px-4">
-            <span className="text-xs font-semibold text-gray-400 uppercase tracking-wider">
-              Management
-            </span>
-          </div>
-        )}
-        {!showText && <div className="h-6" />}
-        <div className="space-y-1">
-          {managementItems.map(renderNavItem)}
-        </div>
-
-        {/* Administration Section */}
-        {showText && (
-          <div className="mt-6 mb-3 px-4">
-            <span className="text-xs font-semibold text-gray-400 uppercase tracking-wider">
-              Administration
-            </span>
-          </div>
-        )}
-        {!showText && <div className="h-6" />}
-        <div className="space-y-1">
-          {administrationItems.map(renderNavItem)}
+        {/* Collapsible Sections */}
+        <div className="space-y-0.5">
+          {navSections.map((section) => (
+            <Collapsible
+              key={section.label}
+              open={openSections.includes(section.label)}
+              onOpenChange={() => toggleSection(section.label)}
+            >
+              <CollapsibleTrigger asChild>
+                <button
+                  className={cn(
+                    "w-full flex items-center rounded-lg transition-all duration-200 h-9",
+                    collapsed && !isMobile ? "justify-center px-2" : "gap-2.5 px-4",
+                    isSectionActive(section)
+                      ? "text-primary font-medium" 
+                      : "text-gray-600 hover:bg-gray-50 hover:text-gray-900"
+                  )}
+                >
+                  <span className={cn(
+                    "flex-shrink-0",
+                    isSectionActive(section) ? "text-primary" : "text-gray-400"
+                  )}>
+                    {section.icon}
+                  </span>
+                  {showText && (
+                    <>
+                      <span className="text-xs flex-1 text-left">{section.label}</span>
+                      <ChevronDown className={cn(
+                        "w-3.5 h-3.5 text-gray-400 transition-transform duration-200",
+                        openSections.includes(section.label) ? "rotate-180" : ""
+                      )} />
+                    </>
+                  )}
+                </button>
+              </CollapsibleTrigger>
+              
+              <CollapsibleContent>
+                <div className={cn(
+                  "mt-0.5 space-y-0",
+                  collapsed && !isMobile ? "" : "ml-4 pl-4 border-l border-gray-200"
+                )}>
+                  {section.items.map((item) => (
+                    <button
+                      key={item.path}
+                      onClick={() => handleNavigate(item.path)}
+                      className={cn(
+                        "w-full flex items-center rounded-md transition-all duration-200 h-8",
+                        collapsed && !isMobile ? "justify-center px-2" : "gap-2.5 px-3",
+                        isPathActive(item.path)
+                          ? "bg-primary/10 text-primary font-medium" 
+                          : "text-gray-500 hover:bg-gray-50 hover:text-gray-700"
+                      )}
+                    >
+                      <span className={cn(
+                        "flex-shrink-0",
+                        isPathActive(item.path) ? "text-primary" : "text-gray-400"
+                      )}>
+                        {item.icon}
+                      </span>
+                      {showText && (
+                        <>
+                          <span className="text-xs flex-1 text-left">{item.label}</span>
+                          {item.badge && (
+                            <span className="px-1.5 py-0.5 rounded-full text-[10px] font-medium bg-primary/10 text-primary">
+                              {item.badge}
+                            </span>
+                          )}
+                        </>
+                      )}
+                    </button>
+                  ))}
+                </div>
+              </CollapsibleContent>
+            </Collapsible>
+          ))}
         </div>
       </nav>
 
-      {/* Bottom Help Card */}
+      {/* Bottom - Sign Out */}
       {showText && (
-        <div className="p-4">
-          <div className="bg-primary/5 rounded-2xl p-4 relative overflow-hidden">
-            <div className="absolute -top-4 -left-4 w-12 h-12 rounded-full bg-primary/10" />
-            <div className="absolute top-2 left-2 w-8 h-8 rounded-full bg-white flex items-center justify-center shadow-sm">
-              <HelpCircle className="w-4 h-4 text-primary" />
-            </div>
-            
-            <div className="mt-8">
-              <h4 className="font-semibold text-gray-900 text-sm">Need Help?</h4>
-              <p className="text-xs text-gray-500 mt-1 leading-relaxed">
-                Contact support for any assistance.
-              </p>
-              <button
-                onClick={() => handleNavigate('/admin/support')}
-                className="mt-3 w-full bg-white text-gray-700 text-sm font-medium py-2.5 px-4 rounded-xl hover:bg-gray-50 transition-colors shadow-sm border border-gray-100"
-              >
-                Get Support
-              </button>
-            </div>
-          </div>
+        <div className="p-3 flex-shrink-0">
+          <button
+            onClick={handleLogout}
+            className="w-full flex items-center justify-center gap-1.5 px-3 py-2 text-xs font-medium text-red-600 bg-red-50 hover:bg-red-100 rounded-lg transition-colors"
+          >
+            <LogOut className="w-3.5 h-3.5" />
+            Sign Out
+          </button>
         </div>
       )}
 
-      {/* Collapsed Help Icon */}
+      {/* Collapsed Sign Out */}
       {!showText && (
-        <div className="p-3 border-t border-gray-100">
+        <div className="p-2 border-t border-gray-100 flex-shrink-0">
           <button
-            onClick={() => handleNavigate('/admin/support')}
-            className="w-full flex justify-center items-center h-10 rounded-xl text-gray-400 hover:bg-gray-50 hover:text-primary transition-colors"
+            onClick={handleLogout}
+            className="w-full flex justify-center items-center h-8 rounded-lg text-red-400 hover:bg-red-50 hover:text-red-600 transition-colors"
           >
-            <HelpCircle className="w-5 h-5" />
+            <LogOut className="w-4 h-4" />
           </button>
         </div>
       )}
