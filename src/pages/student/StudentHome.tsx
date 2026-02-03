@@ -41,8 +41,8 @@ const StudentHome = () => {
           
           {/* Card Content - 32px padding */}
           <CardContent className="relative p-8">
-            {/* Title - Serif font for elegance */}
-            <h1 className="text-3xl md:text-4xl font-bold text-white mb-2" style={{ fontFamily: 'Georgia, serif' }}>
+            {/* Title - Display font */}
+            <h1 className="text-3xl md:text-4xl font-bold text-white mb-2 font-display">
               General Focus
             </h1>
             
