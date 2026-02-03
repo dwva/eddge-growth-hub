@@ -117,7 +117,7 @@ const StudentAnnouncements = () => {
       <div className="space-y-6">
         {/* Upcoming Events */}
         <div>
-          <h2 className="text-lg font-semibold mb-4">Upcoming Events</h2>
+          <h2 className="text-sm font-medium text-muted-foreground mb-3">Upcoming Events</h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             {upcomingEvents.map((event) => (
               <Card key={event.id} className="hover:shadow-md transition-shadow cursor-pointer">
@@ -169,7 +169,7 @@ const StudentAnnouncements = () => {
                       </div>
                       <div className="flex-1 min-w-0">
                         <div className="flex items-center gap-2 mb-1">
-                          <h3 className="font-medium">{announcement.title}</h3>
+                            <h3 className="text-sm font-medium">{announcement.title}</h3>
                           {announcement.isNew && (
                             <Badge className="bg-primary text-white text-xs">New</Badge>
                           )}
@@ -224,7 +224,7 @@ const StudentAnnouncements = () => {
                         </div>
                         <div className="flex-1 min-w-0">
                           <div className="flex items-center gap-2 mb-1">
-                            <h3 className="font-medium">{announcement.title}</h3>
+                            <h3 className="text-sm font-medium">{announcement.title}</h3>
                             {announcement.isNew && (
                               <Badge className="bg-primary text-white text-xs">New</Badge>
                             )}

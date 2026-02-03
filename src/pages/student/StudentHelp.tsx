@@ -87,8 +87,8 @@ const StudentHelp = () => {
         {/* Search */}
         <Card className="bg-gradient-to-br from-primary/5 to-primary/10 border-primary/20">
           <CardContent className="p-6">
-            <h2 className="text-xl font-semibold mb-2">How can we help you?</h2>
-            <p className="text-muted-foreground text-sm mb-4">
+            <h2 className="text-lg font-semibold mb-1">How can we help you?</h2>
+            <p className="text-muted-foreground text-xs mb-3">
               Search our knowledge base or browse frequently asked questions
             </p>
             <div className="relative">
@@ -113,7 +113,7 @@ const StudentHelp = () => {
                     {resource.icon}
                   </div>
                   <div className="flex-1">
-                    <h3 className="font-medium text-sm">{resource.title}</h3>
+                    <h3 className="text-xs font-medium">{resource.title}</h3>
                     <p className="text-xs text-muted-foreground capitalize">{resource.type}</p>
                   </div>
                   <ExternalLink className="w-4 h-4 text-muted-foreground" />
@@ -126,7 +126,7 @@ const StudentHelp = () => {
         {/* FAQs */}
         <Card>
           <CardHeader>
-            <CardTitle className="text-lg flex items-center gap-2">
+            <CardTitle className="text-sm flex items-center gap-2">
               <HelpCircle className="w-5 h-5 text-primary" />
               Frequently Asked Questions
             </CardTitle>
@@ -136,19 +136,19 @@ const StudentHelp = () => {
               <Accordion type="single" collapsible className="w-full">
                 {filteredFaqs.map((faq, index) => (
                   <AccordionItem key={index} value={`item-${index}`}>
-                    <AccordionTrigger className="text-left">
+                    <AccordionTrigger className="text-left text-sm">
                       {faq.question}
                     </AccordionTrigger>
-                    <AccordionContent className="text-muted-foreground">
+                    <AccordionContent className="text-xs text-muted-foreground">
                       {faq.answer}
                     </AccordionContent>
                   </AccordionItem>
                 ))}
               </Accordion>
             ) : (
-              <div className="text-center py-8">
-                <HelpCircle className="w-12 h-12 mx-auto text-muted-foreground mb-4" />
-                <p className="text-muted-foreground">No matching questions found</p>
+              <div className="text-center py-6">
+                <HelpCircle className="w-10 h-10 mx-auto text-muted-foreground mb-3" />
+                <p className="text-xs text-muted-foreground">No matching questions found</p>
               </div>
             )}
           </CardContent>
@@ -157,7 +157,7 @@ const StudentHelp = () => {
         {/* Contact Support */}
         <Card>
           <CardHeader>
-            <CardTitle className="text-lg flex items-center gap-2">
+            <CardTitle className="text-sm flex items-center gap-2">
               <MessageSquare className="w-5 h-5 text-primary" />
               Contact Support
             </CardTitle>
@@ -169,7 +169,7 @@ const StudentHelp = () => {
             
             <div className="space-y-4">
               <div>
-                <label className="text-sm font-medium mb-2 block">Subject</label>
+                <label className="text-xs font-medium mb-1 block">Subject</label>
                 <Input
                   placeholder="What do you need help with?"
                   value={supportSubject}
@@ -177,7 +177,7 @@ const StudentHelp = () => {
                 />
               </div>
               <div>
-                <label className="text-sm font-medium mb-2 block">Message</label>
+                <label className="text-xs font-medium mb-1 block">Message</label>
                 <Textarea
                   placeholder="Describe your issue in detail..."
                   rows={4}
@@ -193,7 +193,7 @@ const StudentHelp = () => {
 
             {/* Alternative Contact */}
             <div className="pt-4 border-t border-border">
-              <p className="text-sm font-medium mb-3">Other ways to reach us</p>
+              <p className="text-xs font-medium mb-2">Other ways to reach us</p>
               <div className="flex flex-wrap gap-4">
                 <div className="flex items-center gap-2 text-sm text-muted-foreground">
                   <Mail className="w-4 h-4" />

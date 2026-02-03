@@ -74,10 +74,10 @@ const StudentHome = () => {
                 <CardContent className="relative p-8 flex flex-col justify-between h-full min-h-[240px]">
                   {/* Top section - Title aligned to same baseline as My Stats */}
                   <div className="pt-2">
-                    <h2 className="text-2xl font-bold text-white leading-tight">
+                    <h2 className="text-xl font-semibold text-white leading-tight">
                       Today's Focus
                     </h2>
-                    <p className="text-white/70 text-sm mt-3 max-w-sm">
+                    <p className="text-white/70 text-xs mt-2 max-w-sm">
                       Your personalized learning plan for today
                     </p>
                   </div>
@@ -110,24 +110,24 @@ const StudentHome = () => {
               <CardContent className="relative p-8 flex flex-col justify-between h-full min-h-[240px]">
                 {/* Top section - Title aligned with Today's Focus */}
                 <div className="pt-2">
-                  <h3 className="text-2xl font-bold text-gray-900 leading-tight">My Stats</h3>
+                  <h3 className="text-lg font-semibold text-gray-900 leading-tight">My Stats</h3>
                   
                   {/* Stats row - evenly aligned */}
-                  <div className="flex gap-10 mt-5">
+                  <div className="flex gap-10 mt-4">
                     <div>
-                      <p className="text-xs text-gray-500 font-medium">Today</p>
-                      <p className="text-2xl font-bold text-gray-900 mt-1">2.5 hrs</p>
+                      <p className="text-xs text-gray-500">Today</p>
+                      <p className="text-xl font-semibold text-gray-900 mt-1">2.5 hrs</p>
                     </div>
                     <div>
-                      <p className="text-xs text-gray-500 font-medium">This Week</p>
-                      <p className="text-2xl font-bold text-gray-900 mt-1">12 hrs</p>
+                      <p className="text-xs text-gray-500">This Week</p>
+                      <p className="text-xl font-semibold text-gray-900 mt-1">12 hrs</p>
                     </div>
                   </div>
                   
                   {/* Streak - aligned with stats content */}
-                  <div className="flex items-center gap-1.5 mt-4">
+                  <div className="flex items-center gap-1.5 mt-3">
                     <Flame className="w-4 h-4 text-orange-500" />
-                    <span className="text-sm font-semibold text-gray-700">7 day streak</span>
+                    <span className="text-xs font-medium text-gray-700">7 day streak</span>
                   </div>
                 </div>
                 
@@ -146,7 +146,7 @@ const StudentHome = () => {
           {/* My Learning Section - 3 Card Grid */}
           <div>
             <div className="flex items-center justify-between mb-4">
-              <h3 className="text-lg font-bold text-gray-900">My Learning</h3>
+              <h3 className="text-base font-semibold text-gray-900">My Learning</h3>
               <button 
                 className="flex items-center gap-1 text-sm text-gray-500 hover:text-primary transition-colors"
                 onClick={() => navigate('/student/learning')}
@@ -166,7 +166,7 @@ const StudentHome = () => {
                     <div className={`w-16 h-16 ${subject.color} rounded-2xl flex items-center justify-center mb-4 group-hover:scale-105 transition-transform`}>
                       <span className={subject.iconColor}>{subject.icon}</span>
                     </div>
-                    <h4 className="font-semibold text-gray-900">{subject.name}</h4>
+                    <h4 className="text-sm font-medium text-gray-900">{subject.name}</h4>
                     <div className="flex items-center gap-2 mt-2">
                       <div className="flex-1 h-1.5 bg-gray-100 rounded-full overflow-hidden">
                         <div 
@@ -192,7 +192,7 @@ const StudentHome = () => {
             <Card className="border-0 shadow-sm rounded-2xl">
               <CardContent className="p-5">
                 <div className="flex items-center justify-between mb-4">
-                  <h4 className="font-bold text-gray-900">Weekly Performance</h4>
+                  <h4 className="text-sm font-medium text-gray-900">Weekly Performance</h4>
                   <button 
                     className="text-xs text-gray-500 hover:text-primary flex items-center gap-1"
                     onClick={() => navigate('/student/performance')}
@@ -210,8 +210,8 @@ const StudentHome = () => {
                     ))}
                   </div>
                   <div>
-                    <p className="font-semibold text-gray-900">85% accuracy</p>
-                    <p className="text-xs text-gray-500">12 tasks completed • 7 days</p>
+                    <p className="text-sm font-medium text-gray-900">85% accuracy</p>
+                    <p className="text-xs text-gray-500">12 tasks completed</p>
                   </div>
                 </div>
               </CardContent>
@@ -221,7 +221,7 @@ const StudentHome = () => {
             <Card className="border-0 shadow-sm rounded-2xl">
               <CardContent className="p-5">
                 <div className="flex items-center justify-between mb-4">
-                  <h4 className="font-bold text-gray-900">Upcoming Tasks</h4>
+                  <h4 className="text-sm font-medium text-gray-900">Upcoming Tasks</h4>
                   <button 
                     className="text-xs text-gray-500 hover:text-primary flex items-center gap-1"
                     onClick={() => navigate('/student/homework')}
@@ -239,7 +239,7 @@ const StudentHome = () => {
                     ))}
                   </div>
                   <div>
-                    <p className="font-semibold text-gray-900">3 pending</p>
+                    <p className="text-sm font-medium text-gray-900">3 pending</p>
                     <p className="text-xs text-gray-500">Due today & tomorrow</p>
                   </div>
                 </div>

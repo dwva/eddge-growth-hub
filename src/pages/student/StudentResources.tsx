@@ -119,7 +119,7 @@ const StudentResources = () => {
 
         {/* Subject Folders */}
         <div>
-          <h2 className="text-sm font-medium mb-3">Browse by Subject</h2>
+          <h2 className="text-sm font-medium text-muted-foreground mb-3">Browse by Subject</h2>
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-3">
             {subjectFolders.map((folder) => (
               <button
@@ -134,7 +134,7 @@ const StudentResources = () => {
                 <div className={`w-10 h-10 rounded-lg ${folder.color} flex items-center justify-center text-xl mb-2`}>
                   {folder.icon}
                 </div>
-                <p className="text-sm font-medium truncate">{folder.name}</p>
+                <p className="text-xs font-medium truncate">{folder.name}</p>
                 <p className="text-xs text-muted-foreground">{folder.count} resources</p>
               </button>
             ))}
@@ -159,7 +159,7 @@ const StudentResources = () => {
                         {getTypeIcon(resource.type)}
                       </div>
                       <div className="flex-1 min-w-0">
-                        <h3 className="font-medium truncate">{resource.title}</h3>
+                        <h3 className="text-sm font-medium truncate">{resource.title}</h3>
                         <div className="flex items-center gap-3 text-xs text-muted-foreground mt-1">
                           <Badge variant="secondary" className="text-xs">
                             {resource.subject}
@@ -213,7 +213,7 @@ const StudentResources = () => {
                         <FileText className="w-5 h-5 text-red-500" />
                       </div>
                       <div className="flex-1 min-w-0">
-                        <h3 className="font-medium truncate">{resource.title}</h3>
+                        <h3 className="text-sm font-medium truncate">{resource.title}</h3>
                         <div className="flex items-center gap-3 text-xs text-muted-foreground mt-1">
                           <Badge variant="secondary" className="text-xs">
                             {resource.subject}
@@ -243,7 +243,7 @@ const StudentResources = () => {
                         <Video className="w-5 h-5 text-blue-500" />
                       </div>
                       <div className="flex-1 min-w-0">
-                        <h3 className="font-medium truncate">{resource.title}</h3>
+                        <h3 className="text-sm font-medium truncate">{resource.title}</h3>
                         <div className="flex items-center gap-3 text-xs text-muted-foreground mt-1">
                           <Badge variant="secondary" className="text-xs">
                             {resource.subject}

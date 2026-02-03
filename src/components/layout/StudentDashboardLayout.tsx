@@ -72,8 +72,8 @@ const StudentDashboardLayout = ({ children }: StudentDashboardLayoutProps) => {
 
             {/* Welcome Text - Planti style */}
             <div className="hidden sm:block">
-              <h1 className="text-xl md:text-2xl font-bold text-gray-900">Welcome to EDDGE.</h1>
-              <p className="text-sm text-gray-500">Hello {firstName}, welcome back!</p>
+              <h1 className="text-lg font-semibold text-gray-900">Welcome to EDDGE.</h1>
+              <p className="text-xs text-gray-500">Hello {firstName}, welcome back!</p>
             </div>
           </div>
           
@@ -134,7 +134,7 @@ const StudentDashboardLayout = ({ children }: StudentDashboardLayoutProps) => {
                       </AvatarFallback>
                     </Avatar>
                     <div className="flex-1 min-w-0">
-                      <p className="font-semibold text-gray-900 truncate">{user?.name || 'Student'}</p>
+                      <p className="text-sm font-medium text-gray-900 truncate">{user?.name || 'Student'}</p>
                       <p className="text-xs text-gray-500 truncate">{user?.email || 'student@eddge.com'}</p>
                       <p className="text-xs text-primary font-medium mt-0.5">Class 9 • CBSE</p>
                     </div>

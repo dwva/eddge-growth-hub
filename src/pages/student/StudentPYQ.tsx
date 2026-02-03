@@ -133,29 +133,29 @@ const StudentPYQ = () => {
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
           <Card>
             <CardContent className="p-4 text-center">
-              <FileText className="w-8 h-8 mx-auto mb-2 text-primary" />
-              <p className="text-2xl font-bold">{pyqPapers.length}</p>
+              <FileText className="w-6 h-6 mx-auto mb-2 text-primary" />
+              <p className="text-xl font-semibold">{pyqPapers.length}</p>
               <p className="text-sm text-muted-foreground">Total Papers</p>
             </CardContent>
           </Card>
           <Card>
             <CardContent className="p-4 text-center">
-              <CheckCircle2 className="w-8 h-8 mx-auto mb-2 text-green-500" />
-              <p className="text-2xl font-bold">{pyqPapers.filter(p => p.solved).length}</p>
+              <CheckCircle2 className="w-6 h-6 mx-auto mb-2 text-green-500" />
+              <p className="text-xl font-semibold">{pyqPapers.filter(p => p.solved).length}</p>
               <p className="text-sm text-muted-foreground">Solved</p>
             </CardContent>
           </Card>
           <Card>
             <CardContent className="p-4 text-center">
-              <Calendar className="w-8 h-8 mx-auto mb-2 text-amber-500" />
-              <p className="text-2xl font-bold">{years.length}</p>
+              <Calendar className="w-6 h-6 mx-auto mb-2 text-amber-500" />
+              <p className="text-xl font-semibold">{years.length}</p>
               <p className="text-sm text-muted-foreground">Years Available</p>
             </CardContent>
           </Card>
           <Card>
             <CardContent className="p-4 text-center">
-              <Clock className="w-8 h-8 mx-auto mb-2 text-blue-500" />
-              <p className="text-2xl font-bold">12h</p>
+              <Clock className="w-6 h-6 mx-auto mb-2 text-blue-500" />
+              <p className="text-xl font-semibold">12h</p>
               <p className="text-sm text-muted-foreground">Practice Time</p>
             </CardContent>
           </Card>
@@ -210,7 +210,7 @@ const StudentPYQ = () => {
                     <div className={`w-1.5 h-14 rounded-full ${getSubjectColor(paper.subject)}`} />
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center gap-2 mb-1">
-                        <h3 className="font-medium truncate">{paper.title}</h3>
+                        <h3 className="text-sm font-medium truncate">{paper.title}</h3>
                         {paper.solved && (
                           <Badge variant="secondary" className="bg-green-100 text-green-700 text-xs">
                             <CheckCircle2 className="w-3 h-3 mr-1" />
@@ -256,10 +256,10 @@ const StudentPYQ = () => {
         </div>
 
         {filteredPapers.length === 0 && (
-          <div className="text-center py-12">
-            <FileText className="w-12 h-12 mx-auto text-muted-foreground mb-4" />
-            <h3 className="font-medium text-lg mb-2">No papers found</h3>
-            <p className="text-muted-foreground">Try adjusting your search or filters</p>
+          <div className="text-center py-10">
+            <FileText className="w-10 h-10 mx-auto text-muted-foreground mb-3" />
+            <h3 className="text-sm font-medium mb-1">No papers found</h3>
+            <p className="text-xs text-muted-foreground">Try adjusting your search or filters</p>
           </div>
         )}
       </div>
