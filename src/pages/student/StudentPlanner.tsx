@@ -155,25 +155,32 @@ const StudentPlanner = () => {
     stubCalendarEvents.filter((e) => isSameDay(e.date, date));
 
   const CalendarDayContent = (props: DayContentProps) => {
-    const { date } = props;
+    const { date, activeModifiers } = props;
     const events = getEventsForDay(date).slice(0, 3);
     const durationShort = (d: string) => (d.replace(/\s*min\s*/i, 'm').replace(/\s*minute(s)?\s*/i, 'm') || d);
+    const isToday = isSameDay(date, new Date());
+    const isSelected = activeModifiers?.selected;
     return (
-      <div className="flex h-full min-h-[4.25rem] w-full flex-col p-1.5 text-left">
-        <span className="mb-1 block text-left text-sm font-medium tabular-nums leading-none">
-          {date.getDate()}
-        </span>
-        <div className="flex min-h-0 flex-1 flex-col gap-1 overflow-hidden">
+      <div className="flex h-full min-h-[5rem] w-full flex-col p-2 text-left">
+        <div className="mb-1.5 flex items-center justify-between">
+          <span className={`inline-flex h-7 w-7 items-center justify-center rounded-full text-sm font-semibold tabular-nums ${isSelected ? 'bg-white/20 text-white' : 'text-foreground'}`}>
+            {date.getDate()}
+          </span>
+          {isToday && !isSelected && (
+            <span className="h-1.5 w-1.5 rounded-full bg-violet-500" title="Today" />
+          )}
+        </div>
+        <div className="flex min-h-0 flex-1 flex-col gap-1.5 overflow-hidden">
           {events.map((ev) => {
-            const intentShort = intentConfig[ev.intent]?.short ?? 'P';
             const dur = (ev as { durationShort?: string }).durationShort ?? durationShort(ev.duration);
             const accent = subjectAccent[ev.subject] ?? calendarEventColors[ev.priority];
             return (
               <button
                 key={ev.id}
                 type="button"
-                className="flex min-h-[1.75rem] cursor-pointer flex-col justify-center rounded-lg border-l-2 pl-2 pr-1.5 py-0.5 text-left text-xs font-medium hover:opacity-90 bg-white/95 border-gray-200 shadow-sm"
-                style={{ borderLeftColor: accent }}
+                className={`group flex h-8 min-h-8 w-full cursor-pointer items-center gap-2 rounded-lg border-0 px-2.5 py-1.5 text-left text-xs transition-all hover:shadow-sm ${
+                  isSelected ? 'bg-white/20 text-white hover:bg-white/30' : 'bg-gray-50/90 hover:bg-gray-100'
+                }`}
                 onClick={(e) => {
                   e.stopPropagation();
                   setSelectedEvent({
@@ -194,8 +201,9 @@ const StudentPlanner = () => {
                   });
                 }}
               >
-                <span className="truncate font-medium text-gray-900" style={{ color: accent }}>{ev.subject} – {ev.title}</span>
-                <span className="text-[10px] text-muted-foreground mt-0.5">{intentConfig[ev.intent]?.label ?? 'Learn'} · {dur}</span>
+                <span className="h-2 w-2 shrink-0 rounded-full" style={{ backgroundColor: isSelected ? 'rgba(255,255,255,0.9)' : accent }} />
+                <span className={`min-w-0 flex-1 truncate font-medium ${isSelected ? 'text-white' : 'text-foreground'}`}>{ev.title}</span>
+                <span className={`shrink-0 text-[10px] font-medium ${isSelected ? 'text-white/80' : 'text-muted-foreground'}`}>{dur}</span>
               </button>
             );
           })}
@@ -445,28 +453,28 @@ const StudentPlanner = () => {
                   </TabsContent>
 
                   <TabsContent value="calendar" className="mt-0">
-                    <div className="flex flex-col gap-4 w-full min-h-[600px] max-w-5xl mx-auto">
-                      {/* Toolbar: left nav | centered month | right controls */}
-                      <div className="relative bg-card p-4 rounded-xl border shadow-sm flex items-center justify-between gap-4 w-full">
-                        <div className="flex items-center gap-3 flex-shrink-0 h-9">
-                          <div className="flex items-center bg-muted/50 p-1 rounded-lg">
-                            <Button variant="ghost" size="icon" className="h-8 w-8" onClick={goToPrevMonth} aria-label="Previous month">
-                              <ChevronLeft className="w-4 h-4" />
+                    <div className="flex flex-col gap-5 w-full min-h-[620px]">
+                      {/* Toolbar – minimal, clean */}
+                      <div className="flex flex-wrap items-center justify-between gap-4">
+                        <div className="flex items-center gap-2">
+                          <div className="flex items-center gap-0.5 rounded-full bg-gray-100 p-0.5">
+                            <Button variant="ghost" size="icon" className="h-8 w-8 rounded-full" onClick={goToPrevMonth} aria-label="Previous month">
+                              <ChevronLeft className="h-4 w-4" />
                             </Button>
-                            <Button variant="ghost" size="sm" className="h-8 px-3 font-medium" onClick={goToToday}>
+                            <Button variant="ghost" size="sm" className="h-8 rounded-full px-3 text-sm font-medium" onClick={goToToday}>
                               Today
                             </Button>
-                            <Button variant="ghost" size="icon" className="h-8 w-8" onClick={goToNextMonth} aria-label="Next month">
-                              <ChevronRight className="w-4 h-4" />
+                            <Button variant="ghost" size="icon" className="h-8 w-8 rounded-full" onClick={goToNextMonth} aria-label="Next month">
+                              <ChevronRight className="h-4 w-4" />
                             </Button>
                           </div>
+                          <h2 className="ml-2 text-xl font-semibold tracking-tight text-foreground">
+                            {format(calendarDate, 'MMMM yyyy')}
+                          </h2>
                         </div>
-                        <h2 className="text-xl font-bold text-foreground absolute left-1/2 -translate-x-1/2 pointer-events-none">
-                          {format(calendarDate, 'MMMM yyyy')}
-                        </h2>
-                        <div className="flex items-center gap-2 flex-shrink-0 h-9">
+                        <div className="flex items-center gap-2">
                           <Select value={calendarView} onValueChange={(v) => setCalendarView(v as CalendarViewValue)}>
-                            <SelectTrigger className="w-[140px] h-9">
+                            <SelectTrigger className="h-9 w-[130px] rounded-lg border-gray-200 bg-gray-50/80">
                               <SelectValue />
                             </SelectTrigger>
                             <SelectContent>
@@ -475,46 +483,50 @@ const StudentPlanner = () => {
                               <SelectItem value="timeGridDay">Daily</SelectItem>
                             </SelectContent>
                           </Select>
-                          <div className="flex items-center bg-muted/50 p-1 rounded-lg border">
+                          <div className="flex rounded-lg border border-gray-200 bg-gray-50/80 p-0.5">
                             <Button
                               variant={viewToggle === 'grid' ? 'secondary' : 'ghost'}
                               size="icon"
-                              className="h-8 w-8"
+                              className="h-8 w-8 rounded-md"
                               onClick={() => setViewToggle('grid')}
                               aria-label="Monthly view"
                             >
-                              <Grid3X3 className="w-4 h-4" />
+                              <Grid3X3 className="h-4 w-4" />
                             </Button>
                             <Button
                               variant={viewToggle === 'list' ? 'secondary' : 'ghost'}
                               size="icon"
-                              className="h-8 w-8"
+                              className="h-8 w-8 rounded-md"
                               onClick={() => setViewToggle('list')}
                               aria-label="Weekly view"
                             >
-                              <List className="w-4 h-4" />
+                              <List className="h-4 w-4" />
                             </Button>
                           </div>
                         </div>
                       </div>
-                      {/* Calendar card: centered, equal cells */}
-                      <Card className="flex-1 p-4 overflow-hidden border shadow-md bg-card relative min-h-[500px]">
-                        {stubCalendarEvents.length === 0 ? (
-                          <div className="absolute inset-0 bg-background/60 backdrop-blur-sm z-10 flex flex-col items-center justify-center gap-3 p-6">
-                            <CalendarIcon className="w-16 h-16 text-muted-foreground opacity-50" />
-                            <p className="text-lg font-semibold text-foreground">No tasks scheduled</p>
-                            <p className="text-sm text-muted-foreground">No tasks found for the visible date range.</p>
-                            <p className="text-xs text-muted-foreground">Create a task to get started with your study plan.</p>
+
+                      {/* Calendar – clean card, minimal grid */}
+                      <Card className="relative flex-1 overflow-hidden rounded-2xl border border-gray-200/80 bg-white shadow-sm min-h-[540px]">
+                        {stubCalendarEvents.length === 0 && (
+                          <div className="absolute inset-0 z-10 flex flex-col items-center justify-center gap-4 rounded-2xl bg-white/95 p-12 backdrop-blur-[2px]">
+                            <div className="flex h-20 w-20 items-center justify-center rounded-2xl bg-gray-100">
+                              <CalendarIcon className="h-10 w-10 text-gray-400" />
+                            </div>
+                            <div className="space-y-1 text-center">
+                              <p className="text-lg font-semibold text-foreground">No tasks scheduled</p>
+                              <p className="max-w-sm text-sm text-muted-foreground">No tasks in this date range. Add a task from the Tasks tab to see it here.</p>
+                            </div>
                           </div>
-                        ) : null}
-                        <div className="relative w-full">
+                        )}
+                        <div className="relative p-4 sm:p-5">
                           <CalendarComponent
                             mode="single"
                             month={calendarDate}
                             onMonthChange={(date) => date && setCalendarDate(date)}
                             selected={calendarDate}
                             onSelect={(date) => date && setCalendarDate(date)}
-                            className="rounded-lg border-0 w-full"
+                            className="w-full rounded-xl [&_.rdp-month]:w-full"
                             classNames={{
                               caption: 'hidden',
                               nav: 'hidden',
@@ -522,15 +534,13 @@ const StudentPlanner = () => {
                               month: 'w-full',
                               table: 'w-full',
                               head_row: 'flex w-full',
-                              head_cell: 'flex-1 min-w-0 text-muted-foreground rounded-md font-semibold text-foreground text-[0.8rem] text-center py-2',
-                              row: 'flex w-full mt-0 border-t border-border/50',
-                              cell: 'flex-1 min-w-0 min-h-[4.25rem] p-0 align-top text-left text-sm border-r border-border/50 last:border-r-0 [&:has([aria-selected])]:bg-accent/50 first:[&:has([aria-selected])]:rounded-l-md last:[&:has([aria-selected])]:rounded-r-md focus-within:relative focus-within:z-20',
-                              day: 'h-full min-h-[4.25rem] w-full flex flex-col items-stretch overflow-hidden p-0 font-normal aria-selected:opacity-100 rounded-none text-left',
-                              day_today: 'bg-amber-50/70 ring-1 ring-amber-200/50 text-foreground font-semibold',
-                              day_selected:
-                                'bg-primary text-primary-foreground hover:bg-primary hover:text-primary-foreground focus:bg-primary focus:text-primary-foreground',
-                              day_outside:
-                                'text-muted-foreground opacity-50 aria-selected:bg-accent/50 aria-selected:text-muted-foreground aria-selected:opacity-30',
+                              head_cell: 'flex-1 min-w-0 py-3 text-center text-xs font-semibold uppercase tracking-wider text-muted-foreground',
+                              row: 'flex w-full border-b border-gray-100 last:border-b-0',
+                              cell: 'flex-1 min-w-0 min-h-[5rem] border-r border-gray-100 last:border-r-0 p-0 align-top [&:has([aria-selected])]:bg-violet-50/50 focus-within:relative focus-within:z-10',
+                              day: 'h-full min-h-[5rem] w-full flex flex-col overflow-hidden p-0 font-normal rounded-none text-left',
+                              day_today: 'bg-violet-50/70 text-foreground',
+                              day_selected: 'bg-violet-500 text-white hover:bg-violet-600 focus:bg-violet-600 [&_.text-foreground]:!text-white [&_.text-muted-foreground]:!text-white/80',
+                              day_outside: 'text-muted-foreground/60',
                             }}
                             components={{
                               Caption: () => null,
