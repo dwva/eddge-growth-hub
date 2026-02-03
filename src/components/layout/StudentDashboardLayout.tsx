@@ -36,13 +36,6 @@ const StudentDashboardLayout = ({ children, title }: StudentDashboardLayoutProps
         collapsed ? "w-14" : "w-44"
       )}>
         <StudentSidebar collapsed={collapsed} />
-        {/* Collapse Toggle - Positioned at 64px from top (below header) */}
-        <button
-          onClick={() => setCollapsed(!collapsed)}
-          className="absolute top-[72px] -right-3 w-6 h-6 bg-white border border-border rounded-full flex items-center justify-center shadow-md hover:bg-accent hover:scale-105 transition-all duration-200 z-10"
-        >
-          <ChevronLeft className={cn("w-3.5 h-3.5 text-muted-foreground transition-transform duration-200", collapsed && "rotate-180")} />
-        </button>
       </aside>
 
       {/* Mobile Sidebar */}
