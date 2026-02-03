@@ -113,31 +113,31 @@ const StudentSidebar = ({ collapsed = false, isMobile = false, onMobileClose }: 
 
   return (
     <div className="flex flex-col h-full bg-white border-r border-gray-100 font-sans">
-      {/* Logo - Planti style */}
+      {/* Logo */}
       <div className={cn(
-        "flex items-center h-16 border-b border-gray-100",
-        collapsed && !isMobile ? "justify-center px-3" : "gap-3 px-6"
+        "flex items-center h-14 border-b border-gray-100",
+        collapsed && !isMobile ? "justify-center px-2" : "gap-2.5 px-4"
       )}>
-        <div className="w-10 h-10 rounded-xl bg-primary flex items-center justify-center flex-shrink-0">
-          <Sparkles className="w-5 h-5 text-white" />
+        <div className="w-8 h-8 rounded-lg bg-primary flex items-center justify-center flex-shrink-0">
+          <Sparkles className="w-4 h-4 text-white" />
         </div>
         {showText && (
-          <span className="text-xl font-bold text-primary tracking-tight">EDDGE</span>
+          <span className="text-lg font-bold text-primary tracking-tight">EDDGE</span>
         )}
       </div>
 
       {/* Navigation */}
       <nav className={cn(
-        "flex-1 py-4 overflow-y-auto scrollbar-hide",
-        collapsed && !isMobile ? "px-3" : "px-4"
+        "flex-1 py-3 overflow-hidden",
+        collapsed && !isMobile ? "px-2" : "px-3"
       )}>
         {/* Dashboard - Standalone */}
-        <div className="mb-2">
+        <div className="mb-1">
           <button
             onClick={() => handleNavigate('/student')}
             className={cn(
-              "w-full flex items-center rounded-xl transition-all duration-200 h-12",
-              collapsed && !isMobile ? "justify-center px-3" : "gap-3 px-5",
+              "w-full flex items-center rounded-lg transition-all duration-200 h-9",
+              collapsed && !isMobile ? "justify-center px-2" : "gap-2.5 px-4",
               isPathActive('/student')
                 ? "bg-primary/10 text-primary font-medium" 
                 : "text-gray-600 hover:bg-gray-50 hover:text-gray-900"
@@ -147,13 +147,13 @@ const StudentSidebar = ({ collapsed = false, isMobile = false, onMobileClose }: 
               "flex-shrink-0",
               isPathActive('/student') ? "text-primary" : "text-gray-400"
             )}>
-              <LayoutDashboard className="w-5 h-5" />
+              <LayoutDashboard className="w-4 h-4" />
             </span>
             {showText && (
               <>
-                <span className="text-sm flex-1 text-left">Dashboard</span>
+                <span className="text-xs flex-1 text-left">Dashboard</span>
                 {isPathActive('/student') && (
-                  <span className="w-2 h-2 rounded-full bg-primary" />
+                  <span className="w-1.5 h-1.5 rounded-full bg-primary" />
                 )}
               </>
             )}
@@ -161,7 +161,7 @@ const StudentSidebar = ({ collapsed = false, isMobile = false, onMobileClose }: 
         </div>
 
         {/* Collapsible Sections */}
-        <div className="space-y-1">
+        <div className="space-y-0.5">
           {navSections.map((section) => (
             <Collapsible
               key={section.label}
@@ -171,8 +171,8 @@ const StudentSidebar = ({ collapsed = false, isMobile = false, onMobileClose }: 
               <CollapsibleTrigger asChild>
                 <button
                   className={cn(
-                    "w-full flex items-center rounded-xl transition-all duration-200 h-12",
-                    collapsed && !isMobile ? "justify-center px-3" : "gap-3 px-5",
+                    "w-full flex items-center rounded-lg transition-all duration-200 h-9",
+                    collapsed && !isMobile ? "justify-center px-2" : "gap-2.5 px-4",
                     isSectionActive(section)
                       ? "text-primary font-medium" 
                       : "text-gray-600 hover:bg-gray-50 hover:text-gray-900"
@@ -186,9 +186,9 @@ const StudentSidebar = ({ collapsed = false, isMobile = false, onMobileClose }: 
                   </span>
                   {showText && (
                     <>
-                      <span className="text-sm flex-1 text-left">{section.label}</span>
+                      <span className="text-xs flex-1 text-left">{section.label}</span>
                       <ChevronDown className={cn(
-                        "w-4 h-4 text-gray-400 transition-transform duration-200",
+                        "w-3.5 h-3.5 text-gray-400 transition-transform duration-200",
                         openSections.includes(section.label) ? "rotate-180" : ""
                       )} />
                     </>
@@ -198,16 +198,16 @@ const StudentSidebar = ({ collapsed = false, isMobile = false, onMobileClose }: 
               
               <CollapsibleContent>
                 <div className={cn(
-                  "mt-1 space-y-0.5",
-                  collapsed && !isMobile ? "" : "ml-5 pl-5 border-l border-gray-200"
+                  "mt-0.5 space-y-0",
+                  collapsed && !isMobile ? "" : "ml-4 pl-4 border-l border-gray-200"
                 )}>
                   {section.items.map((item) => (
                     <button
                       key={item.path}
                       onClick={() => handleNavigate(item.path)}
                       className={cn(
-                        "w-full flex items-center rounded-lg transition-all duration-200 h-10",
-                        collapsed && !isMobile ? "justify-center px-3" : "gap-3 px-4",
+                        "w-full flex items-center rounded-md transition-all duration-200 h-8",
+                        collapsed && !isMobile ? "justify-center px-2" : "gap-2.5 px-3",
                         isPathActive(item.path)
                           ? "bg-primary/10 text-primary font-medium" 
                           : "text-gray-500 hover:bg-gray-50 hover:text-gray-700"
@@ -220,7 +220,7 @@ const StudentSidebar = ({ collapsed = false, isMobile = false, onMobileClose }: 
                         {item.icon}
                       </span>
                       {showText && (
-                        <span className="text-sm">{item.label}</span>
+                        <span className="text-xs">{item.label}</span>
                       )}
                     </button>
                   ))}
@@ -233,24 +233,24 @@ const StudentSidebar = ({ collapsed = false, isMobile = false, onMobileClose }: 
 
       {/* Bottom Section - Help & Sign Out */}
       {showText && (
-        <div className="p-4 space-y-3">
+        <div className="p-3 space-y-2 flex-shrink-0">
           {/* Help Card */}
-          <div className="bg-primary/5 rounded-2xl p-4 relative overflow-hidden">
-            <div className="absolute -top-4 -left-4 w-12 h-12 rounded-full bg-primary/10" />
-            <div className="absolute top-2 left-2 w-8 h-8 rounded-full bg-white flex items-center justify-center shadow-sm">
-              <HelpCircle className="w-4 h-4 text-primary" />
+          <div className="bg-primary/5 rounded-xl p-3 relative overflow-hidden">
+            <div className="absolute -top-3 -left-3 w-10 h-10 rounded-full bg-primary/10" />
+            <div className="absolute top-1.5 left-1.5 w-6 h-6 rounded-full bg-white flex items-center justify-center shadow-sm">
+              <HelpCircle className="w-3 h-3 text-primary" />
             </div>
             
-            <div className="mt-8">
-              <h4 className="font-semibold text-gray-900 text-sm">Help Center</h4>
-              <p className="text-xs text-gray-500 mt-1 leading-relaxed">
-                Having trouble? Please contact us for help.
+            <div className="mt-6">
+              <h4 className="font-semibold text-gray-900 text-xs">Help Center</h4>
+              <p className="text-[10px] text-gray-500 mt-0.5 leading-relaxed">
+                Having trouble? Contact us.
               </p>
               <button
                 onClick={() => handleNavigate('/student/help')}
-                className="mt-3 w-full bg-white text-gray-700 text-sm font-medium py-2.5 px-4 rounded-xl hover:bg-gray-50 transition-colors shadow-sm border border-gray-100"
+                className="mt-2 w-full bg-white text-gray-700 text-xs font-medium py-2 px-3 rounded-lg hover:bg-gray-50 transition-colors shadow-sm border border-gray-100"
               >
-                Go To Help Center
+                Help Center
               </button>
             </div>
           </div>
@@ -258,22 +258,28 @@ const StudentSidebar = ({ collapsed = false, isMobile = false, onMobileClose }: 
           {/* Sign Out Button */}
           <button
             onClick={handleLogout}
-            className="w-full flex items-center justify-center gap-2 px-4 py-3 text-sm font-medium text-red-600 bg-red-50 hover:bg-red-100 rounded-xl transition-colors"
+            className="w-full flex items-center justify-center gap-1.5 px-3 py-2 text-xs font-medium text-red-600 bg-red-50 hover:bg-red-100 rounded-lg transition-colors"
           >
-            <LogOut className="w-4 h-4" />
+            <LogOut className="w-3.5 h-3.5" />
             Sign Out
           </button>
         </div>
       )}
 
-      {/* Collapsed Help Icon */}
+      {/* Collapsed Icons */}
       {!showText && (
-        <div className="p-3 border-t border-gray-100">
+        <div className="p-2 border-t border-gray-100 space-y-1 flex-shrink-0">
           <button
             onClick={() => handleNavigate('/student/help')}
-            className="w-full flex justify-center items-center h-10 rounded-xl text-gray-400 hover:bg-gray-50 hover:text-primary transition-colors"
+            className="w-full flex justify-center items-center h-8 rounded-lg text-gray-400 hover:bg-gray-50 hover:text-primary transition-colors"
           >
-            <HelpCircle className="w-5 h-5" />
+            <HelpCircle className="w-4 h-4" />
+          </button>
+          <button
+            onClick={handleLogout}
+            className="w-full flex justify-center items-center h-8 rounded-lg text-red-400 hover:bg-red-50 hover:text-red-600 transition-colors"
+          >
+            <LogOut className="w-4 h-4" />
           </button>
         </div>
       )}
