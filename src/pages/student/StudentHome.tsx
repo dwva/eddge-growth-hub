@@ -1,8 +1,8 @@
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import StudentDashboardLayout from '@/components/layout/StudentDashboardLayout';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { 
   Zap,
   TrendingUp,
@@ -53,6 +53,7 @@ const subjects = [
 
 const StudentHome = () => {
   const { user } = useAuth();
+  const navigate = useNavigate();
 
   return (
     <StudentDashboardLayout>
@@ -83,10 +84,17 @@ const StudentHome = () => {
                   
                   {/* Bottom section - Buttons */}
                   <div className="flex gap-3 pt-6">
-                    <Button className="bg-white text-primary hover:bg-white/90 font-semibold rounded-xl px-6 h-11 shadow-md">
+                    <Button 
+                      className="bg-white text-primary hover:bg-white/90 font-semibold rounded-xl px-6 h-11 shadow-md"
+                      onClick={() => navigate('/student/planner')}
+                    >
                       Start Today's Plan
                     </Button>
-                    <Button variant="outline" className="border-white/40 text-white hover:bg-white/10 rounded-xl px-6 h-11 bg-transparent">
+                    <Button 
+                      variant="outline" 
+                      className="border-white/40 text-white hover:bg-white/10 rounded-xl px-6 h-11 bg-transparent"
+                      onClick={() => navigate('/student/performance')}
+                    >
                       View Progress
                     </Button>
                   </div>
@@ -124,7 +132,10 @@ const StudentHome = () => {
                 </div>
                 
                 {/* Bottom section - CTA aligned with buttons baseline */}
-                <button className="flex items-center gap-2 text-sm font-medium text-gray-700 hover:text-primary transition-colors group pt-6">
+                <button 
+                  className="flex items-center gap-2 text-sm font-medium text-gray-700 hover:text-primary transition-colors group pt-6"
+                  onClick={() => navigate('/student/performance')}
+                >
                   Go to my progress
                   <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
                 </button>
@@ -136,7 +147,10 @@ const StudentHome = () => {
           <div>
             <div className="flex items-center justify-between mb-4">
               <h3 className="text-lg font-bold text-gray-900">My Learning</h3>
-              <button className="flex items-center gap-1 text-sm text-gray-500 hover:text-primary transition-colors">
+              <button 
+                className="flex items-center gap-1 text-sm text-gray-500 hover:text-primary transition-colors"
+                onClick={() => navigate('/student/learning')}
+              >
                 View All <ArrowRight className="w-4 h-4" />
               </button>
             </div>
@@ -146,6 +160,7 @@ const StudentHome = () => {
                 <Card 
                   key={subject.id} 
                   className="border-0 shadow-sm rounded-2xl hover:shadow-md transition-all duration-300 cursor-pointer group overflow-hidden"
+                  onClick={() => navigate('/student/learning')}
                 >
                   <CardContent className="p-5">
                     <div className={`w-16 h-16 ${subject.color} rounded-2xl flex items-center justify-center mb-4 group-hover:scale-105 transition-transform`}>
@@ -178,7 +193,10 @@ const StudentHome = () => {
               <CardContent className="p-5">
                 <div className="flex items-center justify-between mb-4">
                   <h4 className="font-bold text-gray-900">Weekly Performance</h4>
-                  <button className="text-xs text-gray-500 hover:text-primary flex items-center gap-1">
+                  <button 
+                    className="text-xs text-gray-500 hover:text-primary flex items-center gap-1"
+                    onClick={() => navigate('/student/performance')}
+                  >
                     View All <ArrowRight className="w-3 h-3" />
                   </button>
                 </div>
@@ -204,7 +222,10 @@ const StudentHome = () => {
               <CardContent className="p-5">
                 <div className="flex items-center justify-between mb-4">
                   <h4 className="font-bold text-gray-900">Upcoming Tasks</h4>
-                  <button className="text-xs text-gray-500 hover:text-primary flex items-center gap-1">
+                  <button 
+                    className="text-xs text-gray-500 hover:text-primary flex items-center gap-1"
+                    onClick={() => navigate('/student/homework')}
+                  >
                     View All <ArrowRight className="w-3 h-3" />
                   </button>
                 </div>

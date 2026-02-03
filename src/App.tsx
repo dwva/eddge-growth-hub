@@ -23,6 +23,11 @@ import StudentAttendance from "./pages/student/StudentAttendance";
 import StudentSettings from "./pages/student/StudentSettings";
 import StudentAchievements from "./pages/student/StudentAchievements";
 import StudentDoubtSolver from "./pages/student/StudentDoubtSolver";
+import StudentResources from "./pages/student/StudentResources";
+import StudentPYQ from "./pages/student/StudentPYQ";
+import StudentAnnouncements from "./pages/student/StudentAnnouncements";
+import StudentHomework from "./pages/student/StudentHomework";
+import StudentHelp from "./pages/student/StudentHelp";
 
 // Teacher Pages
 import TeacherHome from "./pages/teacher/TeacherHome";
@@ -143,6 +148,31 @@ const App = () => (
             <Route path="/student/doubt-solver" element={
               <ProtectedRoute allowedRoles={['student']}>
                 <StudentDoubtSolver />
+              </ProtectedRoute>
+            } />
+            <Route path="/student/resources" element={
+              <ProtectedRoute allowedRoles={['student']}>
+                <StudentResources />
+              </ProtectedRoute>
+            } />
+            <Route path="/student/pyq" element={
+              <ProtectedRoute allowedRoles={['student']}>
+                <StudentPYQ />
+              </ProtectedRoute>
+            } />
+            <Route path="/student/announcements" element={
+              <ProtectedRoute allowedRoles={['student']}>
+                <StudentAnnouncements />
+              </ProtectedRoute>
+            } />
+            <Route path="/student/homework" element={
+              <ProtectedRoute allowedRoles={['student']}>
+                <StudentHomework />
+              </ProtectedRoute>
+            } />
+            <Route path="/student/help" element={
+              <ProtectedRoute allowedRoles={['student']}>
+                <StudentHelp />
               </ProtectedRoute>
             } />
             {/* Catch-all student routes */}
