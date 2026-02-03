@@ -47,7 +47,7 @@ interface CalendarDay {
   label: string;
 }
 
-// Mock data for planner - Feature 1: Today's Focus
+// Mock data
 const todaysFocus = {
   title: "Revise Algebra Basics",
   type: "Revision" as TaskType,
@@ -58,7 +58,6 @@ const todaysFocus = {
   route: "/student/learning"
 };
 
-// Feature 2: Secondary Task (Optional)
 const secondaryTask = {
   title: "Quick Practice: Linear Equations",
   type: "Practice" as TaskType,
@@ -66,7 +65,6 @@ const secondaryTask = {
   route: "/student/practice"
 };
 
-// Feature 4: Exam Mode Controller
 const examMode = {
   mode: "Preparation Mode" as ExamMode,
   daysUntilExam: 14,
@@ -74,29 +72,24 @@ const examMode = {
   modeDescription: "Focus shifts to revision and practice. New concepts are paused."
 };
 
-// Feature 7: Learning Readiness Indicator
 const learningReadiness = {
   level: "High" as ReadinessLevel,
   message: "You're energized and ready to learn!",
   taskAdjustment: "Full-length tasks enabled"
 };
 
-// Feature 9: Task Timeline (System-generated history)
 const taskTimeline: Task[] = [
-  { id: 1, title: "Quadratic Equations - Concept", type: "Learn", subject: "Mathematics", duration: "20 mins", completed: true, date: "Today, 10:30 AM" },
+  { id: 1, title: "Quadratic Equations - Concept", type: "Learn", subject: "Mathematics", duration: "20 mins", completed: true, date: "Today" },
   { id: 2, title: "Linear Equations Practice", type: "Practice", subject: "Mathematics", duration: "15 mins", completed: true, date: "Yesterday" },
   { id: 3, title: "Algebra Basics Review", type: "Revision", subject: "Mathematics", duration: "10 mins", completed: false, date: "2 days ago" },
-  { id: 4, title: "Polynomials Introduction", type: "Learn", subject: "Mathematics", duration: "25 mins", completed: true, date: "3 days ago" },
 ];
 
-// Feature 10: Planner History
 const plannerHistory = {
   yesterdayTask: { title: "Linear Equations Practice", completed: true },
   lastCompleted: { title: "Quadratic Equations - Concept", date: "Today, 10:30 AM" },
   missedTask: { title: "Algebra Basics Review", daysAgo: 2 }
 };
 
-// Feature 8: Context Calendar (Read-Only)
 const calendarDays: CalendarDay[] = [
   { day: 27, type: "study", label: "M" },
   { day: 28, type: "revision", label: "T" },
@@ -107,7 +100,6 @@ const calendarDays: CalendarDay[] = [
   { day: 2, type: "study", label: "S" },
 ];
 
-// Feature 6: Mercy & Recovery System
 const streakData = {
   currentStreak: 7,
   graceUsed: false,
@@ -154,151 +146,299 @@ const StudentPlanner = () => {
   const [isRegenerating, setIsRegenerating] = useState(false);
   const [showModeInfo, setShowModeInfo] = useState(false);
 
-  // Feature 3: Silent Auto-Planning - Regenerate handler
   const handleRegenerate = () => {
     setIsRegenerating(true);
     setTimeout(() => setIsRegenerating(false), 1500);
   };
 
-  // Feature 11: Direct Routing to Learn Engine
   const handleStartTask = (route: string) => {
     navigate(route);
   };
 
   return (
     <StudentDashboardLayout title="Planner">
-      <div className="space-y-6 max-w-4xl mx-auto">
-        
-        {/* Feature 7: Learning Readiness Indicator */}
-        <Card className="bg-gradient-to-r from-primary/5 to-primary/10 border-primary/20">
-          <CardContent className="p-4">
-            <div className="flex items-center justify-between">
+      <div className="space-y-6">
+        {/* Top Row: Today's Focus + Stats */}
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          {/* Today's Focus - Takes 2 columns */}
+          <Card className="lg:col-span-2 border-0 shadow-sm bg-gradient-to-br from-primary/5 via-primary/10 to-primary/5 overflow-hidden">
+            <CardContent className="p-6">
+              <div className="flex items-start justify-between mb-4">
+                <div className="flex items-center gap-2">
+                  <Flame className="w-5 h-5 text-primary" />
+                  <span className="text-sm font-medium text-primary">Today's Focus</span>
+                </div>
+                <Badge className={getTaskTypeColor(todaysFocus.type)}>
+                  {getTaskTypeIcon(todaysFocus.type)}
+                  <span className="ml-1">{todaysFocus.type}</span>
+                </Badge>
+              </div>
+              
+              <h2 className="text-2xl font-bold mb-2">{todaysFocus.title}</h2>
+              <p className="text-muted-foreground mb-4">
+                {todaysFocus.subject} • {todaysFocus.chapter}
+              </p>
+              
+              <div className="flex items-center gap-6 text-sm text-muted-foreground mb-6">
+                <div className="flex items-center gap-2">
+                  <Clock className="w-4 h-4" />
+                  <span>{todaysFocus.duration}</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <Sparkles className="w-4 h-4 text-primary" />
+                  <span className="text-primary">AI-selected for you</span>
+                </div>
+              </div>
+
+              <div className="flex gap-3">
+                <Button 
+                  className="flex-1 h-12 rounded-full gradient-primary hover:opacity-90 transition-opacity text-base"
+                  onClick={() => handleStartTask(todaysFocus.route)}
+                >
+                  <Play className="w-5 h-5 mr-2" />
+                  Start Learning
+                </Button>
+                <Button variant="outline" className="h-12 px-6 rounded-full">
+                  Top Sellers
+                </Button>
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Stats Card */}
+          <Card className="border-0 shadow-sm bg-gradient-to-br from-amber-50 to-orange-50">
+            <CardContent className="p-6">
+              <div className="flex items-center gap-3 mb-4">
+                <div className="w-12 h-12 rounded-full bg-gradient-to-br from-orange-400 to-amber-500 flex items-center justify-center">
+                  <Flame className="w-6 h-6 text-white" />
+                </div>
+                <div>
+                  <p className="text-2xl font-bold">{streakData.currentStreak} Days</p>
+                  <p className="text-sm text-muted-foreground">Current Streak</p>
+                </div>
+              </div>
+              
+              <div className="space-y-3">
+                <div className="flex justify-between text-sm">
+                  <span className="text-muted-foreground">Grace Period</span>
+                  <span className="font-medium">{streakData.graceUsed ? '0' : streakData.gracePeriodDays} day</span>
+                </div>
+                <Progress value={streakData.graceUsed ? 0 : 100} className="h-2" />
+                <p className="text-xs text-muted-foreground">{streakData.message}</p>
+              </div>
+              
+              <button className="flex items-center gap-1 text-sm text-primary font-medium mt-4 hover:underline">
+                View history <ArrowRight className="w-4 h-4" />
+              </button>
+            </CardContent>
+          </Card>
+        </div>
+
+        {/* Second Row: Quick Stats */}
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+          {/* Energy Level */}
+          <Card className="border-0 shadow-sm">
+            <CardContent className="p-4">
               <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-full bg-primary/20 flex items-center justify-center">
+                <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center">
                   <Zap className={`w-5 h-5 ${getReadinessColor(learningReadiness.level)}`} />
                 </div>
                 <div>
-                  <p className="text-sm text-muted-foreground">Today's Energy</p>
+                  <p className="text-xs text-muted-foreground">Energy</p>
                   <p className={`font-semibold ${getReadinessColor(learningReadiness.level)}`}>
-                    {learningReadiness.level} Readiness
+                    {learningReadiness.level}
                   </p>
                 </div>
               </div>
-              <div className="text-right hidden sm:block">
-                <p className="text-sm text-muted-foreground">{learningReadiness.message}</p>
-                <p className="text-xs text-muted-foreground mt-1">{learningReadiness.taskAdjustment}</p>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
+            </CardContent>
+          </Card>
 
-        {/* Feature 4: Exam Mode Controller */}
-        <Card className="border-amber-200 bg-amber-50/50">
-          <CardContent className="p-4">
-            <div className="flex items-center justify-between flex-wrap gap-3">
+          {/* Exam Countdown */}
+          <Card className="border-0 shadow-sm">
+            <CardContent className="p-4">
               <div className="flex items-center gap-3">
                 <div className="w-10 h-10 rounded-full bg-amber-100 flex items-center justify-center">
                   <Target className="w-5 h-5 text-amber-600" />
                 </div>
                 <div>
+                  <p className="text-xs text-muted-foreground">Exam In</p>
+                  <p className="font-semibold text-amber-600">{examMode.daysUntilExam} Days</p>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Tasks Completed */}
+          <Card className="border-0 shadow-sm">
+            <CardContent className="p-4">
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-full bg-green-100 flex items-center justify-center">
+                  <CheckCircle2 className="w-5 h-5 text-green-600" />
+                </div>
+                <div>
+                  <p className="text-xs text-muted-foreground">Completed</p>
+                  <p className="font-semibold text-green-600">2 Tasks</p>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Mode */}
+          <Card className="border-0 shadow-sm cursor-pointer" onClick={() => setShowModeInfo(!showModeInfo)}>
+            <CardContent className="p-4">
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center">
+                  <CalendarDays className="w-5 h-5 text-blue-600" />
+                </div>
+                <div>
+                  <p className="text-xs text-muted-foreground">Mode</p>
+                  <p className="font-semibold text-blue-600 text-sm">Prep</p>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+
+        {/* Mode Info Tooltip */}
+        {showModeInfo && (
+          <Card className="border-amber-200 bg-amber-50/50">
+            <CardContent className="p-4">
+              <div className="flex items-center justify-between">
+                <div>
                   <Badge variant="outline" className={getExamModeColor(examMode.mode)}>
                     {examMode.mode}
                   </Badge>
-                  <p className="text-sm text-muted-foreground mt-1">{examMode.examName}</p>
+                  <p className="text-sm text-muted-foreground mt-2">{examMode.modeDescription}</p>
                 </div>
-              </div>
-              <div className="flex items-center gap-4">
-                <button 
-                  onClick={() => setShowModeInfo(!showModeInfo)}
-                  className="text-xs text-amber-600 hover:underline"
-                >
-                  What changes now?
+                <button onClick={() => setShowModeInfo(false)} className="text-muted-foreground hover:text-foreground">
+                  ✕
                 </button>
-                <div className="text-right">
-                  <p className="text-2xl font-bold text-amber-600">{examMode.daysUntilExam}</p>
-                  <p className="text-xs text-muted-foreground">days left</p>
-                </div>
-              </div>
-            </div>
-            {showModeInfo && (
-              <div className="mt-3 pt-3 border-t border-amber-200">
-                <p className="text-sm text-amber-700">{examMode.modeDescription}</p>
-              </div>
-            )}
-          </CardContent>
-        </Card>
-
-        {/* Feature 1: TODAY'S FOCUS - Primary Feature */}
-        <Card className="border-2 border-primary shadow-lg">
-          <CardHeader className="pb-2">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-2">
-                <Flame className="w-5 h-5 text-primary" />
-                <CardTitle className="text-lg">Today's Focus</CardTitle>
-              </div>
-              <Badge className={getTaskTypeColor(todaysFocus.type)}>
-                {getTaskTypeIcon(todaysFocus.type)}
-                <span className="ml-1">{todaysFocus.type}</span>
-              </Badge>
-            </div>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            <div>
-              <h3 className="text-xl font-bold mb-1">{todaysFocus.title}</h3>
-              <p className="text-sm text-muted-foreground">
-                {todaysFocus.subject} • {todaysFocus.chapter}
-              </p>
-            </div>
-            
-            <div className="flex items-center gap-4 text-sm text-muted-foreground">
-              <div className="flex items-center gap-1">
-                <Clock className="w-4 h-4" />
-                <span>{todaysFocus.duration}</span>
-              </div>
-              <div className="flex items-center gap-1">
-                <Sparkles className="w-4 h-4 text-primary" />
-                <span className="text-primary">AI-selected for you</span>
-              </div>
-            </div>
-
-            {/* Feature 11: Direct Routing - Start Button */}
-            <Button 
-              className="w-full h-12 text-lg gradient-primary hover:opacity-90 transition-opacity"
-              onClick={() => handleStartTask(todaysFocus.route)}
-            >
-              <Play className="w-5 h-5 mr-2" />
-              Start Learning
-              <ArrowRight className="w-5 h-5 ml-2" />
-            </Button>
-          </CardContent>
-        </Card>
-
-        {/* Feature 2: Secondary Task (Optional) */}
-        {showSecondaryTask && (
-          <Card className="bg-muted/30 border-dashed hover:bg-muted/50 transition-colors cursor-pointer"
-            onClick={() => handleStartTask(secondaryTask.route)}
-          >
-            <CardContent className="p-4">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-3">
-                  <div className="w-8 h-8 rounded-lg bg-amber-100 flex items-center justify-center">
-                    <PenTool className="w-4 h-4 text-amber-600" />
-                  </div>
-                  <div>
-                    <p className="text-xs text-muted-foreground">Optional follow-up</p>
-                    <p className="font-medium">{secondaryTask.title}</p>
-                  </div>
-                </div>
-                <div className="flex items-center gap-2">
-                  <span className="text-sm text-muted-foreground">{secondaryTask.duration}</span>
-                  <ChevronRight className="w-4 h-4 text-muted-foreground" />
-                </div>
               </div>
             </CardContent>
           </Card>
         )}
 
-        {/* Feature 3: Silent Auto-Planning - Regenerate Option */}
+        {/* Third Row: Timeline + Calendar */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          {/* Task Timeline */}
+          <Card className="border-0 shadow-sm">
+            <CardHeader className="pb-3">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <History className="w-5 h-5 text-primary" />
+                  <CardTitle className="text-base">Recent Activity</CardTitle>
+                </div>
+                <button className="text-sm text-primary hover:underline flex items-center gap-1">
+                  View All <ArrowRight className="w-4 h-4" />
+                </button>
+              </div>
+            </CardHeader>
+            <CardContent className="space-y-3">
+              {taskTimeline.map((task) => (
+                <div 
+                  key={task.id}
+                  className="flex items-center justify-between p-3 bg-muted/30 rounded-xl hover:bg-muted/50 transition-colors"
+                >
+                  <div className="flex items-center gap-3">
+                    {task.completed ? (
+                      <CheckCircle2 className="w-5 h-5 text-primary flex-shrink-0" />
+                    ) : (
+                      <Circle className="w-5 h-5 text-muted-foreground flex-shrink-0" />
+                    )}
+                    <div>
+                      <p className={`font-medium text-sm ${!task.completed ? '' : 'text-muted-foreground'}`}>
+                        {task.title}
+                      </p>
+                      <p className="text-xs text-muted-foreground">{task.date} • {task.duration}</p>
+                    </div>
+                  </div>
+                  <Badge variant="outline" className={`${getTaskTypeColor(task.type)} text-xs`}>
+                    {task.type}
+                  </Badge>
+                </div>
+              ))}
+            </CardContent>
+          </Card>
+
+          {/* Calendar + Secondary Task */}
+          <div className="space-y-4">
+            {/* Secondary Task */}
+            {showSecondaryTask && (
+              <Card className="border-0 shadow-sm border-dashed hover:bg-muted/30 transition-colors cursor-pointer"
+                onClick={() => handleStartTask(secondaryTask.route)}
+              >
+                <CardContent className="p-4">
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-3">
+                      <div className="w-10 h-10 rounded-xl bg-amber-100 flex items-center justify-center">
+                        <PenTool className="w-5 h-5 text-amber-600" />
+                      </div>
+                      <div>
+                        <p className="text-xs text-muted-foreground">Optional follow-up</p>
+                        <p className="font-medium">{secondaryTask.title}</p>
+                      </div>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <span className="text-sm text-muted-foreground">{secondaryTask.duration}</span>
+                      <ChevronRight className="w-4 h-4 text-muted-foreground" />
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            )}
+
+            {/* Calendar */}
+            <Card className="border-0 shadow-sm">
+              <CardHeader className="pb-3">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    <CalendarDays className="w-5 h-5 text-primary" />
+                    <CardTitle className="text-base">This Week</CardTitle>
+                  </div>
+                  <span className="text-xs text-muted-foreground">AI-planned</span>
+                </div>
+              </CardHeader>
+              <CardContent>
+                <div className="grid grid-cols-7 gap-2 mb-4">
+                  {calendarDays.map((day, index) => (
+                    <div key={index} className="text-center">
+                      <p className="text-xs text-muted-foreground mb-1">{day.label}</p>
+                      <div className={`
+                        w-10 h-10 rounded-xl flex items-center justify-center text-sm font-medium mx-auto
+                        ${day.type === 'study' ? 'bg-primary/10 text-primary' : ''}
+                        ${day.type === 'revision' ? 'bg-amber-100 text-amber-600' : ''}
+                        ${day.type === 'exam' ? 'bg-red-100 text-red-600 ring-2 ring-red-200' : ''}
+                        ${day.type === 'rest' ? 'bg-muted text-muted-foreground' : ''}
+                      `}>
+                        {day.day}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+                <div className="flex flex-wrap gap-4 text-xs">
+                  <div className="flex items-center gap-1">
+                    <div className="w-3 h-3 rounded bg-primary/20" />
+                    <span>Study</span>
+                  </div>
+                  <div className="flex items-center gap-1">
+                    <div className="w-3 h-3 rounded bg-amber-100" />
+                    <span>Revision</span>
+                  </div>
+                  <div className="flex items-center gap-1">
+                    <div className="w-3 h-3 rounded bg-red-100" />
+                    <span>Exam</span>
+                  </div>
+                  <div className="flex items-center gap-1">
+                    <div className="w-3 h-3 rounded bg-muted" />
+                    <span>Rest</span>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+        </div>
+
+        {/* Regenerate Button */}
         <div className="flex justify-center">
           <button 
             onClick={handleRegenerate}
@@ -310,180 +450,7 @@ const StudentPlanner = () => {
           </button>
         </div>
 
-        {/* Feature 10: Planner History */}
-        <Card>
-          <CardHeader className="pb-3">
-            <div className="flex items-center gap-2">
-              <History className="w-5 h-5 text-primary" />
-              <CardTitle className="text-lg">Your Journey</CardTitle>
-            </div>
-          </CardHeader>
-          <CardContent className="space-y-3">
-            {/* Yesterday's Task */}
-            <div className="flex items-center justify-between p-3 bg-primary/5 rounded-lg">
-              <div className="flex items-center gap-3">
-                <CheckCircle2 className="w-5 h-5 text-primary" />
-                <div>
-                  <p className="text-xs text-muted-foreground">Yesterday</p>
-                  <p className="font-medium">{plannerHistory.yesterdayTask.title}</p>
-                </div>
-              </div>
-              <Badge variant="outline" className="bg-primary/10 text-primary border-primary/20">
-                Completed
-              </Badge>
-            </div>
-            
-            {/* Last Completed */}
-            <div className="flex items-center justify-between p-3 bg-muted/30 rounded-lg">
-              <div className="flex items-center gap-3">
-                <Sparkles className="w-5 h-5 text-primary" />
-                <div>
-                  <p className="text-xs text-muted-foreground">Last completed</p>
-                  <p className="font-medium">{plannerHistory.lastCompleted.title}</p>
-                </div>
-              </div>
-              <span className="text-xs text-muted-foreground">{plannerHistory.lastCompleted.date}</span>
-            </div>
-
-            {/* Missed Task (shown softly) */}
-            {plannerHistory.missedTask && (
-              <div className="flex items-center justify-between p-3 bg-muted/20 rounded-lg opacity-70">
-                <div className="flex items-center gap-3">
-                  <Circle className="w-5 h-5 text-muted-foreground" />
-                  <div>
-                    <p className="text-xs text-muted-foreground">Ready when you are</p>
-                    <p className="text-muted-foreground">{plannerHistory.missedTask.title}</p>
-                  </div>
-                </div>
-                <span className="text-xs text-muted-foreground">{plannerHistory.missedTask.daysAgo} days ago</span>
-              </div>
-            )}
-          </CardContent>
-        </Card>
-
-        {/* Feature 9: Task Timeline */}
-        <Card>
-          <CardHeader className="pb-3">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-2">
-                <CalendarDays className="w-5 h-5 text-primary" />
-                <CardTitle className="text-lg">Task Timeline</CardTitle>
-              </div>
-              <span className="text-xs text-muted-foreground">System-generated</span>
-            </div>
-          </CardHeader>
-          <CardContent className="space-y-2">
-            {taskTimeline.map((task) => (
-              <div 
-                key={task.id}
-                className="flex items-center justify-between p-3 bg-muted/30 rounded-lg hover:bg-muted/50 transition-colors"
-              >
-                <div className="flex items-center gap-3">
-                  {task.completed ? (
-                    <CheckCircle2 className="w-5 h-5 text-primary flex-shrink-0" />
-                  ) : (
-                    <Circle className="w-5 h-5 text-muted-foreground flex-shrink-0" />
-                  )}
-                  <div className="min-w-0">
-                    <p className={`font-medium truncate ${!task.completed ? '' : 'text-muted-foreground'}`}>
-                      {task.title}
-                    </p>
-                    <div className="flex items-center gap-2 text-xs text-muted-foreground">
-                      <span>{task.subject}</span>
-                      <span>•</span>
-                      <span>{task.duration}</span>
-                      <span>•</span>
-                      <span>{task.date}</span>
-                    </div>
-                  </div>
-                </div>
-                <Badge variant="outline" className={`${getTaskTypeColor(task.type)} flex-shrink-0`}>
-                  {getTaskTypeIcon(task.type)}
-                  <span className="ml-1 hidden sm:inline">{task.type}</span>
-                </Badge>
-              </div>
-            ))}
-          </CardContent>
-        </Card>
-
-        {/* Feature 8: Context Calendar (Read-Only) */}
-        <Card>
-          <CardHeader className="pb-3">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-2">
-                <CalendarDays className="w-5 h-5 text-primary" />
-                <CardTitle className="text-lg">Learning Calendar</CardTitle>
-              </div>
-              <span className="text-xs text-muted-foreground">Read-only • AI-planned</span>
-            </div>
-          </CardHeader>
-          <CardContent>
-            <div className="grid grid-cols-7 gap-2 mb-4">
-              {calendarDays.map((day, index) => (
-                <div key={index} className="text-center">
-                  <p className="text-xs text-muted-foreground mb-1">{day.label}</p>
-                  <div className={`
-                    w-10 h-10 rounded-lg flex items-center justify-center text-sm font-medium mx-auto
-                    ${day.type === 'study' ? 'bg-primary/10 text-primary' : ''}
-                    ${day.type === 'revision' ? 'bg-amber-100 text-amber-600' : ''}
-                    ${day.type === 'exam' ? 'bg-red-100 text-red-600 ring-2 ring-red-200' : ''}
-                    ${day.type === 'rest' ? 'bg-muted text-muted-foreground' : ''}
-                  `}>
-                    {day.day}
-                  </div>
-                </div>
-              ))}
-            </div>
-            <div className="flex flex-wrap gap-4 text-xs">
-              <div className="flex items-center gap-1">
-                <div className="w-3 h-3 rounded bg-primary/20" />
-                <span>Study</span>
-              </div>
-              <div className="flex items-center gap-1">
-                <div className="w-3 h-3 rounded bg-amber-100" />
-                <span>Revision</span>
-              </div>
-              <div className="flex items-center gap-1">
-                <div className="w-3 h-3 rounded bg-red-100" />
-                <span>Exam</span>
-              </div>
-              <div className="flex items-center gap-1">
-                <div className="w-3 h-3 rounded bg-muted" />
-                <span>Rest</span>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-
-        {/* Feature 6: Streak & Mercy System */}
-        <Card className="bg-gradient-to-r from-orange-50 to-amber-50 border-orange-200">
-          <CardContent className="p-4">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-3">
-                <div className="w-12 h-12 rounded-full bg-gradient-to-br from-orange-400 to-amber-500 flex items-center justify-center">
-                  <Flame className="w-6 h-6 text-white" />
-                </div>
-                <div>
-                  <p className="font-bold text-lg">{streakData.currentStreak} Day Streak! 🔥</p>
-                  <p className="text-sm text-muted-foreground">
-                    {streakData.message}
-                  </p>
-                </div>
-              </div>
-              <div className="text-right hidden sm:block">
-                <p className="text-xs text-muted-foreground">Grace Period</p>
-                <div className="flex items-center gap-2 mt-1">
-                  <Progress value={streakData.graceUsed ? 0 : 100} className="w-20 h-2" />
-                  <span className="text-xs text-muted-foreground">
-                    {streakData.graceUsed ? '0' : streakData.gracePeriodDays}/{streakData.gracePeriodDays}
-                  </span>
-                </div>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-
-        {/* Feature 5: Daily Adaptation Note (Subtle) */}
+        {/* Footer Note */}
         <div className="text-center text-xs text-muted-foreground py-2">
           <Sparkles className="w-3 h-3 inline-block mr-1" />
           Plan adapts based on your progress • No stacking of missed tasks
