@@ -19,7 +19,7 @@ const StudentDashboardLayout = ({ children, title }: StudentDashboardLayoutProps
       {/* Desktop Sidebar - Fixed */}
       <aside className={cn(
         "hidden md:flex flex-col transition-all duration-300 h-screen sticky top-0 flex-shrink-0 relative",
-        collapsed ? "w-16" : "w-60"
+        collapsed ? "w-14" : "w-52"
       )}>
         <StudentSidebar collapsed={collapsed} />
         {/* Collapse Toggle */}
