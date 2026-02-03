@@ -2,24 +2,25 @@ import { ReactNode, useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
 import { cn } from '@/lib/utils';
-import { Button } from '@/components/ui/button';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { 
-  LayoutGrid,
+  LayoutDashboard,
   GraduationCap,
-  Calendar,
+  CalendarCheck,
   BookOpen,
-  MessageCircle,
-  BarChart3,
+  MessageSquare,
+  FolderOpen,
   FileText,
   Bell,
-  ClipboardList,
+  ClipboardCheck,
   TrendingUp,
-  Trophy,
+  Award,
   HelpCircle,
   LogOut,
   ChevronDown,
-  Sparkles
+  Sparkles,
+  User
 } from 'lucide-react';
 
 interface NavSection {
@@ -37,16 +38,16 @@ const navSections: NavSection[] = [
     title: 'Learning',
     icon: <GraduationCap className="w-4 h-4" />,
     items: [
-      { label: 'Planner', icon: <Calendar className="w-3.5 h-3.5" />, path: '/student/planner' },
-      { label: 'Personalized Learn', icon: <BookOpen className="w-3.5 h-3.5" />, path: '/student/learning' },
-      { label: 'AI Doubt Solver', icon: <MessageCircle className="w-3.5 h-3.5" />, path: '/student/doubts' },
+      { label: 'Planner', icon: <CalendarCheck className="w-3.5 h-3.5" />, path: '/student/planner' },
+      { label: 'Learn', icon: <BookOpen className="w-3.5 h-3.5" />, path: '/student/learning' },
+      { label: 'AI Doubts', icon: <MessageSquare className="w-3.5 h-3.5" />, path: '/student/doubts' },
     ],
   },
   {
     title: 'Resources',
-    icon: <BarChart3 className="w-4 h-4" />,
+    icon: <FolderOpen className="w-4 h-4" />,
     items: [
-      { label: 'Study Resources', icon: <BarChart3 className="w-3.5 h-3.5" />, path: '/student/resources' },
+      { label: 'Study Materials', icon: <FolderOpen className="w-3.5 h-3.5" />, path: '/student/resources' },
       { label: 'PYQ Papers', icon: <FileText className="w-3.5 h-3.5" />, path: '/student/pyq' },
     ],
   },
@@ -55,7 +56,7 @@ const navSections: NavSection[] = [
     icon: <Bell className="w-4 h-4" />,
     items: [
       { label: 'Events', icon: <Bell className="w-3.5 h-3.5" />, path: '/student/events' },
-      { label: 'Homework', icon: <ClipboardList className="w-3.5 h-3.5" />, path: '/student/homework' },
+      { label: 'Homework', icon: <ClipboardCheck className="w-3.5 h-3.5" />, path: '/student/homework' },
     ],
   },
   {
@@ -63,7 +64,7 @@ const navSections: NavSection[] = [
     icon: <TrendingUp className="w-4 h-4" />,
     items: [
       { label: 'Performance', icon: <TrendingUp className="w-3.5 h-3.5" />, path: '/student/performance' },
-      { label: 'Achievements', icon: <Trophy className="w-3.5 h-3.5" />, path: '/student/achievements' },
+      { label: 'Achievements', icon: <Award className="w-3.5 h-3.5" />, path: '/student/achievements' },
     ],
   },
 ];
@@ -75,7 +76,7 @@ interface StudentSidebarProps {
 }
 
 const StudentSidebar = ({ collapsed = false, isMobile = false, onMobileClose }: StudentSidebarProps) => {
-  const { logout } = useAuth();
+  const { logout, user } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
   const [openSections, setOpenSections] = useState<string[]>(['Learning', 'Resources', 'Updates', 'Progress']);
@@ -110,43 +111,43 @@ const StudentSidebar = ({ collapsed = false, isMobile = false, onMobileClose }: 
     <div className="flex flex-col h-full gradient-sidebar font-sans">
       {/* Logo */}
       <div className={cn(
-        "flex items-center gap-2 px-3 py-4 border-b border-white/10",
+        "flex items-center gap-3 px-4 py-5 border-b border-white/10",
         collapsed && !isMobile && "justify-center px-2"
       )}>
         <div className={cn(
-          "rounded-lg bg-white/20 flex items-center justify-center flex-shrink-0",
-          collapsed && !isMobile ? "w-8 h-8" : "w-9 h-9"
+          "rounded-xl bg-white/20 flex items-center justify-center flex-shrink-0",
+          collapsed && !isMobile ? "w-8 h-8" : "w-10 h-10"
         )}>
-          <Sparkles className={cn(collapsed && !isMobile ? "w-4 h-4" : "w-4 h-4", "text-white")} />
+          <Sparkles className={cn(collapsed && !isMobile ? "w-4 h-4" : "w-5 h-5", "text-white")} />
         </div>
         {showText && (
           <div>
-            <span className="text-sm font-bold text-white tracking-tight">EDDGE</span>
+            <span className="text-base font-bold text-white tracking-tight">EDDGE</span>
             <p className="text-[10px] text-white/60">Student Portal</p>
           </div>
         )}
       </div>
 
-      {/* Navigation - No scrollbar */}
+      {/* Navigation */}
       <nav className={cn(
-        "flex-1 py-2 space-y-0.5 overflow-y-auto scrollbar-hide",
-        collapsed && !isMobile ? "px-1.5" : "px-2"
+        "flex-1 py-4 space-y-1 overflow-y-auto scrollbar-hide",
+        collapsed && !isMobile ? "px-2" : "px-3"
       )}>
         {/* Dashboard */}
         <button
           onClick={() => handleNavigate('/student')}
           className={cn(
-            "w-full flex items-center gap-2 rounded-lg transition-all duration-200",
-            collapsed && !isMobile ? "justify-center p-2" : "px-2.5 py-2",
+            "w-full flex items-center gap-3 rounded-xl transition-all duration-200",
+            collapsed && !isMobile ? "justify-center p-2.5" : "px-3 py-2.5",
             isPathActive('/student')
               ? "bg-white/20 text-white" 
               : "text-white/70 hover:bg-white/10 hover:text-white"
           )}
         >
-          <LayoutGrid className={cn(collapsed && !isMobile ? "w-4 h-4" : "w-4 h-4", "flex-shrink-0")} />
+          <LayoutDashboard className="w-[18px] h-[18px] flex-shrink-0" />
           {showText && (
             <>
-              <span className="text-xs font-medium">Dashboard</span>
+              <span className="text-[13px] font-medium">Dashboard</span>
               {isPathActive('/student') && (
                 <div className="ml-auto w-1.5 h-1.5 rounded-full bg-white" />
               )}
@@ -154,13 +155,16 @@ const StudentSidebar = ({ collapsed = false, isMobile = false, onMobileClose }: 
           )}
         </button>
 
+        {/* Spacer */}
+        <div className="h-2" />
+
         {/* Collapsible Sections */}
         {navSections.map((section) => (
-          <div key={section.title}>
+          <div key={section.title} className="mb-1">
             {collapsed && !isMobile ? (
-              // Collapsed: Show only section icon
-              <div className="py-1">
-                <div className="w-full flex justify-center py-1.5 text-white/50">
+              // Collapsed: Show only icons
+              <div className="space-y-1">
+                <div className="w-full flex justify-center py-2 text-white/40">
                   <span className="flex-shrink-0">{section.icon}</span>
                 </div>
                 {section.items.map((item) => (
@@ -168,7 +172,7 @@ const StudentSidebar = ({ collapsed = false, isMobile = false, onMobileClose }: 
                     key={item.path}
                     onClick={() => handleNavigate(item.path)}
                     className={cn(
-                      "w-full flex justify-center p-2 rounded-lg transition-all duration-200",
+                      "w-full flex justify-center p-2.5 rounded-xl transition-all duration-200",
                       isPathActive(item.path)
                         ? "bg-white/20 text-white" 
                         : "text-white/60 hover:bg-white/10 hover:text-white"
@@ -187,34 +191,34 @@ const StudentSidebar = ({ collapsed = false, isMobile = false, onMobileClose }: 
                 <CollapsibleTrigger asChild>
                   <button
                     className={cn(
-                      "w-full flex items-center gap-2 px-2.5 py-2 rounded-lg transition-all duration-200",
+                      "w-full flex items-center gap-3 px-3 py-2.5 rounded-xl transition-all duration-200",
                       isSectionActive(section)
                         ? "text-white"
                         : "text-white/60 hover:bg-white/10 hover:text-white"
                     )}
                   >
                     <span className="flex-shrink-0">{section.icon}</span>
-                    <span className="text-xs font-medium">{section.title}</span>
+                    <span className="text-[13px] font-medium">{section.title}</span>
                     <ChevronDown className={cn(
-                      "ml-auto w-3 h-3 transition-transform duration-200",
+                      "ml-auto w-3.5 h-3.5 transition-transform duration-200",
                       openSections.includes(section.title) && "rotate-180"
                     )} />
                   </button>
                 </CollapsibleTrigger>
-                <CollapsibleContent className="space-y-0.5 mt-0.5 ml-2">
+                <CollapsibleContent className="space-y-0.5 mt-1 ml-3 pl-3 border-l border-white/10">
                   {section.items.map((item) => (
                     <button
                       key={item.path}
                       onClick={() => handleNavigate(item.path)}
                       className={cn(
-                        "w-full flex items-center gap-2 px-2.5 py-1.5 rounded-lg transition-all duration-200",
+                        "w-full flex items-center gap-3 px-3 py-2 rounded-xl transition-all duration-200",
                         isPathActive(item.path)
                           ? "bg-white/20 text-white" 
                           : "text-white/50 hover:bg-white/10 hover:text-white"
                       )}
                     >
                       <span className="flex-shrink-0">{item.icon}</span>
-                      <span className="text-[11px]">{item.label}</span>
+                      <span className="text-[12px]">{item.label}</span>
                     </button>
                   ))}
                 </CollapsibleContent>
@@ -225,28 +229,60 @@ const StudentSidebar = ({ collapsed = false, isMobile = false, onMobileClose }: 
       </nav>
 
       {/* Bottom Section */}
-      <div className="border-t border-white/10 p-2">
+      <div className="border-t border-white/10 p-3 space-y-1">
         <button
           onClick={() => handleNavigate('/student/help')}
           className={cn(
-            "w-full flex items-center gap-2 rounded-lg transition-all duration-200 text-white/60 hover:bg-white/10 hover:text-white",
-            collapsed && !isMobile ? "justify-center p-2" : "px-2.5 py-2"
+            "w-full flex items-center gap-3 rounded-xl transition-all duration-200 text-white/60 hover:bg-white/10 hover:text-white",
+            collapsed && !isMobile ? "justify-center p-2.5" : "px-3 py-2.5"
           )}
         >
-          <HelpCircle className={cn(collapsed && !isMobile ? "w-4 h-4" : "w-4 h-4", "flex-shrink-0")} />
-          {showText && <span className="text-xs">Help</span>}
+          <HelpCircle className="w-[18px] h-[18px] flex-shrink-0" />
+          {showText && <span className="text-[12px]">Help & Support</span>}
         </button>
 
         <button
           onClick={handleLogout}
           className={cn(
-            "w-full flex items-center gap-2 rounded-lg transition-all duration-200 text-white/60 hover:bg-white/10 hover:text-white mt-0.5",
-            collapsed && !isMobile ? "justify-center p-2" : "px-2.5 py-2"
+            "w-full flex items-center gap-3 rounded-xl transition-all duration-200 text-white/60 hover:bg-white/10 hover:text-white",
+            collapsed && !isMobile ? "justify-center p-2.5" : "px-3 py-2.5"
           )}
         >
-          <LogOut className={cn(collapsed && !isMobile ? "w-4 h-4" : "w-4 h-4", "flex-shrink-0")} />
-          {showText && <span className="text-xs">Logout</span>}
+          <LogOut className="w-[18px] h-[18px] flex-shrink-0" />
+          {showText && <span className="text-[12px]">Logout</span>}
         </button>
+
+        {/* User Profile */}
+        <div className={cn(
+          "mt-3 pt-3 border-t border-white/10",
+          collapsed && !isMobile ? "flex justify-center" : ""
+        )}>
+          {collapsed && !isMobile ? (
+            <Avatar className="w-9 h-9 border-2 border-white/20">
+              <AvatarImage src="" />
+              <AvatarFallback className="bg-white/20 text-white text-xs">
+                <User className="w-4 h-4" />
+              </AvatarFallback>
+            </Avatar>
+          ) : (
+            <div className="flex items-center gap-3 px-2">
+              <Avatar className="w-9 h-9 border-2 border-white/20">
+                <AvatarImage src="" />
+                <AvatarFallback className="bg-white/20 text-white text-xs">
+                  <User className="w-4 h-4" />
+                </AvatarFallback>
+              </Avatar>
+              <div className="flex-1 min-w-0">
+                <p className="text-[12px] font-medium text-white truncate">
+                  {user?.name || 'Student'}
+                </p>
+                <p className="text-[10px] text-white/50 truncate">
+                  {user?.email || 'student@eddge.com'}
+                </p>
+              </div>
+            </div>
+          )}
+        </div>
       </div>
     </div>
   );
