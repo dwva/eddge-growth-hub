@@ -46,6 +46,8 @@ const navSections: NavSection[] = [
     items: [
       { label: 'Planner', icon: <CalendarCheck className="w-4 h-4" />, path: '/student/planner' },
       { label: 'Personalized Learn', icon: <BookOpen className="w-4 h-4" />, path: '/student/learning' },
+      { label: 'Practice', icon: <ClipboardCheck className="w-4 h-4" />, path: '/student/practice' },
+      { label: 'Revision', icon: <FolderOpen className="w-4 h-4" />, path: '/student/revision' },
       { label: 'AI Doubt Solver', icon: <MessageSquare className="w-4 h-4" />, path: '/student/doubts' },
     ],
   },
@@ -62,6 +64,7 @@ const navSections: NavSection[] = [
     icon: <Bell className="w-5 h-5" />,
     items: [
       { label: 'Events & Announcements', icon: <CalendarCheck className="w-4 h-4" />, path: '/student/announcements' },
+      { label: 'Attendance', icon: <CalendarCheck className="w-4 h-4" />, path: '/student/attendance' },
       { label: 'Homework', icon: <ClipboardCheck className="w-4 h-4" />, path: '/student/homework' },
     ],
   },

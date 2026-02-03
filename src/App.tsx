@@ -16,6 +16,7 @@ import StudentHome from "./pages/student/StudentHome";
 import StudentPlanner from "./pages/student/StudentPlanner";
 import StudentLearning from "./pages/student/StudentLearning";
 import StudentPractice from "./pages/student/StudentPractice";
+import StudentRevision from "./pages/student/StudentRevision";
 import StudentTests from "./pages/student/StudentTests";
 import StudentPerformance from "./pages/student/StudentPerformance";
 import StudentAttendance from "./pages/student/StudentAttendance";
@@ -84,6 +85,11 @@ const App = () => (
             <Route path="/student/practice" element={
               <ProtectedRoute allowedRoles={['student']}>
                 <StudentPractice />
+              </ProtectedRoute>
+            } />
+            <Route path="/student/revision" element={
+              <ProtectedRoute allowedRoles={['student']}>
+                <StudentRevision />
               </ProtectedRoute>
             } />
             <Route path="/student/tests" element={
