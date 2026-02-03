@@ -1,7 +1,7 @@
-import { Button } from '@/components/ui/button';
 import { useNavigate } from 'react-router-dom';
 import { GraduationCap, Sparkles, ArrowRight } from 'lucide-react';
 import { GLSLHills } from '@/components/ui/glsl-hills';
+import { RainbowButton } from '@/components/ui/rainbow-button';
 
 const Landing = () => {
   const navigate = useNavigate();
@@ -49,14 +49,13 @@ const Landing = () => {
 
           {/* CTA Button */}
           <div className="mt-12">
-            <Button 
+            <RainbowButton 
               onClick={() => navigate('/login')}
-              size="lg"
-              className="gradient-primary font-semibold px-10 py-7 text-lg rounded-full shadow-lg hover:shadow-xl transition-all duration-300"
+              className="font-semibold px-10 py-6 text-lg shadow-lg hover:shadow-xl transition-all duration-300"
             >
               Get Started
               <ArrowRight className="w-5 h-5 ml-2" />
-            </Button>
+            </RainbowButton>
           </div>
 
         </div>
