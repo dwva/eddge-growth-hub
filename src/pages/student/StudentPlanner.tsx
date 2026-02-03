@@ -129,11 +129,11 @@ const StudentPlanner = () => {
     const { date } = props;
     const events = getEventsForDay(date).slice(0, 3);
     return (
-      <div className="flex h-full min-h-[4.5rem] w-full flex-col items-stretch p-0.5 text-left">
-        <span className="text-right text-sm font-medium tabular-nums">
+      <div className="flex h-full min-h-[4.5rem] w-full flex-col items-stretch p-1 text-left">
+        <span className="text-left text-sm font-medium tabular-nums">
           {date.getDate()}
         </span>
-        <div className="mt-0.5 flex min-h-0 flex-1 flex-col gap-0.5 overflow-hidden">
+        <div className="mt-1 flex min-h-0 flex-1 flex-col gap-1 overflow-hidden">
           {events.map((ev) => (
             <button
               key={ev.id}
@@ -386,9 +386,9 @@ const StudentPlanner = () => {
                   <TabsContent value="calendar" className="mt-0">
                     <div className="flex flex-col gap-4 w-full min-h-[600px]">
                       {/* Toolbar */}
-                      <div className="bg-card p-4 rounded-xl border shadow-sm flex flex-wrap items-center justify-between gap-3">
-                        <div className="flex flex-wrap items-center gap-3">
-                          <div className="flex items-center bg-muted/50 p-1 rounded-lg">
+                      <div className="bg-card p-4 rounded-xl border shadow-sm flex flex-nowrap items-center justify-between gap-4 w-full">
+                        <div className="flex flex-nowrap items-center gap-3 min-w-0">
+                          <div className="flex items-center bg-muted/50 p-1 rounded-lg flex-shrink-0">
                             <Button variant="ghost" size="icon" className="h-8 w-8" onClick={goToPrevMonth} aria-label="Previous month">
                               <ChevronLeft className="w-4 h-4" />
                             </Button>
@@ -399,11 +399,11 @@ const StudentPlanner = () => {
                               <ChevronRight className="w-4 h-4" />
                             </Button>
                           </div>
-                          <h2 className="text-xl font-bold text-foreground">
+                          <h2 className="text-xl font-bold text-foreground flex-shrink-0 whitespace-nowrap">
                             {format(calendarDate, 'MMMM yyyy')}
                           </h2>
                         </div>
-                        <div className="flex items-center gap-2">
+                        <div className="flex flex-nowrap items-center gap-2 flex-shrink-0">
                           <Select value={calendarView} onValueChange={(v) => setCalendarView(v as CalendarViewValue)}>
                             <SelectTrigger className="w-[140px] h-9">
                               <SelectValue />
@@ -457,10 +457,10 @@ const StudentPlanner = () => {
                             classNames={{
                               caption: 'hidden',
                               nav: 'hidden',
-                              head_cell: 'text-muted-foreground rounded-md w-full font-semibold text-foreground text-[0.8rem]',
+                              head_cell: 'text-muted-foreground rounded-md w-full font-semibold text-foreground text-[0.8rem] text-center',
                               row: 'flex w-full mt-1',
-                              cell: 'h-auto min-h-[4.5rem] w-full p-0.5 align-top text-center text-sm [&:has([aria-selected])]:bg-accent/50 first:[&:has([aria-selected])]:rounded-l-md last:[&:has([aria-selected])]:rounded-r-md focus-within:relative focus-within:z-20',
-                              day: 'h-full min-h-[4.5rem] w-full flex flex-col p-0 font-normal aria-selected:opacity-100 rounded-md',
+                              cell: 'h-auto min-h-[4.5rem] w-full p-0.5 align-top text-left text-sm [&:has([aria-selected])]:bg-accent/50 first:[&:has([aria-selected])]:rounded-l-md last:[&:has([aria-selected])]:rounded-r-md focus-within:relative focus-within:z-20',
+                              day: 'h-full min-h-[4.5rem] w-full flex flex-col items-start p-0 font-normal aria-selected:opacity-100 rounded-md text-left',
                               day_today: 'bg-transparent text-foreground font-semibold',
                               day_selected:
                                 'bg-primary text-primary-foreground hover:bg-primary hover:text-primary-foreground focus:bg-primary focus:text-primary-foreground',
