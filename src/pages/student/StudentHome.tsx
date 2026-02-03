@@ -187,108 +187,153 @@ const StudentHome = () => {
             <ArrowRight className="w-4 h-4 text-gray-400" />
           </div>
 
-          {/* My Learning Section - 3 Card Grid */}
-          <div>
-            <div className="flex items-center justify-between mb-4">
-              <h3 className="text-base font-semibold text-gray-900">My Learning</h3>
-              <button 
-                className="flex items-center gap-1 text-sm text-gray-500 hover:text-primary transition-colors"
-                onClick={() => navigate('/student/learning')}
-              >
-                View All <ArrowRight className="w-4 h-4" />
-              </button>
-            </div>
+          {/* Main Content Grid - Left (My Learning + Stats) + Right (Recent Activity) */}
+          <div className="grid grid-cols-1 lg:grid-cols-[1fr_340px] gap-6">
             
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-              {subjects.map((subject) => (
-                <Card 
-                  key={subject.id} 
-                  className="border-0 shadow-sm rounded-2xl hover:shadow-md transition-all duration-300 cursor-pointer group overflow-hidden"
-                  onClick={() => navigate('/student/learning')}
-                >
-                  <CardContent className="p-5">
-                    <div className={`w-16 h-16 ${subject.color} rounded-2xl flex items-center justify-center mb-4 group-hover:scale-105 transition-transform`}>
-                      <span className={subject.iconColor}>{subject.icon}</span>
+            {/* Left Column */}
+            <div className="space-y-6">
+              {/* My Learning Section - 3 Card Grid */}
+              <div>
+                <div className="flex items-center justify-between mb-4">
+                  <h3 className="text-base font-semibold text-gray-900">My Learning</h3>
+                  <button 
+                    className="flex items-center gap-1 text-xs text-gray-500 hover:text-primary transition-colors"
+                    onClick={() => navigate('/student/learning')}
+                  >
+                    View All <ArrowRight className="w-3.5 h-3.5" />
+                  </button>
+                </div>
+                
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                  {subjects.map((subject) => (
+                    <Card 
+                      key={subject.id} 
+                      className="border border-gray-100 shadow-sm rounded-2xl cursor-pointer group bg-white"
+                      onClick={() => navigate('/student/learning')}
+                    >
+                      <CardContent className="p-5">
+                        <div className={`w-14 h-14 ${subject.color} rounded-xl flex items-center justify-center mb-3`}>
+                          <span className={subject.iconColor}>{subject.icon}</span>
+                        </div>
+                        <h4 className="text-sm font-medium text-gray-900">{subject.name}</h4>
+                        <div className="flex items-center gap-2 mt-2">
+                          <div className="flex-1 h-1.5 bg-gray-100 rounded-full overflow-hidden">
+                            <div 
+                              className="h-full bg-primary rounded-full"
+                              style={{ width: `${subject.progress}%` }}
+                            />
+                          </div>
+                          <span className="text-xs text-gray-500">{subject.progress}%</span>
+                        </div>
+                      </CardContent>
+                    </Card>
+                  ))}
+                </div>
+              </div>
+
+              {/* Bottom Stats Row - Weekly Performance + Upcoming Tasks */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                {/* Weekly Performance */}
+                <Card className="border border-gray-100 shadow-sm rounded-2xl bg-white">
+                  <CardContent className="p-4">
+                    <div className="flex items-center justify-between mb-3">
+                      <h4 className="text-sm font-semibold text-primary">Weekly Performance</h4>
+                      <button 
+                        className="text-xs text-gray-400 hover:text-primary flex items-center gap-1"
+                        onClick={() => navigate('/student/performance')}
+                      >
+                        View All <ArrowRight className="w-3 h-3" />
+                      </button>
                     </div>
-                    <h4 className="text-sm font-medium text-gray-900">{subject.name}</h4>
-                    <div className="flex items-center gap-2 mt-2">
-                      <div className="flex-1 h-1.5 bg-gray-100 rounded-full overflow-hidden">
-                        <div 
-                          className="h-full bg-primary rounded-full transition-all"
-                          style={{ width: `${subject.progress}%` }}
-                        />
+                    
+                    <div className="flex items-center gap-3">
+                      <div className="flex -space-x-2">
+                        {['🎯', '📚', '✨', '🏆'].map((emoji, i) => (
+                          <div key={i} className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center border-2 border-white text-sm">
+                            {emoji}
+                          </div>
+                        ))}
                       </div>
-                      <span className="text-xs text-gray-500">{subject.progress}%</span>
+                      <div className="border-l border-gray-200 pl-3">
+                        <p className="text-sm font-semibold text-gray-900">85% accuracy</p>
+                        <p className="text-xs text-gray-500">12 tasks • 7 days</p>
+                      </div>
                     </div>
                   </CardContent>
-                  {/* Arrow indicator on hover */}
-                  <div className="absolute top-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity">
-                    <ArrowRight className="w-5 h-5 text-gray-400" />
-                  </div>
                 </Card>
-              ))}
+
+                {/* Upcoming Tasks */}
+                <Card className="border border-gray-100 shadow-sm rounded-2xl bg-white">
+                  <CardContent className="p-4">
+                    <div className="flex items-center justify-between mb-3">
+                      <h4 className="text-sm font-semibold text-primary">Upcoming Tasks</h4>
+                      <button 
+                        className="text-xs text-gray-400 hover:text-primary flex items-center gap-1"
+                        onClick={() => navigate('/student/homework')}
+                      >
+                        View All <ArrowRight className="w-3 h-3" />
+                      </button>
+                    </div>
+                    
+                    <div className="flex items-center gap-3">
+                      <div className="flex -space-x-2">
+                        {['📝', '📖', '🧮', '✏️'].map((emoji, i) => (
+                          <div key={i} className="w-8 h-8 rounded-full bg-amber-50 flex items-center justify-center border-2 border-white text-sm">
+                            {emoji}
+                          </div>
+                        ))}
+                      </div>
+                      <div className="border-l border-gray-200 pl-3">
+                        <p className="text-sm font-semibold text-gray-900">3 pending</p>
+                        <p className="text-xs text-gray-500">Due today & tomorrow</p>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+              </div>
             </div>
-          </div>
 
-          {/* Bottom Cards Row - Weekly Performance + Upcoming Tasks */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {/* Weekly Performance */}
-            <Card className="border-0 shadow-sm rounded-2xl">
-              <CardContent className="p-5">
-                <div className="flex items-center justify-between mb-4">
-                  <h4 className="text-sm font-medium text-gray-900">Weekly Performance</h4>
-                  <button 
-                    className="text-xs text-gray-500 hover:text-primary flex items-center gap-1"
-                    onClick={() => navigate('/student/performance')}
-                  >
-                    View All <ArrowRight className="w-3 h-3" />
-                  </button>
-                </div>
-                
-                <div className="flex items-center gap-4">
-                  <div className="flex -space-x-2">
-                    {['🎯', '📚', '✨'].map((emoji, i) => (
-                      <div key={i} className="w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center border-2 border-white text-lg">
-                        {emoji}
+            {/* Right Column - Recent Activity */}
+            <div>
+              <div className="flex items-center justify-between mb-4">
+                <h3 className="text-base font-semibold text-gray-900">Recent Activity</h3>
+                <button 
+                  className="text-xs text-gray-500 hover:text-primary flex items-center gap-1"
+                  onClick={() => navigate('/student/performance')}
+                >
+                  View All <ArrowRight className="w-3.5 h-3.5" />
+                </button>
+              </div>
+              
+              <Card className="border border-gray-100 shadow-sm rounded-2xl bg-white">
+                <CardContent className="p-0">
+                  <div className="divide-y divide-gray-50">
+                    {[
+                      { icon: '📐', title: 'Quadratic Equations', desc: 'Completed chapter quiz', time: '2 min ago', color: 'bg-blue-50' },
+                      { icon: '🔬', title: 'Newton\'s Laws', desc: 'Watched video lesson', time: '15 min ago', color: 'bg-emerald-50' },
+                      { icon: '🧠', title: 'Logical Reasoning', desc: 'Practiced 10 questions', time: '1 hr ago', color: 'bg-purple-50' },
+                      { icon: '📚', title: 'Study Resources', desc: 'Downloaded notes', time: '2 hrs ago', color: 'bg-amber-50' },
+                      { icon: '✅', title: 'Math Homework', desc: 'Submitted assignment', time: '3 hrs ago', color: 'bg-green-50' },
+                      { icon: '🎯', title: 'Practice Test', desc: 'Scored 92%', time: '5 hrs ago', color: 'bg-pink-50' },
+                      { icon: '💡', title: 'AI Doubt Solver', desc: 'Asked 3 questions', time: '6 hrs ago', color: 'bg-violet-50' },
+                    ].map((activity, index) => (
+                      <div key={index} className="flex items-center justify-between px-4 py-3 hover:bg-gray-50/50 cursor-pointer">
+                        <div className="flex items-center gap-3">
+                          <div className={`w-9 h-9 rounded-full ${activity.color} flex items-center justify-center text-base`}>
+                            {activity.icon}
+                          </div>
+                          <div>
+                            <p className="text-sm font-medium text-gray-900">{activity.title}</p>
+                            <p className="text-xs text-gray-500">{activity.desc}</p>
+                          </div>
+                        </div>
+                        <span className="text-xs text-gray-400 whitespace-nowrap">{activity.time}</span>
                       </div>
                     ))}
                   </div>
-                  <div>
-                    <p className="text-sm font-medium text-gray-900">85% accuracy</p>
-                    <p className="text-xs text-gray-500">12 tasks completed</p>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-
-            {/* Upcoming Tasks */}
-            <Card className="border-0 shadow-sm rounded-2xl">
-              <CardContent className="p-5">
-                <div className="flex items-center justify-between mb-4">
-                  <h4 className="text-sm font-medium text-gray-900">Upcoming Tasks</h4>
-                  <button 
-                    className="text-xs text-gray-500 hover:text-primary flex items-center gap-1"
-                    onClick={() => navigate('/student/homework')}
-                  >
-                    View All <ArrowRight className="w-3 h-3" />
-                  </button>
-                </div>
-                
-                <div className="flex items-center gap-4">
-                  <div className="flex -space-x-2">
-                    {['📝', '📖', '🧮'].map((emoji, i) => (
-                      <div key={i} className="w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center border-2 border-white text-lg">
-                        {emoji}
-                      </div>
-                    ))}
-                  </div>
-                  <div>
-                    <p className="text-sm font-medium text-gray-900">3 pending</p>
-                    <p className="text-xs text-gray-500">Due today & tomorrow</p>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
+                </CardContent>
+              </Card>
+            </div>
           </div>
         </div>
       </div>
