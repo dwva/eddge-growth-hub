@@ -59,21 +59,6 @@ const Landing = () => {
             </Button>
           </div>
 
-          {/* Trust Indicators */}
-          <div className="mt-16 flex flex-wrap justify-center gap-8 text-sm text-muted-foreground">
-            <div className="flex items-center gap-2">
-              <div className="w-2 h-2 rounded-full bg-primary" />
-              <span>10,000+ Students</span>
-            </div>
-            <div className="flex items-center gap-2">
-              <div className="w-2 h-2 rounded-full bg-primary" />
-              <span>500+ Schools</span>
-            </div>
-            <div className="flex items-center gap-2">
-              <div className="w-2 h-2 rounded-full bg-primary" />
-              <span>98% Satisfaction</span>
-            </div>
-          </div>
         </div>
       </section>
     </div>
