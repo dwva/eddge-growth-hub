@@ -33,14 +33,14 @@ const StudentDashboardLayout = ({ children }: StudentDashboardLayoutProps) => {
       {/* Desktop Sidebar - Fixed, Slim - Planti style */}
       <aside className={cn(
         "hidden md:flex flex-col h-screen sticky top-0 flex-shrink-0 transition-all duration-300",
-        collapsed ? "w-16" : "w-56"
+        collapsed ? "w-[72px]" : "w-[260px]"
       )}>
         <StudentSidebar collapsed={collapsed} />
       </aside>
 
       {/* Mobile Sidebar */}
       <Sheet open={mobileOpen} onOpenChange={setMobileOpen}>
-        <SheetContent side="left" className="w-64 p-0 border-0">
+        <SheetContent side="left" className="w-72 p-0 border-0">
           <StudentSidebar isMobile onMobileClose={() => setMobileOpen(false)} />
         </SheetContent>
       </Sheet>
