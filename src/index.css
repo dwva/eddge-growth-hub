@@ -72,6 +72,22 @@
 
     --gradient-start: 262 83% 58%;
     --gradient-end: 280 70% 55%;
+
+    /* Admin Theme - Blue/Indigo */
+    --admin-primary: 221 83% 53%;
+    --admin-primary-light: 221 83% 96%;
+    --admin-primary-dark: 221 83% 45%;
+    --admin-accent: 262 83% 58%;
+    --admin-sidebar-bg: 222 47% 11%;
+    --admin-sidebar-hover: 222 47% 15%;
+    --admin-success: 142 76% 36%;
+    --admin-success-light: 142 76% 95%;
+    --admin-warning: 38 92% 50%;
+    --admin-warning-light: 38 92% 95%;
+    --admin-danger: 0 84% 60%;
+    --admin-danger-light: 0 84% 95%;
+    --admin-info: 199 89% 48%;
+    --admin-info-light: 199 89% 95%;
   }
 
   .dark {
@@ -165,5 +181,45 @@
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
+  }
+
+  /* Admin Theme Utilities */
+  .gradient-admin {
+    background: linear-gradient(135deg, hsl(221 83% 53%), hsl(262 83% 58%));
+  }
+
+  .gradient-admin-sidebar {
+    background: linear-gradient(180deg, hsl(222 47% 11%), hsl(222 47% 8%));
+  }
+
+  .text-gradient-admin {
+    background: linear-gradient(135deg, hsl(221 83% 53%), hsl(262 83% 58%));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .shadow-admin-primary {
+    box-shadow: 0 4px 14px 0 hsla(221, 83%, 53%, 0.25);
+  }
+
+  .shadow-admin-success {
+    box-shadow: 0 4px 14px 0 hsla(142, 76%, 36%, 0.25);
+  }
+
+  .shadow-admin-warning {
+    box-shadow: 0 4px 14px 0 hsla(38, 92%, 50%, 0.25);
+  }
+
+  .card-hover {
+    @apply transition-all duration-300 hover:-translate-y-1 hover:shadow-lg;
+  }
+
+  .icon-hover {
+    @apply transition-transform duration-200 hover:scale-110;
+  }
+
+  .button-press {
+    @apply active:scale-95 transition-transform duration-100;
   }
 }
