@@ -99,32 +99,32 @@ const AdminSidebar = ({ collapsed = false, isMobile = false, onMobileClose }: Ad
     <div className="flex flex-col h-full bg-white border-r border-gray-100 font-sans">
       {/* Logo */}
       <div className={cn(
-        "flex items-center h-14 border-b border-gray-100",
-        collapsed && !isMobile ? "justify-center px-2" : "gap-2.5 px-4"
+        "flex items-center h-16 border-b border-gray-100",
+        collapsed && !isMobile ? "justify-center px-2" : "gap-3 px-4"
       )}>
-        <div className="w-8 h-8 rounded-lg bg-primary flex items-center justify-center flex-shrink-0">
-          <Sparkles className="w-4 h-4 text-white" />
+        <div className="w-9 h-9 rounded-xl bg-primary flex items-center justify-center flex-shrink-0">
+          <Sparkles className="w-5 h-5 text-white" />
         </div>
         {showText && (
           <div>
-            <span className="text-lg font-bold text-primary tracking-tight">EDDGE</span>
-            <span className="text-[10px] text-muted-foreground block -mt-1">Admin Portal</span>
+            <span className="text-2xl font-bold text-primary tracking-tight">EDDGE</span>
+            <span className="text-xs text-muted-foreground block -mt-0.5">Admin Portal</span>
           </div>
         )}
       </div>
 
       {/* Navigation */}
       <nav className={cn(
-        "flex-1 py-3 overflow-hidden",
+        "flex-1 py-4 overflow-hidden",
         collapsed && !isMobile ? "px-2" : "px-3"
       )}>
         {/* Dashboard - Standalone */}
-        <div className="mb-1">
+        <div className="mb-3">
           <button
             onClick={() => handleNavigate('/admin')}
             className={cn(
-              "w-full flex items-center rounded-lg transition-all duration-200 h-9",
-              collapsed && !isMobile ? "justify-center px-2" : "gap-2.5 px-4",
+              "w-full flex items-center rounded-lg transition-all duration-200 h-10",
+              collapsed && !isMobile ? "justify-center px-2" : "gap-3 px-4",
               isPathActive('/admin')
                 ? "bg-primary/10 text-primary font-medium" 
                 : "text-gray-600 hover:bg-gray-50 hover:text-gray-900"
@@ -134,11 +134,11 @@ const AdminSidebar = ({ collapsed = false, isMobile = false, onMobileClose }: Ad
               "flex-shrink-0",
               isPathActive('/admin') ? "text-primary" : "text-gray-400"
             )}>
-              <LayoutDashboard className="w-4 h-4" />
+              <LayoutDashboard className="w-5 h-5" />
             </span>
             {showText && (
               <>
-                <span className="text-xs flex-1 text-left">Dashboard</span>
+                <span className="text-sm flex-1 text-left">Dashboard</span>
                 {isPathActive('/admin') && (
                   <span className="w-1.5 h-1.5 rounded-full bg-primary" />
                 )}
@@ -148,7 +148,7 @@ const AdminSidebar = ({ collapsed = false, isMobile = false, onMobileClose }: Ad
         </div>
 
         {/* Collapsible Sections */}
-        <div className="space-y-0.5">
+        <div className="space-y-2">
           {navSections.map((section) => (
             <Collapsible
               key={section.label}
@@ -158,8 +158,8 @@ const AdminSidebar = ({ collapsed = false, isMobile = false, onMobileClose }: Ad
               <CollapsibleTrigger asChild>
                 <button
                   className={cn(
-                    "w-full flex items-center rounded-lg transition-all duration-200 h-9",
-                    collapsed && !isMobile ? "justify-center px-2" : "gap-2.5 px-4",
+                    "w-full flex items-center rounded-lg transition-all duration-200 h-10",
+                    collapsed && !isMobile ? "justify-center px-2" : "gap-3 px-4",
                     isSectionActive(section)
                       ? "text-primary font-medium" 
                       : "text-gray-600 hover:bg-gray-50 hover:text-gray-900"
@@ -173,9 +173,9 @@ const AdminSidebar = ({ collapsed = false, isMobile = false, onMobileClose }: Ad
                   </span>
                   {showText && (
                     <>
-                      <span className="text-xs flex-1 text-left">{section.label}</span>
+                      <span className="text-sm flex-1 text-left">{section.label}</span>
                       <ChevronDown className={cn(
-                        "w-3.5 h-3.5 text-gray-400 transition-transform duration-200",
+                        "w-4 h-4 text-gray-400 transition-transform duration-200",
                         openSections.includes(section.label) ? "rotate-180" : ""
                       )} />
                     </>
@@ -185,15 +185,15 @@ const AdminSidebar = ({ collapsed = false, isMobile = false, onMobileClose }: Ad
               
               <CollapsibleContent>
                 <div className={cn(
-                  "mt-0.5 space-y-0",
-                  collapsed && !isMobile ? "" : "ml-4 pl-4 border-l border-gray-200"
+                  "mt-1 space-y-1",
+                  collapsed && !isMobile ? "" : "ml-5 pl-4 border-l border-gray-200"
                 )}>
                   {section.items.map((item) => (
                     <button
                       key={item.path}
                       onClick={() => handleNavigate(item.path)}
                       className={cn(
-                        "w-full flex items-center rounded-md transition-all duration-200 h-8",
+                        "w-full flex items-center rounded-md transition-all duration-200 h-9",
                         collapsed && !isMobile ? "justify-center px-2" : "gap-2.5 px-3",
                         isPathActive(item.path)
                           ? "bg-primary/10 text-primary font-medium" 
