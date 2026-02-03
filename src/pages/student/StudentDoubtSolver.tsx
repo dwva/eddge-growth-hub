@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect } from 'react';
+import StudentDashboardLayout from '@/components/layout/StudentDashboardLayout';
 import { Button } from '@/components/ui/button';
 import { ScrollArea } from '@/components/ui/scroll-area';
-import { Textarea } from '@/components/ui/textarea';
 import { 
   Plus, 
   Send, 
@@ -9,19 +9,18 @@ import {
   Mic, 
   Search,
   MoreHorizontal,
-  ChevronDown,
   Sparkles,
   BookOpen,
   Calculator,
   FlaskConical,
   PenTool,
-  Share,
   ThumbsUp,
   ThumbsDown,
   Copy,
   RotateCcw,
-  Menu,
-  X
+  PanelRightClose,
+  PanelRightOpen,
+  MessageSquare
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
@@ -98,14 +97,13 @@ const mockResponses = [
   "Absolutely! Let me explain this concept in a way that's easy to understand.\n\n**Important Points:**\n- This principle was discovered by...\n- It applies in situations where...\n- The formula we use is...\n\n**Pro Tip:** Remember to always check your units!\n\nWant me to show you a practice problem?",
 ];
 
-const StudentDoubtSolver = () => {
+const StudentDoubtSolverContent = () => {
   const [conversations, setConversations] = useState<Conversation[]>(mockConversations);
   const [activeConversation, setActiveConversation] = useState<Conversation | null>(null);
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState('');
   const [isTyping, setIsTyping] = useState(false);
-  const [sidebarOpen, setSidebarOpen] = useState(true);
-  const [mobileSidebarOpen, setMobileSidebarOpen] = useState(false);
+  const [rightSidebarOpen, setRightSidebarOpen] = useState(true);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
 
@@ -121,13 +119,11 @@ const StudentDoubtSolver = () => {
     setActiveConversation(null);
     setMessages([]);
     setInput('');
-    setMobileSidebarOpen(false);
   };
 
   const handleSelectConversation = (conv: Conversation) => {
     setActiveConversation(conv);
     setMessages(conv.messages);
-    setMobileSidebarOpen(false);
   };
 
   const simulateAIResponse = (userMessage: string) => {
@@ -234,106 +230,37 @@ const StudentDoubtSolver = () => {
   };
 
   return (
-    <div className="flex h-screen bg-background text-foreground overflow-hidden">
-      {/* Mobile sidebar overlay */}
-      {mobileSidebarOpen && (
-        <div 
-          className="fixed inset-0 bg-black/20 z-40 lg:hidden"
-          onClick={() => setMobileSidebarOpen(false)}
-        />
-      )}
-
-      {/* Sidebar */}
-      <aside className={cn(
-        "fixed lg:relative z-50 h-full bg-card border-r border-border flex flex-col transition-all duration-300",
-        sidebarOpen ? "w-64" : "w-0 lg:w-0",
-        mobileSidebarOpen ? "translate-x-0" : "-translate-x-full lg:translate-x-0"
-      )}>
-        {/* Logo */}
-        <div className="flex-shrink-0 p-4 border-b border-border">
-          <div className="flex items-center gap-3 mb-4">
-            <div className="w-10 h-10 rounded-xl bg-primary flex items-center justify-center">
-              <Sparkles className="w-5 h-5 text-white" />
+    <div className="flex h-[calc(100vh-12rem)] bg-background rounded-2xl border border-border overflow-hidden">
+      {/* Main Chat Area */}
+      <div className="flex-1 flex flex-col min-w-0">
+        {/* Header */}
+        <header className="flex-shrink-0 h-14 border-b border-border bg-card flex items-center justify-between px-4">
+          <div className="flex items-center gap-3">
+            <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-primary to-purple-600 flex items-center justify-center">
+              <Sparkles className="w-4 h-4 text-white" />
             </div>
             <div>
-              <span className="text-xl font-bold text-primary">EDDGE</span>
-              <span className="text-xs text-muted-foreground block">Doubt Solver</span>
+              <h2 className="font-semibold text-foreground">AI Doubt Solver</h2>
+              <p className="text-xs text-muted-foreground">Ask anything about your studies</p>
             </div>
           </div>
-          <Button
-            onClick={handleNewChat}
-            className="w-full justify-start gap-2 bg-primary hover:bg-primary/90 text-white"
-          >
-            <Plus className="w-4 h-4" />
-            New chat
-          </Button>
-        </div>
-
-        {/* Search */}
-        <div className="p-3">
-          <div className="relative">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-            <input
-              type="text"
-              placeholder="Search chats..."
-              className="w-full bg-muted border-0 rounded-lg pl-9 pr-3 py-2 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/20"
-            />
-          </div>
-        </div>
-
-        {/* Conversation history */}
-        <ScrollArea className="flex-1 px-2">
-          {renderConversationGroup('Today', grouped.today)}
-          {renderConversationGroup('Yesterday', grouped.yesterday)}
-          {renderConversationGroup('Previous 7 Days', grouped.thisWeek)}
-          {renderConversationGroup('Older', grouped.older)}
-        </ScrollArea>
-
-        {/* User section */}
-        <div className="flex-shrink-0 p-3 border-t border-border">
-          <button className="w-full flex items-center gap-3 p-2 rounded-lg hover:bg-muted transition-colors">
-            <div className="w-8 h-8 rounded-full bg-gradient-to-br from-primary to-purple-600 flex items-center justify-center text-sm font-medium text-white">
-              S
-            </div>
-            <span className="text-sm text-foreground truncate flex-1 text-left">Student</span>
-            <MoreHorizontal className="w-4 h-4 text-muted-foreground" />
-          </button>
-        </div>
-      </aside>
-
-      {/* Main content */}
-      <main className="flex-1 flex flex-col min-w-0 bg-gradient-to-b from-background to-muted/30">
-        {/* Header */}
-        <header className="flex-shrink-0 h-14 border-b border-border bg-card/80 backdrop-blur-sm flex items-center justify-between px-4">
           <div className="flex items-center gap-2">
             <Button
-              variant="ghost"
-              size="icon"
-              className="lg:hidden text-muted-foreground hover:text-foreground hover:bg-muted"
-              onClick={() => setMobileSidebarOpen(true)}
+              variant="outline"
+              size="sm"
+              onClick={handleNewChat}
+              className="gap-2"
             >
-              <Menu className="w-5 h-5" />
+              <Plus className="w-4 h-4" />
+              New Chat
             </Button>
             <Button
               variant="ghost"
               size="icon"
-              className="hidden lg:flex text-muted-foreground hover:text-foreground hover:bg-muted"
-              onClick={() => setSidebarOpen(!sidebarOpen)}
+              onClick={() => setRightSidebarOpen(!rightSidebarOpen)}
+              className="text-muted-foreground hover:text-foreground"
             >
-              <Menu className="w-5 h-5" />
-            </Button>
-            <button className="flex items-center gap-1 text-lg font-semibold hover:bg-muted rounded-lg px-2 py-1 transition-colors text-foreground">
-              <span>Doubt Solver</span>
-              <ChevronDown className="w-4 h-4 text-muted-foreground" />
-            </button>
-          </div>
-          <div className="flex items-center gap-2">
-            <Button
-              variant="ghost"
-              size="icon"
-              className="text-muted-foreground hover:text-foreground hover:bg-muted"
-            >
-              <Share className="w-5 h-5" />
+              {rightSidebarOpen ? <PanelRightClose className="w-5 h-5" /> : <PanelRightOpen className="w-5 h-5" />}
             </Button>
           </div>
         </header>
@@ -395,7 +322,7 @@ const StudentDoubtSolver = () => {
                       className={cn(
                         "max-w-[80%] rounded-2xl px-4 py-3 shadow-sm",
                         message.role === 'user'
-                          ? "bg-primary text-white"
+                          ? "bg-primary text-primary-foreground"
                           : "bg-card border border-border text-foreground"
                       )}
                     >
@@ -449,56 +376,89 @@ const StudentDoubtSolver = () => {
           )}
 
           {/* Input area */}
-          <div className="flex-shrink-0 p-4 bg-gradient-to-t from-background to-transparent">
+          <div className="flex-shrink-0 p-4 border-t border-border bg-card">
             <div className="max-w-3xl mx-auto">
-              <div className="relative bg-card rounded-2xl border border-border shadow-lg focus-within:border-primary/50 focus-within:ring-2 focus-within:ring-primary/20 transition-all">
-                <Textarea
+              <div className="relative bg-muted rounded-2xl border border-border focus-within:border-primary/50 focus-within:ring-2 focus-within:ring-primary/20">
+                <textarea
                   ref={textareaRef}
                   value={input}
                   onChange={handleTextareaChange}
                   onKeyDown={handleKeyDown}
-                  placeholder="Ask me anything about your studies..."
-                  className="w-full min-h-[52px] max-h-[200px] bg-transparent border-0 resize-none px-4 py-3 pr-28 text-foreground placeholder:text-muted-foreground focus-visible:ring-0 focus-visible:ring-offset-0"
+                  placeholder="Ask me anything..."
                   rows={1}
+                  className="w-full bg-transparent resize-none px-4 py-3 pr-24 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none max-h-[200px]"
                 />
                 <div className="absolute right-2 bottom-2 flex items-center gap-1">
                   <Button
                     variant="ghost"
                     size="icon"
-                    className="h-8 w-8 text-muted-foreground hover:text-foreground hover:bg-muted"
+                    className="h-8 w-8 text-muted-foreground hover:text-foreground hover:bg-background"
                   >
                     <Paperclip className="w-4 h-4" />
                   </Button>
                   <Button
                     variant="ghost"
                     size="icon"
-                    className="h-8 w-8 text-muted-foreground hover:text-foreground hover:bg-muted"
+                    className="h-8 w-8 text-muted-foreground hover:text-foreground hover:bg-background"
                   >
                     <Mic className="w-4 h-4" />
                   </Button>
                   <Button
-                    onClick={handleSend}
-                    disabled={!input.trim() || isTyping}
                     size="icon"
-                    className={cn(
-                      "h-8 w-8 rounded-lg transition-colors",
-                      input.trim()
-                        ? "bg-primary text-white hover:bg-primary/90"
-                        : "bg-muted text-muted-foreground"
-                    )}
+                    onClick={handleSend}
+                    disabled={!input.trim()}
+                    className="h-8 w-8 bg-primary hover:bg-primary/90 text-primary-foreground disabled:opacity-50"
                   >
                     <Send className="w-4 h-4" />
                   </Button>
                 </div>
               </div>
-              <p className="text-center text-xs text-muted-foreground mt-2">
-                AI-powered doubt solving for students. Responses are for educational purposes.
+              <p className="text-xs text-center text-muted-foreground mt-2">
+                AI can make mistakes. Please verify important information.
               </p>
             </div>
           </div>
         </div>
-      </main>
+      </div>
+
+      {/* Right Sidebar - Conversation History */}
+      {rightSidebarOpen && (
+        <aside className="w-72 border-l border-border bg-card flex flex-col">
+          {/* Header */}
+          <div className="flex-shrink-0 p-4 border-b border-border">
+            <div className="flex items-center gap-2 mb-3">
+              <MessageSquare className="w-5 h-5 text-primary" />
+              <h3 className="font-semibold text-foreground">Chat History</h3>
+            </div>
+            {/* Search */}
+            <div className="relative">
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+              <input
+                type="text"
+                placeholder="Search chats..."
+                className="w-full bg-muted border-0 rounded-lg pl-9 pr-3 py-2 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/20"
+              />
+            </div>
+          </div>
+
+          {/* Conversation history */}
+          <ScrollArea className="flex-1 px-2 py-2">
+            {renderConversationGroup('Today', grouped.today)}
+            {renderConversationGroup('Yesterday', grouped.yesterday)}
+            {renderConversationGroup('Previous 7 Days', grouped.thisWeek)}
+            {renderConversationGroup('Older', grouped.older)}
+          </ScrollArea>
+        </aside>
+      )}
     </div>
+  );
+};
+
+const StudentDoubtSolver = () => {
+  return (
+    <StudentDashboardLayout>
+      <StudentDoubtSolverContent />
+    </StudentDashboardLayout>
   );
 };
 
