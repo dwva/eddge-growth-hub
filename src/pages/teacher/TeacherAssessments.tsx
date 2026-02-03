@@ -1,25 +1,34 @@
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 import TeacherDashboardLayout from '@/components/layout/TeacherDashboardLayout';
+import StatCard from '@/components/shared/StatCard';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
+import { Progress } from '@/components/ui/progress';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Textarea } from '@/components/ui/textarea';
-import { Search, Plus, ClipboardList, BookOpen, Calendar, Eye, Pencil, Trash2, Download, FileText, Users, BarChart3 } from 'lucide-react';
+import { 
+  Search, Plus, ClipboardList, BookOpen, Calendar, Eye, Pencil, 
+  Trash2, Download, FileText, Users, BarChart3, Clock, CheckCircle2,
+  MoreHorizontal, Play, ChevronRight
+} from 'lucide-react';
 import { assessments as mockAssessments, assessmentResults } from '@/data/teacherMockData';
 import { toast } from 'sonner';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
 
 const TeacherAssessmentsContent = () => {
-  const navigate = useNavigate();
   const [searchQuery, setSearchQuery] = useState('');
   const [assessments, setAssessments] = useState(mockAssessments);
   const [isCreateOpen, setIsCreateOpen] = useState(false);
+  const [statusFilter, setStatusFilter] = useState('all');
   const [formData, setFormData] = useState({
     title: '',
     subject: '',
@@ -30,10 +39,12 @@ const TeacherAssessmentsContent = () => {
     scheduledDate: '',
   });
 
-  const filteredAssessments = assessments.filter(a =>
-    a.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    a.subject.toLowerCase().includes(searchQuery.toLowerCase())
-  );
+  const filteredAssessments = assessments.filter(a => {
+    const matchesSearch = a.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      a.subject.toLowerCase().includes(searchQuery.toLowerCase());
+    const matchesStatus = statusFilter === 'all' || a.status === statusFilter;
+    return matchesSearch && matchesStatus;
+  });
 
   const handleCreate = () => {
     if (!formData.title || !formData.subject || !formData.class) {
@@ -68,320 +79,343 @@ const TeacherAssessmentsContent = () => {
     toast.success('Assessment deleted');
   };
 
+  const getStatusStyle = (status: string) => {
+    switch (status) {
+      case 'published': return 'bg-emerald-50 text-emerald-700 border-emerald-200';
+      case 'draft': return 'bg-gray-100 text-gray-700 border-gray-200';
+      default: return 'bg-blue-50 text-blue-700 border-blue-200';
+    }
+  };
+
+  const draftCount = assessments.filter(a => a.status === 'draft').length;
+  const publishedCount = assessments.filter(a => a.status === 'published').length;
+  const avgScore = Math.round(assessmentResults.reduce((acc, r) => acc + r.avgScore, 0) / assessmentResults.length);
+
   return (
     <div className="space-y-6">
-      {/* Header */}
-      <div>
-        <h1 className="text-2xl font-bold">Assessments</h1>
-        <p className="text-muted-foreground">Create, manage, and view assessment results</p>
+      {/* Page Header */}
+      <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
+        <div>
+          <h1 className="text-2xl font-bold text-gray-900">Assessments</h1>
+          <p className="text-sm text-gray-500 mt-1">Create and manage assessments for your classes</p>
+        </div>
+        <Dialog open={isCreateOpen} onOpenChange={setIsCreateOpen}>
+          <DialogTrigger asChild>
+            <Button size="sm" className="gap-2 h-9 rounded-xl">
+              <Plus className="w-4 h-4" />
+              Create Assessment
+            </Button>
+          </DialogTrigger>
+          <DialogContent className="sm:max-w-lg">
+            <DialogHeader>
+              <DialogTitle>Create New Assessment</DialogTitle>
+            </DialogHeader>
+            <div className="space-y-4 pt-4">
+              <div className="space-y-2">
+                <Label className="text-sm">Title *</Label>
+                <Input
+                  placeholder="e.g., Mid-Term Mathematics Test"
+                  value={formData.title}
+                  onChange={(e) => setFormData(prev => ({ ...prev, title: e.target.value }))}
+                  className="rounded-xl"
+                />
+              </div>
+              <div className="grid grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <Label className="text-sm">Subject *</Label>
+                  <Select value={formData.subject} onValueChange={(v) => setFormData(prev => ({ ...prev, subject: v }))}>
+                    <SelectTrigger className="rounded-xl">
+                      <SelectValue placeholder="Select subject" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="Mathematics">Mathematics</SelectItem>
+                      <SelectItem value="Science">Science</SelectItem>
+                      <SelectItem value="English">English</SelectItem>
+                      <SelectItem value="History">History</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+                <div className="space-y-2">
+                  <Label className="text-sm">Class *</Label>
+                  <Select value={formData.class} onValueChange={(v) => setFormData(prev => ({ ...prev, class: v }))}>
+                    <SelectTrigger className="rounded-xl">
+                      <SelectValue placeholder="Select class" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="Class 9-A">Class 9-A</SelectItem>
+                      <SelectItem value="Class 9-B">Class 9-B</SelectItem>
+                      <SelectItem value="Class 10-A">Class 10-A</SelectItem>
+                      <SelectItem value="Class 10-B">Class 10-B</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+              </div>
+              <div className="grid grid-cols-3 gap-4">
+                <div className="space-y-2">
+                  <Label className="text-sm">Type</Label>
+                  <Select value={formData.type} onValueChange={(v) => setFormData(prev => ({ ...prev, type: v }))}>
+                    <SelectTrigger className="rounded-xl">
+                      <SelectValue placeholder="Select" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="Quiz">Quiz</SelectItem>
+                      <SelectItem value="Unit Test">Unit Test</SelectItem>
+                      <SelectItem value="Assessment">Assessment</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+                <div className="space-y-2">
+                  <Label className="text-sm">Marks</Label>
+                  <Input
+                    type="number"
+                    placeholder="50"
+                    value={formData.marks}
+                    onChange={(e) => setFormData(prev => ({ ...prev, marks: e.target.value }))}
+                    className="rounded-xl"
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label className="text-sm">Duration</Label>
+                  <Input
+                    type="number"
+                    placeholder="60 mins"
+                    value={formData.duration}
+                    onChange={(e) => setFormData(prev => ({ ...prev, duration: e.target.value }))}
+                    className="rounded-xl"
+                  />
+                </div>
+              </div>
+              <div className="space-y-2">
+                <Label className="text-sm">Scheduled Date</Label>
+                <Input
+                  type="date"
+                  value={formData.scheduledDate}
+                  onChange={(e) => setFormData(prev => ({ ...prev, scheduledDate: e.target.value }))}
+                  className="rounded-xl"
+                />
+              </div>
+              <Button onClick={handleCreate} className="w-full rounded-xl">
+                Create Assessment
+              </Button>
+            </div>
+          </DialogContent>
+        </Dialog>
+      </div>
+
+      {/* KPI Cards */}
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+        <StatCard 
+          title="Total Assessments" 
+          value={assessments.length} 
+          icon={<ClipboardList className="w-5 h-5" />} 
+          iconBg="bg-blue-50 text-blue-600"
+        />
+        <StatCard 
+          title="Published" 
+          value={publishedCount} 
+          icon={<CheckCircle2 className="w-5 h-5" />} 
+          iconBg="bg-emerald-50 text-emerald-600"
+        />
+        <StatCard 
+          title="Drafts" 
+          value={draftCount} 
+          icon={<FileText className="w-5 h-5" />} 
+          iconBg="bg-gray-100 text-gray-600"
+        />
+        <StatCard 
+          title="Avg Score" 
+          value={`${avgScore}%`} 
+          icon={<BarChart3 className="w-5 h-5" />} 
+          iconBg="bg-violet-50 text-violet-600"
+        />
       </div>
 
       <Tabs defaultValue="all">
-        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-          <TabsList>
-            <TabsTrigger value="all">All Assessments</TabsTrigger>
-            <TabsTrigger value="results">Results</TabsTrigger>
-          </TabsList>
-          <Dialog open={isCreateOpen} onOpenChange={setIsCreateOpen}>
-            <DialogTrigger asChild>
-              <Button className="gap-2">
-                <Plus className="w-4 h-4" />
-                Create Assessment
-              </Button>
-            </DialogTrigger>
-            <DialogContent className="max-w-md">
-              <DialogHeader>
-                <DialogTitle>Create Assessment</DialogTitle>
-              </DialogHeader>
-              <div className="space-y-4 pt-4">
-                <div className="space-y-2">
-                  <Label>Title *</Label>
-                  <Input
-                    placeholder="e.g., Mid-Term Mathematics"
-                    value={formData.title}
-                    onChange={(e) => setFormData(prev => ({ ...prev, title: e.target.value }))}
-                  />
-                </div>
-                <div className="grid grid-cols-2 gap-4">
-                  <div className="space-y-2">
-                    <Label>Subject *</Label>
-                    <Select value={formData.subject} onValueChange={(v) => setFormData(prev => ({ ...prev, subject: v }))}>
-                      <SelectTrigger>
-                        <SelectValue placeholder="Select" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="Mathematics">Mathematics</SelectItem>
-                        <SelectItem value="Science">Science</SelectItem>
-                        <SelectItem value="English">English</SelectItem>
-                        <SelectItem value="History">History</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </div>
-                  <div className="space-y-2">
-                    <Label>Class *</Label>
-                    <Select value={formData.class} onValueChange={(v) => setFormData(prev => ({ ...prev, class: v }))}>
-                      <SelectTrigger>
-                        <SelectValue placeholder="Select" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="Class 9-A">Class 9-A</SelectItem>
-                        <SelectItem value="Class 9-B">Class 9-B</SelectItem>
-                        <SelectItem value="Class 10-A">Class 10-A</SelectItem>
-                        <SelectItem value="Class 10-B">Class 10-B</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </div>
-                </div>
-                <div className="grid grid-cols-2 gap-4">
-                  <div className="space-y-2">
-                    <Label>Type</Label>
-                    <Select value={formData.type} onValueChange={(v) => setFormData(prev => ({ ...prev, type: v }))}>
-                      <SelectTrigger>
-                        <SelectValue placeholder="Select" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="Quiz">Quiz</SelectItem>
-                        <SelectItem value="Unit Test">Unit Test</SelectItem>
-                        <SelectItem value="Assessment">Assessment</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </div>
-                  <div className="space-y-2">
-                    <Label>Total Marks</Label>
-                    <Input
-                      type="number"
-                      placeholder="50"
-                      value={formData.marks}
-                      onChange={(e) => setFormData(prev => ({ ...prev, marks: e.target.value }))}
-                    />
-                  </div>
-                </div>
-                <div className="grid grid-cols-2 gap-4">
-                  <div className="space-y-2">
-                    <Label>Duration (mins)</Label>
-                    <Input
-                      type="number"
-                      placeholder="60"
-                      value={formData.duration}
-                      onChange={(e) => setFormData(prev => ({ ...prev, duration: e.target.value }))}
-                    />
-                  </div>
-                  <div className="space-y-2">
-                    <Label>Scheduled Date</Label>
-                    <Input
-                      type="date"
-                      value={formData.scheduledDate}
-                      onChange={(e) => setFormData(prev => ({ ...prev, scheduledDate: e.target.value }))}
-                    />
-                  </div>
-                </div>
-                <Button onClick={handleCreate} className="w-full">Create Assessment</Button>
-              </div>
-            </DialogContent>
-          </Dialog>
-        </div>
+        <TabsList className="w-full lg:w-auto inline-flex h-10 p-1 rounded-xl bg-gray-100">
+          <TabsTrigger value="all" className="px-4 py-2 text-sm rounded-lg data-[state=active]:bg-white data-[state=active]:shadow-sm">
+            All Assessments
+          </TabsTrigger>
+          <TabsTrigger value="results" className="px-4 py-2 text-sm rounded-lg data-[state=active]:bg-white data-[state=active]:shadow-sm">
+            Results
+          </TabsTrigger>
+        </TabsList>
 
         {/* All Assessments Tab */}
-        <TabsContent value="all" className="space-y-4">
-          <Card>
-            <CardContent className="pt-6">
-              <div className="relative">
-                <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-                <Input
-                  placeholder="Search assessments..."
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  className="pl-9"
-                />
+        <TabsContent value="all" className="space-y-4 mt-6">
+          {/* Filters */}
+          <Card className="rounded-2xl shadow-sm border-gray-100">
+            <CardContent className="p-4">
+              <div className="flex flex-col sm:flex-row gap-4">
+                <div className="relative flex-1">
+                  <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+                  <Input
+                    placeholder="Search assessments..."
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    className="pl-10 h-10 rounded-xl border-gray-200 bg-gray-50 focus:bg-white"
+                  />
+                </div>
+                <Select value={statusFilter} onValueChange={setStatusFilter}>
+                  <SelectTrigger className="w-40 h-10 rounded-xl border-gray-200">
+                    <SelectValue placeholder="All Status" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="all">All Status</SelectItem>
+                    <SelectItem value="draft">Draft</SelectItem>
+                    <SelectItem value="published">Published</SelectItem>
+                  </SelectContent>
+                </Select>
               </div>
             </CardContent>
           </Card>
 
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <ClipboardList className="w-5 h-5" />
-                Assessments ({filteredAssessments.length})
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              {filteredAssessments.length > 0 ? (
-                <div className="rounded-md border overflow-x-auto">
-                  <Table>
-                    <TableHeader>
-                      <TableRow>
-                        <TableHead>Title</TableHead>
-                        <TableHead>Subject</TableHead>
-                        <TableHead>Class</TableHead>
-                        <TableHead>Type</TableHead>
-                        <TableHead>Marks</TableHead>
-                        <TableHead>Date</TableHead>
-                        <TableHead>Status</TableHead>
-                        <TableHead>Actions</TableHead>
-                      </TableRow>
-                    </TableHeader>
-                    <TableBody>
-                      {filteredAssessments.map((assessment) => (
-                        <TableRow key={assessment.id}>
-                          <TableCell className="font-medium">{assessment.title}</TableCell>
-                          <TableCell>
-                            <div className="flex items-center gap-1.5">
-                              <BookOpen className="w-4 h-4 text-muted-foreground" />
-                              {assessment.subject}
-                            </div>
-                          </TableCell>
-                          <TableCell>{assessment.class}</TableCell>
-                          <TableCell>
-                            <Badge variant="outline">{assessment.type}</Badge>
-                          </TableCell>
-                          <TableCell>{assessment.marks}</TableCell>
-                          <TableCell>
-                            <div className="flex items-center gap-1.5">
-                              <Calendar className="w-4 h-4 text-muted-foreground" />
-                              {assessment.scheduledDate}
-                            </div>
-                          </TableCell>
-                          <TableCell>
-                            <Badge variant={assessment.status === 'published' ? 'default' : 'secondary'}>
-                              {assessment.status}
-                            </Badge>
-                          </TableCell>
-                          <TableCell>
-                            <div className="flex gap-1">
-                              <Button variant="ghost" size="icon">
-                                <Eye className="w-4 h-4" />
-                              </Button>
-                              <Button variant="ghost" size="icon">
-                                <Pencil className="w-4 h-4" />
-                              </Button>
-                              {assessment.status === 'draft' && (
-                                <Button variant="ghost" size="icon" onClick={() => handlePublish(assessment.id)}>
-                                  <FileText className="w-4 h-4 text-primary" />
-                                </Button>
-                              )}
-                              <Button variant="ghost" size="icon" onClick={() => handleDelete(assessment.id)}>
-                                <Trash2 className="w-4 h-4 text-destructive" />
-                              </Button>
-                            </div>
-                          </TableCell>
-                        </TableRow>
-                      ))}
-                    </TableBody>
-                  </Table>
+          {/* Assessment Cards Grid */}
+          {filteredAssessments.length > 0 ? (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+              {filteredAssessments.map((assessment) => (
+                <Card key={assessment.id} className="rounded-2xl shadow-sm border-gray-100 hover:shadow-md transition-shadow overflow-hidden">
+                  <CardContent className="p-5">
+                    {/* Header */}
+                    <div className="flex items-start justify-between mb-4">
+                      <Badge variant="outline" className={`text-xs font-medium ${getStatusStyle(assessment.status)}`}>
+                        {assessment.status}
+                      </Badge>
+                      <DropdownMenu>
+                        <DropdownMenuTrigger asChild>
+                          <Button variant="ghost" size="icon" className="h-8 w-8 rounded-lg">
+                            <MoreHorizontal className="w-4 h-4" />
+                          </Button>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent align="end" className="w-40">
+                          <DropdownMenuItem>
+                            <Eye className="w-4 h-4 mr-2" /> View
+                          </DropdownMenuItem>
+                          <DropdownMenuItem>
+                            <Pencil className="w-4 h-4 mr-2" /> Edit
+                          </DropdownMenuItem>
+                          {assessment.status === 'draft' && (
+                            <DropdownMenuItem onClick={() => handlePublish(assessment.id)}>
+                              <Play className="w-4 h-4 mr-2" /> Publish
+                            </DropdownMenuItem>
+                          )}
+                          <DropdownMenuItem onClick={() => handleDelete(assessment.id)} className="text-red-600">
+                            <Trash2 className="w-4 h-4 mr-2" /> Delete
+                          </DropdownMenuItem>
+                        </DropdownMenuContent>
+                      </DropdownMenu>
+                    </div>
+
+                    {/* Title & Subject */}
+                    <h3 className="font-semibold text-gray-900 mb-1">{assessment.title}</h3>
+                    <div className="flex items-center gap-2 text-sm text-gray-500 mb-4">
+                      <BookOpen className="w-4 h-4" />
+                      <span>{assessment.subject}</span>
+                      <span>•</span>
+                      <span>{assessment.class}</span>
+                    </div>
+
+                    {/* Meta Info */}
+                    <div className="flex flex-wrap gap-3 text-xs text-gray-500">
+                      <div className="flex items-center gap-1.5 px-2 py-1 bg-gray-50 rounded-lg">
+                        <Calendar className="w-3.5 h-3.5" />
+                        {assessment.scheduledDate}
+                      </div>
+                      <div className="flex items-center gap-1.5 px-2 py-1 bg-gray-50 rounded-lg">
+                        <FileText className="w-3.5 h-3.5" />
+                        {assessment.marks} marks
+                      </div>
+                      <div className="flex items-center gap-1.5 px-2 py-1 bg-gray-50 rounded-lg">
+                        <ClipboardList className="w-3.5 h-3.5" />
+                        {assessment.type}
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
+          ) : (
+            <Card className="rounded-2xl shadow-sm border-gray-100">
+              <CardContent className="py-16">
+                <div className="text-center">
+                  <div className="w-16 h-16 rounded-2xl bg-gray-100 flex items-center justify-center mx-auto mb-4">
+                    <ClipboardList className="w-8 h-8 text-gray-400" />
+                  </div>
+                  <h3 className="text-lg font-semibold text-gray-900 mb-2">No assessments found</h3>
+                  <p className="text-gray-500 text-sm mb-4">Create your first assessment to get started</p>
+                  <Button className="rounded-xl" onClick={() => setIsCreateOpen(true)}>
+                    <Plus className="w-4 h-4 mr-2" />
+                    Create Assessment
+                  </Button>
                 </div>
-              ) : (
-                <div className="text-center py-12">
-                  <ClipboardList className="w-12 h-12 text-muted-foreground mx-auto mb-4" />
-                  <h3 className="text-lg font-medium mb-2">No Assessments Found</h3>
-                  <p className="text-muted-foreground mb-4">Create your first assessment to get started</p>
-                  <Button onClick={() => setIsCreateOpen(true)}>Create Assessment</Button>
-                </div>
-              )}
-            </CardContent>
-          </Card>
+              </CardContent>
+            </Card>
+          )}
         </TabsContent>
 
         {/* Results Tab */}
-        <TabsContent value="results" className="space-y-4">
-          {/* Summary Cards */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <Card>
-              <CardContent className="pt-6">
-                <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center">
-                    <ClipboardList className="w-5 h-5 text-primary" />
+        <TabsContent value="results" className="space-y-6 mt-6">
+          {/* Results Cards */}
+          {assessmentResults.map((result) => (
+            <Card key={result.id} className="rounded-2xl shadow-sm border-gray-100 overflow-hidden hover:shadow-md transition-shadow">
+              <CardContent className="p-5">
+                <div className="flex flex-col lg:flex-row lg:items-center gap-4">
+                  {/* Assessment Info */}
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-start gap-4">
+                      <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center flex-shrink-0">
+                        <ClipboardList className="w-6 h-6 text-primary" />
+                      </div>
+                      <div className="min-w-0">
+                        <h3 className="font-semibold text-gray-900 truncate">{result.title}</h3>
+                        <div className="flex items-center gap-2 text-sm text-gray-500 mt-0.5">
+                          <span>{result.subject}</span>
+                          <span>•</span>
+                          <span>{result.class}</span>
+                          <span>•</span>
+                          <span>{result.completed}</span>
+                        </div>
+                      </div>
+                    </div>
                   </div>
-                  <div>
-                    <p className="text-sm text-muted-foreground">Total Assessments</p>
-                    <p className="text-2xl font-bold">{assessmentResults.length}</p>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-            <Card>
-              <CardContent className="pt-6">
-                <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-lg bg-green-500/10 flex items-center justify-center">
-                    <BarChart3 className="w-5 h-5 text-green-500" />
-                  </div>
-                  <div>
-                    <p className="text-sm text-muted-foreground">Average Score</p>
-                    <p className="text-2xl font-bold">
-                      {Math.round(assessmentResults.reduce((acc, r) => acc + r.avgScore, 0) / assessmentResults.length)}%
-                    </p>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-            <Card>
-              <CardContent className="pt-6">
-                <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-lg bg-blue-500/10 flex items-center justify-center">
-                    <Users className="w-5 h-5 text-blue-500" />
-                  </div>
-                  <div>
-                    <p className="text-sm text-muted-foreground">Total Students</p>
-                    <p className="text-2xl font-bold">
-                      {assessmentResults.reduce((acc, r) => acc + r.totalStudents, 0)}
-                    </p>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-          </div>
 
-          <Card>
-            <CardHeader>
-              <CardTitle>Assessment Results</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="rounded-md border overflow-x-auto">
-                <Table>
-                  <TableHeader>
-                    <TableRow>
-                      <TableHead>Assessment</TableHead>
-                      <TableHead>Subject</TableHead>
-                      <TableHead>Class</TableHead>
-                      <TableHead>Students</TableHead>
-                      <TableHead>Avg Score</TableHead>
-                      <TableHead>Highest</TableHead>
-                      <TableHead>Lowest</TableHead>
-                      <TableHead>Completed</TableHead>
-                      <TableHead>Actions</TableHead>
-                    </TableRow>
-                  </TableHeader>
-                  <TableBody>
-                    {assessmentResults.map((result) => (
-                      <TableRow key={result.id}>
-                        <TableCell className="font-medium">{result.title}</TableCell>
-                        <TableCell>{result.subject}</TableCell>
-                        <TableCell>{result.class}</TableCell>
-                        <TableCell>{result.studentsAttempted}/{result.totalStudents}</TableCell>
-                        <TableCell>
-                          <Badge variant={result.avgScore >= 70 ? 'default' : 'destructive'}>
-                            {result.avgScore}%
-                          </Badge>
-                        </TableCell>
-                        <TableCell className="text-green-600">{result.highest}%</TableCell>
-                        <TableCell className="text-red-600">{result.lowest}%</TableCell>
-                        <TableCell>{result.completed}</TableCell>
-                        <TableCell>
-                          <div className="flex gap-1">
-                            <Button variant="ghost" size="icon">
-                              <Eye className="w-4 h-4" />
-                            </Button>
-                            <Button variant="ghost" size="icon">
-                              <Download className="w-4 h-4" />
-                            </Button>
-                          </div>
-                        </TableCell>
-                      </TableRow>
-                    ))}
-                  </TableBody>
-                </Table>
-              </div>
-            </CardContent>
-          </Card>
+                  {/* Stats */}
+                  <div className="grid grid-cols-4 gap-4 lg:gap-8">
+                    <div className="text-center">
+                      <div className="text-xs text-gray-500 mb-1">Students</div>
+                      <div className="font-semibold">{result.studentsAttempted}/{result.totalStudents}</div>
+                      <Progress value={(result.studentsAttempted / result.totalStudents) * 100} className="h-1.5 mt-1" />
+                    </div>
+                    <div className="text-center">
+                      <div className="text-xs text-gray-500 mb-1">Average</div>
+                      <div className={`font-bold text-lg ${result.avgScore >= 70 ? 'text-emerald-600' : 'text-amber-600'}`}>
+                        {result.avgScore}%
+                      </div>
+                    </div>
+                    <div className="text-center">
+                      <div className="text-xs text-gray-500 mb-1">Highest</div>
+                      <div className="font-semibold text-emerald-600">{result.highest}%</div>
+                    </div>
+                    <div className="text-center">
+                      <div className="text-xs text-gray-500 mb-1">Lowest</div>
+                      <div className="font-semibold text-red-600">{result.lowest}%</div>
+                    </div>
+                  </div>
+
+                  {/* Actions */}
+                  <div className="flex gap-2 lg:flex-shrink-0">
+                    <Button variant="outline" size="sm" className="h-9 rounded-lg gap-1.5">
+                      <Eye className="w-4 h-4" />
+                      View
+                    </Button>
+                    <Button variant="outline" size="sm" className="h-9 rounded-lg gap-1.5">
+                      <Download className="w-4 h-4" />
+                      Export
+                    </Button>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          ))}
         </TabsContent>
       </Tabs>
     </div>

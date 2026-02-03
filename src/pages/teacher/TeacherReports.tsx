@@ -1,7 +1,9 @@
 import { useEffect, useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import TeacherDashboardLayout from '@/components/layout/TeacherDashboardLayout';
+import PageHeader from '@/components/teacher/PageHeader';
 import { useTeacherMode } from '@/contexts/TeacherModeContext';
+import { cn } from '@/lib/utils';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -10,8 +12,9 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Input } from '@/components/ui/input';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Progress } from '@/components/ui/progress';
-import { ArrowLeft, FileText, Download, Users, BarChart3, BookOpen, Calendar } from 'lucide-react';
-import { classStudents, classAnalyticsData } from '@/data/teacherMockData';
+import { Avatar, AvatarFallback } from '@/components/ui/avatar';
+import { FileText, Download, Users, BarChart3, BookOpen, Calendar, AlertTriangle, TrendingDown, MessageSquare } from 'lucide-react';
+import { classStudents, classAnalyticsData, atRiskStudents } from '@/data/teacherMockData';
 import { toast } from 'sonner';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 
@@ -24,7 +27,7 @@ const TeacherReportsContent = () => {
   const getTabFromPath = () => {
     if (location.pathname.includes('class-summary')) return 'class-summary';
     if (location.pathname.includes('subject-performance')) return 'subject-performance';
-    return 'student-reports';
+    return currentMode === 'class_teacher' ? 'class-summary' : 'subject-performance';
   };
   
   const [activeTab, setActiveTab] = useState(getTabFromPath());
@@ -38,29 +41,15 @@ const TeacherReportsContent = () => {
   const handleTabChange = (value: string) => {
     setActiveTab(value);
     const routeMap: Record<string, string> = {
-      'student-reports': '/teacher/reports/students',
       'class-summary': '/teacher/reports/class-summary',
       'subject-performance': '/teacher/reports/subject-performance',
     };
-    navigate(routeMap[value] || '/teacher/reports/students');
+    navigate(routeMap[value] || '/teacher/reports/class-summary');
   };
   
-  const [studentReport, setStudentReport] = useState({
-    studentId: '',
-    reportType: '',
-    dateRange: '',
-  });
   const [classSummary, setClassSummary] = useState({
     dateRange: '',
   });
-
-  const handleGenerateStudentReport = () => {
-    if (!studentReport.studentId || !studentReport.reportType) {
-      toast.error('Please select student and report type');
-      return;
-    }
-    toast.success('Report generated! Download will start shortly.');
-  };
 
   const handleGenerateClassReport = () => {
     toast.success('Class summary report generated!');
@@ -71,136 +60,30 @@ const TeacherReportsContent = () => {
   };
 
   return (
-    <div className="space-y-6">
-      {/* Header */}
-      <div className="flex items-center gap-4">
-        <Button variant="ghost" size="icon" onClick={() => navigate('/teacher')}>
-          <ArrowLeft className="w-5 h-5" />
-        </Button>
-        <div>
-          <h1 className="text-2xl font-bold">Reports</h1>
-          <p className="text-muted-foreground">Generate and export reports</p>
-        </div>
-      </div>
+    <div className="space-y-6 max-w-7xl">
+      <PageHeader
+        title="Reports"
+        subtitle="Generate and export reports"
+        action={
+          <Button variant="outline" size="sm" className="h-8 px-3 text-xs rounded-lg gap-1.5" onClick={handleExportPDF}>
+            <Download className="w-4 h-4" />
+            Export PDF
+          </Button>
+        }
+      />
 
       <Tabs value={activeTab} onValueChange={handleTabChange}>
-        <TabsList className="grid w-full grid-cols-3 lg:w-auto lg:inline-grid">
-          <TabsTrigger value="student-reports">Student Reports</TabsTrigger>
-          <TabsTrigger value="class-summary">Class Summary</TabsTrigger>
+        <TabsList className={cn(
+          "h-8 p-1 rounded-lg bg-gray-100 mb-6",
+          currentMode === 'subject_teacher' ? "inline-flex" : "inline-flex"
+        )}>
+          {currentMode === 'class_teacher' && (
+            <TabsTrigger value="class-summary" className="text-xs px-2.5 py-1.5 h-7 data-[state=active]:bg-white data-[state=active]:shadow-sm rounded-md">Class Summary</TabsTrigger>
+          )}
           {currentMode === 'subject_teacher' && (
-            <TabsTrigger value="subject-performance">Subject Performance</TabsTrigger>
+            <TabsTrigger value="subject-performance" className="text-xs px-2.5 py-1.5 h-7 data-[state=active]:bg-white data-[state=active]:shadow-sm rounded-md">Subject Performance</TabsTrigger>
           )}
         </TabsList>
-
-        {/* Student Reports Tab */}
-        <TabsContent value="student-reports" className="space-y-6">
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <FileText className="w-5 h-5" />
-                Generate Student Report
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                <div className="space-y-2">
-                  <Label>Select Student</Label>
-                  <Select 
-                    value={studentReport.studentId} 
-                    onValueChange={(v) => setStudentReport(prev => ({ ...prev, studentId: v }))}
-                  >
-                    <SelectTrigger>
-                      <SelectValue placeholder="Choose student" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {classStudents.map(student => (
-                        <SelectItem key={student.id} value={student.id}>{student.name}</SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                </div>
-                <div className="space-y-2">
-                  <Label>Report Type</Label>
-                  <Select 
-                    value={studentReport.reportType} 
-                    onValueChange={(v) => setStudentReport(prev => ({ ...prev, reportType: v }))}
-                  >
-                    <SelectTrigger>
-                      <SelectValue placeholder="Select type" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="progress">Progress Report</SelectItem>
-                      <SelectItem value="term">Term Summary</SelectItem>
-                      <SelectItem value="custom">Custom Report</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
-                <div className="space-y-2">
-                  <Label>Date Range</Label>
-                  <Input
-                    type="month"
-                    value={studentReport.dateRange}
-                    onChange={(e) => setStudentReport(prev => ({ ...prev, dateRange: e.target.value }))}
-                  />
-                </div>
-              </div>
-              <div className="flex gap-2">
-                <Button onClick={handleGenerateStudentReport} className="gap-2">
-                  <FileText className="w-4 h-4" />
-                  Generate Report
-                </Button>
-                <Button variant="outline" onClick={handleExportPDF} className="gap-2">
-                  <Download className="w-4 h-4" />
-                  Export as PDF
-                </Button>
-              </div>
-            </CardContent>
-          </Card>
-
-          {/* Sample Report Preview */}
-          {studentReport.studentId && (
-            <Card>
-              <CardHeader>
-                <CardTitle>Report Preview</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="border rounded-lg p-6 bg-muted/20">
-                  <div className="text-center mb-6">
-                    <h2 className="text-xl font-bold">Student Progress Report</h2>
-                    <p className="text-muted-foreground">
-                      {classStudents.find(s => s.id === studentReport.studentId)?.name} • Class 10-A
-                    </p>
-                  </div>
-                  <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
-                    <div className="text-center p-4 bg-background rounded-lg">
-                      <p className="text-2xl font-bold text-primary">
-                        {classStudents.find(s => s.id === studentReport.studentId)?.overallScore}%
-                      </p>
-                      <p className="text-sm text-muted-foreground">Overall Score</p>
-                    </div>
-                    <div className="text-center p-4 bg-background rounded-lg">
-                      <p className="text-2xl font-bold">#{classStudents.find(s => s.id === studentReport.studentId)?.rank}</p>
-                      <p className="text-sm text-muted-foreground">Class Rank</p>
-                    </div>
-                    <div className="text-center p-4 bg-background rounded-lg">
-                      <p className="text-2xl font-bold text-green-500">95%</p>
-                      <p className="text-sm text-muted-foreground">Attendance</p>
-                    </div>
-                    <div className="text-center p-4 bg-background rounded-lg">
-                      <p className="text-2xl font-bold">
-                        {classStudents.find(s => s.id === studentReport.studentId)?.behaviour}
-                      </p>
-                      <p className="text-sm text-muted-foreground">Behaviour</p>
-                    </div>
-                  </div>
-                  <p className="text-sm text-muted-foreground text-center">
-                    Full report will include subject-wise breakdown, attendance details, and teacher remarks.
-                  </p>
-                </div>
-              </CardContent>
-            </Card>
-          )}
-        </TabsContent>
 
         {/* Class Summary Tab */}
         <TabsContent value="class-summary" className="space-y-6">
@@ -223,11 +106,11 @@ const TeacherReportsContent = () => {
                 </div>
               </div>
               <div className="flex gap-2">
-                <Button onClick={handleGenerateClassReport} className="gap-2">
+                <Button size="sm" onClick={handleGenerateClassReport} className="gap-1.5 h-8 text-xs">
                   <FileText className="w-4 h-4" />
                   Generate Summary
                 </Button>
-                <Button variant="outline" onClick={handleExportPDF} className="gap-2">
+                <Button size="sm" variant="outline" onClick={handleExportPDF} className="gap-1.5 h-8 text-xs">
                   <Download className="w-4 h-4" />
                   Export
                 </Button>
@@ -273,63 +156,85 @@ const TeacherReportsContent = () => {
               </CardContent>
             </Card>
 
-            <Card>
+            <Card className="rounded-xl shadow-sm border-gray-100">
               <CardHeader>
-                <CardTitle>Subject-wise Breakdown</CardTitle>
+                <CardTitle className="text-base">Subject-wise Breakdown</CardTitle>
               </CardHeader>
               <CardContent>
-                <div className="h-48">
+                <div className="h-48 rounded-lg bg-gradient-to-b from-gray-50/50 to-transparent p-4">
                   <ResponsiveContainer width="100%" height="100%">
-                    <BarChart data={classAnalyticsData.subjectPerformance}>
-                      <CartesianGrid strokeDasharray="3 3" />
-                      <XAxis dataKey="subject" tick={{ fontSize: 12 }} />
-                      <YAxis domain={[0, 100]} />
-                      <Tooltip />
-                      <Bar dataKey="avgScore" fill="hsl(var(--primary))" radius={[4, 4, 0, 0]} />
+                    <BarChart data={classAnalyticsData.subjectPerformance} margin={{ top: 5, right: 5, left: -15, bottom: 0 }}>
+                      <defs>
+                        <linearGradient id="reportsBarGrad" x1="0" y1="0" x2="0" y2="1">
+                          <stop offset="0%" stopColor="#8b5cf6" />
+                          <stop offset="100%" stopColor="#a78bfa" stopOpacity={0.85} />
+                        </linearGradient>
+                      </defs>
+                      <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" vertical={false} />
+                      <XAxis dataKey="subject" tick={{ fontSize: 11, fill: '#6b7280' }} />
+                      <YAxis domain={[0, 100]} tick={{ fontSize: 11 }} axisLine={false} tickLine={false} />
+                      <Tooltip contentStyle={{ borderRadius: '12px', border: '1px solid #e5e7eb', boxShadow: '0 4px 12px rgba(0,0,0,0.08)' }} formatter={(v: number) => [`${v}%`, 'Score']} />
+                      <Bar dataKey="avgScore" fill="url(#reportsBarGrad)" radius={[6, 6, 0, 0]} maxBarSize={36} />
                     </BarChart>
                   </ResponsiveContainer>
                 </div>
               </CardContent>
             </Card>
 
-            <Card>
-              <CardHeader>
-                <CardTitle>Top Performers</CardTitle>
+            <Card className="rounded-xl shadow-sm border-gray-100">
+              <CardHeader className="py-3">
+                <CardTitle className="text-sm font-semibold">Top Performers</CardTitle>
               </CardHeader>
-              <CardContent>
-                <div className="space-y-3">
+              <CardContent className="pt-0 pb-3">
+                <div className="space-y-2 max-h-[180px] overflow-y-auto">
                   {classStudents.slice(0, 5).map((student, index) => (
-                    <div key={student.id} className="flex items-center justify-between">
-                      <div className="flex items-center gap-3">
-                        <Badge variant={index === 0 ? 'default' : 'outline'}>#{index + 1}</Badge>
-                        <span className="font-medium">{student.name}</span>
+                    <div key={student.id} className="flex items-center justify-between py-1.5">
+                      <div className="flex items-center gap-2">
+                        <Badge variant={index === 0 ? 'default' : 'outline'} className="h-5 px-1.5 text-xs">#{index + 1}</Badge>
+                        <span className="font-medium text-sm">{student.name}</span>
                       </div>
-                      <span className="text-sm font-semibold">{student.overallScore}%</span>
+                      <span className="text-xs font-semibold">{student.overallScore}%</span>
                     </div>
                   ))}
                 </div>
               </CardContent>
             </Card>
 
-            <Card>
-              <CardHeader>
-                <CardTitle>Attendance Summary</CardTitle>
+            {/* At-Risk Students Section */}
+            <Card className="rounded-xl shadow-sm border-gray-100">
+              <CardHeader className="py-3">
+                <CardTitle className="flex items-center gap-2 text-sm font-semibold">
+                  <AlertTriangle className="w-4 h-4 text-red-500" />
+                  At-Risk Students ({atRiskStudents.length})
+                </CardTitle>
+                <p className="text-xs text-muted-foreground">Students needing immediate attention</p>
               </CardHeader>
-              <CardContent className="space-y-4">
-                <div className="flex items-center justify-between">
-                  <span>Average Attendance</span>
-                  <span className="font-bold">92%</span>
-                </div>
-                <Progress value={92} />
-                <div className="grid grid-cols-2 gap-4 pt-4">
-                  <div className="text-center p-3 bg-muted/30 rounded-lg">
-                    <p className="text-xl font-bold text-green-500">28</p>
-                    <p className="text-sm text-muted-foreground">Regular</p>
-                  </div>
-                  <div className="text-center p-3 bg-muted/30 rounded-lg">
-                    <p className="text-xl font-bold text-red-500">4</p>
-                    <p className="text-sm text-muted-foreground">Irregular</p>
-                  </div>
+              <CardContent className="py-0 pb-3">
+                <div className="space-y-2 max-h-[180px] overflow-y-auto">
+                  {atRiskStudents.map((student) => (
+                    <div key={student.id} className="flex items-center gap-3 p-2 rounded-lg bg-red-50/50 border border-red-100">
+                      <Avatar className="w-9 h-9 border border-red-100 flex-shrink-0">
+                        <AvatarFallback className="bg-red-100 text-red-600 font-semibold text-xs">
+                          {student.avatar}
+                        </AvatarFallback>
+                      </Avatar>
+                      <div className="flex-1 min-w-0">
+                        <div className="flex items-center justify-between gap-1">
+                          <p className="font-semibold text-gray-900 text-sm truncate">{student.name}</p>
+                          <Badge variant="destructive" className="text-[10px] h-5 px-1.5">{student.overallScore}%</Badge>
+                        </div>
+                        <div className="flex flex-wrap gap-1.5 mt-0.5 text-[11px] text-gray-600">
+                          <span className="text-red-700"><TrendingDown className="w-2.5 h-2.5 inline mr-0.5" />{student.trend}</span>
+                          <span>{student.attendance}% attendance</span>
+                          <span>Weak: {student.weakestSubject}</span>
+                        </div>
+                        <Button size="sm" variant="outline" className="h-6 text-[10px] rounded-md mt-1.5 px-2" onClick={() => navigate('/teacher/communication')}>
+                          <MessageSquare className="w-2.5 h-2.5 mr-1" />
+                          Contact
+                        </Button>
+                      </div>
+                    </div>
+                  ))}
                 </div>
               </CardContent>
             </Card>
@@ -366,11 +271,11 @@ const TeacherReportsContent = () => {
                   </div>
                 </div>
                 <div className="flex gap-2">
-                  <Button className="gap-2">
+                  <Button size="sm" className="gap-1.5 h-8 text-xs">
                     <BarChart3 className="w-4 h-4" />
                     Generate Report
                   </Button>
-                  <Button variant="outline" className="gap-2">
+                  <Button size="sm" variant="outline" className="gap-1.5 h-8 text-xs">
                     <Download className="w-4 h-4" />
                     Export
                   </Button>
@@ -378,24 +283,30 @@ const TeacherReportsContent = () => {
               </CardContent>
             </Card>
 
-            <Card>
+            <Card className="rounded-xl shadow-sm border-gray-100">
               <CardHeader>
-                <CardTitle>Class Comparison - Mathematics</CardTitle>
+                <CardTitle className="text-base">Class Comparison - Mathematics</CardTitle>
               </CardHeader>
               <CardContent>
-                <div className="h-64">
+                <div className="h-64 rounded-lg bg-gradient-to-b from-gray-50/50 to-transparent p-4">
                   <ResponsiveContainer width="100%" height="100%">
                     <BarChart data={[
                       { class: 'Class 9-A', avgScore: 72 },
                       { class: 'Class 9-B', avgScore: 75 },
                       { class: 'Class 10-A', avgScore: 78 },
                       { class: 'Class 10-B', avgScore: 70 },
-                    ]}>
-                      <CartesianGrid strokeDasharray="3 3" />
-                      <XAxis dataKey="class" />
-                      <YAxis domain={[0, 100]} />
-                      <Tooltip />
-                      <Bar dataKey="avgScore" fill="hsl(var(--primary))" radius={[4, 4, 0, 0]} />
+                    ]} margin={{ top: 10, right: 10, left: -10, bottom: 0 }}>
+                      <defs>
+                        <linearGradient id="subjectPerfBarGrad" x1="0" y1="0" x2="0" y2="1">
+                          <stop offset="0%" stopColor="#8b5cf6" />
+                          <stop offset="100%" stopColor="#a78bfa" stopOpacity={0.85} />
+                        </linearGradient>
+                      </defs>
+                      <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" vertical={false} />
+                      <XAxis dataKey="class" tick={{ fontSize: 11, fill: '#6b7280' }} axisLine={{ stroke: '#e5e7eb' }} />
+                      <YAxis domain={[0, 100]} tick={{ fontSize: 11 }} axisLine={false} tickLine={false} />
+                      <Tooltip contentStyle={{ borderRadius: '12px', border: '1px solid #e5e7eb', boxShadow: '0 4px 12px rgba(0,0,0,0.08)' }} formatter={(v: number) => [`${v}%`, 'Avg Score']} />
+                      <Bar dataKey="avgScore" fill="url(#subjectPerfBarGrad)" radius={[8, 8, 0, 0]} maxBarSize={56} />
                     </BarChart>
                   </ResponsiveContainer>
                 </div>

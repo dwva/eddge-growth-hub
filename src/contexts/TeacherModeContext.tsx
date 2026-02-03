@@ -1,6 +1,18 @@
-import React, { createContext, useContext, useState, ReactNode } from 'react';
+import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 
 type TeacherMode = 'class_teacher' | 'subject_teacher';
+
+const STORAGE_KEY = 'eddge_teacher_mode';
+
+function getStoredMode(): TeacherMode {
+  try {
+    const stored = localStorage.getItem(STORAGE_KEY);
+    if (stored === 'class_teacher' || stored === 'subject_teacher') return stored;
+  } catch {
+    // ignore
+  }
+  return 'class_teacher';
+}
 
 interface TeacherModeContextType {
   currentMode: TeacherMode;
@@ -10,7 +22,15 @@ interface TeacherModeContextType {
 const TeacherModeContext = createContext<TeacherModeContextType | undefined>(undefined);
 
 export const TeacherModeProvider = ({ children }: { children: ReactNode }) => {
-  const [currentMode, setCurrentMode] = useState<TeacherMode>('class_teacher');
+  const [currentMode, setCurrentMode] = useState<TeacherMode>(getStoredMode);
+
+  useEffect(() => {
+    try {
+      localStorage.setItem(STORAGE_KEY, currentMode);
+    } catch {
+      // ignore
+    }
+  }, [currentMode]);
 
   return (
     <TeacherModeContext.Provider value={{ currentMode, setCurrentMode }}>

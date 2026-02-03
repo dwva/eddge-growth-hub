@@ -1,15 +1,16 @@
 import { useState } from 'react';
-import { useNavigate, useSearchParams } from 'react-router-dom';
 import TeacherDashboardLayout from '@/components/layout/TeacherDashboardLayout';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { ScrollArea } from '@/components/ui/scroll-area';
-import { Search, MessageCircle, Send, Paperclip, Smile, Check, CheckCheck, Plus } from 'lucide-react';
-import { parentConversations, studentConversations } from '@/data/teacherMockData';
+import { 
+  Search, MessageCircle, Send, Paperclip, Smile, Check, CheckCheck, 
+  Plus, Phone, Video, MoreVertical
+} from 'lucide-react';
+import { parentConversations } from '@/data/teacherMockData';
 
 interface Message {
   id: string;
@@ -24,30 +25,23 @@ const mockMessages: Message[] = [
   { id: 'm2', sender: 'teacher', content: 'Good morning! Of course, John has been doing well. His recent test scores have improved significantly.', timestamp: '9:35 AM', read: true },
   { id: 'm3', sender: 'other', content: 'That\'s great to hear! We\'ve been practicing at home as well.', timestamp: '9:40 AM', read: true },
   { id: 'm4', sender: 'teacher', content: 'That definitely helps. I\'d suggest focusing on geometry as that\'s an area where he can improve further.', timestamp: '9:45 AM', read: true },
-  { id: 'm5', sender: 'other', content: 'Thank you for the update on John\'s progress.', timestamp: '10:30 AM', read: true },
+  { id: 'm5', sender: 'other', content: 'Thank you for the update. We\'ll focus on that.', timestamp: '10:30 AM', read: true },
 ];
 
 const TeacherCommunicationContent = () => {
-  const navigate = useNavigate();
-  const [searchParams] = useSearchParams();
-  const isStudentTab = searchParams.get('tab') === 'students';
-  const [activeTab, setActiveTab] = useState(isStudentTab ? 'students' : 'parents');
   const [selectedConversation, setSelectedConversation] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState('');
   const [newMessage, setNewMessage] = useState('');
   const [messages, setMessages] = useState<Message[]>(mockMessages);
 
-  const conversations = activeTab === 'parents' ? parentConversations : studentConversations;
-  const filteredConversations = conversations.filter(c =>
+  const filteredConversations = parentConversations.filter(c =>
     c.studentName.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    ('parentName' in c && (c as typeof parentConversations[0]).parentName.toLowerCase().includes(searchQuery.toLowerCase()))
+    (c as typeof parentConversations[0]).parentName.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
-  const currentConversation = conversations.find(c => c.id === selectedConversation);
+  const currentConversation = parentConversations.find(c => c.id === selectedConversation);
   const displayName = currentConversation 
-    ? (activeTab === 'parents' && 'parentName' in currentConversation 
-        ? (currentConversation as typeof parentConversations[0]).parentName 
-        : currentConversation.studentName)
+    ? (currentConversation as typeof parentConversations[0]).parentName 
     : '';
 
   const handleSend = () => {
@@ -65,182 +59,201 @@ const TeacherCommunicationContent = () => {
     setNewMessage('');
   };
 
+  const totalUnread = parentConversations.reduce((acc, c) => acc + c.unread, 0);
+
   return (
-    <div className="space-y-6">
-      {/* Header */}
-      <div>
-        <h1 className="text-2xl font-bold">Communication</h1>
-        <p className="text-muted-foreground">Message parents and students</p>
+    <div className="flex flex-col h-[calc(100vh-8rem)] min-h-[500px]">
+      {/* Page Header */}
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 pb-4">
+        <div className="min-w-0">
+          <h1 className="text-xl sm:text-2xl font-bold text-gray-900 truncate">Parent Messages</h1>
+          <p className="text-sm text-gray-500 mt-0.5">
+            Communicate with parents
+            {totalUnread > 0 && <span className="ml-1 text-primary font-medium">• {totalUnread} unread</span>}
+          </p>
+        </div>
+        <Button size="sm" className="gap-2 h-9 rounded-xl shrink-0">
+          <Plus className="w-4 h-4" />
+          New Message
+        </Button>
       </div>
 
-      <Tabs value={activeTab} onValueChange={(v) => { setActiveTab(v); setSelectedConversation(null); }}>
-        <TabsList>
-          <TabsTrigger value="parents">Parent Messages</TabsTrigger>
-          <TabsTrigger value="students">Student Messages</TabsTrigger>
-        </TabsList>
+      {/* Two-column layout: Conversation list + Chat */}
+      <div className="flex-1 grid grid-cols-1 lg:grid-cols-12 gap-4 min-h-0 overflow-hidden">
+        {/* Conversation List - responsive: full width on mobile, 4 cols on lg */}
+        <Card className="lg:col-span-4 flex flex-col rounded-2xl shadow-sm border-gray-100 overflow-hidden min-h-[280px] lg:min-h-0">
+          <div className="p-3 sm:p-4 border-b border-gray-100 shrink-0">
+            <div className="relative">
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+              <Input
+                placeholder="Search parents..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="pl-10 h-10 rounded-xl border-gray-200 bg-gray-50 focus:bg-white"
+              />
+            </div>
+          </div>
+          <ScrollArea className="flex-1 min-h-0">
+            <div className="p-2 space-y-1">
+              {filteredConversations.map((conv) => (
+                <button
+                  key={conv.id}
+                  onClick={() => setSelectedConversation(conv.id)}
+                  className={`w-full flex items-start gap-3 p-3 rounded-xl transition-all text-left ${
+                    selectedConversation === conv.id 
+                      ? 'bg-primary/10 border border-primary/20' 
+                      : 'hover:bg-gray-50 border border-transparent'
+                  }`}
+                >
+                  <div className="relative flex-shrink-0">
+                    <Avatar className="w-11 h-11 border-2 border-white shadow-sm">
+                      <AvatarFallback className="bg-gradient-to-br from-primary/20 to-primary/10 text-primary font-semibold text-sm">
+                        {conv.avatar}
+                      </AvatarFallback>
+                    </Avatar>
+                    {conv.online && (
+                      <span className="absolute bottom-0 right-0 w-3 h-3 bg-emerald-500 rounded-full border-2 border-white" />
+                    )}
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-center justify-between gap-2">
+                      <p className="font-semibold text-gray-900 truncate text-sm">
+                        {(conv as typeof parentConversations[0]).parentName}
+                      </p>
+                      <span className="text-xs text-gray-400 flex-shrink-0">{conv.timestamp}</span>
+                    </div>
+                    <p className="text-xs text-gray-500 mt-0.5 truncate">{conv.studentName} • {conv.studentClass}</p>
+                    <p className="text-sm text-gray-600 truncate mt-1">{conv.lastMessage}</p>
+                  </div>
+                  {conv.unread > 0 && (
+                    <Badge className="bg-primary text-white text-xs h-5 px-2 rounded-full flex-shrink-0">
+                      {conv.unread}
+                    </Badge>
+                  )}
+                </button>
+              ))}
+            </div>
+          </ScrollArea>
+        </Card>
 
-        <TabsContent value={activeTab} className="mt-4">
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 h-[calc(100vh-280px)]">
-            {/* Conversation List */}
-            <Card className="lg:col-span-1 flex flex-col">
-              <CardHeader className="pb-3">
-                <div className="flex items-center justify-between">
-                  <CardTitle className="text-lg">Messages</CardTitle>
-                  <Button size="sm" variant="outline" className="gap-1">
-                    <Plus className="w-4 h-4" />
-                    New
-                  </Button>
+        {/* Chat Area - 8 cols on lg */}
+        <Card className="lg:col-span-8 flex flex-col rounded-2xl shadow-sm border-gray-100 overflow-hidden min-h-[400px] lg:min-h-0">
+          {selectedConversation && currentConversation ? (
+            <>
+              <div className="p-3 sm:p-4 border-b border-gray-100 bg-white shrink-0">
+                <div className="flex items-center justify-between gap-2">
+                  <div className="flex items-center gap-3 min-w-0">
+                    <div className="relative flex-shrink-0">
+                      <Avatar className="w-10 h-10 sm:w-11 sm:h-11 border-2 border-white shadow-sm">
+                        <AvatarFallback className="bg-gradient-to-br from-primary/20 to-primary/10 text-primary font-semibold text-sm">
+                          {currentConversation.avatar}
+                        </AvatarFallback>
+                      </Avatar>
+                      {currentConversation.online && (
+                        <span className="absolute bottom-0 right-0 w-2.5 h-2.5 sm:w-3 sm:h-3 bg-emerald-500 rounded-full border-2 border-white" />
+                      )}
+                    </div>
+                    <div className="min-w-0">
+                      <p className="font-semibold text-gray-900 truncate text-sm sm:text-base">{displayName}</p>
+                      <p className="text-xs text-gray-500 truncate">
+                        {currentConversation.studentName} • {currentConversation.online ? 
+                          <span className="text-emerald-600">Online</span> : 
+                          'Last seen recently'}
+                      </p>
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-1 flex-shrink-0">
+                    <Button variant="ghost" size="icon" className="h-8 w-8 sm:h-9 sm:w-9 rounded-lg">
+                      <Phone className="w-4 h-4 text-gray-500" />
+                    </Button>
+                    <Button variant="ghost" size="icon" className="h-8 w-8 sm:h-9 sm:w-9 rounded-lg">
+                      <Video className="w-4 h-4 text-gray-500" />
+                    </Button>
+                    <Button variant="ghost" size="icon" className="h-8 w-8 sm:h-9 sm:w-9 rounded-lg">
+                      <MoreVertical className="w-4 h-4 text-gray-500" />
+                    </Button>
+                  </div>
                 </div>
-                <div className="relative mt-2">
-                  <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-                  <Input
-                    placeholder={`Search ${activeTab}...`}
-                    value={searchQuery}
-                    onChange={(e) => setSearchQuery(e.target.value)}
-                    className="pl-9"
-                  />
-                </div>
-              </CardHeader>
-              <CardContent className="flex-1 p-0">
-                <ScrollArea className="h-full">
-                  <div className="space-y-1 p-3">
-                    {filteredConversations.map((conv) => (
-                      <button
-                        key={conv.id}
-                        onClick={() => setSelectedConversation(conv.id)}
-                        className={`w-full flex items-start gap-3 p-3 rounded-lg transition-colors text-left ${
-                          selectedConversation === conv.id ? 'bg-primary/10' : 'hover:bg-muted/50'
+              </div>
+
+              <ScrollArea className="flex-1 min-h-0 p-4 bg-gray-50/50">
+                <div className="space-y-4 max-w-2xl">
+                  <div className="flex items-center gap-4 py-2">
+                    <div className="flex-1 h-px bg-gray-200" />
+                    <span className="text-xs text-gray-400 px-2">Today</span>
+                    <div className="flex-1 h-px bg-gray-200" />
+                  </div>
+
+                  {messages.map((msg) => (
+                    <div
+                      key={msg.id}
+                      className={`flex ${msg.sender === 'teacher' ? 'justify-end' : 'justify-start'}`}
+                    >
+                      <div
+                        className={`max-w-[85%] sm:max-w-[75%] rounded-2xl px-3 py-2 sm:px-4 sm:py-3 ${
+                          msg.sender === 'teacher'
+                            ? 'bg-primary text-white rounded-br-md'
+                            : 'bg-white border border-gray-100 shadow-sm rounded-bl-md'
                         }`}
                       >
-                        <div className="relative">
-                          <Avatar className="w-10 h-10">
-                            <AvatarFallback className="bg-primary/10 text-primary">
-                              {conv.avatar}
-                            </AvatarFallback>
-                          </Avatar>
-                          {conv.online && (
-                            <span className="absolute bottom-0 right-0 w-3 h-3 bg-green-500 rounded-full border-2 border-background" />
+                        <p className="text-sm leading-relaxed break-words">{msg.content}</p>
+                        <div className={`flex items-center gap-1.5 mt-1.5 ${msg.sender === 'teacher' ? 'justify-end' : ''}`}>
+                          <span className={`text-[11px] ${msg.sender === 'teacher' ? 'text-primary-foreground/70' : 'text-gray-400'}`}>
+                            {msg.timestamp}
+                          </span>
+                          {msg.sender === 'teacher' && (
+                            msg.read 
+                              ? <CheckCheck className="w-3.5 h-3.5 text-primary-foreground/70" />
+                              : <Check className="w-3.5 h-3.5 text-primary-foreground/70" />
                           )}
                         </div>
-                        <div className="flex-1 min-w-0">
-                          <div className="flex items-center justify-between">
-                            <p className="font-medium text-sm truncate">
-                              {activeTab === 'parents' && 'parentName' in conv ? (conv as typeof parentConversations[0]).parentName : conv.studentName}
-                            </p>
-                            <span className="text-xs text-muted-foreground">{conv.timestamp}</span>
-                          </div>
-                          <p className="text-xs text-muted-foreground truncate">{conv.studentName} • {conv.studentClass}</p>
-                          <p className="text-sm text-muted-foreground truncate mt-0.5">{conv.lastMessage}</p>
-                        </div>
-                        {conv.unread > 0 && (
-                          <Badge className="bg-green-500 text-white text-xs px-1.5 py-0.5">{conv.unread}</Badge>
-                        )}
-                      </button>
-                    ))}
-                  </div>
-                </ScrollArea>
-              </CardContent>
-            </Card>
-
-            {/* Chat Area */}
-            <Card className="lg:col-span-2 flex flex-col">
-              {selectedConversation && currentConversation ? (
-                <>
-                  {/* Chat Header */}
-                  <CardHeader className="border-b pb-4">
-                    <div className="flex items-center gap-3">
-                      <div className="relative">
-                        <Avatar className="w-10 h-10">
-                          <AvatarFallback className="bg-primary/10 text-primary">
-                            {currentConversation.avatar}
-                          </AvatarFallback>
-                        </Avatar>
-                        {currentConversation.online && (
-                          <span className="absolute bottom-0 right-0 w-3 h-3 bg-green-500 rounded-full border-2 border-background" />
-                        )}
-                      </div>
-                      <div>
-                        <p className="font-semibold">{displayName}</p>
-                        <p className="text-sm text-muted-foreground">
-                          {currentConversation.studentName} • {currentConversation.studentClass}
-                        </p>
                       </div>
                     </div>
-                  </CardHeader>
-
-                  {/* Messages */}
-                  <CardContent className="flex-1 p-0 overflow-hidden">
-                    <ScrollArea className="h-full p-4">
-                      <div className="space-y-4">
-                        {messages.map((msg) => (
-                          <div
-                            key={msg.id}
-                            className={`flex ${msg.sender === 'teacher' ? 'justify-end' : 'justify-start'}`}
-                          >
-                            <div
-                              className={`max-w-[70%] rounded-lg px-4 py-2 ${
-                                msg.sender === 'teacher'
-                                  ? 'bg-green-500 text-white'
-                                  : 'bg-muted'
-                              }`}
-                            >
-                              <p className="text-sm">{msg.content}</p>
-                              <div className={`flex items-center gap-1 mt-1 ${
-                                msg.sender === 'teacher' ? 'justify-end' : ''
-                              }`}>
-                                <span className={`text-xs ${
-                                  msg.sender === 'teacher' ? 'text-green-100' : 'text-muted-foreground'
-                                }`}>
-                                  {msg.timestamp}
-                                </span>
-                                {msg.sender === 'teacher' && (
-                                  msg.read 
-                                    ? <CheckCheck className="w-3.5 h-3.5 text-green-100" />
-                                    : <Check className="w-3.5 h-3.5 text-green-100" />
-                                )}
-                              </div>
-                            </div>
-                          </div>
-                        ))}
-                      </div>
-                    </ScrollArea>
-                  </CardContent>
-
-                  {/* Message Input */}
-                  <div className="p-4 border-t">
-                    <div className="flex items-center gap-2">
-                      <Button variant="ghost" size="icon">
-                        <Paperclip className="w-5 h-5 text-muted-foreground" />
-                      </Button>
-                      <Button variant="ghost" size="icon">
-                        <Smile className="w-5 h-5 text-muted-foreground" />
-                      </Button>
-                      <Input
-                        placeholder="Type a message..."
-                        value={newMessage}
-                        onChange={(e) => setNewMessage(e.target.value)}
-                        onKeyDown={(e) => e.key === 'Enter' && handleSend()}
-                        className="flex-1"
-                      />
-                      <Button onClick={handleSend} className="bg-green-500 hover:bg-green-600">
-                        <Send className="w-4 h-4" />
-                      </Button>
-                    </div>
-                  </div>
-                </>
-              ) : (
-                <div className="flex-1 flex flex-col items-center justify-center text-center p-8">
-                  <MessageCircle className="w-16 h-16 text-muted-foreground mb-4" />
-                  <h3 className="text-lg font-medium mb-2">Select a Conversation</h3>
-                  <p className="text-muted-foreground">
-                    Choose a conversation from the list to start messaging
-                  </p>
+                  ))}
                 </div>
-              )}
-            </Card>
-          </div>
-        </TabsContent>
-      </Tabs>
+              </ScrollArea>
+
+              <div className="p-3 sm:p-4 border-t border-gray-100 bg-white shrink-0">
+                <div className="flex items-center gap-2 sm:gap-3">
+                  <Button variant="ghost" size="icon" className="h-9 w-9 sm:h-10 sm:w-10 rounded-xl flex-shrink-0">
+                    <Paperclip className="w-4 h-4 sm:w-5 sm:h-5 text-gray-500" />
+                  </Button>
+                  <div className="flex-1 min-w-0 relative">
+                    <Input
+                      placeholder="Type a message..."
+                      value={newMessage}
+                      onChange={(e) => setNewMessage(e.target.value)}
+                      onKeyDown={(e) => e.key === 'Enter' && handleSend()}
+                      className="pr-10 sm:pr-12 h-10 sm:h-11 rounded-xl border-gray-200 bg-gray-50 focus:bg-white"
+                    />
+                    <Button variant="ghost" size="icon" className="absolute right-1 top-1/2 -translate-y-1/2 h-8 w-8 rounded-lg">
+                      <Smile className="w-4 h-4 sm:w-5 sm:h-5 text-gray-400" />
+                    </Button>
+                  </div>
+                  <Button 
+                    onClick={handleSend} 
+                    size="icon"
+                    className="h-10 w-10 sm:h-11 sm:w-11 rounded-xl flex-shrink-0"
+                    disabled={!newMessage.trim()}
+                  >
+                    <Send className="w-4 h-4 sm:w-5 sm:h-5" />
+                  </Button>
+                </div>
+              </div>
+            </>
+          ) : (
+            <div className="flex-1 flex flex-col items-center justify-center text-center p-6 sm:p-8 bg-gray-50/50">
+              <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-2xl bg-gray-100 flex items-center justify-center mb-4">
+                <MessageCircle className="w-8 h-8 sm:w-10 sm:h-10 text-gray-400" />
+              </div>
+              <h3 className="text-base sm:text-lg font-semibold text-gray-900 mb-2">Select a Conversation</h3>
+              <p className="text-gray-500 text-sm max-w-xs">
+                Choose a parent from the list to start messaging
+              </p>
+            </div>
+          )}
+        </Card>
+      </div>
     </div>
   );
 };

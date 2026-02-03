@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import TeacherDashboardLayout from '@/components/layout/TeacherDashboardLayout';
+import PageHeader from '@/components/teacher/PageHeader';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
@@ -9,7 +10,8 @@ import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
-import { ArrowLeft, Plus, Calendar, Clock, User, CheckCircle, XCircle, RefreshCw } from 'lucide-react';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Plus, Calendar, Clock, User, CheckCircle, XCircle, RefreshCw, ChevronLeft, ChevronRight } from 'lucide-react';
 import { meetings as mockMeetings, classStudents } from '@/data/teacherMockData';
 import { toast } from 'sonner';
 
@@ -26,17 +28,17 @@ const TeacherMeetingsContent = () => {
     notes: '',
   });
 
-  // Get current date info for calendar
+  // Calendar state
+  const [viewDate, setViewDate] = useState(new Date());
   const today = new Date();
-  const currentMonth = today.toLocaleString('default', { month: 'long', year: 'numeric' });
-  
-  // Generate days for calendar (simplified)
+  const currentMonth = viewDate.toLocaleString('default', { month: 'long', year: 'numeric' });
+
   const getDaysInMonth = () => {
-    const year = today.getFullYear();
-    const month = today.getMonth();
+    const year = viewDate.getFullYear();
+    const month = viewDate.getMonth();
     const firstDay = new Date(year, month, 1).getDay();
     const daysInMonth = new Date(year, month + 1, 0).getDate();
-    
+
     const days = [];
     for (let i = 0; i < firstDay; i++) {
       days.push(null);
@@ -48,11 +50,20 @@ const TeacherMeetingsContent = () => {
   };
 
   const days = getDaysInMonth();
+  const isToday = (day: number | null) =>
+    day !== null &&
+    viewDate.getFullYear() === today.getFullYear() &&
+    viewDate.getMonth() === today.getMonth() &&
+    day === today.getDate();
 
   const getMeetingsForDay = (day: number) => {
-    const dateStr = `2026-02-${day.toString().padStart(2, '0')}`;
+    const month = (viewDate.getMonth() + 1).toString().padStart(2, '0');
+    const dateStr = `${viewDate.getFullYear()}-${month}-${day.toString().padStart(2, '0')}`;
     return meetings.filter(m => m.date === dateStr);
   };
+
+  const prevMonth = () => setViewDate(new Date(viewDate.getFullYear(), viewDate.getMonth() - 1));
+  const nextMonth = () => setViewDate(new Date(viewDate.getFullYear(), viewDate.getMonth() + 1));
 
   const handleSchedule = () => {
     const student = classStudents.find(s => s.id === formData.studentId);
@@ -89,25 +100,18 @@ const TeacherMeetingsContent = () => {
   };
 
   return (
-    <div className="space-y-6">
-      {/* Header */}
-      <div className="flex items-center justify-between">
-        <div className="flex items-center gap-4">
-          <Button variant="ghost" size="icon" onClick={() => navigate('/teacher')}>
-            <ArrowLeft className="w-5 h-5" />
-          </Button>
-          <div>
-            <h1 className="text-2xl font-bold">PTM Scheduling</h1>
-            <p className="text-muted-foreground">Schedule and manage parent-teacher meetings</p>
-          </div>
-        </div>
-        <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-          <DialogTrigger asChild>
-            <Button className="gap-2">
-              <Plus className="w-4 h-4" />
-              Schedule Meeting
-            </Button>
-          </DialogTrigger>
+    <div className="space-y-6 max-w-7xl">
+      <PageHeader
+        title="PTM Scheduling"
+        subtitle="Schedule and manage parent-teacher meetings"
+        action={
+          <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+            <DialogTrigger asChild>
+              <Button size="sm" className="gap-1.5 h-8 px-3 text-xs rounded-lg">
+                <Plus className="w-3.5 h-3.5" />
+                Schedule Meeting
+              </Button>
+            </DialogTrigger>
           <DialogContent>
             <DialogHeader>
               <DialogTitle>Schedule New Meeting</DialogTitle>
@@ -183,112 +187,202 @@ const TeacherMeetingsContent = () => {
                   rows={2}
                 />
               </div>
-              <Button onClick={handleSchedule} className="w-full">Schedule Meeting</Button>
+              <Button size="sm" onClick={handleSchedule} className="w-full h-8 text-xs">Schedule Meeting</Button>
             </div>
           </DialogContent>
         </Dialog>
-      </div>
+        }
+      />
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        {/* Calendar View */}
-        <Card className="lg:col-span-2">
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <Calendar className="w-5 h-5" />
-              {currentMonth}
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="grid grid-cols-7 gap-1 text-center">
-              {['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].map(day => (
-                <div key={day} className="text-sm font-medium text-muted-foreground py-2">{day}</div>
-              ))}
-              {days.map((day, index) => (
-                <div
-                  key={index}
-                  className={`p-2 min-h-[80px] border rounded-lg ${
-                    day === today.getDate() ? 'border-primary bg-primary/5' : 'border-transparent'
-                  } ${day ? 'hover:bg-muted/50' : ''}`}
-                >
-                  {day && (
-                    <>
-                      <span className={`text-sm ${day === today.getDate() ? 'font-bold text-primary' : ''}`}>
-                        {day}
-                      </span>
-                      <div className="space-y-1 mt-1">
-                        {getMeetingsForDay(day).slice(0, 2).map(meeting => (
-                          <div
-                            key={meeting.id}
-                            className={`text-xs px-1 py-0.5 rounded truncate ${
-                              meeting.status === 'confirmed' ? 'bg-green-100 text-green-700' : 'bg-yellow-100 text-yellow-700'
-                            }`}
-                          >
-                            {meeting.time}
-                          </div>
-                        ))}
-                        {getMeetingsForDay(day).length > 2 && (
-                          <div className="text-xs text-muted-foreground">
-                            +{getMeetingsForDay(day).length - 2} more
-                          </div>
-                        )}
-                      </div>
-                    </>
-                  )}
-                </div>
-              ))}
-            </div>
-          </CardContent>
-        </Card>
+      <Tabs defaultValue="calendar" className="space-y-4">
+        <TabsList className="h-8 p-1 rounded-lg bg-gray-100 w-full sm:w-auto">
+          <TabsTrigger value="calendar" className="text-xs px-3 py-1.5 h-7 data-[state=active]:bg-white data-[state=active]:shadow-sm rounded-md">
+            <Calendar className="w-3.5 h-3.5 mr-1.5" />
+            Calendar
+          </TabsTrigger>
+          <TabsTrigger value="schedule" className="text-xs px-3 py-1.5 h-7 data-[state=active]:bg-white data-[state=active]:shadow-sm rounded-md">
+            <Clock className="w-3.5 h-3.5 mr-1.5" />
+            Schedule
+          </TabsTrigger>
+        </TabsList>
 
-        {/* Upcoming Meetings */}
-        <Card>
-          <CardHeader>
-            <CardTitle>Upcoming Meetings</CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            {meetings.map((meeting) => (
-              <div key={meeting.id} className="p-3 bg-muted/30 rounded-lg border">
-                <div className="flex items-start justify-between mb-2">
-                  <div className="flex items-center gap-2">
-                    <User className="w-4 h-4 text-muted-foreground" />
-                    <span className="font-medium text-sm">{meeting.parentName}</span>
-                  </div>
-                  <Badge variant={meeting.status === 'confirmed' ? 'default' : 'secondary'} className="text-xs">
-                    {meeting.status}
-                  </Badge>
-                </div>
-                <p className="text-sm text-muted-foreground mb-2">Re: {meeting.studentName}</p>
-                <div className="flex items-center gap-4 text-xs text-muted-foreground mb-2">
-                  <div className="flex items-center gap-1">
-                    <Calendar className="w-3 h-3" />
-                    {meeting.date}
-                  </div>
-                  <div className="flex items-center gap-1">
-                    <Clock className="w-3 h-3" />
-                    {meeting.time}
-                  </div>
-                </div>
-                <p className="text-xs text-muted-foreground mb-3">{meeting.type} • {meeting.duration}</p>
-                <div className="flex gap-2">
-                  {meeting.status === 'pending' && (
-                    <Button size="sm" variant="outline" onClick={() => handleConfirm(meeting.id)} className="gap-1 flex-1">
-                      <CheckCircle className="w-3 h-3" />
-                      Confirm
+        {/* Calendar Tab */}
+        <TabsContent value="calendar" className="space-y-4 mt-4">
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            <Card className="lg:col-span-2 rounded-xl shadow-sm border-gray-100 overflow-hidden">
+              <CardHeader className="pb-3">
+                <div className="flex items-center justify-between">
+                  <CardTitle className="text-base flex items-center gap-2">
+                    <Calendar className="w-4 h-4 text-primary" />
+                    {currentMonth}
+                  </CardTitle>
+                  <div className="flex gap-1">
+                    <Button variant="outline" size="icon" className="h-7 w-7 rounded-md" onClick={prevMonth}>
+                      <ChevronLeft className="w-4 h-4" />
                     </Button>
-                  )}
-                  <Button size="sm" variant="outline" className="gap-1 flex-1">
-                    <RefreshCw className="w-3 h-3" />
-                    Reschedule
-                  </Button>
-                  <Button size="sm" variant="outline" onClick={() => handleCancel(meeting.id)} className="text-destructive">
-                    <XCircle className="w-3 h-3" />
-                  </Button>
+                    <Button variant="outline" size="icon" className="h-7 w-7 rounded-md" onClick={nextMonth}>
+                      <ChevronRight className="w-4 h-4" />
+                    </Button>
+                  </div>
                 </div>
-              </div>
-            ))}
-          </CardContent>
-        </Card>
-      </div>
+              </CardHeader>
+              <CardContent className="pt-0">
+                <div className="grid grid-cols-7 gap-px bg-gray-100 rounded-xl overflow-hidden">
+                  {['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].map(day => (
+                    <div key={day} className="bg-gray-50 py-2 text-center text-[11px] font-semibold text-gray-500 uppercase tracking-wide">
+                      {day}
+                    </div>
+                  ))}
+                  {days.map((day, index) => (
+                    <div
+                      key={index}
+                      className={`min-h-[72px] sm:min-h-[84px] p-2 bg-white ${
+                        isToday(day) ? 'ring-2 ring-primary ring-inset rounded-lg' : ''
+                      } ${day ? 'hover:bg-gray-50/80' : 'bg-gray-50/50'}`}
+                    >
+                      {day && (
+                        <>
+                          <span className={`inline-flex items-center justify-center w-6 h-6 text-xs font-medium rounded-full ${
+                            isToday(day) ? 'bg-primary text-white' : 'text-gray-700'
+                          }`}>
+                            {day}
+                          </span>
+                          <div className="space-y-1 mt-1.5">
+                            {getMeetingsForDay(day).slice(0, 2).map(meeting => (
+                              <div
+                                key={meeting.id}
+                                className={`text-[10px] px-1.5 py-0.5 rounded truncate ${
+                                  meeting.status === 'confirmed' ? 'bg-emerald-100 text-emerald-700' : 'bg-amber-100 text-amber-700'
+                                }`}
+                              >
+                                {meeting.time}
+                              </div>
+                            ))}
+                            {getMeetingsForDay(day).length > 2 && (
+                              <div className="text-[10px] text-gray-500">+{getMeetingsForDay(day).length - 2}</div>
+                            )}
+                          </div>
+                        </>
+                      )}
+                    </div>
+                  ))}
+                </div>
+              </CardContent>
+            </Card>
+            <Card className="rounded-xl shadow-sm border-gray-100">
+              <CardHeader>
+                <CardTitle className="text-base">Upcoming</CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-3 max-h-[360px] overflow-y-auto">
+                {meetings.slice(0, 5).map((meeting) => (
+                  <div key={meeting.id} className="p-2.5 rounded-lg bg-gray-50 border border-gray-100 text-xs">
+                    <div className="flex justify-between items-start mb-1">
+                      <span className="font-medium">{meeting.parentName}</span>
+                      <Badge variant={meeting.status === 'confirmed' ? 'default' : 'secondary'} className="text-[10px] h-4 px-1.5">
+                        {meeting.status}
+                      </Badge>
+                    </div>
+                    <p className="text-gray-500 text-[11px]">Re: {meeting.studentName}</p>
+                    <p className="text-[11px] mt-1">{meeting.date} • {meeting.time}</p>
+                  </div>
+                ))}
+              </CardContent>
+            </Card>
+          </div>
+        </TabsContent>
+
+        {/* Schedule Tab */}
+        <TabsContent value="schedule" className="space-y-4 mt-4">
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            <Card className="lg:col-span-2 rounded-xl shadow-sm border-gray-100 overflow-hidden">
+              <CardHeader className="pb-2">
+                <div className="flex items-center justify-between">
+                  <CardTitle className="text-base flex items-center gap-2">
+                    <Calendar className="w-4 h-4 text-primary" />
+                    {currentMonth}
+                  </CardTitle>
+                  <div className="flex gap-1">
+                    <Button variant="outline" size="icon" className="h-7 w-7 rounded-md" onClick={prevMonth}>
+                      <ChevronLeft className="w-4 h-4" />
+                    </Button>
+                    <Button variant="outline" size="icon" className="h-7 w-7 rounded-md" onClick={nextMonth}>
+                      <ChevronRight className="w-4 h-4" />
+                    </Button>
+                  </div>
+                </div>
+              </CardHeader>
+              <CardContent className="pt-0">
+                <div className="grid grid-cols-7 gap-px bg-gray-100 rounded-xl overflow-hidden">
+                  {['S', 'M', 'T', 'W', 'T', 'F', 'S'].map((d, i) => (
+                    <div key={i} className="bg-gray-50 py-1.5 text-center text-[10px] font-semibold text-gray-500">
+                      {d}
+                    </div>
+                  ))}
+                  {days.map((day, index) => (
+                    <div
+                      key={index}
+                      className={`min-h-[36px] p-1 bg-white flex items-center justify-center ${
+                        isToday(day) ? 'ring-2 ring-primary ring-inset rounded' : ''
+                      } ${day ? 'hover:bg-gray-50' : 'bg-gray-50/50'}`}
+                    >
+                      {day && (
+                        <span className={`text-xs ${isToday(day) ? 'font-bold text-primary' : 'text-gray-700'}`}>{day}</span>
+                      )}
+                    </div>
+                  ))}
+                </div>
+              </CardContent>
+            </Card>
+            <Card className="rounded-xl shadow-sm border-gray-100">
+              <CardHeader>
+                <CardTitle className="text-base">Upcoming Meetings</CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-3">
+                {meetings.map((meeting) => (
+                  <div key={meeting.id} className="p-2.5 rounded-lg bg-gray-50/80 border border-gray-100 hover:bg-gray-50 transition-colors">
+                    <div className="flex items-start justify-between mb-1.5">
+                      <div className="flex items-center gap-2">
+                        <User className="w-3.5 h-3.5 text-muted-foreground" />
+                        <span className="font-medium text-xs">{meeting.parentName}</span>
+                      </div>
+                      <Badge variant={meeting.status === 'confirmed' ? 'default' : 'secondary'} className="text-[10px] h-4 px-1.5">
+                        {meeting.status}
+                      </Badge>
+                    </div>
+                    <p className="text-[11px] text-muted-foreground mb-1.5">Re: {meeting.studentName}</p>
+                    <div className="flex items-center gap-3 text-[11px] text-muted-foreground mb-2">
+                      <span className="flex items-center gap-1">
+                        <Calendar className="w-3 h-3" />
+                        {meeting.date}
+                      </span>
+                      <span className="flex items-center gap-1">
+                        <Clock className="w-3 h-3" />
+                        {meeting.time}
+                      </span>
+                    </div>
+                    <p className="text-[10px] text-muted-foreground mb-2">{meeting.type} • {meeting.duration}</p>
+                    <div className="flex gap-1.5">
+                      {meeting.status === 'pending' && (
+                        <Button size="sm" variant="outline" onClick={() => handleConfirm(meeting.id)} className="gap-1 h-7 text-[11px] px-2 flex-1">
+                          <CheckCircle className="w-3 h-3" />
+                          Confirm
+                        </Button>
+                      )}
+                      <Button size="sm" variant="outline" className="gap-1 h-7 text-[11px] px-2 flex-1">
+                        <RefreshCw className="w-3 h-3" />
+                        Reschedule
+                      </Button>
+                      <Button size="sm" variant="outline" onClick={() => handleCancel(meeting.id)} className="text-destructive h-7 w-7 p-0">
+                        <XCircle className="w-3 h-3" />
+                      </Button>
+                    </div>
+                  </div>
+                ))}
+              </CardContent>
+            </Card>
+          </div>
+        </TabsContent>
+      </Tabs>
     </div>
   );
 };

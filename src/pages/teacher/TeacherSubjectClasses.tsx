@@ -1,13 +1,14 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import TeacherDashboardLayout from '@/components/layout/TeacherDashboardLayout';
+import PageHeader from '@/components/teacher/PageHeader';
 import { useTeacherMode } from '@/contexts/TeacherModeContext';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { ArrowLeft, BookOpen, Users, BarChart3, Calendar, AlertCircle } from 'lucide-react';
+import { BookOpen, Users, BarChart3, Calendar, AlertCircle } from 'lucide-react';
 import { subjectClasses } from '@/data/teacherMockData';
 
 const TeacherSubjectClassesContent = () => {
@@ -30,33 +31,27 @@ const TeacherSubjectClassesContent = () => {
   const filteredClasses = subjectClasses.filter(c => c.subject === selectedSubject);
 
   return (
-    <div className="space-y-6">
-      {/* Header */}
-      <div className="flex items-center justify-between">
-        <div className="flex items-center gap-4">
-          <Button variant="ghost" size="icon" onClick={() => navigate('/teacher')}>
-            <ArrowLeft className="w-5 h-5" />
-          </Button>
-          <div>
-            <h1 className="text-2xl font-bold">My Subject - Classes</h1>
-            <p className="text-muted-foreground">View all classes where you teach your subject</p>
-          </div>
-        </div>
-        <Select value={selectedSubject} onValueChange={setSelectedSubject}>
-          <SelectTrigger className="w-48">
-            <SelectValue />
-          </SelectTrigger>
+    <div className="space-y-6 max-w-7xl">
+      <PageHeader
+        title="My Subject - Classes"
+        subtitle="View all classes where you teach your subject"
+        filter={
+          <Select value={selectedSubject} onValueChange={setSelectedSubject}>
+            <SelectTrigger className="w-48 h-9 rounded-lg">
+              <SelectValue />
+            </SelectTrigger>
           <SelectContent>
             <SelectItem value="Mathematics">Mathematics</SelectItem>
             <SelectItem value="Science">Science</SelectItem>
           </SelectContent>
         </Select>
-      </div>
+        }
+      />
 
       {/* Classes Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         {filteredClasses.map((cls) => (
-          <Card key={cls.id} className="hover:border-primary/50 transition-colors cursor-pointer">
+          <Card key={cls.id} className="rounded-xl shadow-sm border-gray-100 hover:border-primary/50 transition-colors cursor-pointer">
             <CardContent className="pt-6">
               <div className="flex items-start justify-between mb-4">
                 <div>
@@ -79,10 +74,10 @@ const TeacherSubjectClassesContent = () => {
 
                 <div className="space-y-1">
                   <div className="flex items-center justify-between text-sm">
-                    <span className="text-muted-foreground">Completion</span>
-                    <span className="font-medium">{cls.completion}%</span>
+                    <span className="text-muted-foreground">Subject Performance</span>
+                    <span className="font-medium">{cls.avgScore}%</span>
                   </div>
-                  <Progress value={cls.completion} />
+                  <Progress value={cls.avgScore} />
                 </div>
 
                 <div className="flex items-center gap-2 text-sm text-muted-foreground">

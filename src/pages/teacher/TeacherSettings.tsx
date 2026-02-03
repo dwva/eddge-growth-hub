@@ -52,21 +52,21 @@ const TeacherSettingsContent = () => {
       </div>
 
       <Tabs defaultValue="profile">
-        <TabsList className="grid w-full grid-cols-4 lg:w-auto lg:inline-grid">
-          <TabsTrigger value="profile" className="gap-2">
-            <User className="w-4 h-4" />
+        <TabsList className="grid w-full grid-cols-4 lg:w-auto lg:inline-grid h-8 p-1 rounded-lg bg-gray-100">
+          <TabsTrigger value="profile" className="gap-1.5 text-xs px-2.5 py-1.5 h-7 data-[state=active]:bg-white data-[state=active]:shadow-sm rounded-md">
+            <User className="w-3.5 h-3.5" />
             Profile
           </TabsTrigger>
-          <TabsTrigger value="notifications" className="gap-2">
-            <Bell className="w-4 h-4" />
+          <TabsTrigger value="notifications" className="gap-1.5 text-xs px-2.5 py-1.5 h-7 data-[state=active]:bg-white data-[state=active]:shadow-sm rounded-md">
+            <Bell className="w-3.5 h-3.5" />
             Notifications
           </TabsTrigger>
-          <TabsTrigger value="appearance" className="gap-2">
-            <Palette className="w-4 h-4" />
+          <TabsTrigger value="appearance" className="gap-1.5 text-xs px-2.5 py-1.5 h-7 data-[state=active]:bg-white data-[state=active]:shadow-sm rounded-md">
+            <Palette className="w-3.5 h-3.5" />
             Appearance
           </TabsTrigger>
-          <TabsTrigger value="security" className="gap-2">
-            <Lock className="w-4 h-4" />
+          <TabsTrigger value="security" className="gap-1.5 text-xs px-2.5 py-1.5 h-7 data-[state=active]:bg-white data-[state=active]:shadow-sm rounded-md">
+            <Lock className="w-3.5 h-3.5" />
             Security
           </TabsTrigger>
         </TabsList>

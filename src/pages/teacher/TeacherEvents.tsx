@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import TeacherDashboardLayout from '@/components/layout/TeacherDashboardLayout';
+import PageHeader from '@/components/teacher/PageHeader';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
@@ -9,7 +10,7 @@ import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { ArrowLeft, Plus, Calendar, Clock, MapPin, Pencil, Trash2, Share, Bell, CheckCircle } from 'lucide-react';
+import { Plus, Calendar, Clock, MapPin, Pencil, Trash2, Share, Bell, CheckCircle } from 'lucide-react';
 import { events as mockEvents } from '@/data/teacherMockData';
 import { toast } from 'sonner';
 
@@ -90,27 +91,21 @@ const TeacherEventsContent = () => {
   };
 
   return (
-    <div className="space-y-6">
-      {/* Header */}
-      <div className="flex items-center justify-between">
-        <div className="flex items-center gap-4">
-          <Button variant="ghost" size="icon" onClick={() => navigate('/teacher')}>
-            <ArrowLeft className="w-5 h-5" />
+    <div className="space-y-6 max-w-7xl">
+      <PageHeader
+        title="Events & Announcements"
+        subtitle="Create and manage school events and announcements"
+        action={
+          <Button size="sm" onClick={() => setIsFormOpen(!isFormOpen)} className="gap-1.5 h-8 px-3 text-xs rounded-lg">
+            <Plus className="w-4 h-4" />
+            Create New Event
           </Button>
-          <div>
-            <h1 className="text-2xl font-bold">Events & Announcements</h1>
-            <p className="text-muted-foreground">Create and manage school events and announcements</p>
-          </div>
-        </div>
-        <Button onClick={() => setIsFormOpen(!isFormOpen)} className="gap-2">
-          <Plus className="w-4 h-4" />
-          Create New Event
-        </Button>
-      </div>
+        }
+      />
 
       {/* Create/Edit Form */}
       {isFormOpen && (
-        <Card>
+        <Card className="rounded-xl shadow-sm border-gray-100">
           <CardHeader>
             <CardTitle>{editingEvent ? 'Edit Event' : 'Create New Event'}</CardTitle>
           </CardHeader>

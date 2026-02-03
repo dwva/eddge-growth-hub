@@ -1,15 +1,16 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import TeacherDashboardLayout from '@/components/layout/TeacherDashboardLayout';
+import PageHeader from '@/components/teacher/PageHeader';
 import { useTeacherMode } from '@/contexts/TeacherModeContext';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
-import { ArrowLeft, Search, Users, TrendingUp, TrendingDown, Minus, AlertCircle } from 'lucide-react';
+import { Search, Users, TrendingUp, TrendingDown, Minus, AlertCircle } from 'lucide-react';
 import { subjectStudents } from '@/data/teacherMockData';
 
 const TeacherSubjectStudentsContent = () => {
@@ -46,43 +47,14 @@ const TeacherSubjectStudentsContent = () => {
   };
 
   return (
-    <div className="space-y-6">
-      {/* Header */}
-      <div className="flex items-center gap-4">
-        <Button variant="ghost" size="icon" onClick={() => navigate('/teacher')}>
-          <ArrowLeft className="w-5 h-5" />
-        </Button>
-        <div>
-          <h1 className="text-2xl font-bold">My Subject - Students</h1>
-          <p className="text-muted-foreground">View students across all classes for your subject</p>
-        </div>
-      </div>
-
-      {/* Filters */}
-      <Card>
-        <CardContent className="pt-6">
-          <div className="flex flex-col sm:flex-row gap-4">
-            <div className="relative flex-1">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-              <Input
-                placeholder="Search students..."
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                className="pl-9"
-              />
-            </div>
-            <Select value={subjectFilter} onValueChange={setSubjectFilter}>
-              <SelectTrigger className="w-full sm:w-40">
-                <SelectValue placeholder="Subject" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">All Subjects</SelectItem>
-                <SelectItem value="Mathematics">Mathematics</SelectItem>
-                <SelectItem value="Science">Science</SelectItem>
-              </SelectContent>
-            </Select>
+    <div className="space-y-6 max-w-7xl">
+      <PageHeader
+        title="My Subject - Students"
+        subtitle="View students across all classes for your subject"
+        filter={
+          <>
             <Select value={classFilter} onValueChange={setClassFilter}>
-              <SelectTrigger className="w-full sm:w-40">
+              <SelectTrigger className="w-full sm:w-40 h-9 rounded-lg">
                 <SelectValue placeholder="Class" />
               </SelectTrigger>
               <SelectContent>
@@ -93,19 +65,34 @@ const TeacherSubjectStudentsContent = () => {
                 <SelectItem value="Class 10-B">Class 10-B</SelectItem>
               </SelectContent>
             </Select>
-          </div>
-        </CardContent>
-      </Card>
+          </>
+        }
+      />
 
-      {/* Students Table */}
-      <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <Users className="w-5 h-5" />
-            Students ({filteredStudents.length})
-          </CardTitle>
-        </CardHeader>
-        <CardContent>
+      {/* Filters & Table */}
+      <Card className="rounded-xl shadow-sm border-gray-100 overflow-hidden">
+        <div className="p-4 border-b border-gray-100 flex flex-col sm:flex-row gap-4">
+          <div className="relative flex-1 max-w-sm">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+            <Input
+              placeholder="Search students..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="pl-9 h-9 rounded-lg"
+            />
+          </div>
+          <Select value={subjectFilter} onValueChange={setSubjectFilter}>
+            <SelectTrigger className="w-full sm:w-40 h-9 rounded-lg">
+              <SelectValue placeholder="Subject" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">All Subjects</SelectItem>
+              <SelectItem value="Mathematics">Mathematics</SelectItem>
+              <SelectItem value="Science">Science</SelectItem>
+            </SelectContent>
+          </Select>
+        </div>
+        <CardContent className="p-0">
           {filteredStudents.length > 0 ? (
             <div className="rounded-md border overflow-x-auto">
               <Table>

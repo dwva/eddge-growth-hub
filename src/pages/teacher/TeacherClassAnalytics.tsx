@@ -1,46 +1,28 @@
-import { useEffect, useState } from 'react';
-import { useNavigate, useLocation } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import TeacherDashboardLayout from '@/components/layout/TeacherDashboardLayout';
+import StatCard from '@/components/shared/StatCard';
 import { useTeacherMode } from '@/contexts/TeacherModeContext';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
-import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { Progress } from '@/components/ui/progress';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
-import { ArrowLeft, Target, Users, BarChart3, TrendingUp, TrendingDown, AlertCircle, AlertTriangle, Calendar } from 'lucide-react';
+import { 
+  Target, Users, BarChart3, TrendingUp, AlertCircle, 
+  AlertTriangle, Download
+} from 'lucide-react';
 import { classAnalyticsData, atRiskStudents as atRiskData } from '@/data/teacherMockData';
-import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, BarChart, Bar, PieChart, Pie, Cell } from 'recharts';
+import { toast } from 'sonner';
+import { XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, BarChart, Bar, PieChart, Pie, Cell, Area, AreaChart } from 'recharts';
 
-const COLORS = ['#22c55e', '#eab308', '#ef4444'];
+const pieData = [
+  { name: 'High', value: classAnalyticsData.distribution.high, color: '#10b981' },
+  { name: 'Medium', value: classAnalyticsData.distribution.medium, color: '#f59e0b' },
+  { name: 'Low', value: classAnalyticsData.distribution.low, color: '#ef4444' },
+];
 
 const TeacherClassAnalyticsContent = () => {
   const navigate = useNavigate();
-  const location = useLocation();
   const { currentMode } = useTeacherMode();
-  
-  // Determine active tab from URL path
-  const getTabFromPath = () => {
-    if (location.pathname.includes('subject-wise')) return 'subject-wise';
-    if (location.pathname.includes('at-risk')) return 'at-risk';
-    return 'overall';
-  };
-  
-  const [activeTab, setActiveTab] = useState(getTabFromPath());
-  
-  // Update tab when URL changes
-  useEffect(() => {
-    setActiveTab(getTabFromPath());
-  }, [location.pathname]);
-  
-  // Handle tab change and update URL
-  const handleTabChange = (value: string) => {
-    setActiveTab(value);
-    navigate(`/teacher/class-analytics/${value}`);
-  };
 
-  // Mode restriction
   if (currentMode !== 'class_teacher') {
     return (
       <div className="flex flex-col items-center justify-center min-h-[60vh] text-center">
@@ -52,277 +34,184 @@ const TeacherClassAnalyticsContent = () => {
     );
   }
 
-  const pieData = [
-    { name: 'High (≥80%)', value: classAnalyticsData.distribution.high },
-    { name: 'Medium (60-79%)', value: classAnalyticsData.distribution.medium },
-    { name: 'Low (<60%)', value: classAnalyticsData.distribution.low },
-  ];
-
   return (
     <div className="space-y-6">
-      {/* Header */}
-      <div className="flex items-center gap-4">
-        <Button variant="ghost" size="icon" onClick={() => navigate('/teacher')}>
-          <ArrowLeft className="w-5 h-5" />
-        </Button>
+      {/* Page Header */}
+      <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-bold">Class Analytics</h1>
-          <p className="text-muted-foreground">View comprehensive performance metrics for your class</p>
+          <h1 className="text-2xl font-bold text-gray-900">Class Analytics</h1>
+          <p className="text-sm text-gray-500 mt-1">Performance metrics for Class 10-A</p>
+        </div>
+        <div className="flex items-center gap-3">
+          <Button variant="outline" size="sm" className="gap-2 h-9 rounded-xl" onClick={() => toast.success('Exporting report...')}>
+            <Download className="w-4 h-4" />
+            Export Report
+          </Button>
         </div>
       </div>
 
-      <Tabs value={activeTab} onValueChange={handleTabChange}>
-        <TabsList className="grid w-full grid-cols-3 lg:w-auto lg:inline-grid">
-          <TabsTrigger value="overall">Overall Performance</TabsTrigger>
-          <TabsTrigger value="subject-wise">Subject-wise</TabsTrigger>
-          <TabsTrigger value="at-risk">At-Risk Students</TabsTrigger>
-        </TabsList>
-
-        {/* Overall Performance Tab */}
-        <TabsContent value="overall" className="space-y-6">
-          {/* Key Metrics */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <Card>
-              <CardContent className="pt-6">
-                <div className="flex items-center gap-3 mb-3">
-                  <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center">
-                    <Target className="w-5 h-5 text-primary" />
-                  </div>
-                  <span className="text-sm font-medium text-muted-foreground">Class Average</span>
-                </div>
-                <p className="text-3xl font-bold">{classAnalyticsData.classAverage}%</p>
-                <Progress value={classAnalyticsData.classAverage} className="mt-2" />
-              </CardContent>
-            </Card>
-            <Card>
-              <CardContent className="pt-6">
-                <div className="flex items-center gap-3 mb-3">
-                  <div className="w-10 h-10 rounded-lg bg-blue-500/10 flex items-center justify-center">
-                    <Users className="w-5 h-5 text-blue-500" />
-                  </div>
-                  <span className="text-sm font-medium text-muted-foreground">Total Students</span>
-                </div>
-                <p className="text-3xl font-bold">{classAnalyticsData.totalStudents}</p>
-              </CardContent>
-            </Card>
-            <Card>
-              <CardContent className="pt-6">
-                <div className="flex items-center gap-3 mb-3">
-                  <div className="w-10 h-10 rounded-lg bg-green-500/10 flex items-center justify-center">
-                    <BarChart3 className="w-5 h-5 text-green-500" />
-                  </div>
-                  <span className="text-sm font-medium text-muted-foreground">Overall Accuracy</span>
-                </div>
-                <p className="text-3xl font-bold">{classAnalyticsData.overallAccuracy}%</p>
-                <Progress value={classAnalyticsData.overallAccuracy} className="mt-2" />
-              </CardContent>
-            </Card>
+      <div className="space-y-6 mt-6">
+          {/* KPI Cards */}
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+            <StatCard 
+              title="Class Average" 
+              value={`${classAnalyticsData.classAverage}%`} 
+              icon={<Target className="w-5 h-5" />} 
+              trend={{ value: 3, isPositive: true }}
+              iconBg="bg-emerald-50 text-emerald-600"
+            />
+            <StatCard 
+              title="Total Students" 
+              value={classAnalyticsData.totalStudents} 
+              icon={<Users className="w-5 h-5" />} 
+              iconBg="bg-blue-50 text-blue-600"
+            />
+            <StatCard 
+              title="Pass Rate" 
+              value={`${classAnalyticsData.overallAccuracy}%`} 
+              icon={<BarChart3 className="w-5 h-5" />} 
+              iconBg="bg-violet-50 text-violet-600"
+            />
+            <StatCard 
+              title="At-Risk" 
+              value={atRiskData.length} 
+              icon={<AlertTriangle className="w-5 h-5" />} 
+              iconBg="bg-red-50 text-red-600"
+            />
           </div>
 
           {/* Performance Trend */}
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <TrendingUp className="w-5 h-5 text-green-500" />
-                Performance Trend
-              </CardTitle>
+          <Card className="rounded-2xl shadow-sm border-gray-100 overflow-hidden">
+            <CardHeader className="pb-2">
+              <div className="flex items-center justify-between">
+                <div>
+                  <CardTitle className="text-lg font-semibold">Performance Trend</CardTitle>
+                  <p className="text-sm text-gray-500">Weekly class average scores</p>
+                </div>
+                <div className="flex items-center gap-2 text-sm text-emerald-600">
+                  <TrendingUp className="w-4 h-4" />
+                  <span>+3% this month</span>
+                </div>
+              </div>
             </CardHeader>
             <CardContent>
               <div className="h-64">
                 <ResponsiveContainer width="100%" height="100%">
-                  <LineChart data={classAnalyticsData.performanceTrend}>
-                    <CartesianGrid strokeDasharray="3 3" />
-                    <XAxis dataKey="week" />
-                    <YAxis domain={[0, 100]} />
-                    <Tooltip />
-                    <Line type="monotone" dataKey="score" stroke="hsl(var(--primary))" strokeWidth={2} dot={{ fill: 'hsl(var(--primary))' }} />
-                  </LineChart>
+                  <AreaChart data={classAnalyticsData.performanceTrend} margin={{ top: 10, right: 10, left: -10, bottom: 0 }}>
+                    <defs>
+                      <linearGradient id="areaGradient" x1="0" y1="0" x2="0" y2="1">
+                        <stop offset="0%" stopColor="#8b5cf6" stopOpacity={0.3} />
+                        <stop offset="100%" stopColor="#8b5cf6" stopOpacity={0} />
+                      </linearGradient>
+                    </defs>
+                    <CartesianGrid strokeDasharray="3 3" stroke="#f3f4f6" vertical={false} />
+                    <XAxis dataKey="week" tick={{ fontSize: 12, fill: '#9ca3af' }} axisLine={false} tickLine={false} />
+                    <YAxis domain={[0, 100]} tick={{ fontSize: 12, fill: '#9ca3af' }} axisLine={false} tickLine={false} />
+                    <Tooltip contentStyle={{ borderRadius: '12px', border: 'none', boxShadow: '0 4px 20px rgba(0,0,0,0.1)' }} formatter={(v: number) => [`${v}%`, 'Score']} />
+                    <Area type="monotone" dataKey="score" stroke="#8b5cf6" strokeWidth={3} fill="url(#areaGradient)" />
+                  </AreaChart>
                 </ResponsiveContainer>
               </div>
             </CardContent>
           </Card>
 
-          {/* Distribution */}
+          {/* Subject Comparison Chart + Distribution in one row */}
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            <Card>
+            <Card className="rounded-2xl shadow-sm border-gray-100 overflow-hidden">
               <CardHeader>
-                <CardTitle>Distribution Breakdown</CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <div className="flex items-center gap-3">
-                  <div className="w-3 h-3 rounded-full bg-green-500" />
-                  <span className="flex-1">High Performers (≥80%)</span>
-                  <span className="font-semibold">{classAnalyticsData.distribution.high}</span>
-                  <Progress value={(classAnalyticsData.distribution.high / classAnalyticsData.totalStudents) * 100} className="w-24" />
-                </div>
-                <div className="flex items-center gap-3">
-                  <div className="w-3 h-3 rounded-full bg-yellow-500" />
-                  <span className="flex-1">Medium Performers (60-79%)</span>
-                  <span className="font-semibold">{classAnalyticsData.distribution.medium}</span>
-                  <Progress value={(classAnalyticsData.distribution.medium / classAnalyticsData.totalStudents) * 100} className="w-24" />
-                </div>
-                <div className="flex items-center gap-3">
-                  <div className="w-3 h-3 rounded-full bg-red-500" />
-                  <span className="flex-1">Low Performers (&lt;60%)</span>
-                  <span className="font-semibold">{classAnalyticsData.distribution.low}</span>
-                  <Progress value={(classAnalyticsData.distribution.low / classAnalyticsData.totalStudents) * 100} className="w-24" />
-                </div>
-              </CardContent>
-            </Card>
-            <Card>
-              <CardHeader>
-                <CardTitle>Distribution Chart</CardTitle>
+                <CardTitle className="text-lg font-semibold">Subject Performance Comparison</CardTitle>
               </CardHeader>
               <CardContent>
-                <div className="h-48">
+                <div className="h-64">
                   <ResponsiveContainer width="100%" height="100%">
-                    <PieChart>
-                      <Pie
-                        data={pieData}
-                        cx="50%"
-                        cy="50%"
-                        innerRadius={40}
-                        outerRadius={70}
-                        paddingAngle={5}
-                        dataKey="value"
-                        label={({ name, value }) => `${value}`}
-                      >
-                        {pieData.map((_, index) => (
-                          <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-                        ))}
-                      </Pie>
-                      <Tooltip />
-                    </PieChart>
+                    <BarChart data={[...classAnalyticsData.subjectPerformance].sort((a, b) => b.avgScore - a.avgScore)} margin={{ top: 10, right: 10, left: -10, bottom: 0 }}>
+                      <CartesianGrid strokeDasharray="3 3" stroke="#f3f4f6" vertical={false} />
+                      <XAxis dataKey="subject" tick={{ fontSize: 11, fill: '#9ca3af' }} axisLine={false} tickLine={false} />
+                      <YAxis domain={[0, 100]} tick={{ fontSize: 12, fill: '#9ca3af' }} axisLine={false} tickLine={false} />
+                      <Tooltip contentStyle={{ borderRadius: '12px', border: 'none', boxShadow: '0 4px 20px rgba(0,0,0,0.1)' }} formatter={(v: number) => [`${v}%`, 'Avg Score']} />
+                      <Bar dataKey="avgScore" fill="#8b5cf6" radius={[8, 8, 0, 0]} maxBarSize={48} />
+                    </BarChart>
                   </ResponsiveContainer>
                 </div>
               </CardContent>
             </Card>
-          </div>
-        </TabsContent>
 
-        {/* Subject-wise Tab */}
-        <TabsContent value="subject-wise" className="space-y-6">
-          <Card>
-            <CardHeader>
-              <CardTitle>Subject Performance Comparison</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="h-64">
-                <ResponsiveContainer width="100%" height="100%">
-                  <BarChart data={[...classAnalyticsData.subjectPerformance].sort((a, b) => a.avgScore - b.avgScore)}>
-                    <CartesianGrid strokeDasharray="3 3" />
-                    <XAxis dataKey="subject" />
-                    <YAxis domain={[0, 100]} />
-                    <Tooltip />
-                    <Bar dataKey="avgScore" fill="hsl(var(--primary))" radius={[4, 4, 0, 0]} />
-                  </BarChart>
-                </ResponsiveContainer>
-              </div>
-            </CardContent>
-          </Card>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            {classAnalyticsData.subjectPerformance.map((subject) => (
-              <Card key={subject.subject}>
-                <CardContent className="pt-6">
-                  <div className="flex items-center justify-between mb-2">
-                    <h3 className="font-semibold">{subject.subject}</h3>
-                    <Badge variant={subject.avgScore >= 75 ? 'default' : subject.avgScore >= 60 ? 'secondary' : 'destructive'}>
-                      {subject.avgScore}%
-                    </Badge>
+            <Card className="rounded-2xl shadow-sm border-gray-100">
+              <CardHeader>
+                <CardTitle className="text-lg font-semibold">Performance Distribution</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="flex gap-6 items-center">
+                  <div className="h-40 w-40 flex-shrink-0">
+                    <ResponsiveContainer width="100%" height="100%">
+                      <PieChart>
+                        <Pie data={pieData} cx="50%" cy="50%" innerRadius={35} outerRadius={65} paddingAngle={4} dataKey="value" stroke="white" strokeWidth={2}>
+                          {pieData.map((entry, index) => (
+                            <Cell key={`cell-${index}`} fill={entry.color} />
+                          ))}
+                        </Pie>
+                        <Tooltip contentStyle={{ borderRadius: '12px', border: 'none', boxShadow: '0 4px 20px rgba(0,0,0,0.1)' }} formatter={(v: number, name: string) => [`${v} students`, name]} />
+                      </PieChart>
+                    </ResponsiveContainer>
                   </div>
-                  <p className="text-sm text-muted-foreground mb-2">Teacher: {subject.teacher}</p>
-                  <div className="flex items-center justify-between text-sm">
-                    <span>Pass Rate</span>
-                    <span className="font-medium">{subject.passRate}%</span>
-                  </div>
-                  <Progress value={subject.passRate} className="mt-1" />
-                </CardContent>
-              </Card>
-            ))}
-          </div>
-        </TabsContent>
-
-        {/* At-Risk Students Tab */}
-        <TabsContent value="at-risk" className="space-y-6">
-          <Card className="bg-red-50 border-red-200">
-            <CardContent className="pt-6">
-              <div className="flex items-center gap-3">
-                <AlertTriangle className="w-6 h-6 text-red-500" />
-                <div>
-                  <h3 className="font-semibold">At-Risk Criteria</h3>
-                  <p className="text-sm text-muted-foreground">
-                    Students with overall score below 60%, declining trend, or low attendance
-                  </p>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <AlertTriangle className="w-5 h-5 text-red-500" />
-                At-Risk Students ({atRiskData.length})
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="rounded-md border overflow-x-auto">
-                <Table>
-                  <TableHeader>
-                    <TableRow>
-                      <TableHead>Student</TableHead>
-                      <TableHead>Overall Score</TableHead>
-                      <TableHead>Weakest Subject</TableHead>
-                      <TableHead>Trend</TableHead>
-                      <TableHead>Attendance</TableHead>
-                      <TableHead>Action</TableHead>
-                    </TableRow>
-                  </TableHeader>
-                  <TableBody>
-                    {atRiskData.map((student) => (
-                      <TableRow key={student.id}>
-                        <TableCell>
-                          <div className="flex items-center gap-3">
-                            <Avatar className="w-9 h-9">
-                              <AvatarFallback className="bg-red-100 text-red-600 text-sm">
-                                {student.avatar}
-                              </AvatarFallback>
-                            </Avatar>
-                            <span className="font-medium">{student.name}</span>
-                          </div>
-                        </TableCell>
-                        <TableCell>
-                          <Badge variant="destructive">{student.overallScore}%</Badge>
-                        </TableCell>
-                        <TableCell>{student.weakestSubject}</TableCell>
-                        <TableCell>
-                          <div className="flex items-center gap-1 text-red-500">
-                            <TrendingDown className="w-4 h-4" />
-                            <span className="text-sm">{student.trend}</span>
-                          </div>
-                        </TableCell>
-                        <TableCell>
-                          <span className={student.attendance < 80 ? 'text-red-500' : ''}>{student.attendance}%</span>
-                        </TableCell>
-                        <TableCell>
-                          <div className="flex gap-2">
-                            <Button size="sm" variant="outline">View Details</Button>
-                            <Button size="sm" variant="outline" className="gap-1">
-                              <Calendar className="w-3 h-3" />
-                              Schedule Meeting
-                            </Button>
-                          </div>
-                        </TableCell>
-                      </TableRow>
+                  <div className="flex-1 space-y-2">
+                    {['High Performers (≥80%)', 'Average (60-79%)', 'Need Support (<60%)'].map((label, i) => (
+                      <div key={label} className="flex items-center gap-3">
+                        <div className="w-3 h-3 rounded-full" style={{ backgroundColor: pieData[i].color }} />
+                        <span className="text-sm text-gray-600 flex-1">{label}</span>
+                        <span className="text-sm font-semibold">{pieData[i].value}</span>
+                        <Progress value={(pieData[i].value / classAnalyticsData.totalStudents) * 100} className="w-20 h-1.5" />
+                      </div>
                     ))}
-                  </TableBody>
-                </Table>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+
+          {/* Subject Cards */}
+          <Card className="rounded-2xl shadow-sm border-gray-100">
+            <CardHeader>
+              <CardTitle className="text-lg font-semibold">Subject-wise Breakdown</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4">
+                {classAnalyticsData.subjectPerformance.map((subject) => (
+                  <div key={subject.subject} className="p-4 rounded-xl border border-gray-100 hover:border-gray-200 transition-colors">
+                    <div className="flex items-start justify-between mb-3">
+                      <div>
+                        <h3 className="font-semibold text-gray-900 text-sm">{subject.subject}</h3>
+                        <p className="text-xs text-gray-500">{subject.teacher}</p>
+                      </div>
+                      <span className={`px-2 py-0.5 rounded-full text-xs font-semibold ${
+                        subject.avgScore >= 75 ? 'bg-emerald-50 text-emerald-700' :
+                        subject.avgScore >= 60 ? 'bg-amber-50 text-amber-700' : 'bg-red-50 text-red-700'
+                      }`}>
+                        {subject.avgScore}%
+                      </span>
+                    </div>
+                    <div className="space-y-2">
+                      <div>
+                        <div className="flex justify-between text-xs mb-0.5">
+                          <span className="text-gray-500">Avg</span>
+                          <span className="font-medium">{subject.avgScore}%</span>
+                        </div>
+                        <Progress value={subject.avgScore} className="h-1.5" />
+                      </div>
+                      <div>
+                        <div className="flex justify-between text-xs mb-0.5">
+                          <span className="text-gray-500">Pass Rate</span>
+                          <span className="font-medium">{subject.passRate}%</span>
+                        </div>
+                        <Progress value={subject.passRate} className="h-1.5" />
+                      </div>
+                    </div>
+                  </div>
+                ))}
               </div>
             </CardContent>
           </Card>
-        </TabsContent>
-      </Tabs>
+      </div>
     </div>
   );
 };
