@@ -1,5 +1,5 @@
-import { useState } from 'react';
-import { useNavigate, useSearchParams } from 'react-router-dom';
+import { useEffect, useState } from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
 import TeacherDashboardLayout from '@/components/layout/TeacherDashboardLayout';
 import { useTeacherMode } from '@/contexts/TeacherModeContext';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -13,12 +13,33 @@ import { chapters, topics, commonMistakes } from '@/data/teacherMockData';
 
 const TeacherSubjectAnalyticsContent = () => {
   const navigate = useNavigate();
-  const [searchParams] = useSearchParams();
+  const location = useLocation();
   const { currentMode } = useTeacherMode();
-  const defaultTab = searchParams.get('tab') || 'chapters';
-  const [activeTab, setActiveTab] = useState(defaultTab);
+  
+  const getTabFromPath = () => {
+    if (location.pathname.includes('/topics')) return 'topics';
+    if (location.pathname.includes('/mistakes')) return 'mistakes';
+    return 'chapters';
+  };
+  
+  const [activeTab, setActiveTab] = useState(getTabFromPath());
   const [subjectFilter, setSubjectFilter] = useState('Mathematics');
   const [masteryFilter, setMasteryFilter] = useState('all');
+  
+  useEffect(() => {
+    setActiveTab(getTabFromPath());
+  }, [location.pathname]);
+  
+  useEffect(() => {
+    if (location.pathname === '/teacher/subject-analytics') {
+      navigate('/teacher/subject-analytics/chapters', { replace: true });
+    }
+  }, [location.pathname, navigate]);
+  
+  const handleTabChange = (value: string) => {
+    setActiveTab(value);
+    navigate(`/teacher/subject-analytics/${value}`);
+  };
 
   // Mode restriction
   if (currentMode !== 'subject_teacher') {
@@ -60,29 +81,29 @@ const TeacherSubjectAnalyticsContent = () => {
   const weakestChapter = filteredChapters[0]?.name || 'N/A';
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 max-w-7xl">
       {/* Header */}
       <div className="flex items-center gap-4">
         <Button variant="ghost" size="icon" onClick={() => navigate('/teacher')}>
           <ArrowLeft className="w-5 h-5" />
         </Button>
         <div>
-          <h1 className="text-2xl font-bold">Subject Analytics</h1>
-          <p className="text-muted-foreground">Analyze chapter and topic-level performance</p>
+          <h1 className="text-lg md:text-xl font-bold">Subject Analytics</h1>
+          <p className="text-sm text-muted-foreground">Analyze chapter and topic-level performance</p>
         </div>
       </div>
 
-      <Tabs value={activeTab} onValueChange={setActiveTab}>
-        <TabsList className="grid w-full grid-cols-3 lg:w-auto lg:inline-grid">
-          <TabsTrigger value="chapters">Chapters</TabsTrigger>
-          <TabsTrigger value="topics">Topics</TabsTrigger>
-          <TabsTrigger value="mistakes">Common Mistakes</TabsTrigger>
+      <Tabs value={activeTab} onValueChange={handleTabChange}>
+        <TabsList className="grid w-full grid-cols-3 lg:w-auto lg:inline-grid h-8 p-1 rounded-lg bg-gray-100">
+          <TabsTrigger value="chapters" className="text-xs px-2.5 py-1.5 h-7 data-[state=active]:bg-white data-[state=active]:shadow-sm rounded-md">Chapters</TabsTrigger>
+          <TabsTrigger value="topics" className="text-xs px-2.5 py-1.5 h-7 data-[state=active]:bg-white data-[state=active]:shadow-sm rounded-md">Topics</TabsTrigger>
+          <TabsTrigger value="mistakes" className="text-xs px-2.5 py-1.5 h-7 data-[state=active]:bg-white data-[state=active]:shadow-sm rounded-md">Common Mistakes</TabsTrigger>
         </TabsList>
 
         {/* Chapters Tab */}
         <TabsContent value="chapters" className="space-y-6">
           {/* Filters */}
-          <Card>
+          <Card className="rounded-xl shadow-sm border-gray-100">
             <CardContent className="pt-6">
               <div className="flex flex-col sm:flex-row gap-4">
                 <Select value={subjectFilter} onValueChange={setSubjectFilter}>
@@ -111,7 +132,7 @@ const TeacherSubjectAnalyticsContent = () => {
 
           {/* Summary Stats */}
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-            <Card>
+            <Card className="rounded-xl shadow-sm border-gray-100">
               <CardContent className="pt-6">
                 <div className="flex items-center gap-3">
                   <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center">
@@ -124,7 +145,7 @@ const TeacherSubjectAnalyticsContent = () => {
                 </div>
               </CardContent>
             </Card>
-            <Card>
+            <Card className="rounded-xl shadow-sm border-gray-100">
               <CardContent className="pt-6">
                 <div className="flex items-center gap-3">
                   <div className="w-10 h-10 rounded-lg bg-red-500/10 flex items-center justify-center">
@@ -137,7 +158,7 @@ const TeacherSubjectAnalyticsContent = () => {
                 </div>
               </CardContent>
             </Card>
-            <Card>
+            <Card className="rounded-xl shadow-sm border-gray-100">
               <CardContent className="pt-6">
                 <div className="flex items-center gap-3">
                   <div className="w-10 h-10 rounded-lg bg-green-500/10 flex items-center justify-center">
@@ -150,7 +171,7 @@ const TeacherSubjectAnalyticsContent = () => {
                 </div>
               </CardContent>
             </Card>
-            <Card>
+            <Card className="rounded-xl shadow-sm border-gray-100">
               <CardContent className="pt-6">
                 <div className="flex items-center gap-3">
                   <div className="w-10 h-10 rounded-lg bg-yellow-500/10 flex items-center justify-center">
@@ -168,7 +189,7 @@ const TeacherSubjectAnalyticsContent = () => {
           {/* Chapters Grid */}
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
             {filteredChapters.map((chapter) => (
-              <Card key={chapter.id} className="hover:border-primary/50 transition-colors cursor-pointer">
+              <Card key={chapter.id} className="rounded-xl shadow-sm border-gray-100 hover:border-primary/50 transition-colors cursor-pointer">
                 <CardContent className="pt-6">
                   <div className="flex items-start justify-between mb-4">
                     <div className="flex items-center gap-3">
@@ -223,8 +244,8 @@ const TeacherSubjectAnalyticsContent = () => {
         </TabsContent>
 
         {/* Topics Tab */}
-        <TabsContent value="topics" className="space-y-6">
-          <Card>
+        <TabsContent value="topics" className="space-y-6 mt-6">
+          <Card className="rounded-xl shadow-sm border-gray-100">
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
                 <BookOpen className="w-5 h-5" />
@@ -234,7 +255,7 @@ const TeacherSubjectAnalyticsContent = () => {
             <CardContent>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 {topics.map((topic) => (
-                  <div key={topic.id} className="p-4 border rounded-lg">
+                  <div key={topic.id} className="p-4 rounded-xl border border-gray-100 bg-gray-50/50 hover:bg-gray-50 transition-colors">
                     <div className="flex items-center justify-between mb-2">
                       <h4 className="font-medium">{topic.name}</h4>
                       <Badge variant={topic.avgAccuracy >= 60 ? 'secondary' : 'destructive'}>
@@ -267,8 +288,8 @@ const TeacherSubjectAnalyticsContent = () => {
         </TabsContent>
 
         {/* Common Mistakes Tab */}
-        <TabsContent value="mistakes" className="space-y-6">
-          <Card>
+        <TabsContent value="mistakes" className="space-y-6 mt-6">
+          <Card className="rounded-xl shadow-sm border-gray-100">
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
                 <Brain className="w-5 h-5" />
@@ -277,7 +298,7 @@ const TeacherSubjectAnalyticsContent = () => {
             </CardHeader>
             <CardContent className="space-y-4">
               {commonMistakes.map((mistake) => (
-                <div key={mistake.id} className="p-4 border rounded-lg">
+                <div key={mistake.id} className="p-4 rounded-xl border border-gray-100 bg-gray-50/50 hover:bg-gray-50 transition-colors">
                   <div className="flex items-start justify-between gap-4 mb-3">
                     <div className="flex-1">
                       <p className="font-medium">{mistake.description}</p>

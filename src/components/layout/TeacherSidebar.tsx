@@ -43,19 +43,11 @@ const classTeacherNavItems: NavItem[] = [
     icon: <FolderOpen className="w-5 h-5" />,
     children: [
       { id: 'students', label: 'Students', icon: <Users className="w-4 h-4" />, path: '/teacher/my-class/students' },
-      { id: 'behaviour', label: 'Behaviour & Notes', icon: <FileText className="w-4 h-4" />, path: '/teacher/my-class/behaviour' },
+      { id: 'attendance', label: 'Mark Attendance', icon: <Calendar className="w-4 h-4" />, path: '/teacher/my-class/attendance' },
+      { id: 'class-summary', label: 'Class Summary', icon: <FileText className="w-4 h-4" />, path: '/teacher/reports/class-summary' },
     ],
   },
-  {
-    id: 'class-analytics',
-    label: 'Class Analytics',
-    icon: <BarChart3 className="w-5 h-5" />,
-    children: [
-      { id: 'overall', label: 'Overall Performance', icon: <BarChart3 className="w-4 h-4" />, path: '/teacher/class-analytics/overall' },
-      { id: 'subject-wise', label: 'Subject-wise Analysis', icon: <BookOpen className="w-4 h-4" />, path: '/teacher/class-analytics/subject-wise' },
-      { id: 'at-risk', label: 'At-Risk Students', icon: <AlertTriangle className="w-4 h-4" />, path: '/teacher/class-analytics/at-risk' },
-    ],
-  },
+  { id: 'class-analytics', label: 'Class Analytics', icon: <BarChart3 className="w-5 h-5" />, path: '/teacher/class-analytics' },
   { id: 'assessments', label: 'Assessments', icon: <ClipboardList className="w-5 h-5" />, path: '/teacher/assessments' },
   {
     id: 'communication',
@@ -63,18 +55,7 @@ const classTeacherNavItems: NavItem[] = [
     icon: <MessageCircle className="w-5 h-5" />,
     children: [
       { id: 'parent-messages', label: 'Parent Messages', icon: <MessageCircle className="w-4 h-4" />, path: '/teacher/communication' },
-      { id: 'student-messages', label: 'Student Messages', icon: <MessageCircle className="w-4 h-4" />, path: '/teacher/communication/students' },
       { id: 'announcements', label: 'Announcements', icon: <FileText className="w-4 h-4" />, path: '/teacher/announcements/events' },
-      { id: 'ptm', label: 'PTM Scheduling', icon: <Calendar className="w-4 h-4" />, path: '/teacher/meetings' },
-    ],
-  },
-  {
-    id: 'reports',
-    label: 'Reports',
-    icon: <FileText className="w-5 h-5" />,
-    children: [
-      { id: 'student-reports', label: 'Student Reports', icon: <FileText className="w-4 h-4" />, path: '/teacher/reports/students' },
-      { id: 'class-summary', label: 'Class Summary', icon: <FileText className="w-4 h-4" />, path: '/teacher/reports/class-summary' },
     ],
   },
 ];
@@ -101,7 +82,6 @@ const subjectTeacherNavItems: NavItem[] = [
       { id: 'mistakes', label: 'Common Mistakes', icon: <AlertTriangle className="w-4 h-4" />, path: '/teacher/subject-analytics/mistakes' },
     ],
   },
-  { id: 'assessments', label: 'Assessments', icon: <ClipboardList className="w-5 h-5" />, path: '/teacher/assessments' },
   {
     id: 'ai-tools',
     label: 'AI Tools',
@@ -109,6 +89,7 @@ const subjectTeacherNavItems: NavItem[] = [
     children: [
       { id: 'question-gen', label: 'Question Generator', icon: <Sparkles className="w-4 h-4" />, path: '/teacher/ai-tools/question-generator' },
       { id: 'worksheet-gen', label: 'Worksheet Generator', icon: <FileText className="w-4 h-4" />, path: '/teacher/ai-tools/worksheet-generator' },
+      { id: 'assessments', label: 'Assessments', icon: <ClipboardList className="w-4 h-4" />, path: '/teacher/assessments' },
     ],
   },
   {
@@ -117,17 +98,7 @@ const subjectTeacherNavItems: NavItem[] = [
     icon: <MessageCircle className="w-5 h-5" />,
     children: [
       { id: 'parent-messages', label: 'Parent Messages', icon: <MessageCircle className="w-4 h-4" />, path: '/teacher/communication' },
-      { id: 'student-messages', label: 'Student Messages', icon: <MessageCircle className="w-4 h-4" />, path: '/teacher/communication/students' },
       { id: 'announcements', label: 'Announcements', icon: <FileText className="w-4 h-4" />, path: '/teacher/announcements/events' },
-      { id: 'ptm', label: 'PTM Scheduling', icon: <Calendar className="w-4 h-4" />, path: '/teacher/meetings' },
-    ],
-  },
-  {
-    id: 'reports',
-    label: 'Reports',
-    icon: <FileText className="w-5 h-5" />,
-    children: [
-      { id: 'subject-performance', label: 'Subject Performance', icon: <BarChart3 className="w-4 h-4" />, path: '/teacher/reports/subject-performance' },
     ],
   },
 ];
@@ -163,7 +134,7 @@ const TeacherSidebar = ({ collapsed = false, isMobile = false, onMobileClose }: 
     });
     
     // Always keep these sections open by default
-    return [...new Set([...sections, 'my-class', 'my-subject', 'class-analytics', 'subject-analytics', 'communication', 'reports', 'ai-tools'])];
+    return [...new Set([...sections, 'my-class', 'my-subject', 'class-analytics', 'subject-analytics', 'communication', 'ai-tools'])];
   };
   
   const [openSections, setOpenSections] = useState<string[]>(getActiveSections());
@@ -212,8 +183,8 @@ const TeacherSidebar = ({ collapsed = false, isMobile = false, onMobileClose }: 
         </div>
         {showText && (
           <div>
-            <span className="text-2xl font-bold text-primary tracking-tight">EDDGE</span>
-            <span className="text-xs text-muted-foreground block">Teacher Portal</span>
+            <span className="text-xl font-bold text-primary tracking-tight">EDDGE</span>
+            <span className="text-[11px] text-muted-foreground block">Teacher Portal</span>
           </div>
         )}
       </div>
@@ -249,7 +220,7 @@ const TeacherSidebar = ({ collapsed = false, isMobile = false, onMobileClose }: 
                       </span>
                       {showText && (
                         <>
-                          <span className="font-medium text-sm flex-1 text-left">{item.label}</span>
+                          <span className="font-medium text-xs flex-1 text-left">{item.label}</span>
                           <ChevronDown className={cn(
                             "w-4 h-4 text-gray-400 transition-transform duration-200",
                             openSections.includes(item.id) ? "rotate-180" : ""
@@ -284,7 +255,7 @@ const TeacherSidebar = ({ collapsed = false, isMobile = false, onMobileClose }: 
                           </span>
                           {showText && (
                             <>
-                              <span className="font-medium text-xs flex-1 text-left">{child.label}</span>
+                                      <span className="font-medium text-xs flex-1 text-left">{child.label}</span>
                               {isPathActive(child.path) && (
                                 <span className="w-1.5 h-1.5 rounded-full bg-primary ml-auto" />
                               )}
@@ -314,7 +285,7 @@ const TeacherSidebar = ({ collapsed = false, isMobile = false, onMobileClose }: 
                   </span>
                   {showText && (
                     <>
-                      <span className="font-medium text-sm flex-1 text-left">{item.label}</span>
+                      <span className="font-medium text-xs flex-1 text-left">{item.label}</span>
                       {isPathActive(item.path) && (
                         <span className="w-2 h-2 rounded-full bg-primary ml-auto" />
                       )}
@@ -336,7 +307,7 @@ const TeacherSidebar = ({ collapsed = false, isMobile = false, onMobileClose }: 
             className="w-full flex items-center px-4 py-2.5 gap-3 rounded-xl text-gray-600 hover:bg-gray-50 hover:text-gray-900 transition-all duration-200"
           >
             <Settings className="w-5 h-5 text-gray-400" />
-            <span className="font-medium text-sm">Settings</span>
+            <span className="font-medium text-xs">Settings</span>
           </button>
 
           {/* Logout */}
@@ -345,7 +316,7 @@ const TeacherSidebar = ({ collapsed = false, isMobile = false, onMobileClose }: 
             className="w-full flex items-center justify-center px-4 py-3 gap-3 rounded-xl text-red-600 bg-red-50 hover:bg-red-100 transition-colors"
           >
             <LogOut className="w-5 h-5" />
-            <span className="font-medium text-sm">Logout</span>
+            <span className="font-medium text-xs">Logout</span>
           </button>
         </div>
       )}

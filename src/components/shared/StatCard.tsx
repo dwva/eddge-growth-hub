@@ -1,5 +1,4 @@
 import { ReactNode } from 'react';
-import { Card, CardContent } from '@/components/ui/card';
 import { cn } from '@/lib/utils';
 
 interface StatCardProps {
@@ -12,34 +11,60 @@ interface StatCardProps {
     isPositive: boolean;
   };
   className?: string;
+  variant?: 'default' | 'outline' | 'gradient';
+  iconBg?: string;
 }
 
-const StatCard = ({ title, value, icon, description, trend, className }: StatCardProps) => {
+const StatCard = ({ 
+  title, 
+  value, 
+  icon, 
+  description, 
+  trend, 
+  className,
+  variant = 'default',
+  iconBg
+}: StatCardProps) => {
+  const baseStyles = "relative overflow-hidden rounded-2xl transition-all duration-200 hover:shadow-lg";
+  
+  const variantStyles = {
+    default: "bg-white border border-gray-100 shadow-sm",
+    outline: "bg-white/50 border-2 border-gray-100",
+    gradient: "bg-gradient-to-br from-primary/5 to-primary/10 border border-primary/10"
+  };
+
   return (
-    <Card className={cn("hover:shadow-md transition-shadow", className)}>
-      <CardContent className="p-5">
-        <div className="flex items-start justify-between">
-          <div className="space-y-1">
-            <p className="text-sm text-muted-foreground">{title}</p>
-            <p className="text-2xl font-bold">{value}</p>
+    <div className={cn(baseStyles, variantStyles[variant], className)}>
+      <div className="p-5">
+        <div className="flex items-start justify-between gap-4">
+          <div className="space-y-2 flex-1 min-w-0">
+            <p className="text-[13px] font-medium text-gray-500 tracking-wide">{title}</p>
+            <div className="flex items-baseline gap-2">
+              <p className="text-2xl font-bold text-gray-900 tracking-tight">{value}</p>
+              {trend && (
+                <span className={cn(
+                  "inline-flex items-center gap-0.5 text-xs font-semibold px-1.5 py-0.5 rounded-full",
+                  trend.isPositive 
+                    ? "text-emerald-700 bg-emerald-50" 
+                    : "text-red-700 bg-red-50"
+                )}>
+                  {trend.isPositive ? '↑' : '↓'} {Math.abs(trend.value)}%
+                </span>
+              )}
+            </div>
             {description && (
-              <p className="text-xs text-muted-foreground">{description}</p>
-            )}
-            {trend && (
-              <p className={cn(
-                "text-xs font-medium",
-                trend.isPositive ? "text-primary" : "text-destructive"
-              )}>
-                {trend.isPositive ? '↑' : '↓'} {Math.abs(trend.value)}%
-              </p>
+              <p className="text-xs text-gray-400">{description}</p>
             )}
           </div>
-          <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center text-primary">
+          <div className={cn(
+            "w-12 h-12 rounded-xl flex items-center justify-center flex-shrink-0",
+            iconBg || "bg-primary/10 text-primary"
+          )}>
             {icon}
           </div>
         </div>
-      </CardContent>
-    </Card>
+      </div>
+    </div>
   );
 };
 

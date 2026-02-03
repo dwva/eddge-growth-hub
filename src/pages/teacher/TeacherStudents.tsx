@@ -2,15 +2,24 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import TeacherDashboardLayout from '@/components/layout/TeacherDashboardLayout';
 import { useTeacherMode } from '@/contexts/TeacherModeContext';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
-import { ArrowLeft, Search, Users, TrendingUp, TrendingDown, Minus, AlertCircle } from 'lucide-react';
+import { Progress } from '@/components/ui/progress';
+import { 
+  Search, Users, TrendingUp, TrendingDown, Minus, AlertCircle, 
+  Filter, ChevronLeft, ChevronRight, MoreHorizontal, Eye, MessageSquare, FileText
+} from 'lucide-react';
 import { classStudents } from '@/data/teacherMockData';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
 
 const TeacherStudentsContent = () => {
   const navigate = useNavigate();
@@ -18,7 +27,8 @@ const TeacherStudentsContent = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [performanceFilter, setPerformanceFilter] = useState('all');
   const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 5;
+  const [viewMode, setViewMode] = useState<'table' | 'grid'>('table');
+  const itemsPerPage = 8;
 
   // Mode restriction
   if (currentMode !== 'class_teacher') {
@@ -47,169 +57,234 @@ const TeacherStudentsContent = () => {
 
   const getTrendIcon = (trend: string) => {
     switch (trend) {
-      case 'up': return <TrendingUp className="w-4 h-4 text-green-500" />;
+      case 'up': return <TrendingUp className="w-4 h-4 text-emerald-500" />;
       case 'down': return <TrendingDown className="w-4 h-4 text-red-500" />;
-      default: return <Minus className="w-4 h-4 text-muted-foreground" />;
+      default: return <Minus className="w-4 h-4 text-gray-400" />;
+    }
+  };
+
+  const getPerformanceColor = (score: number) => {
+    if (score >= 85) return 'bg-emerald-500';
+    if (score >= 70) return 'bg-amber-500';
+    return 'bg-red-500';
+  };
+
+  const getBehaviourStyle = (behaviour: string) => {
+    switch (behaviour) {
+      case 'Excellent': return 'bg-emerald-50 text-emerald-700 border-emerald-200';
+      case 'Good': return 'bg-blue-50 text-blue-700 border-blue-200';
+      case 'Needs Attention': return 'bg-amber-50 text-amber-700 border-amber-200';
+      case 'Concern': return 'bg-red-50 text-red-700 border-red-200';
+      default: return 'bg-gray-50 text-gray-700 border-gray-200';
     }
   };
 
   return (
     <div className="space-y-6">
-      {/* Header */}
-      <div className="flex items-center gap-4">
-        <Button variant="ghost" size="icon" onClick={() => navigate('/teacher')}>
-          <ArrowLeft className="w-5 h-5" />
-        </Button>
+      {/* Page Header */}
+      <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-bold">My Class - Students</h1>
-          <p className="text-muted-foreground">View and manage students in your assigned class ({classStudents.length} students)</p>
+          <h1 className="text-2xl font-bold text-gray-900">Students</h1>
+          <p className="text-sm text-gray-500 mt-1">Class 10-A • {classStudents.length} students enrolled</p>
+        </div>
+        <div className="flex items-center gap-3">
+          <Button variant="outline" size="sm" className="gap-2 h-9 rounded-xl">
+            <FileText className="w-4 h-4" />
+            Export
+          </Button>
         </div>
       </div>
 
-      {/* Search & Filters */}
-      <Card>
-        <CardContent className="pt-6">
+      {/* Filters Bar */}
+      <Card className="rounded-2xl shadow-sm border-gray-100">
+        <CardContent className="p-4">
           <div className="flex flex-col sm:flex-row gap-4">
             <div className="relative flex-1">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
               <Input
-                placeholder="Search students..."
+                placeholder="Search students by name..."
                 value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                className="pl-9"
+                onChange={(e) => { setSearchQuery(e.target.value); setCurrentPage(1); }}
+                className="pl-10 h-10 rounded-xl border-gray-200 bg-gray-50 focus:bg-white"
               />
             </div>
-            <Select value={performanceFilter} onValueChange={setPerformanceFilter}>
-              <SelectTrigger className="w-full sm:w-48">
-                <SelectValue placeholder="Filter by performance" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">All Students</SelectItem>
-                <SelectItem value="high">High Performers (≥85%)</SelectItem>
-                <SelectItem value="medium">Medium (70-84%)</SelectItem>
-                <SelectItem value="low">Low Performers (&lt;70%)</SelectItem>
-              </SelectContent>
-            </Select>
+            <div className="flex items-center gap-3">
+              <Select value={performanceFilter} onValueChange={(v) => { setPerformanceFilter(v); setCurrentPage(1); }}>
+                <SelectTrigger className="w-44 h-10 rounded-xl border-gray-200">
+                  <Filter className="w-4 h-4 mr-2 text-gray-400" />
+                  <SelectValue placeholder="Filter" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">All Students</SelectItem>
+                  <SelectItem value="high">High (≥85%)</SelectItem>
+                  <SelectItem value="medium">Medium (70-84%)</SelectItem>
+                  <SelectItem value="low">Low (&lt;70%)</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
           </div>
         </CardContent>
       </Card>
 
-      {/* Students Table */}
-      <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <Users className="w-5 h-5" />
-            Students
-          </CardTitle>
-        </CardHeader>
-        <CardContent>
-          {paginatedStudents.length > 0 ? (
-            <>
-              <div className="rounded-md border overflow-x-auto">
-                <Table>
-                  <TableHeader>
-                    <TableRow>
-                      <TableHead className="w-16">Rank</TableHead>
-                      <TableHead>Student</TableHead>
-                      <TableHead>Overall Score</TableHead>
-                      <TableHead>Subjects</TableHead>
-                      <TableHead>Performance</TableHead>
-                    </TableRow>
-                  </TableHeader>
-                  <TableBody>
-                    {paginatedStudents.map((student) => (
-                      <TableRow key={student.id}>
-                        <TableCell className="font-medium">#{student.rank}</TableCell>
-                        <TableCell>
-                          <div className="flex items-center gap-3">
-                            <Avatar className="w-9 h-9">
-                              <AvatarFallback className="bg-primary/10 text-primary text-sm">
-                                {student.avatar}
-                              </AvatarFallback>
-                            </Avatar>
-                            <div>
-                              <p className="font-medium">{student.name}</p>
-                              {student.weakAreas.length > 0 && (
-                                <p className="text-xs text-red-500">Weak: {student.weakAreas.join(', ')}</p>
-                              )}
-                            </div>
-                          </div>
-                        </TableCell>
-                        <TableCell>
-                          <div className="flex items-center gap-2">
-                            <span className="font-semibold">{student.overallScore}%</span>
-                            {getTrendIcon(student.trend)}
-                            {student.trendValue !== 0 && (
-                              <span className={`text-xs ${student.trendValue > 0 ? 'text-green-500' : 'text-red-500'}`}>
-                                {student.trendValue > 0 ? '+' : ''}{student.trendValue}%
-                              </span>
-                            )}
-                          </div>
-                        </TableCell>
-                        <TableCell>
-                          <div className="flex flex-wrap gap-1">
-                            {Object.entries(student.subjects).map(([subject, score]) => (
-                              <Badge key={subject} variant="outline" className="text-xs">
-                                {subject}: {score}%
-                              </Badge>
-                            ))}
-                          </div>
-                        </TableCell>
-                        <TableCell>
-                          <div className="space-y-1">
-                            <Badge 
-                              variant={student.behaviour === 'Excellent' ? 'default' : student.behaviour === 'Good' ? 'secondary' : 'destructive'}
-                              className="text-xs"
-                            >
-                              {student.behaviour}
-                            </Badge>
-                            {student.strongAreas.length > 0 && (
-                              <p className="text-xs text-green-600">Strong: {student.strongAreas.join(', ')}</p>
-                            )}
-                          </div>
-                        </TableCell>
-                      </TableRow>
-                    ))}
-                  </TableBody>
-                </Table>
-              </div>
+      {/* Students List */}
+      {paginatedStudents.length > 0 ? (
+        <Card className="rounded-2xl shadow-sm border-gray-100 overflow-hidden">
+          {/* Table Header */}
+          <div className="hidden md:grid grid-cols-12 gap-4 px-6 py-3 bg-gray-50 border-b border-gray-100 text-xs font-semibold text-gray-500 uppercase tracking-wide">
+            <div className="col-span-4">Student</div>
+            <div className="col-span-2 text-center">Score</div>
+            <div className="col-span-2 text-center">Attendance</div>
+            <div className="col-span-2 text-center">Behaviour</div>
+            <div className="col-span-2 text-right">Action</div>
+          </div>
 
-              {/* Pagination */}
-              <div className="flex items-center justify-between mt-4">
-                <p className="text-sm text-muted-foreground">
-                  Page {currentPage} of {totalPages} ({filteredStudents.length} total students)
-                </p>
-                <div className="flex gap-2">
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
-                    disabled={currentPage === 1}
-                  >
-                    Previous
+          {/* Student Rows */}
+          <div className="divide-y divide-gray-50">
+            {paginatedStudents.map((student) => (
+              <div 
+                key={student.id} 
+                className="grid grid-cols-1 md:grid-cols-12 gap-4 px-6 py-4 hover:bg-gray-50/50 transition-colors items-center"
+              >
+                {/* Student Info */}
+                <div className="col-span-4 flex items-center gap-4">
+                  <div className="relative">
+                    <Avatar className="w-12 h-12 border-2 border-white shadow-sm">
+                      <AvatarFallback className="bg-gradient-to-br from-primary/20 to-primary/10 text-primary font-semibold">
+                        {student.avatar}
+                      </AvatarFallback>
+                    </Avatar>
+                    <div className={`absolute -bottom-0.5 -right-0.5 w-4 h-4 rounded-full border-2 border-white ${getPerformanceColor(student.overallScore)}`} />
+                  </div>
+                  <div className="min-w-0">
+                    <p className="font-semibold text-gray-900 truncate">{student.name}</p>
+                    <p className="text-xs text-gray-500">Rank #{student.rank}</p>
+                    {student.weakAreas.length > 0 && (
+                      <div className="flex items-center gap-1 mt-1">
+                        <span className="text-[10px] text-red-500 bg-red-50 px-1.5 py-0.5 rounded">
+                          Weak: {student.weakAreas.slice(0, 2).join(', ')}
+                        </span>
+                      </div>
+                    )}
+                  </div>
+                </div>
+
+                {/* Score */}
+                <div className="col-span-2 flex flex-col items-center">
+                  <div className="flex items-center gap-2">
+                    <span className="text-lg font-bold text-gray-900">{student.overallScore}%</span>
+                    {getTrendIcon(student.trend)}
+                  </div>
+                  {student.trendValue !== 0 && (
+                    <span className={`text-xs font-medium ${student.trendValue > 0 ? 'text-emerald-600' : 'text-red-600'}`}>
+                      {student.trendValue > 0 ? '+' : ''}{student.trendValue}% this month
+                    </span>
+                  )}
+                </div>
+
+                {/* Attendance - using score as proxy */}
+                <div className="col-span-2 flex flex-col items-center">
+                  <div className="w-full max-w-[80px]">
+                    <div className="flex items-center justify-between text-xs mb-1">
+                      <span className="text-gray-500">Attendance</span>
+                      <span className="font-medium">{Math.min(100, student.overallScore + 8)}%</span>
+                    </div>
+                    <Progress value={Math.min(100, student.overallScore + 8)} className="h-1.5" />
+                  </div>
+                </div>
+
+                {/* Behaviour */}
+                <div className="col-span-2 flex justify-center">
+                  <Badge variant="outline" className={`text-xs font-medium ${getBehaviourStyle(student.behaviour)}`}>
+                    {student.behaviour}
+                  </Badge>
+                </div>
+
+                {/* Actions */}
+                <div className="col-span-2 flex items-center justify-end gap-2">
+                  <Button variant="ghost" size="icon" className="h-8 w-8 rounded-lg">
+                    <Eye className="w-4 h-4 text-gray-500" />
                   </Button>
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
-                    disabled={currentPage === totalPages}
-                  >
-                    Next
+                  <Button variant="ghost" size="icon" className="h-8 w-8 rounded-lg">
+                    <MessageSquare className="w-4 h-4 text-gray-500" />
                   </Button>
+                  <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                      <Button variant="ghost" size="icon" className="h-8 w-8 rounded-lg">
+                        <MoreHorizontal className="w-4 h-4 text-gray-500" />
+                      </Button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent align="end" className="w-48">
+                      <DropdownMenuItem onClick={() => navigate('/teacher/reports/class-summary')}>
+                        <FileText className="w-4 h-4 mr-2" />
+                        View Class Summary
+                      </DropdownMenuItem>
+                      <DropdownMenuItem onClick={() => navigate('/teacher/communication')}>
+                        <MessageSquare className="w-4 h-4 mr-2" />
+                        Contact Parent
+                      </DropdownMenuItem>
+                    </DropdownMenuContent>
+                  </DropdownMenu>
                 </div>
               </div>
-            </>
-          ) : (
-            <div className="text-center py-12">
-              <Users className="w-12 h-12 text-muted-foreground mx-auto mb-4" />
-              <h3 className="text-lg font-medium mb-2">No students found</h3>
-              <p className="text-muted-foreground">
+            ))}
+          </div>
+
+          {/* Pagination Footer */}
+          <div className="flex items-center justify-between px-6 py-4 bg-gray-50 border-t border-gray-100">
+            <p className="text-sm text-gray-500">
+              Showing {(currentPage - 1) * itemsPerPage + 1} - {Math.min(currentPage * itemsPerPage, filteredStudents.length)} of {filteredStudents.length}
+            </p>
+            <div className="flex items-center gap-2">
+              <Button
+                variant="outline"
+                size="sm"
+                className="h-8 w-8 p-0 rounded-lg"
+                onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
+                disabled={currentPage === 1}
+              >
+                <ChevronLeft className="w-4 h-4" />
+              </Button>
+              {Array.from({ length: Math.min(5, totalPages) }, (_, i) => {
+                const page = i + 1;
+                return (
+                  <Button
+                    key={page}
+                    variant={currentPage === page ? "default" : "outline"}
+                    size="sm"
+                    className="h-8 w-8 p-0 rounded-lg"
+                    onClick={() => setCurrentPage(page)}
+                  >
+                    {page}
+                  </Button>
+                );
+              })}
+              <Button
+                variant="outline"
+                size="sm"
+                className="h-8 w-8 p-0 rounded-lg"
+                onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
+                disabled={currentPage === totalPages}
+              >
+                <ChevronRight className="w-4 h-4" />
+              </Button>
+            </div>
+          </div>
+        </Card>
+      ) : (
+        <Card className="rounded-2xl shadow-sm border-gray-100">
+          <CardContent className="py-16">
+            <div className="text-center">
+              <div className="w-16 h-16 rounded-2xl bg-gray-100 flex items-center justify-center mx-auto mb-4">
+                <Users className="w-8 h-8 text-gray-400" />
+              </div>
+              <h3 className="text-lg font-semibold text-gray-900 mb-2">No students found</h3>
+              <p className="text-gray-500 text-sm">
                 {searchQuery ? 'Try a different search term' : 'No students match the current filter'}
               </p>
             </div>
-          )}
-        </CardContent>
-      </Card>
+          </CardContent>
+        </Card>
+      )}
     </div>
   );
 };
