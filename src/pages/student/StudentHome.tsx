@@ -60,63 +60,63 @@ const StudentHome = () => {
         {/* Main Grid - Full Width */}
         <div className="space-y-6">
           
-          {/* Hero Row: Focus Card + Stats Card */}
-          <div className="grid grid-cols-1 md:grid-cols-5 gap-6">
+          {/* Hero Row: Focus Card + Stats Card - Exact alignment like reference */}
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-5">
             
-            {/* Hero Card - Today's Focus (3/5 width) */}
-            <Card className="md:col-span-3 relative overflow-hidden border-0 shadow-sm rounded-2xl bg-gradient-to-br from-primary via-primary to-purple-600 min-h-[200px]">
+            {/* Hero Card - Today's Focus (7/12 width on desktop) */}
+            <Card className="lg:col-span-7 relative overflow-hidden border-0 shadow-sm rounded-3xl bg-gradient-to-br from-primary via-primary to-purple-700 h-[220px]">
               {/* Decorative elements */}
-              <div className="absolute top-0 right-0 w-40 h-40 bg-white/10 rounded-full -translate-y-1/2 translate-x-1/4 blur-2xl" />
-              <div className="absolute bottom-0 left-0 w-32 h-32 bg-white/5 rounded-full translate-y-1/3 -translate-x-1/4 blur-xl" />
+              <div className="absolute top-0 right-0 w-48 h-48 bg-white/5 rounded-full -translate-y-1/4 translate-x-1/4" />
+              <div className="absolute top-1/2 right-1/4 w-32 h-32 bg-white/5 rounded-full" />
+              <div className="absolute bottom-0 right-0 w-64 h-64 bg-purple-500/20 rounded-full translate-y-1/2 translate-x-1/4" />
               
-              <CardContent className="relative p-6 flex flex-col justify-between h-full">
+              <CardContent className="relative p-7 flex flex-col justify-end h-full">
                 <div>
-                  <h2 className="text-xl md:text-2xl font-bold text-white mb-2">
+                  <h2 className="text-2xl md:text-[28px] font-bold text-white leading-tight mb-2">
                     Today's Focus
                   </h2>
-                  <p className="text-white/80 text-sm md:text-base max-w-xs">
+                  <p className="text-white/70 text-sm md:text-base max-w-sm">
                     Your personalized learning plan for today
                   </p>
                 </div>
                 
-                <div className="flex flex-wrap gap-3 mt-6">
-                  <Button className="bg-white text-primary hover:bg-white/90 font-semibold rounded-xl shadow-md">
+                <div className="flex gap-3 mt-6">
+                  <Button className="bg-white text-primary hover:bg-white/90 font-semibold rounded-xl px-6 h-11 shadow-md">
                     Start Today's Plan
                   </Button>
-                  <Button variant="outline" className="border-white/30 text-white hover:bg-white/10 rounded-xl">
+                  <Button variant="outline" className="border-white/40 text-white hover:bg-white/10 rounded-xl px-6 h-11 bg-transparent">
                     View Progress
                   </Button>
                 </div>
               </CardContent>
             </Card>
 
-            {/* Stats Card - My Stats (2/5 width) */}
-            <Card className="md:col-span-2 relative overflow-hidden border-0 shadow-sm rounded-2xl bg-gradient-to-br from-amber-50 to-orange-50 min-h-[200px]">
-              {/* Decorative top right curve */}
-              <div className="absolute -top-8 -right-8 w-24 h-24 bg-primary/20 rounded-full" />
+            {/* Stats Card - My Stats (5/12 width on desktop) */}
+            <Card className="lg:col-span-5 relative overflow-hidden border-0 shadow-sm rounded-3xl bg-gradient-to-br from-amber-100 via-amber-50 to-orange-100 h-[220px]">
+              {/* Decorative circle */}
+              <div className="absolute -top-6 -right-6 w-20 h-20 bg-primary/10 rounded-full" />
+              <div className="absolute bottom-0 right-0 w-32 h-32 bg-orange-200/50 rounded-full translate-y-1/3 translate-x-1/4" />
               
-              <CardContent className="relative p-6 flex flex-col justify-between h-full">
-                <h3 className="text-lg font-bold text-gray-900">My Stats</h3>
+              <CardContent className="relative p-7 flex flex-col h-full">
+                <h3 className="text-xl font-bold text-gray-900">My Stats</h3>
                 
-                <div className="flex gap-6 mt-4">
+                <div className="flex gap-8 mt-5">
                   <div>
-                    <p className="text-xs text-gray-500 font-medium">Today</p>
+                    <p className="text-xs text-gray-500 font-medium mb-1">Today</p>
                     <p className="text-xl font-bold text-gray-900">2.5 hrs</p>
                   </div>
                   <div>
-                    <p className="text-xs text-gray-500 font-medium">This Week</p>
+                    <p className="text-xs text-gray-500 font-medium mb-1">This Week</p>
                     <p className="text-xl font-bold text-gray-900">12 hrs</p>
                   </div>
                 </div>
                 
-                <div className="flex items-center gap-4 mt-4">
-                  <div className="flex items-center gap-1.5">
-                    <Flame className="w-4 h-4 text-orange-500" />
-                    <span className="text-sm font-semibold text-gray-700">7 day streak</span>
-                  </div>
+                <div className="flex items-center gap-1.5 mt-4">
+                  <Flame className="w-4 h-4 text-orange-500" />
+                  <span className="text-sm font-semibold text-gray-700">7 day streak</span>
                 </div>
                 
-                <button className="mt-4 flex items-center gap-2 text-sm font-medium text-gray-700 hover:text-primary transition-colors group">
+                <button className="mt-auto flex items-center gap-2 text-sm font-medium text-gray-700 hover:text-primary transition-colors group">
                   Go to my progress
                   <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
                 </button>
