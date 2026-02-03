@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Righteous&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
 
 @tailwind base;
@@ -123,10 +123,10 @@
     @apply bg-background text-foreground font-sans;
   }
 
-  /* Headings use display font (Sora) */
+  /* Headings use display font (Righteous - Art Deco geometric style similar to Sifonn) */
   h1, h2, h3, h4, h5, h6,
   .font-display {
-    font-family: 'Sora', system-ui, sans-serif;
+    font-family: 'Righteous', system-ui, sans-serif;
   }
 
   h1 {
