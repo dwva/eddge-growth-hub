@@ -296,18 +296,18 @@ const StudentHome = () => {
 
             {/* Right Column - AI Study Suggestions */}
             <div className="lg:pl-2">
-              <div className="mb-4">
-                <h3 className="text-base font-semibold text-gray-900 flex items-center gap-2">
-                  <Brain className="w-4 h-4 text-primary" />
-                  AI Study Suggestions
-                </h3>
-                <p className="text-xs text-gray-500 mt-1">
-                  Based on your recent learning
-                </p>
-              </div>
-
               <Card className="border border-gray-100 shadow-sm rounded-2xl bg-white min-h-[380px]">
-                <CardContent className="p-6 space-y-2">
+                <CardContent className="p-6">
+                  <div className="mb-5">
+                    <h3 className="text-base font-semibold text-gray-900 flex items-center gap-2">
+                      <Brain className="w-4 h-4 text-primary" />
+                      AI Study Suggestions
+                    </h3>
+                    <p className="text-xs text-gray-500 mt-1">
+                      Based on your recent learning
+                    </p>
+                  </div>
+                  <div className="space-y-2">
                   {[
                     {
                       id: 'learn',
@@ -387,6 +387,7 @@ const StudentHome = () => {
                       </button>
                     );
                   })}
+                  </div>
                 </CardContent>
               </Card>
             </div>

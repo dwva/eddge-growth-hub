@@ -29,7 +29,7 @@ const StudentDashboardLayout = ({ children }: StudentDashboardLayoutProps) => {
   const firstName = user?.name?.split(' ')[0] || 'Student';
 
   return (
-    <div className="min-h-screen bg-[#f8f9fb] flex font-sans">
+    <div className="h-screen min-h-0 bg-[#f8f9fb] flex font-sans overflow-hidden">
       {/* Desktop Sidebar - Fixed, Slim - Planti style */}
       <aside className={cn(
         "hidden md:flex flex-col h-screen sticky top-0 flex-shrink-0 transition-all duration-300 overflow-hidden",
@@ -46,7 +46,7 @@ const StudentDashboardLayout = ({ children }: StudentDashboardLayoutProps) => {
       </Sheet>
 
       {/* Main Content */}
-      <div className="flex-1 flex flex-col min-w-0">
+      <div className="flex-1 flex flex-col min-w-0 min-h-0 overflow-hidden">
         {/* Top Bar - Planti style */}
         <header className="h-20 bg-white px-6 md:px-8 flex items-center justify-between sticky top-0 z-10 flex-shrink-0">
           {/* Left: Welcome Text */}
@@ -161,8 +161,8 @@ const StudentDashboardLayout = ({ children }: StudentDashboardLayoutProps) => {
           </div>
         </header>
 
-        {/* Page Content */}
-        <main className="flex-1 p-6 md:p-8 overflow-y-auto">
+        {/* Page Content - no scroll, fits viewport */}
+        <main className="flex-1 min-h-0 p-6 md:p-8 overflow-hidden">
           {children}
         </main>
       </div>
