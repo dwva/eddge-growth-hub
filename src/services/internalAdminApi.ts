@@ -1,0 +1,354 @@
+// Internal Admin API Service with Mock Data
+
+export interface PlatformOverview {
+  total_schools: number;
+  total_users: number;
+  daily_active_users: number;
+  system_uptime_days: number;
+}
+
+export interface School {
+  id: string;
+  name: string;
+  email?: string;
+  phone?: string;
+  address?: string;
+  is_active: boolean;
+  subscription_status: string;
+  created_at: string;
+}
+
+export interface SchoolSubscription {
+  plan_name: string;
+  subscription_status: string;
+  start_date: string;
+  renewal_date: string;
+}
+
+export interface UsageAnalytics {
+  user_growth: Array<{ date: string; count: number }>;
+  feature_usage: {
+    doubt_solver: number;
+    foundation_engine: number;
+    assessments: number;
+  };
+  ai_consumption: {
+    total_requests: number;
+    total_tokens: number;
+    cost_usd: number;
+  };
+}
+
+export interface BillingPlan {
+  id: string;
+  name: string;
+  price_monthly: number;
+  price_yearly: number;
+  features: string[];
+}
+
+export interface BillingRenewal {
+  school_id: string;
+  school_name: string;
+  plan_name: string;
+  renewal_date: string;
+  amount: number;
+}
+
+export interface Invoice {
+  id: string;
+  school_name: string;
+  amount: number;
+  status: "paid" | "pending" | "overdue";
+  due_date: string;
+  paid_date?: string;
+}
+
+export interface SystemHealth {
+  api_status: {
+    status: "healthy" | "unhealthy";
+    response_time_ms: number;
+    last_check: string;
+  };
+  error_count_24h: number;
+  background_jobs: {
+    pending: number;
+    running: number;
+    failed: number;
+  };
+}
+
+export interface AuditLog {
+  id: string;
+  user_id: string;
+  action: string;
+  resource: string;
+  ip_address?: string;
+  timestamp: string;
+}
+
+export interface AccessLog {
+  id: string;
+  user_id: string;
+  endpoint: string;
+  method: string;
+  status_code: number;
+  ip_address?: string;
+  timestamp: string;
+}
+
+export interface ComplianceLog {
+  id: string;
+  event_type: string;
+  description: string;
+  user_id?: string;
+  school_id?: string;
+  timestamp: string;
+}
+
+// Mock Data
+const mockSchools: School[] = [
+  { id: "sch-001", name: "Delhi Public School", email: "admin@dps.edu", phone: "+91 11 2345 6789", address: "New Delhi", is_active: true, subscription_status: "Premium", created_at: "2023-01-15" },
+  { id: "sch-002", name: "St. Mary's Academy", email: "contact@stmarys.edu", phone: "+91 22 3456 7890", address: "Mumbai", is_active: true, subscription_status: "Standard", created_at: "2023-02-20" },
+  { id: "sch-003", name: "Kendriya Vidyalaya", email: "kv@gov.in", phone: "+91 80 4567 8901", address: "Bangalore", is_active: true, subscription_status: "Premium", created_at: "2023-03-10" },
+  { id: "sch-004", name: "Modern School", email: "info@modernschool.edu", phone: "+91 44 5678 9012", address: "Chennai", is_active: false, subscription_status: "Basic", created_at: "2023-04-05" },
+  { id: "sch-005", name: "DAV Public School", email: "dav@dav.edu", phone: "+91 33 6789 0123", address: "Kolkata", is_active: true, subscription_status: "Standard", created_at: "2023-05-12" },
+  { id: "sch-006", name: "Ryan International", email: "ryan@ryanint.edu", phone: "+91 40 7890 1234", address: "Hyderabad", is_active: true, subscription_status: "Premium", created_at: "2023-06-18" },
+  { id: "sch-007", name: "Army Public School", email: "aps@army.edu", phone: "+91 79 8901 2345", address: "Ahmedabad", is_active: true, subscription_status: "Standard", created_at: "2023-07-22" },
+  { id: "sch-008", name: "Springdales School", email: "spring@springdales.edu", phone: "+91 141 9012 3456", address: "Jaipur", is_active: false, subscription_status: "Basic", created_at: "2023-08-30" },
+  { id: "sch-009", name: "The Heritage School", email: "heritage@heritage.edu", phone: "+91 522 0123 4567", address: "Lucknow", is_active: true, subscription_status: "Premium", created_at: "2023-09-15" },
+  { id: "sch-010", name: "Bishop Cotton School", email: "bishop@bcotton.edu", phone: "+91 20 1234 5678", address: "Pune", is_active: true, subscription_status: "Standard", created_at: "2023-10-08" },
+  { id: "sch-011", name: "La Martiniere College", email: "lam@lamart.edu", phone: "+91 172 2345 6789", address: "Chandigarh", is_active: true, subscription_status: "Premium", created_at: "2023-11-20" },
+  { id: "sch-012", name: "Scindia School", email: "scindia@scindia.edu", phone: "+91 751 3456 7890", address: "Gwalior", is_active: true, subscription_status: "Basic", created_at: "2023-12-05" },
+];
+
+const mockPlans: BillingPlan[] = [
+  {
+    id: "basic",
+    name: "Basic",
+    price_monthly: 99,
+    price_yearly: 990,
+    features: ["Up to 100 students", "5 teachers", "Basic analytics", "Email support"]
+  },
+  {
+    id: "standard",
+    name: "Standard",
+    price_monthly: 199,
+    price_yearly: 1990,
+    features: ["Up to 500 students", "25 teachers", "Advanced analytics", "AI features", "Priority support"]
+  },
+  {
+    id: "premium",
+    name: "Premium",
+    price_monthly: 399,
+    price_yearly: 3990,
+    features: ["Unlimited students", "Unlimited teachers", "Full analytics", "All AI features", "Custom integrations", "24/7 support"]
+  }
+];
+
+const mockRenewals: BillingRenewal[] = [
+  { school_id: "sch-001", school_name: "Delhi Public School", plan_name: "Premium", renewal_date: "2024-02-15", amount: 399 },
+  { school_id: "sch-002", school_name: "St. Mary's Academy", plan_name: "Standard", renewal_date: "2024-02-18", amount: 199 },
+  { school_id: "sch-005", school_name: "DAV Public School", plan_name: "Standard", renewal_date: "2024-02-22", amount: 199 },
+  { school_id: "sch-006", school_name: "Ryan International", plan_name: "Premium", renewal_date: "2024-02-25", amount: 399 },
+];
+
+const mockInvoices: Invoice[] = [
+  { id: "inv-001-abc123", school_name: "Delhi Public School", amount: 399, status: "paid", due_date: "2024-01-15", paid_date: "2024-01-14" },
+  { id: "inv-002-def456", school_name: "St. Mary's Academy", amount: 199, status: "paid", due_date: "2024-01-18", paid_date: "2024-01-17" },
+  { id: "inv-003-ghi789", school_name: "Modern School", amount: 99, status: "overdue", due_date: "2024-01-05" },
+  { id: "inv-004-jkl012", school_name: "DAV Public School", amount: 199, status: "pending", due_date: "2024-02-12" },
+  { id: "inv-005-mno345", school_name: "Ryan International", amount: 399, status: "paid", due_date: "2024-01-25", paid_date: "2024-01-24" },
+  { id: "inv-006-pqr678", school_name: "Army Public School", amount: 199, status: "paid", due_date: "2024-01-22", paid_date: "2024-01-21" },
+  { id: "inv-007-stu901", school_name: "Springdales School", amount: 99, status: "overdue", due_date: "2024-01-30" },
+  { id: "inv-008-vwx234", school_name: "The Heritage School", amount: 399, status: "pending", due_date: "2024-02-15" },
+];
+
+const mockAuditLogs: AuditLog[] = [
+  { id: "aud-001", user_id: "usr-admin-001", action: "UPDATE", resource: "school_settings", ip_address: "192.168.1.1", timestamp: "2024-01-15T10:30:00Z" },
+  { id: "aud-002", user_id: "usr-admin-002", action: "CREATE", resource: "subscription", ip_address: "192.168.1.2", timestamp: "2024-01-15T11:45:00Z" },
+  { id: "aud-003", user_id: "usr-admin-001", action: "DELETE", resource: "user_account", ip_address: "192.168.1.1", timestamp: "2024-01-15T12:00:00Z" },
+  { id: "aud-004", user_id: "usr-admin-003", action: "UPDATE", resource: "billing_plan", ip_address: "192.168.1.3", timestamp: "2024-01-15T14:20:00Z" },
+  { id: "aud-005", user_id: "usr-admin-002", action: "CREATE", resource: "school_account", ip_address: "192.168.1.2", timestamp: "2024-01-15T15:30:00Z" },
+  { id: "aud-006", user_id: "usr-admin-001", action: "UPDATE", resource: "system_config", ip_address: "192.168.1.1", timestamp: "2024-01-15T16:45:00Z" },
+  { id: "aud-007", user_id: "usr-admin-003", action: "DELETE", resource: "api_key", ip_address: "192.168.1.3", timestamp: "2024-01-16T09:00:00Z" },
+  { id: "aud-008", user_id: "usr-admin-002", action: "CREATE", resource: "announcement", ip_address: "192.168.1.2", timestamp: "2024-01-16T10:15:00Z" },
+];
+
+const mockAccessLogs: AccessLog[] = [
+  { id: "acc-001", user_id: "usr-001", endpoint: "/api/schools", method: "GET", status_code: 200, ip_address: "10.0.0.1", timestamp: "2024-01-15T10:00:00Z" },
+  { id: "acc-002", user_id: "usr-002", endpoint: "/api/users", method: "POST", status_code: 201, ip_address: "10.0.0.2", timestamp: "2024-01-15T10:05:00Z" },
+  { id: "acc-003", user_id: "usr-003", endpoint: "/api/billing", method: "GET", status_code: 200, ip_address: "10.0.0.3", timestamp: "2024-01-15T10:10:00Z" },
+  { id: "acc-004", user_id: "usr-001", endpoint: "/api/auth", method: "POST", status_code: 401, ip_address: "10.0.0.1", timestamp: "2024-01-15T10:15:00Z" },
+  { id: "acc-005", user_id: "usr-004", endpoint: "/api/reports", method: "GET", status_code: 500, ip_address: "10.0.0.4", timestamp: "2024-01-15T10:20:00Z" },
+  { id: "acc-006", user_id: "usr-002", endpoint: "/api/schools/123", method: "PUT", status_code: 200, ip_address: "10.0.0.2", timestamp: "2024-01-15T10:25:00Z" },
+  { id: "acc-007", user_id: "usr-005", endpoint: "/api/analytics", method: "GET", status_code: 200, ip_address: "10.0.0.5", timestamp: "2024-01-15T10:30:00Z" },
+  { id: "acc-008", user_id: "usr-003", endpoint: "/api/users/456", method: "DELETE", status_code: 403, ip_address: "10.0.0.3", timestamp: "2024-01-15T10:35:00Z" },
+];
+
+const mockComplianceLogs: ComplianceLog[] = [
+  { id: "comp-001", event_type: "DATA_ACCESS", description: "Bulk student data export requested", user_id: "usr-admin-001", school_id: "sch-001", timestamp: "2024-01-15T09:00:00Z" },
+  { id: "comp-002", event_type: "DATA_DELETION", description: "User account deletion completed", user_id: "usr-admin-002", school_id: "sch-003", timestamp: "2024-01-15T10:30:00Z" },
+  { id: "comp-003", event_type: "CONSENT_UPDATE", description: "Privacy consent updated for school", school_id: "sch-002", timestamp: "2024-01-15T11:45:00Z" },
+  { id: "comp-004", event_type: "DATA_BREACH", description: "Potential breach detected and mitigated", timestamp: "2024-01-15T13:00:00Z" },
+  { id: "comp-005", event_type: "DATA_ACCESS", description: "Parent data access request fulfilled", user_id: "usr-parent-001", school_id: "sch-005", timestamp: "2024-01-15T14:20:00Z" },
+  { id: "comp-006", event_type: "AUDIT_COMPLETE", description: "Monthly DPDP compliance audit completed", timestamp: "2024-01-15T16:00:00Z" },
+  { id: "comp-007", event_type: "DATA_RETENTION", description: "Old records archived per retention policy", school_id: "sch-001", timestamp: "2024-01-16T08:00:00Z" },
+  { id: "comp-008", event_type: "CONSENT_UPDATE", description: "New data processing agreement signed", school_id: "sch-006", timestamp: "2024-01-16T09:30:00Z" },
+];
+
+// Simulated delay for async behavior
+const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
+
+export const internalAdminApi = {
+  getPlatformOverview: async (): Promise<PlatformOverview> => {
+    await delay(500);
+    return {
+      total_schools: 150,
+      total_users: 45000,
+      daily_active_users: 12000,
+      system_uptime_days: 365
+    };
+  },
+
+  getSchools: async (page: number, pageSize: number, search?: string): Promise<{ schools: School[]; total: number }> => {
+    await delay(400);
+    let filtered = mockSchools;
+    if (search) {
+      const searchLower = search.toLowerCase();
+      filtered = mockSchools.filter(s => 
+        s.name.toLowerCase().includes(searchLower) ||
+        s.email?.toLowerCase().includes(searchLower)
+      );
+    }
+    const start = (page - 1) * pageSize;
+    const end = start + pageSize;
+    return {
+      schools: filtered.slice(start, end),
+      total: filtered.length
+    };
+  },
+
+  getSchoolSubscription: async (schoolId: string): Promise<SchoolSubscription> => {
+    await delay(300);
+    const school = mockSchools.find(s => s.id === schoolId);
+    return {
+      plan_name: school?.subscription_status || "Basic",
+      subscription_status: school?.is_active ? "Active" : "Suspended",
+      start_date: school?.created_at || "2023-01-01",
+      renewal_date: "2024-03-01"
+    };
+  },
+
+  toggleSchoolStatus: async (schoolId: string, isActive: boolean): Promise<void> => {
+    await delay(500);
+    const school = mockSchools.find(s => s.id === schoolId);
+    if (school) {
+      school.is_active = isActive;
+    }
+  },
+
+  getUsageAnalytics: async (startDate: string, endDate: string): Promise<UsageAnalytics> => {
+    await delay(600);
+    return {
+      user_growth: [
+        { date: "2024-01-10", count: 45 },
+        { date: "2024-01-11", count: 52 },
+        { date: "2024-01-12", count: 38 },
+        { date: "2024-01-13", count: 61 },
+        { date: "2024-01-14", count: 55 },
+        { date: "2024-01-15", count: 48 },
+        { date: "2024-01-16", count: 67 }
+      ],
+      feature_usage: {
+        doubt_solver: 15000,
+        foundation_engine: 8000,
+        assessments: 5000
+      },
+      ai_consumption: {
+        total_requests: 500000,
+        total_tokens: 75000000,
+        cost_usd: 1250.50
+      }
+    };
+  },
+
+  getBillingPlans: async (): Promise<BillingPlan[]> => {
+    await delay(300);
+    return mockPlans;
+  },
+
+  getBillingRenewals: async (days: number): Promise<BillingRenewal[]> => {
+    await delay(400);
+    return mockRenewals;
+  },
+
+  getBillingInvoices: async (page: number, pageSize: number): Promise<{ invoices: Invoice[]; total: number }> => {
+    await delay(400);
+    const start = (page - 1) * pageSize;
+    const end = start + pageSize;
+    return {
+      invoices: mockInvoices.slice(start, end),
+      total: mockInvoices.length
+    };
+  },
+
+  getSystemHealth: async (): Promise<SystemHealth> => {
+    await delay(300);
+    return {
+      api_status: {
+        status: "healthy",
+        response_time_ms: 45,
+        last_check: new Date().toISOString()
+      },
+      error_count_24h: 3,
+      background_jobs: {
+        pending: 5,
+        running: 2,
+        failed: 0
+      }
+    };
+  },
+
+  getAuditLogs: async (page: number, pageSize: number, userId?: string): Promise<{ logs: AuditLog[]; total: number }> => {
+    await delay(400);
+    let filtered = mockAuditLogs;
+    if (userId) {
+      filtered = mockAuditLogs.filter(l => l.user_id.includes(userId));
+    }
+    const start = (page - 1) * pageSize;
+    const end = start + pageSize;
+    return {
+      logs: filtered.slice(start, end),
+      total: filtered.length
+    };
+  },
+
+  getAccessLogs: async (page: number, pageSize: number, userId?: string): Promise<{ logs: AccessLog[]; total: number }> => {
+    await delay(400);
+    let filtered = mockAccessLogs;
+    if (userId) {
+      filtered = mockAccessLogs.filter(l => l.user_id.includes(userId));
+    }
+    const start = (page - 1) * pageSize;
+    const end = start + pageSize;
+    return {
+      logs: filtered.slice(start, end),
+      total: filtered.length
+    };
+  },
+
+  getComplianceLogs: async (page: number, pageSize: number, eventType?: string): Promise<{ logs: ComplianceLog[]; total: number }> => {
+    await delay(400);
+    let filtered = mockComplianceLogs;
+    if (eventType) {
+      filtered = mockComplianceLogs.filter(l => l.event_type.toLowerCase().includes(eventType.toLowerCase()));
+    }
+    const start = (page - 1) * pageSize;
+    const end = start + pageSize;
+    return {
+      logs: filtered.slice(start, end),
+      total: filtered.length
+    };
+  }
+};

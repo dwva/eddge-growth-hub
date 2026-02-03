@@ -66,6 +66,14 @@ import AdminSettings from "./pages/admin/AdminSettings";
 // Super Admin Pages
 import SuperAdminHome from "./pages/superadmin/SuperAdminHome";
 
+// Internal Admin Pages
+import InternalAdminOverview from "./pages/internal-admin/InternalAdminOverview";
+import InternalAdminSchools from "./pages/internal-admin/InternalAdminSchools";
+import InternalAdminAnalytics from "./pages/internal-admin/InternalAdminAnalytics";
+import InternalAdminBilling from "./pages/internal-admin/InternalAdminBilling";
+import InternalAdminHealth from "./pages/internal-admin/InternalAdminHealth";
+import InternalAdminSecurity from "./pages/internal-admin/InternalAdminSecurity";
+
 const queryClient = new QueryClient();
 
 const App = () => (
@@ -285,6 +293,43 @@ const App = () => (
             <Route path="/superadmin/*" element={
               <ProtectedRoute allowedRoles={['superadmin']}>
                 <SuperAdminHome />
+              </ProtectedRoute>
+            } />
+
+            {/* Internal Admin Routes */}
+            <Route path="/internal-admin" element={
+              <ProtectedRoute allowedRoles={['superadmin']}>
+                <InternalAdminOverview />
+              </ProtectedRoute>
+            } />
+            <Route path="/internal-admin/schools" element={
+              <ProtectedRoute allowedRoles={['superadmin']}>
+                <InternalAdminSchools />
+              </ProtectedRoute>
+            } />
+            <Route path="/internal-admin/analytics" element={
+              <ProtectedRoute allowedRoles={['superadmin']}>
+                <InternalAdminAnalytics />
+              </ProtectedRoute>
+            } />
+            <Route path="/internal-admin/billing" element={
+              <ProtectedRoute allowedRoles={['superadmin']}>
+                <InternalAdminBilling />
+              </ProtectedRoute>
+            } />
+            <Route path="/internal-admin/health" element={
+              <ProtectedRoute allowedRoles={['superadmin']}>
+                <InternalAdminHealth />
+              </ProtectedRoute>
+            } />
+            <Route path="/internal-admin/security" element={
+              <ProtectedRoute allowedRoles={['superadmin']}>
+                <InternalAdminSecurity />
+              </ProtectedRoute>
+            } />
+            <Route path="/internal-admin/*" element={
+              <ProtectedRoute allowedRoles={['superadmin']}>
+                <InternalAdminOverview />
               </ProtectedRoute>
             } />
 
