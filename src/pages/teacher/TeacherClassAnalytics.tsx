@@ -1,5 +1,5 @@
-import { useState } from 'react';
-import { useNavigate, useSearchParams } from 'react-router-dom';
+import { useEffect, useState } from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
 import TeacherDashboardLayout from '@/components/layout/TeacherDashboardLayout';
 import { useTeacherMode } from '@/contexts/TeacherModeContext';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -17,10 +17,28 @@ const COLORS = ['#22c55e', '#eab308', '#ef4444'];
 
 const TeacherClassAnalyticsContent = () => {
   const navigate = useNavigate();
-  const [searchParams] = useSearchParams();
+  const location = useLocation();
   const { currentMode } = useTeacherMode();
-  const defaultTab = searchParams.get('tab') || 'overall';
-  const [activeTab, setActiveTab] = useState(defaultTab);
+  
+  // Determine active tab from URL path
+  const getTabFromPath = () => {
+    if (location.pathname.includes('subject-wise')) return 'subject-wise';
+    if (location.pathname.includes('at-risk')) return 'at-risk';
+    return 'overall';
+  };
+  
+  const [activeTab, setActiveTab] = useState(getTabFromPath());
+  
+  // Update tab when URL changes
+  useEffect(() => {
+    setActiveTab(getTabFromPath());
+  }, [location.pathname]);
+  
+  // Handle tab change and update URL
+  const handleTabChange = (value: string) => {
+    setActiveTab(value);
+    navigate(`/teacher/class-analytics/${value}`);
+  };
 
   // Mode restriction
   if (currentMode !== 'class_teacher') {
@@ -53,7 +71,7 @@ const TeacherClassAnalyticsContent = () => {
         </div>
       </div>
 
-      <Tabs value={activeTab} onValueChange={setActiveTab}>
+      <Tabs value={activeTab} onValueChange={handleTabChange}>
         <TabsList className="grid w-full grid-cols-3 lg:w-auto lg:inline-grid">
           <TabsTrigger value="overall">Overall Performance</TabsTrigger>
           <TabsTrigger value="subject-wise">Subject-wise</TabsTrigger>
