@@ -105,15 +105,12 @@ const StudentSidebar = ({ collapsed = false, isMobile = false, onMobileClose }: 
 
   return (
     <div className="flex flex-col h-full gradient-sidebar font-sans">
-      {/* Logo - 16px padding, 48px height */}
+      {/* Logo - 24px padding */}
       <div className={cn(
         "flex items-center h-16 border-b border-white/10",
-        collapsed && !isMobile ? "justify-center px-2" : "gap-3 px-4"
+        collapsed && !isMobile ? "justify-center px-2" : "gap-3 p-6"
       )}>
-        <div className={cn(
-          "rounded-xl bg-white/20 flex items-center justify-center flex-shrink-0",
-          collapsed && !isMobile ? "w-8 h-8" : "w-8 h-8"
-        )}>
+        <div className="w-8 h-8 rounded-xl bg-white/20 flex items-center justify-center flex-shrink-0">
           <Sparkles className="w-4 h-4 text-white" />
         </div>
         {showText && (
@@ -124,17 +121,17 @@ const StudentSidebar = ({ collapsed = false, isMobile = false, onMobileClose }: 
         )}
       </div>
 
-      {/* Navigation - 16px horizontal padding, 8px vertical gaps */}
+      {/* Navigation - consistent px-4 (16px) padding */}
       <nav className={cn(
         "flex-1 py-4 overflow-y-auto scrollbar-hide",
-        collapsed && !isMobile ? "px-2" : "px-3"
+        collapsed && !isMobile ? "px-2" : "px-4"
       )}>
-        {/* Dashboard - 8px vertical margin, 12px horizontal padding */}
+        {/* Dashboard - px-4 (16px) horizontal padding */}
         <button
           onClick={() => handleNavigate('/student')}
           className={cn(
             "w-full flex items-center rounded-lg transition-all duration-200 h-10",
-            collapsed && !isMobile ? "justify-center px-2" : "gap-3 px-3",
+            collapsed && !isMobile ? "justify-center px-2" : "gap-3 px-4",
             isPathActive('/student')
               ? "bg-white/20 text-white" 
               : "text-white/80 hover:bg-white/10 hover:text-white"
@@ -186,7 +183,7 @@ const StudentSidebar = ({ collapsed = false, isMobile = false, onMobileClose }: 
                   onOpenChange={() => toggleSection(section.title)}
                 >
                   <CollapsibleTrigger asChild>
-                    <button className="w-full flex items-center gap-3 px-3 h-10 rounded-lg transition-all duration-200 text-white/80 hover:bg-white/10 hover:text-white">
+                    <button className="w-full flex items-center gap-3 px-4 h-10 rounded-lg transition-all duration-200 text-white/80 hover:bg-white/10 hover:text-white">
                       <span className="flex-shrink-0">{section.icon}</span>
                       <span className="text-sm font-medium flex-1 text-left">{section.title}</span>
                       <ChevronUp className={cn(
@@ -195,7 +192,7 @@ const StudentSidebar = ({ collapsed = false, isMobile = false, onMobileClose }: 
                       )} />
                     </button>
                   </CollapsibleTrigger>
-                  <CollapsibleContent className="ml-4 pl-3 border-l border-white/20 mt-1 space-y-0.5">
+                  <CollapsibleContent className="ml-4 pl-2 border-l border-white/20 mt-1 space-y-0.5">
                     {section.items.map((item) => (
                       <button
                         key={item.path}
@@ -219,13 +216,13 @@ const StudentSidebar = ({ collapsed = false, isMobile = false, onMobileClose }: 
         </div>
       </nav>
 
-      {/* Bottom Section - 16px padding, 8px gap between items */}
+      {/* Bottom Section - 12px padding container, 16px horizontal on buttons */}
       <div className="border-t border-white/10 p-3 space-y-1">
         <button
           onClick={() => handleNavigate('/student/help')}
           className={cn(
-            "w-full flex items-center rounded-lg transition-all duration-200 text-white/70 hover:bg-white/10 hover:text-white h-10",
-            collapsed && !isMobile ? "justify-center px-2" : "gap-3 px-3"
+            "w-full flex items-center rounded-lg transition-all duration-200 text-white/70 hover:bg-white/10 hover:text-white",
+            collapsed && !isMobile ? "justify-center px-2 h-10" : "gap-3 px-4 py-2.5"
           )}
         >
           <HelpCircle className="w-5 h-5 flex-shrink-0" />
@@ -235,8 +232,8 @@ const StudentSidebar = ({ collapsed = false, isMobile = false, onMobileClose }: 
         <button
           onClick={handleLogout}
           className={cn(
-            "w-full flex items-center rounded-lg transition-all duration-200 text-white/70 hover:bg-white/10 hover:text-white h-10",
-            collapsed && !isMobile ? "justify-center px-2" : "gap-3 px-3"
+            "w-full flex items-center rounded-lg transition-all duration-200 text-white/70 hover:bg-white/10 hover:text-white",
+            collapsed && !isMobile ? "justify-center px-2 h-10" : "gap-3 px-4 py-3"
           )}
         >
           <LogOut className="w-5 h-5 flex-shrink-0" />
