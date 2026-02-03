@@ -105,10 +105,10 @@ const StudentSidebar = ({ collapsed = false, isMobile = false, onMobileClose }: 
 
   return (
     <div className="flex flex-col h-full gradient-sidebar font-sans">
-      {/* Logo - p-6 (24px) padding, gap-3 (12px) */}
+      {/* Logo - px-6 (24px) padding */}
       <div className={cn(
         "flex items-center h-16 border-b border-white/10",
-        collapsed && !isMobile ? "justify-center px-2" : "gap-3 px-5 py-4"
+        collapsed && !isMobile ? "justify-center px-2" : "gap-3 px-6 py-4"
       )}>
         <div className="w-9 h-9 rounded-xl bg-white/20 flex items-center justify-center flex-shrink-0">
           <Sparkles className="w-5 h-5 text-white" />
@@ -121,10 +121,10 @@ const StudentSidebar = ({ collapsed = false, isMobile = false, onMobileClose }: 
         )}
       </div>
 
-      {/* Navigation - px-3 (12px) wrapper padding */}
+      {/* Navigation - px-4 (16px) wrapper padding */}
       <nav className={cn(
         "flex-1 py-4 overflow-y-auto scrollbar-hide",
-        collapsed && !isMobile ? "px-2" : "px-3"
+        collapsed && !isMobile ? "px-2" : "px-4"
       )}>
         {/* Dashboard - px-4 (16px) horizontal padding */}
         <button
@@ -216,8 +216,8 @@ const StudentSidebar = ({ collapsed = false, isMobile = false, onMobileClose }: 
         </div>
       </nav>
 
-      {/* Bottom Section - p-3 (12px) padding */}
-      <div className="border-t border-white/10 p-3 space-y-0.5">
+      {/* Bottom Section - p-4 (16px) padding */}
+      <div className="border-t border-white/10 p-4 space-y-1">
         <button
           onClick={() => handleNavigate('/student/help')}
           className={cn(
