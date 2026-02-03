@@ -1,25 +1,36 @@
 import { Button } from '@/components/ui/button';
 import { useNavigate } from 'react-router-dom';
-import { GraduationCap, Sparkles, Users, Brain, ArrowRight } from 'lucide-react';
+import { GraduationCap, Sparkles, ArrowRight } from 'lucide-react';
+import { GLSLHills } from '@/components/ui/glsl-hills';
 
 const Landing = () => {
   const navigate = useNavigate();
 
   return (
-    <div className="min-h-screen bg-background font-sans">
+    <div className="min-h-screen bg-background font-sans relative overflow-hidden">
+      {/* GLSL Hills Background */}
+      <GLSLHills 
+        speed={0.3} 
+        cameraZ={130}
+        color={{ r: 0.55, g: 0.36, b: 0.86 }}
+      />
+      
+      {/* Gradient Overlay */}
+      <div className="absolute inset-0 bg-gradient-to-b from-background/80 via-background/40 to-background pointer-events-none" />
+
       {/* Hero Section - Full Center */}
-      <section className="min-h-screen flex flex-col items-center justify-center px-4 sm:px-6 lg:px-8">
+      <section className="relative z-10 min-h-screen flex flex-col items-center justify-center px-4 sm:px-6 lg:px-8">
         <div className="max-w-4xl mx-auto text-center">
           {/* Logo */}
           <div className="flex items-center justify-center gap-3 mb-12">
-            <div className="w-14 h-14 rounded-2xl bg-primary flex items-center justify-center">
+            <div className="w-14 h-14 rounded-2xl bg-primary flex items-center justify-center shadow-lg">
               <GraduationCap className="w-8 h-8 text-primary-foreground" />
             </div>
             <span className="text-3xl font-semibold tracking-tight text-foreground">EDDGE</span>
           </div>
 
           {/* Badge */}
-          <div className="inline-flex items-center gap-2 px-5 py-2.5 mb-8 text-sm font-medium rounded-full bg-primary/10 text-primary">
+          <div className="inline-flex items-center gap-2 px-5 py-2.5 mb-8 text-sm font-medium rounded-full bg-primary/10 text-primary backdrop-blur-sm">
             <Sparkles className="w-4 h-4" />
             AI-Powered Learning Platform
           </div>
