@@ -4,14 +4,15 @@ import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { Menu, Bell, ChevronLeft, User, Settings, LogOut } from 'lucide-react';
+import { Input } from '@/components/ui/input';
+import { Menu, Bell, ChevronLeft, ChevronDown, Settings, LogOut, Search } from 'lucide-react';
 import StudentSidebar from './StudentSidebar';
 import { useAuth } from '@/contexts/AuthContext';
 import { useNavigate } from 'react-router-dom';
 
 interface StudentDashboardLayoutProps {
   children: ReactNode;
-  title: string;
+  title?: string;
 }
 
 const StudentDashboardLayout = ({ children, title }: StudentDashboardLayoutProps) => {
@@ -25,12 +26,14 @@ const StudentDashboardLayout = ({ children, title }: StudentDashboardLayoutProps
     navigate('/');
   };
 
+  const firstName = user?.name?.split(' ')[0] || 'Deva';
+
   return (
     <div className="h-screen bg-background flex overflow-hidden font-sans">
       {/* Desktop Sidebar - Fixed */}
       <aside className={cn(
         "hidden md:flex flex-col transition-all duration-300 h-screen sticky top-0 flex-shrink-0 relative",
-        collapsed ? "w-12" : "w-48"
+        collapsed ? "w-14" : "w-52"
       )}>
         <StudentSidebar collapsed={collapsed} />
         {/* Collapse Toggle */}
@@ -52,8 +55,9 @@ const StudentDashboardLayout = ({ children, title }: StudentDashboardLayoutProps
       {/* Main Content */}
       <div className="flex-1 flex flex-col h-screen overflow-hidden">
         {/* Header - Fixed */}
-        <header className="h-14 border-b border-border bg-card px-4 flex items-center justify-between sticky top-0 z-10 flex-shrink-0">
+        <header className="h-16 border-b border-border bg-white px-4 md:px-6 flex items-center justify-between sticky top-0 z-10 flex-shrink-0">
           <div className="flex items-center gap-4">
+            {/* Mobile Menu */}
             <Sheet open={mobileOpen} onOpenChange={setMobileOpen}>
               <SheetTrigger asChild className="md:hidden">
                 <Button variant="ghost" size="icon" className="h-9 w-9">
@@ -61,47 +65,70 @@ const StudentDashboardLayout = ({ children, title }: StudentDashboardLayoutProps
                 </Button>
               </SheetTrigger>
             </Sheet>
-            <h1 className="text-lg font-semibold tracking-tight">{title}</h1>
-          </div>
-          
-          {/* Right Side: Notification + Profile */}
-          <div className="flex items-center gap-2">
+            
+            {/* Desktop Hamburger */}
             <Button 
               variant="ghost" 
               size="icon" 
-              className="relative hover:bg-primary/10 hover:text-primary transition-all duration-200 h-9 w-9"
+              className="hidden md:flex h-9 w-9"
+              onClick={() => setCollapsed(!collapsed)}
             >
-              <Bell className="w-5 h-5" />
-              <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-destructive rounded-full"></span>
+              <Menu className="w-5 h-5 text-muted-foreground" />
+            </Button>
+            
+            {/* Search Bar */}
+            <div className="hidden md:flex items-center relative">
+              <Search className="absolute left-4 w-4 h-4 text-muted-foreground" />
+              <Input 
+                placeholder="Search courses, lessons, resources..." 
+                className="pl-10 w-80 lg:w-96 h-10 bg-muted/40 border-0 rounded-full focus-visible:ring-1 focus-visible:ring-primary/30"
+              />
+            </div>
+          </div>
+          
+          {/* Right Side: Notification + Profile */}
+          <div className="flex items-center gap-3">
+            <Button 
+              variant="ghost" 
+              size="icon" 
+              className="relative hover:bg-primary/10 transition-all duration-200 h-10 w-10"
+            >
+              <Bell className="w-5 h-5 text-muted-foreground" />
+              <span className="absolute top-1 right-1 min-w-[18px] h-[18px] bg-destructive rounded-full text-[10px] text-white flex items-center justify-center font-semibold">3</span>
             </Button>
 
             {/* Profile Dropdown */}
             <Popover>
               <PopoverTrigger asChild>
-                <Button variant="ghost" size="icon" className="h-9 w-9 rounded-full">
-                  <Avatar className="w-8 h-8 border border-border">
+                <Button variant="ghost" className="h-10 px-2 gap-2 rounded-full hover:bg-muted/50">
+                  <Avatar className="w-9 h-9 border-2 border-primary/20">
                     <AvatarImage src="" />
-                    <AvatarFallback className="bg-primary/10 text-primary text-xs">
-                      <User className="w-4 h-4" />
+                    <AvatarFallback className="bg-primary text-primary-foreground text-sm font-semibold">
+                      {firstName.charAt(0)}
                     </AvatarFallback>
                   </Avatar>
+                  <div className="hidden md:flex flex-col items-start">
+                    <span className="text-sm font-medium">{firstName}</span>
+                    <span className="text-[11px] text-muted-foreground">Class 9</span>
+                  </div>
+                  <ChevronDown className="hidden md:block w-4 h-4 text-muted-foreground" />
                 </Button>
               </PopoverTrigger>
-              <PopoverContent className="w-64 p-0" align="end">
+              <PopoverContent className="w-64 p-0 bg-white" align="end">
                 <div className="p-4 border-b border-border">
                   <div className="flex items-center gap-3">
-                    <Avatar className="w-10 h-10 border border-border">
+                    <Avatar className="w-11 h-11 border-2 border-primary/20">
                       <AvatarImage src="" />
-                      <AvatarFallback className="bg-primary/10 text-primary">
-                        <User className="w-5 h-5" />
+                      <AvatarFallback className="bg-primary text-primary-foreground font-semibold">
+                        {firstName.charAt(0)}
                       </AvatarFallback>
                     </Avatar>
                     <div className="flex-1 min-w-0">
-                      <p className="text-sm font-medium truncate">{user?.name || 'Alex Johnson'}</p>
+                      <p className="text-sm font-semibold truncate">{user?.name || 'Deva'}</p>
                       <p className="text-xs text-muted-foreground truncate">{user?.email || 'student@eddge.com'}</p>
                     </div>
                   </div>
-                  <p className="text-[10px] text-muted-foreground mt-2 px-1">Class 10 • CBSE Board</p>
+                  <p className="text-[11px] text-muted-foreground mt-2 px-1">Class 9 • CBSE Board</p>
                 </div>
                 <div className="p-2">
                   <button 
@@ -125,7 +152,7 @@ const StudentDashboardLayout = ({ children, title }: StudentDashboardLayoutProps
         </header>
 
         {/* Page Content - Scrollable */}
-        <main className="flex-1 p-4 md:p-6 overflow-y-auto">
+        <main className="flex-1 p-4 md:p-6 overflow-y-auto bg-[#f8f8fc]">
           {children}
         </main>
       </div>
