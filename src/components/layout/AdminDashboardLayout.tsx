@@ -5,16 +5,16 @@ import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
 import { Input } from '@/components/ui/input';
-import { Avatar, AvatarFallback } from '@/components/ui/avatar';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { 
   Menu, 
   LogOut, 
-  ChevronLeft,
   Bell,
   Search,
   Settings,
-  User,
-  HelpCircle
+  HelpCircle,
+  MessageSquare,
+  SlidersHorizontal
 } from 'lucide-react';
 import {
   Popover,
@@ -46,137 +46,167 @@ const AdminDashboardLayout = ({
     navigate('/');
   };
 
+  const firstName = user?.name?.split(' ')[0] || 'Admin';
+
   return (
-    <div className="min-h-screen bg-background flex">
+    <div className="min-h-screen bg-[#f8f9fb] flex font-sans">
       {/* Desktop Sidebar */}
       <aside className={cn(
         "hidden md:flex flex-col h-screen sticky top-0 flex-shrink-0 transition-all duration-300",
-        collapsed ? "w-[72px]" : "w-[240px]"
+        collapsed ? "w-[72px]" : "w-[260px]"
       )}>
         <AdminSidebar collapsed={collapsed} />
-        {/* Collapse Toggle */}
-        <button
-          onClick={() => setCollapsed(!collapsed)}
-          className="absolute top-16 -right-3 w-6 h-6 bg-white border border-gray-200 rounded-full flex items-center justify-center shadow-sm hover:bg-gray-50 hover:scale-110 transition-all duration-200 z-10"
-        >
-          <ChevronLeft className={cn("w-3.5 h-3.5 text-gray-600 transition-transform duration-200", collapsed && "rotate-180")} />
-        </button>
       </aside>
 
       {/* Mobile Sidebar */}
       <Sheet open={mobileOpen} onOpenChange={setMobileOpen}>
-        <SheetContent side="left" className="w-64 p-0 border-0">
+        <SheetContent side="left" className="w-72 p-0 border-0">
           <AdminSidebar isMobile onMobileClose={() => setMobileOpen(false)} />
         </SheetContent>
       </Sheet>
 
       {/* Main Content */}
       <div className="flex-1 flex flex-col min-w-0">
-        {/* Sticky Header */}
-        <header className="sticky top-0 z-40 bg-white/80 backdrop-blur-xl border-b border-gray-100">
-          <div className="px-4 md:px-6 py-3 flex items-center justify-between gap-4">
-            <div className="flex items-center gap-3">
-              {/* Mobile Menu Trigger */}
-              <Sheet open={mobileOpen} onOpenChange={setMobileOpen}>
-                <SheetTrigger asChild className="md:hidden">
-                  <Button variant="ghost" size="icon" className="flex-shrink-0 h-8 w-8">
-                    <Menu className="w-4 h-4" />
-                  </Button>
-                </SheetTrigger>
-              </Sheet>
-              
-              {/* Page Title */}
-              <div>
-                <h1 className="text-sm font-semibold text-foreground">{pageTitle}</h1>
-                {pageDescription && (
-                  <p className="text-xs text-muted-foreground">{pageDescription}</p>
-                )}
-              </div>
+        {/* Top Bar - matching student dashboard */}
+        <header className="h-16 bg-white px-4 md:px-6 flex items-center justify-between sticky top-0 z-10 flex-shrink-0 border-b border-gray-100">
+          {/* Left: Menu + Page Title */}
+          <div className="flex items-center gap-3">
+            {/* Mobile Menu */}
+            <Sheet open={mobileOpen} onOpenChange={setMobileOpen}>
+              <SheetTrigger asChild className="md:hidden">
+                <Button variant="ghost" size="icon" className="h-9 w-9">
+                  <Menu className="w-5 h-5" />
+                </Button>
+              </SheetTrigger>
+            </Sheet>
+            
+            {/* Desktop Collapse Toggle */}
+            <Button 
+              variant="ghost" 
+              size="icon" 
+              className="hidden md:flex h-9 w-9"
+              onClick={() => setCollapsed(!collapsed)}
+            >
+              <Menu className="w-5 h-5 text-gray-500" />
+            </Button>
+
+            {/* Page Title */}
+            <div className="hidden sm:block">
+              <h1 className="text-lg font-bold text-gray-900">{pageTitle}</h1>
+              {pageDescription && (
+                <p className="text-xs text-gray-500">{pageDescription}</p>
+              )}
             </div>
+          </div>
+          
+          {/* Center: Search */}
+          <div className="hidden lg:flex items-center flex-1 justify-center max-w-md mx-4">
+            <div className="relative w-full">
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+              <Input 
+                placeholder="Search teachers, students, classes..." 
+                className="pl-9 pr-10 w-full h-9 bg-gray-50 border-gray-200 rounded-lg text-sm focus-visible:ring-1 focus-visible:ring-primary/30"
+              />
+              <button className="absolute right-2.5 top-1/2 -translate-y-1/2 p-1 hover:bg-gray-100 rounded transition-colors">
+                <SlidersHorizontal className="w-3.5 h-3.5 text-gray-400" />
+              </button>
+            </div>
+          </div>
+          
+          {/* Right: Icons + Avatar */}
+          <div className="flex items-center gap-1.5">
+            {/* Support */}
+            <Button 
+              variant="ghost" 
+              size="sm"
+              onClick={() => navigate('/admin/support')}
+              className="hidden sm:flex items-center gap-1.5 h-9 px-3 hover:bg-gray-100 rounded-lg"
+            >
+              <HelpCircle className="w-4 h-4 text-gray-500" />
+              <span className="text-sm text-gray-600">Support</span>
+            </Button>
 
-            {/* Right side actions */}
-            <div className="flex items-center gap-2">
-              {/* Search - Desktop */}
-              <div className="relative hidden lg:block">
-                <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-muted-foreground" />
-                <Input 
-                  placeholder="Search..."
-                  className="pl-8 pr-3 py-1.5 w-48 h-8 text-xs bg-muted/50 border-0 rounded-lg focus:bg-white focus:ring-2 focus:ring-primary/20"
-                />
-              </div>
+            {/* Messages */}
+            <Button 
+              variant="ghost" 
+              size="icon" 
+              className="h-9 w-9 hover:bg-gray-100 rounded-lg"
+            >
+              <MessageSquare className="w-4 h-4 text-gray-500" />
+            </Button>
 
-              {/* Support Button */}
-              <Button 
-                variant="ghost" 
-                size="sm"
-                onClick={() => navigate('/admin/support')}
-                className="hidden sm:flex items-center gap-1.5 h-8 px-3 rounded-lg hover:bg-muted text-xs"
-              >
-                <HelpCircle className="w-3.5 h-3.5 text-muted-foreground" />
-                <span className="text-muted-foreground">Support</span>
-              </Button>
+            {/* Notifications */}
+            <Button 
+              variant="ghost" 
+              size="icon" 
+              className="relative h-9 w-9 hover:bg-gray-100 rounded-lg"
+            >
+              <Bell className="w-4 h-4 text-gray-500" />
+              <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-red-500 rounded-full"></span>
+            </Button>
 
-              {/* Notifications */}
-              <Button 
-                variant="ghost" 
-                size="icon" 
-                className="relative rounded-lg hover:bg-muted h-8 w-8"
-              >
-                <Bell className="w-4 h-4 text-muted-foreground" />
-                <span className="absolute top-1.5 right-1.5 w-1.5 h-1.5 bg-primary rounded-full"></span>
-              </Button>
+            {/* Header Actions */}
+            {headerActions}
 
-              {/* Header Actions */}
-              {headerActions}
-
-              {/* User Menu */}
-              <Popover>
-                <PopoverTrigger asChild>
-                  <Button variant="ghost" className="flex items-center gap-2 px-2 hover:bg-muted rounded-lg h-8">
-                    <Avatar className="w-6 h-6">
-                      <AvatarFallback className="bg-primary/10 text-primary text-[10px] font-semibold">
-                        {user?.name?.split(' ').map(n => n[0]).join('').slice(0, 2) || 'AD'}
+            {/* Avatar */}
+            <Popover>
+              <PopoverTrigger asChild>
+                <button className="ml-1">
+                  <Avatar className="w-9 h-9 border-2 border-primary/20 hover:border-primary/40 transition-colors cursor-pointer">
+                    <AvatarImage src="" />
+                    <AvatarFallback className="bg-gradient-to-br from-primary to-purple-600 text-white font-semibold text-sm">
+                      {firstName.charAt(0)}
+                    </AvatarFallback>
+                  </Avatar>
+                </button>
+              </PopoverTrigger>
+              <PopoverContent className="w-60 p-0 bg-white rounded-xl shadow-lg border-0" align="end">
+                <div className="p-4 border-b border-gray-100">
+                  <div className="flex items-center gap-3">
+                    <Avatar className="w-11 h-11 border-2 border-primary/20">
+                      <AvatarImage src="" />
+                      <AvatarFallback className="bg-gradient-to-br from-primary to-purple-600 text-white font-semibold">
+                        {firstName.charAt(0)}
                       </AvatarFallback>
                     </Avatar>
-                    <div className="hidden sm:block text-left">
-                      <div className="text-xs font-medium">{user?.name}</div>
-                      <div className="text-[10px] text-muted-foreground capitalize">{user?.role}</div>
+                    <div className="flex-1 min-w-0">
+                      <p className="font-semibold text-gray-900 truncate">{user?.name || 'Admin'}</p>
+                      <p className="text-xs text-gray-500 truncate">{user?.email || 'admin@eddge.com'}</p>
+                      <p className="text-xs text-primary font-medium mt-0.5 capitalize">{user?.role || 'Administrator'}</p>
                     </div>
-                  </Button>
-                </PopoverTrigger>
-                <PopoverContent className="w-48 p-1.5" align="end">
-                  <div className="space-y-0.5">
-                    <button className="w-full flex items-center gap-2 px-2.5 py-1.5 text-xs rounded-md hover:bg-muted transition-colors">
-                      <User className="w-3.5 h-3.5" />
-                      Profile
-                    </button>
-                    <button 
-                      onClick={() => navigate('/admin/settings')}
-                      className="w-full flex items-center gap-2 px-2.5 py-1.5 text-xs rounded-md hover:bg-muted transition-colors"
-                    >
-                      <Settings className="w-3.5 h-3.5" />
-                      Settings
-                    </button>
-                    <hr className="my-1" />
-                    <button 
-                      onClick={handleLogout}
-                      className="w-full flex items-center gap-2 px-2.5 py-1.5 text-xs rounded-md text-destructive hover:bg-destructive/10 transition-colors"
-                    >
-                      <LogOut className="w-3.5 h-3.5" />
-                      Logout
-                    </button>
                   </div>
-                </PopoverContent>
-              </Popover>
-            </div>
+                </div>
+                <div className="p-2">
+                  <button 
+                    onClick={() => navigate('/admin/settings')}
+                    className="w-full flex items-center gap-3 px-3 py-2.5 text-sm rounded-lg hover:bg-gray-50 transition-colors text-gray-700"
+                  >
+                    <Settings className="w-4 h-4" />
+                    Settings
+                  </button>
+                  <button 
+                    onClick={() => navigate('/admin/support')}
+                    className="w-full flex items-center gap-3 px-3 py-2.5 text-sm rounded-lg hover:bg-gray-50 transition-colors text-gray-700 sm:hidden"
+                  >
+                    <HelpCircle className="w-4 h-4" />
+                    Support
+                  </button>
+                  <button 
+                    onClick={handleLogout}
+                    className="w-full flex items-center gap-3 px-3 py-2.5 text-sm rounded-lg hover:bg-red-50 transition-colors text-red-600"
+                  >
+                    <LogOut className="w-4 h-4" />
+                    Logout
+                  </button>
+                </div>
+              </PopoverContent>
+            </Popover>
           </div>
         </header>
 
         {/* Page Content */}
-        <main className="flex-1 p-4 md:p-5 overflow-y-auto">
-          <div className="max-w-7xl mx-auto">
-            {children}
-          </div>
+        <main className="flex-1 p-6 md:p-8 overflow-y-auto">
+          {children}
         </main>
       </div>
     </div>
