@@ -305,8 +305,8 @@ const StudentHome = () => {
                 </p>
               </div>
 
-              <Card className="border border-gray-100 shadow-sm rounded-2xl bg-white">
-                <CardContent className="p-4 space-y-2">
+              <Card className="border border-gray-100 shadow-sm rounded-2xl bg-white min-h-[380px]">
+                <CardContent className="p-6 space-y-2">
                   {[
                     {
                       id: 'learn',
@@ -342,18 +342,18 @@ const StudentHome = () => {
                     <button
                       key={suggestion.id}
                       type="button"
-                      className="w-full flex items-center justify-between px-3 py-2.5 rounded-xl hover:bg-gray-50 transition-colors text-left"
+                      className="w-full flex items-center justify-between gap-4 px-4 py-4 rounded-xl hover:bg-gray-50 transition-colors text-left min-h-[56px]"
                       onClick={() => navigate(suggestion.path)}
                     >
-                      <div className="flex items-center gap-3">
-                        <div className="w-8 h-8 rounded-full bg-gray-100 flex items-center justify-center">
+                      <div className="flex items-center gap-3 min-w-0 flex-1">
+                        <div className="w-9 h-9 rounded-full bg-gray-100 flex items-center justify-center flex-shrink-0">
                           {suggestion.icon}
                         </div>
-                        <span className="text-sm font-medium text-gray-900">
+                        <span className="text-sm font-medium text-gray-900 leading-snug text-left">
                           {suggestion.label}
                         </span>
                       </div>
-                      <ArrowRight className="w-3.5 h-3.5 text-gray-400" />
+                      <ArrowRight className="w-4 h-4 text-gray-400 flex-shrink-0" />
                     </button>
                   ))}
                 </CardContent>
