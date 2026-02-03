@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { cn } from '@/lib/utils';
+import { useAuth } from '@/contexts/AuthContext';
 import { 
   LayoutDashboard,
   BookOpen,
@@ -16,7 +17,8 @@ import {
   BarChart3,
   Bell,
   FileText,
-  ChevronDown
+  ChevronDown,
+  LogOut
 } from 'lucide-react';
 import {
   Collapsible,
@@ -82,6 +84,7 @@ interface StudentSidebarProps {
 const StudentSidebar = ({ collapsed = false, isMobile = false, onMobileClose }: StudentSidebarProps) => {
   const navigate = useNavigate();
   const location = useLocation();
+  const { logout } = useAuth();
   const [openSections, setOpenSections] = useState<string[]>(['Learning', 'Resources', 'Updates', 'Progress']);
 
   const handleNavigate = (path: string) => {
@@ -89,6 +92,11 @@ const StudentSidebar = ({ collapsed = false, isMobile = false, onMobileClose }: 
     if (isMobile && onMobileClose) {
       onMobileClose();
     }
+  };
+
+  const handleLogout = () => {
+    logout();
+    navigate('/');
   };
 
   const toggleSection = (label: string) => {
@@ -223,9 +231,10 @@ const StudentSidebar = ({ collapsed = false, isMobile = false, onMobileClose }: 
         </div>
       </nav>
 
-      {/* Bottom Help Card */}
+      {/* Bottom Section - Help & Sign Out */}
       {showText && (
-        <div className="p-4">
+        <div className="p-4 space-y-3">
+          {/* Help Card */}
           <div className="bg-primary/5 rounded-2xl p-4 relative overflow-hidden">
             <div className="absolute -top-4 -left-4 w-12 h-12 rounded-full bg-primary/10" />
             <div className="absolute top-2 left-2 w-8 h-8 rounded-full bg-white flex items-center justify-center shadow-sm">
@@ -245,6 +254,15 @@ const StudentSidebar = ({ collapsed = false, isMobile = false, onMobileClose }: 
               </button>
             </div>
           </div>
+
+          {/* Sign Out Button */}
+          <button
+            onClick={handleLogout}
+            className="w-full flex items-center justify-center gap-2 px-4 py-3 text-sm font-medium text-red-600 bg-red-50 hover:bg-red-100 rounded-xl transition-colors"
+          >
+            <LogOut className="w-4 h-4" />
+            Sign Out
+          </button>
         </div>
       )}
 
