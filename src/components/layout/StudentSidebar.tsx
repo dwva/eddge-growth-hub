@@ -17,7 +17,7 @@ import {
   Award,
   HelpCircle,
   LogOut,
-  ChevronDown,
+  ChevronUp,
   Sparkles
 } from 'lucide-react';
 
@@ -34,35 +34,35 @@ interface NavSection {
 const navSections: NavSection[] = [
   {
     title: 'Learning',
-    icon: <GraduationCap className="w-3.5 h-3.5" />,
+    icon: <GraduationCap className="w-4 h-4" />,
     items: [
-      { label: 'Planner', icon: <CalendarCheck className="w-3 h-3" />, path: '/student/planner' },
-      { label: 'Learn', icon: <BookOpen className="w-3 h-3" />, path: '/student/learning' },
-      { label: 'AI Doubts', icon: <MessageSquare className="w-3 h-3" />, path: '/student/doubts' },
+      { label: 'Planner', icon: <CalendarCheck className="w-4 h-4" />, path: '/student/planner' },
+      { label: 'Personalized Learn', icon: <BookOpen className="w-4 h-4" />, path: '/student/learning' },
+      { label: 'AI Doubt Solver', icon: <MessageSquare className="w-4 h-4" />, path: '/student/doubts' },
     ],
   },
   {
     title: 'Resources',
-    icon: <FolderOpen className="w-3.5 h-3.5" />,
+    icon: <FolderOpen className="w-4 h-4" />,
     items: [
-      { label: 'Study Materials', icon: <FolderOpen className="w-3 h-3" />, path: '/student/resources' },
-      { label: 'PYQ Papers', icon: <FileText className="w-3 h-3" />, path: '/student/pyq' },
+      { label: 'Study Resources', icon: <FolderOpen className="w-4 h-4" />, path: '/student/resources' },
+      { label: 'PYQ Papers', icon: <FileText className="w-4 h-4" />, path: '/student/pyq' },
     ],
   },
   {
     title: 'Updates',
-    icon: <Bell className="w-3.5 h-3.5" />,
+    icon: <Bell className="w-4 h-4" />,
     items: [
-      { label: 'Events', icon: <Bell className="w-3 h-3" />, path: '/student/events' },
-      { label: 'Homework', icon: <ClipboardCheck className="w-3 h-3" />, path: '/student/homework' },
+      { label: 'Events & Announcements', icon: <Bell className="w-4 h-4" />, path: '/student/events' },
+      { label: 'Homework', icon: <ClipboardCheck className="w-4 h-4" />, path: '/student/homework' },
     ],
   },
   {
     title: 'Progress',
-    icon: <TrendingUp className="w-3.5 h-3.5" />,
+    icon: <TrendingUp className="w-4 h-4" />,
     items: [
-      { label: 'Performance', icon: <TrendingUp className="w-3 h-3" />, path: '/student/performance' },
-      { label: 'Achievements', icon: <Award className="w-3 h-3" />, path: '/student/achievements' },
+      { label: 'Performance', icon: <TrendingUp className="w-4 h-4" />, path: '/student/performance' },
+      { label: 'Achievements', icon: <Award className="w-4 h-4" />, path: '/student/achievements' },
     ],
   },
 ];
@@ -100,8 +100,6 @@ const StudentSidebar = ({ collapsed = false, isMobile = false, onMobileClose }: 
   };
 
   const isPathActive = (path: string) => location.pathname === path;
-  const isSectionActive = (section: NavSection) => 
-    section.items.some(item => location.pathname === item.path);
 
   const showText = !collapsed || isMobile;
 
@@ -109,60 +107,60 @@ const StudentSidebar = ({ collapsed = false, isMobile = false, onMobileClose }: 
     <div className="flex flex-col h-full gradient-sidebar font-sans">
       {/* Logo */}
       <div className={cn(
-        "flex items-center gap-2 px-3 py-4 border-b border-white/10",
+        "flex items-center gap-3 px-4 py-5 border-b border-white/10",
         collapsed && !isMobile && "justify-center px-2"
       )}>
         <div className={cn(
-          "rounded-lg bg-white/20 flex items-center justify-center flex-shrink-0",
-          collapsed && !isMobile ? "w-7 h-7" : "w-8 h-8"
+          "rounded-xl bg-white/20 flex items-center justify-center flex-shrink-0",
+          collapsed && !isMobile ? "w-8 h-8" : "w-9 h-9"
         )}>
-          <Sparkles className={cn(collapsed && !isMobile ? "w-3.5 h-3.5" : "w-4 h-4", "text-white")} />
+          <Sparkles className={cn(collapsed && !isMobile ? "w-4 h-4" : "w-5 h-5", "text-white")} />
         </div>
         {showText && (
           <div>
-            <span className="text-sm font-bold text-white tracking-tight">EDDGE</span>
-            <p className="text-[9px] text-white/60">Student Portal</p>
+            <span className="text-lg font-bold text-white tracking-tight">EDDGE</span>
+            <p className="text-[10px] text-white/70">Student Portal</p>
           </div>
         )}
       </div>
 
       {/* Navigation */}
       <nav className={cn(
-        "flex-1 py-2 space-y-0.5 overflow-y-auto scrollbar-hide",
-        collapsed && !isMobile ? "px-1.5" : "px-2"
+        "flex-1 py-4 space-y-1 overflow-y-auto scrollbar-hide",
+        collapsed && !isMobile ? "px-2" : "px-3"
       )}>
         {/* Dashboard */}
         <button
           onClick={() => handleNavigate('/student')}
           className={cn(
-            "w-full flex items-center gap-2 rounded-lg transition-all duration-200",
-            collapsed && !isMobile ? "justify-center p-2" : "px-2.5 py-2",
+            "w-full flex items-center gap-3 rounded-xl transition-all duration-200",
+            collapsed && !isMobile ? "justify-center p-2.5" : "px-3 py-2.5",
             isPathActive('/student')
               ? "bg-white/20 text-white" 
-              : "text-white/70 hover:bg-white/10 hover:text-white"
+              : "text-white/80 hover:bg-white/10 hover:text-white"
           )}
         >
-          <LayoutDashboard className="w-4 h-4 flex-shrink-0" />
+          <LayoutDashboard className="w-5 h-5 flex-shrink-0" />
           {showText && (
             <>
-              <span className="text-[11px] font-medium">Dashboard</span>
+              <span className="text-sm font-medium">Dashboard</span>
               {isPathActive('/student') && (
-                <div className="ml-auto w-1.5 h-1.5 rounded-full bg-white" />
+                <div className="ml-auto w-2 h-2 rounded-full bg-white" />
               )}
             </>
           )}
         </button>
 
         {/* Spacer */}
-        <div className="h-1" />
+        <div className="h-2" />
 
         {/* Collapsible Sections */}
         {navSections.map((section) => (
           <div key={section.title}>
             {collapsed && !isMobile ? (
               // Collapsed: Show only icons
-              <div className="space-y-0.5">
-                <div className="w-full flex justify-center py-1.5 text-white/40">
+              <div className="space-y-1">
+                <div className="w-full flex justify-center py-2 text-white/50">
                   <span className="flex-shrink-0">{section.icon}</span>
                 </div>
                 {section.items.map((item) => (
@@ -170,10 +168,10 @@ const StudentSidebar = ({ collapsed = false, isMobile = false, onMobileClose }: 
                     key={item.path}
                     onClick={() => handleNavigate(item.path)}
                     className={cn(
-                      "w-full flex justify-center p-2 rounded-lg transition-all duration-200",
+                      "w-full flex justify-center p-2.5 rounded-xl transition-all duration-200",
                       isPathActive(item.path)
                         ? "bg-white/20 text-white" 
-                        : "text-white/60 hover:bg-white/10 hover:text-white"
+                        : "text-white/70 hover:bg-white/10 hover:text-white"
                     )}
                   >
                     <span className="flex-shrink-0">{item.icon}</span>
@@ -188,35 +186,30 @@ const StudentSidebar = ({ collapsed = false, isMobile = false, onMobileClose }: 
               >
                 <CollapsibleTrigger asChild>
                   <button
-                    className={cn(
-                      "w-full flex items-center gap-2 px-2.5 py-1.5 rounded-lg transition-all duration-200",
-                      isSectionActive(section)
-                        ? "text-white"
-                        : "text-white/60 hover:bg-white/10 hover:text-white"
-                    )}
+                    className="w-full flex items-center gap-3 px-3 py-2 rounded-xl transition-all duration-200 text-white/80 hover:bg-white/10 hover:text-white"
                   >
                     <span className="flex-shrink-0">{section.icon}</span>
-                    <span className="text-[11px] font-medium">{section.title}</span>
-                    <ChevronDown className={cn(
-                      "ml-auto w-3 h-3 transition-transform duration-200",
-                      openSections.includes(section.title) && "rotate-180"
+                    <span className="text-sm font-medium">{section.title}</span>
+                    <ChevronUp className={cn(
+                      "ml-auto w-4 h-4 transition-transform duration-200",
+                      !openSections.includes(section.title) && "rotate-180"
                     )} />
                   </button>
                 </CollapsibleTrigger>
-                <CollapsibleContent className="space-y-0 ml-2.5 pl-2.5 border-l border-white/10">
+                <CollapsibleContent className="space-y-0.5 ml-4 pl-4 border-l border-white/20 mt-1">
                   {section.items.map((item) => (
                     <button
                       key={item.path}
                       onClick={() => handleNavigate(item.path)}
                       className={cn(
-                        "w-full flex items-center gap-2 px-2.5 py-1.5 rounded-lg transition-all duration-200",
+                        "w-full flex items-center gap-3 px-3 py-2 rounded-xl transition-all duration-200",
                         isPathActive(item.path)
                           ? "bg-white/20 text-white" 
-                          : "text-white/50 hover:bg-white/10 hover:text-white"
+                          : "text-white/60 hover:bg-white/10 hover:text-white"
                       )}
                     >
                       <span className="flex-shrink-0">{item.icon}</span>
-                      <span className="text-[10px]">{item.label}</span>
+                      <span className="text-[13px]">{item.label}</span>
                     </button>
                   ))}
                 </CollapsibleContent>
@@ -227,27 +220,27 @@ const StudentSidebar = ({ collapsed = false, isMobile = false, onMobileClose }: 
       </nav>
 
       {/* Bottom Section */}
-      <div className="border-t border-white/10 p-2 space-y-0.5">
+      <div className="border-t border-white/10 p-3 space-y-1">
         <button
           onClick={() => handleNavigate('/student/help')}
           className={cn(
-            "w-full flex items-center gap-2 rounded-lg transition-all duration-200 text-white/60 hover:bg-white/10 hover:text-white",
-            collapsed && !isMobile ? "justify-center p-2" : "px-2.5 py-1.5"
+            "w-full flex items-center gap-3 rounded-xl transition-all duration-200 text-white/70 hover:bg-white/10 hover:text-white",
+            collapsed && !isMobile ? "justify-center p-2.5" : "px-3 py-2"
           )}
         >
-          <HelpCircle className="w-4 h-4 flex-shrink-0" />
-          {showText && <span className="text-[10px]">Help & Support</span>}
+          <HelpCircle className="w-5 h-5 flex-shrink-0" />
+          {showText && <span className="text-sm">Help & Support</span>}
         </button>
 
         <button
           onClick={handleLogout}
           className={cn(
-            "w-full flex items-center gap-2 rounded-lg transition-all duration-200 text-white/60 hover:bg-white/10 hover:text-white",
-            collapsed && !isMobile ? "justify-center p-2" : "px-2.5 py-1.5"
+            "w-full flex items-center gap-3 rounded-xl transition-all duration-200 text-white/70 hover:bg-white/10 hover:text-white",
+            collapsed && !isMobile ? "justify-center p-2.5" : "px-3 py-2"
           )}
         >
-          <LogOut className="w-4 h-4 flex-shrink-0" />
-          {showText && <span className="text-[10px]">Logout</span>}
+          <LogOut className="w-5 h-5 flex-shrink-0" />
+          {showText && <span className="text-sm">Logout</span>}
         </button>
       </div>
     </div>
