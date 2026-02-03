@@ -56,12 +56,12 @@ const StudentHome = () => {
 
   return (
     <StudentDashboardLayout>
-      <div className="max-w-7xl mx-auto">
+      <div className="w-full">
         {/* Main Grid - Full Width */}
         <div className="space-y-6">
           
           {/* Hero Row: Focus Card + Stats Card - Pixel-perfect alignment */}
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-stretch">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 items-stretch">
             
             {/* Hero Card - Today's Focus (7/12 width on desktop) */}
             <Card className="lg:col-span-7 relative overflow-hidden border-0 shadow-sm rounded-3xl bg-gradient-to-br from-primary via-primary to-purple-700">
