@@ -47,25 +47,25 @@ const phaseInfo = {
   foundation: {
     title: 'Foundation',
     description: 'Understanding why this matters',
-    icon: <Lightbulb className="w-4 h-4" />,
+    icon: <Lightbulb className="w-3.5 h-3.5" />,
     color: 'text-amber-600 bg-amber-50 border-amber-200'
   },
   concept: {
     title: 'Concept',
     description: 'Deep understanding of the topic',
-    icon: <Brain className="w-4 h-4" />,
+    icon: <Brain className="w-3.5 h-3.5" />,
     color: 'text-blue-600 bg-blue-50 border-blue-200'
   },
   ace: {
     title: 'A.C.E',
     description: 'Assess • Correct • Elevate',
-    icon: <Target className="w-4 h-4" />,
+    icon: <Target className="w-3.5 h-3.5" />,
     color: 'text-primary bg-primary/5 border-primary/20'
   },
   exit: {
     title: 'Exit',
     description: 'Summary and key takeaways',
-    icon: <Award className="w-4 h-4" />,
+    icon: <Award className="w-3.5 h-3.5" />,
     color: 'text-emerald-600 bg-emerald-50 border-emerald-200'
   }
 };
@@ -85,109 +85,126 @@ const StudentLearning = () => {
 
   return (
     <StudentDashboardLayout title="Learn">
-      <div className="space-y-6 max-w-5xl">
-        {/* Continue Learning Card */}
-        <Card className="border border-border bg-card overflow-hidden">
-          <CardContent className="p-0">
-            <div className="p-5 border-b border-border">
+      <div className="space-y-4 max-w-6xl">
+        {/* Top Section: Continue Learning + Engine Info */}
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
+          {/* Continue Learning Card */}
+          <Card className="lg:col-span-2 border border-border bg-card">
+            <CardContent className="p-4">
               <div className="flex items-center justify-between mb-3">
                 <div className="flex items-center gap-2">
                   <Sparkles className="w-4 h-4 text-primary" />
                   <span className="text-xs font-medium text-primary uppercase tracking-wide">Continue Learning</span>
                 </div>
-                <Badge variant="outline" className="text-xs border-border">
+                <Badge variant="outline" className="text-[10px] border-border">
                   <Clock className="w-3 h-3 mr-1" />
                   {currentSession.estimatedTime}
                 </Badge>
               </div>
               
-              <h2 className="text-xl font-semibold mb-1">{currentSession.topic}</h2>
-              <p className="text-sm text-muted-foreground mb-4">
+              <h2 className="text-lg font-semibold mb-1">{currentSession.topic}</h2>
+              <p className="text-xs text-muted-foreground mb-3">
                 {currentSession.subject} • {currentSession.chapter}
               </p>
               
-              <div className="flex items-center gap-2 mb-2">
+              <div className="flex items-center gap-2 mb-4">
                 <Progress value={currentSession.progress} className="h-1.5 flex-1" />
                 <span className="text-xs text-muted-foreground">{currentSession.progress}%</span>
               </div>
-            </div>
 
-            {/* Learning Engine Phases */}
-            <div className="p-5 bg-muted/30">
-              <p className="text-xs text-muted-foreground mb-3 uppercase tracking-wide">Learning Path</p>
-              <div className="flex items-center gap-2">
+              {/* Learning Path - Compact */}
+              <div className="flex flex-wrap items-center gap-1.5 mb-4">
                 {phases.map((phase, index) => {
                   const status = getPhaseStatus(phase, currentSession.currentPhase);
                   const info = phaseInfo[phase];
                   return (
                     <div key={phase} className="flex items-center">
                       <div className={`
-                        flex items-center gap-2 px-3 py-2 rounded-lg border transition-all
+                        flex items-center gap-1.5 px-2 py-1 rounded-md border transition-all text-[10px]
                         ${status === 'completed' ? 'bg-emerald-50 border-emerald-200 text-emerald-600' : ''}
                         ${status === 'current' ? info.color : ''}
                         ${status === 'upcoming' ? 'bg-muted border-border text-muted-foreground' : ''}
                       `}>
                         {status === 'completed' ? (
-                          <CheckCircle2 className="w-4 h-4" />
+                          <CheckCircle2 className="w-3 h-3" />
                         ) : (
                           info.icon
                         )}
-                        <span className="text-xs font-medium">{info.title}</span>
+                        <span className="font-medium hidden sm:inline">{info.title}</span>
                       </div>
                       {index < phases.length - 1 && (
-                        <ChevronRight className="w-4 h-4 text-muted-foreground mx-1" />
+                        <ChevronRight className="w-3 h-3 text-muted-foreground mx-0.5" />
                       )}
                     </div>
                   );
                 })}
               </div>
               
-              <div className="mt-4 p-3 rounded-lg border border-border bg-card">
-                <p className="text-xs text-muted-foreground mb-1">Current Phase</p>
-                <p className="text-sm font-medium">{phaseInfo[currentSession.currentPhase].title}: {phaseInfo[currentSession.currentPhase].description}</p>
-              </div>
-              
-              <Button className="mt-4 h-10 px-6 rounded-lg gradient-primary hover:opacity-90 transition-opacity">
+              <Button className="h-9 px-5 text-sm rounded-lg gradient-primary hover:opacity-90 transition-opacity">
                 <Play className="w-4 h-4 mr-2" />
                 Resume Learning
               </Button>
-            </div>
-          </CardContent>
-        </Card>
+            </CardContent>
+          </Card>
+
+          {/* Learning Engine Info - Compact */}
+          <Card className="border border-border bg-card">
+            <CardContent className="p-4">
+              <div className="flex items-center gap-2 mb-3">
+                <Brain className="w-4 h-4 text-primary" />
+                <h3 className="text-xs font-medium">Learn Engine</h3>
+              </div>
+              <div className="space-y-2">
+                {phases.map((phase) => {
+                  const info = phaseInfo[phase];
+                  return (
+                    <div key={phase} className={`p-2 rounded-md border ${info.color}`}>
+                      <div className="flex items-center gap-1.5">
+                        {info.icon}
+                        <span className="text-[10px] font-medium">{info.title}</span>
+                      </div>
+                      <p className="text-[9px] opacity-70 mt-0.5">{info.description}</p>
+                    </div>
+                  );
+                })}
+              </div>
+            </CardContent>
+          </Card>
+        </div>
 
         {/* All Subjects */}
         <div>
-          <div className="flex items-center justify-between mb-4">
-            <h2 className="text-base font-medium">All Subjects</h2>
+          <div className="flex items-center justify-between mb-3">
+            <h2 className="text-sm font-medium">All Subjects</h2>
             <button className="text-xs text-primary hover:underline flex items-center gap-1">
               View Progress <ArrowRight className="w-3 h-3" />
             </button>
           </div>
           
-          <div className="space-y-3">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
             {subjects.map((subject) => (
               <Card 
                 key={subject.id} 
                 className={`border border-border bg-card hover:border-primary/30 transition-all cursor-pointer ${selectedSubject === subject.id ? 'border-primary/50' : ''}`}
                 onClick={() => setSelectedSubject(selectedSubject === subject.id ? null : subject.id)}
               >
-                <CardContent className="p-4">
+                <CardContent className="p-3">
                   <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-3">
-                      <div className={`w-10 h-10 rounded-lg ${subject.color} flex items-center justify-center text-white text-lg`}>
+                    <div className="flex items-center gap-2.5">
+                      <div className={`w-9 h-9 rounded-lg ${subject.color} flex items-center justify-center text-white text-sm`}>
                         {subject.icon}
                       </div>
                       <div>
                         <h3 className="text-sm font-medium">{subject.name}</h3>
-                        <p className="text-xs text-muted-foreground">
+                        <p className="text-[10px] text-muted-foreground">
                           {subject.completedChapters}/{subject.chapters} chapters
                         </p>
                       </div>
                     </div>
-                    <div className="flex items-center gap-3">
+                    <div className="flex items-center gap-2">
                       <div className="text-right">
-                        <p className="text-sm font-medium">{subject.progress}%</p>
-                        <Progress value={subject.progress} className="h-1 w-16" />
+                        <p className="text-xs font-medium">{subject.progress}%</p>
+                        <Progress value={subject.progress} className="h-1 w-12" />
                       </div>
                       <ChevronRight className={`w-4 h-4 text-muted-foreground transition-transform ${selectedSubject === subject.id ? 'rotate-90' : ''}`} />
                     </div>
@@ -195,27 +212,27 @@ const StudentLearning = () => {
                   
                   {/* Chapters */}
                   {selectedSubject === subject.id && chapters[subject.id as keyof typeof chapters] && (
-                    <div className="mt-4 pt-4 border-t border-border space-y-2">
+                    <div className="mt-3 pt-3 border-t border-border space-y-1.5">
                       {chapters[subject.id as keyof typeof chapters].map((chapter) => (
                         <div 
                           key={chapter.id}
-                          className="flex items-center justify-between p-3 rounded-lg border border-border hover:bg-muted/30 transition-colors"
+                          className="flex items-center justify-between p-2 rounded-lg border border-border hover:bg-muted/30 transition-colors"
                         >
-                          <div className="flex items-center gap-3">
+                          <div className="flex items-center gap-2">
                             {chapter.completed ? (
-                              <CheckCircle2 className="w-4 h-4 text-emerald-600" />
+                              <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600" />
                             ) : (
-                              <div className="w-4 h-4 rounded-full border-2 border-muted-foreground" />
+                              <div className="w-3.5 h-3.5 rounded-full border-2 border-muted-foreground" />
                             )}
-                            <span className={`text-sm ${chapter.completed ? 'text-muted-foreground' : 'font-medium'}`}>
+                            <span className={`text-xs ${chapter.completed ? 'text-muted-foreground' : 'font-medium'}`}>
                               {chapter.name}
                             </span>
                           </div>
                           <div className="flex items-center gap-2">
-                            <Badge variant="outline" className="text-[10px] border-border">
+                            <Badge variant="outline" className="text-[9px] border-border py-0">
                               {chapter.concepts} concepts
                             </Badge>
-                            <Button variant="ghost" size="sm" className="h-7 text-xs">
+                            <Button variant="ghost" size="sm" className="h-6 text-[10px] px-2">
                               <BookOpen className="w-3 h-3 mr-1" />
                               Learn
                             </Button>
@@ -229,33 +246,6 @@ const StudentLearning = () => {
             ))}
           </div>
         </div>
-
-        {/* Learning Engine Info */}
-        <Card className="border border-border bg-card">
-          <CardContent className="p-5">
-            <div className="flex items-center gap-2 mb-4">
-              <Brain className="w-4 h-4 text-primary" />
-              <h3 className="text-sm font-medium">How EDDGE Learn Engine Works</h3>
-            </div>
-            <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-              {phases.map((phase) => {
-                const info = phaseInfo[phase];
-                return (
-                  <div key={phase} className={`p-3 rounded-lg border ${info.color}`}>
-                    <div className="flex items-center gap-2 mb-2">
-                      {info.icon}
-                      <span className="text-xs font-medium">{info.title}</span>
-                    </div>
-                    <p className="text-[11px] opacity-80">{info.description}</p>
-                  </div>
-                );
-              })}
-            </div>
-            <p className="text-xs text-muted-foreground mt-4">
-              Each topic follows this structured path to ensure deep understanding and exam readiness.
-            </p>
-          </CardContent>
-        </Card>
       </div>
     </StudentDashboardLayout>
   );
