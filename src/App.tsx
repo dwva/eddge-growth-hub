@@ -26,7 +26,16 @@ import StudentAchievements from "./pages/student/StudentAchievements";
 import TeacherHome from "./pages/teacher/TeacherHome";
 
 // Parent Pages
-import ParentHome from "./pages/parent/ParentHome";
+import ParentDashboardHome from "./pages/parent/ParentDashboardHome";
+import ParentChildProgress from "./pages/parent/ParentChildProgress";
+import ParentAchievements from "./pages/parent/ParentAchievements";
+import ParentMeetings from "./pages/parent/ParentMeetings";
+import ParentCommunications from "./pages/parent/ParentCommunications";
+import ParentHomework from "./pages/parent/ParentHomework";
+import ParentAnnouncements from "./pages/parent/ParentAnnouncements";
+import ParentSettings from "./pages/parent/ParentSettings";
+import ParentSupport from "./pages/parent/ParentSupport";
+import ParentChildDetails from "./pages/parent/ParentChildDetails";
 
 // Admin Pages
 import AdminHome from "./pages/admin/AdminHome";
@@ -116,12 +125,57 @@ const App = () => (
             {/* Parent Routes */}
             <Route path="/parent" element={
               <ProtectedRoute allowedRoles={['parent']}>
-                <ParentHome />
+                <ParentDashboardHome />
+              </ProtectedRoute>
+            } />
+            <Route path="/parent/child-progress/:childId" element={
+              <ProtectedRoute allowedRoles={['parent']}>
+                <ParentChildProgress />
+              </ProtectedRoute>
+            } />
+            <Route path="/parent/achievements" element={
+              <ProtectedRoute allowedRoles={['parent']}>
+                <ParentAchievements />
+              </ProtectedRoute>
+            } />
+            <Route path="/parent/meetings" element={
+              <ProtectedRoute allowedRoles={['parent']}>
+                <ParentMeetings />
+              </ProtectedRoute>
+            } />
+            <Route path="/parent/communications" element={
+              <ProtectedRoute allowedRoles={['parent']}>
+                <ParentCommunications />
+              </ProtectedRoute>
+            } />
+            <Route path="/parent/homework" element={
+              <ProtectedRoute allowedRoles={['parent']}>
+                <ParentHomework />
+              </ProtectedRoute>
+            } />
+            <Route path="/parent/announcements" element={
+              <ProtectedRoute allowedRoles={['parent']}>
+                <ParentAnnouncements />
+              </ProtectedRoute>
+            } />
+            <Route path="/parent/settings" element={
+              <ProtectedRoute allowedRoles={['parent']}>
+                <ParentSettings />
+              </ProtectedRoute>
+            } />
+            <Route path="/parent/support" element={
+              <ProtectedRoute allowedRoles={['parent']}>
+                <ParentSupport />
+              </ProtectedRoute>
+            } />
+            <Route path="/parent/child/:childId" element={
+              <ProtectedRoute allowedRoles={['parent']}>
+                <ParentChildDetails />
               </ProtectedRoute>
             } />
             <Route path="/parent/*" element={
               <ProtectedRoute allowedRoles={['parent']}>
-                <ParentHome />
+                <ParentDashboardHome />
               </ProtectedRoute>
             } />
 
