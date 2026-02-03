@@ -22,6 +22,7 @@ import StudentPerformance from "./pages/student/StudentPerformance";
 import StudentAttendance from "./pages/student/StudentAttendance";
 import StudentSettings from "./pages/student/StudentSettings";
 import StudentAchievements from "./pages/student/StudentAchievements";
+import StudentDoubtSolver from "./pages/student/StudentDoubtSolver";
 
 // Teacher Pages
 import TeacherHome from "./pages/teacher/TeacherHome";
@@ -137,6 +138,11 @@ const App = () => (
             <Route path="/student/settings" element={
               <ProtectedRoute allowedRoles={['student']}>
                 <StudentSettings />
+              </ProtectedRoute>
+            } />
+            <Route path="/student/doubt-solver" element={
+              <ProtectedRoute allowedRoles={['student']}>
+                <StudentDoubtSolver />
               </ProtectedRoute>
             } />
             {/* Catch-all student routes */}
