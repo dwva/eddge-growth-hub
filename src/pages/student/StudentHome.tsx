@@ -5,7 +5,6 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { 
   Zap,
-  TrendingUp,
   BookOpen,
   Calculator,
   Atom,
@@ -29,26 +28,28 @@ const subjectNames: Record<string, string> = {
   '3': 'Aptitude',
 };
 
-// Build flat list of studied chapters (completed) from mockData + placeholder Aptitude
-function buildStudiedChapters(): { key: string; subjectId: string; subjectName: string; chapterId: string; chapterName: string }[] {
-  const list: { key: string; subjectId: string; subjectName: string; chapterId: string; chapterName: string }[] = [];
+// Build flat list of leftover chapters (not completed) from mockData + placeholder Aptitude
+function buildStudiedChapters(): { key: string; subjectId: string; subjectName: string; chapterId: string; chapterName: string; concepts: number; progress: number }[] {
+  const list: { key: string; subjectId: string; subjectName: string; chapterId: string; chapterName: string; concepts: number; progress: number }[] = [];
   (Object.keys(chaptersData) as (keyof typeof chaptersData)[]).forEach((subjectId) => {
     const subjectName = subjectNames[subjectId] ?? 'Subject';
     chaptersData[subjectId].forEach((ch) => {
-      if (ch.completed) {
+      if (!ch.completed) {
         list.push({
           key: `${subjectId}-${ch.id}`,
           subjectId,
           subjectName,
           chapterId: ch.id,
           chapterName: ch.name,
+          concepts: ch.concepts,
+          progress: 0,
         });
       }
     });
   });
-  // Placeholder studied chapters for Aptitude (no chapters in mockData)
-  list.push({ key: '3-a1', subjectId: '3', subjectName: 'Aptitude', chapterId: 'a1', chapterName: 'Logical Reasoning' });
-  list.push({ key: '3-a2', subjectId: '3', subjectName: 'Aptitude', chapterId: 'a2', chapterName: 'Patterns & Sequences' });
+  // Placeholder leftover chapters for Aptitude (no chapters in mockData)
+  list.push({ key: '3-a1', subjectId: '3', subjectName: 'Aptitude', chapterId: 'a1', chapterName: 'Logical Reasoning', concepts: 6, progress: 0 });
+  list.push({ key: '3-a2', subjectId: '3', subjectName: 'Aptitude', chapterId: 'a2', chapterName: 'Patterns & Sequences', concepts: 5, progress: 0 });
   return list;
 }
 
@@ -215,20 +216,19 @@ const StudentHome = () => {
             <div className="space-y-6">
               {/* Continue Learn - chapters studied, scrollable, updates when studied again */}
               <div>
-                <div className="flex items-center justify-between mb-4">
-                  <h3 className="text-base font-semibold text-gray-900">Continue Learn</h3>
-                  <button 
-                    className="flex items-center gap-1 text-xs text-gray-500 hover:text-primary transition-colors"
-                    onClick={() => navigate('/student/learning')}
-                  >
-                    View All <ArrowRight className="w-3.5 h-3.5" />
-                  </button>
-                </div>
-
                 <div 
                   className="rounded-2xl border border-gray-100 bg-white shadow-sm overflow-hidden"
                   style={{ scrollBehavior: 'smooth' }}
                 >
+                  <div className="flex items-center justify-between px-4 pt-4 pb-3 border-b border-gray-50">
+                    <h3 className="text-base font-semibold text-gray-900">Continue Learn</h3>
+                    <button 
+                      className="flex items-center gap-1 text-xs text-gray-500 hover:text-primary transition-colors"
+                      onClick={() => navigate('/student/learning')}
+                    >
+                      View All <ArrowRight className="w-3.5 h-3.5" />
+                    </button>
+                  </div>
                   <div className="max-h-[220px] overflow-y-auto overflow-x-hidden scroll-smooth py-1 pr-1 [scrollbar-gutter:stable]">
                     {studiedChapters.map((item) => (
                       <button
@@ -241,74 +241,23 @@ const StudentHome = () => {
                           <p className="text-sm font-medium text-gray-900 truncate">
                             {item.subjectName} · {item.chapterName}
                           </p>
-                          <p className="text-xs text-gray-500 mt-0.5">Continue</p>
+                          <div className="flex items-center gap-2 mt-1.5">
+                            <div className="flex-1 min-w-0 h-1.5 bg-gray-100 rounded-full overflow-hidden max-w-[80px]">
+                              <div
+                                className="h-full bg-primary rounded-full"
+                                style={{ width: `${item.progress}%` }}
+                              />
+                            </div>
+                            <span className="text-xs text-gray-500">
+                              {item.progress}% complete · {item.concepts} concepts
+                            </span>
+                          </div>
                         </div>
                         <ArrowRight className="w-4 h-4 text-gray-400 flex-shrink-0 group-hover:translate-x-0.5 transition-transform" />
                       </button>
                     ))}
                   </div>
                 </div>
-              </div>
-
-              {/* Bottom Stats Row - Weekly Performance + Upcoming Tasks */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                {/* Weekly Performance */}
-                <Card className="border border-gray-100 shadow-sm rounded-2xl bg-white">
-                  <CardContent className="p-4">
-                    <div className="flex items-center justify-between mb-3">
-                      <h4 className="text-sm font-semibold text-primary">Weekly Performance</h4>
-                      <button 
-                        className="text-xs text-gray-400 hover:text-primary flex items-center gap-1"
-                        onClick={() => navigate('/student/performance')}
-                      >
-                        View All <ArrowRight className="w-3 h-3" />
-                      </button>
-                    </div>
-                    
-                    <div className="flex items-center gap-3">
-                      <div className="flex -space-x-2">
-                        {['🎯', '📚', '✨', '🏆'].map((emoji, i) => (
-                          <div key={i} className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center border-2 border-white text-sm">
-                            {emoji}
-                          </div>
-                        ))}
-                      </div>
-                      <div className="border-l border-gray-200 pl-3">
-                        <p className="text-sm font-semibold text-gray-900">85% accuracy</p>
-                        <p className="text-xs text-gray-500">12 tasks • 7 days</p>
-                      </div>
-                    </div>
-                  </CardContent>
-                </Card>
-
-                {/* Upcoming Tasks */}
-                <Card className="border border-gray-100 shadow-sm rounded-2xl bg-white">
-                  <CardContent className="p-4">
-                    <div className="flex items-center justify-between mb-3">
-                      <h4 className="text-sm font-semibold text-primary">Upcoming Tasks</h4>
-                      <button 
-                        className="text-xs text-gray-400 hover:text-primary flex items-center gap-1"
-                        onClick={() => navigate('/student/homework')}
-                      >
-                        View All <ArrowRight className="w-3 h-3" />
-                      </button>
-                    </div>
-                    
-                    <div className="flex items-center gap-3">
-                      <div className="flex -space-x-2">
-                        {['📝', '📖', '🧮', '✏️'].map((emoji, i) => (
-                          <div key={i} className="w-8 h-8 rounded-full bg-amber-50 flex items-center justify-center border-2 border-white text-sm">
-                            {emoji}
-                          </div>
-                        ))}
-                      </div>
-                      <div className="border-l border-gray-200 pl-3">
-                        <p className="text-sm font-semibold text-gray-900">3 pending</p>
-                        <p className="text-xs text-gray-500">Due today & tomorrow</p>
-                      </div>
-                    </div>
-                  </CardContent>
-                </Card>
               </div>
             </div>
 
