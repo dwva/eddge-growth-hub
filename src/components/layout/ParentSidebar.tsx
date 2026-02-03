@@ -1,7 +1,6 @@
 import { ReactNode, useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
-import { useChild } from '@/contexts/ChildContext';
 import { cn } from '@/lib/utils';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
 import { 
@@ -16,8 +15,7 @@ import {
   LogOut,
   ChevronDown,
   Sparkles,
-  Users,
-  Settings
+  FileText
 } from 'lucide-react';
 
 interface NavSection {
@@ -30,6 +28,33 @@ interface NavSection {
   }[];
 }
 
+const navSections: NavSection[] = [
+  {
+    title: 'Performance',
+    icon: <TrendingUp className="w-3.5 h-3.5" />,
+    items: [
+      { label: 'Progress', icon: <TrendingUp className="w-3 h-3" />, path: '/parent/child-progress/1' },
+      { label: 'Achievements', icon: <Award className="w-3 h-3" />, path: '/parent/achievements' },
+    ],
+  },
+  {
+    title: 'Communication',
+    icon: <MessageSquare className="w-3.5 h-3.5" />,
+    items: [
+      { label: 'Meetings', icon: <Calendar className="w-3 h-3" />, path: '/parent/meetings' },
+      { label: 'Messages', icon: <MessageSquare className="w-3 h-3" />, path: '/parent/communications' },
+    ],
+  },
+  {
+    title: 'Learning',
+    icon: <BookOpen className="w-3.5 h-3.5" />,
+    items: [
+      { label: 'Homework', icon: <FileText className="w-3 h-3" />, path: '/parent/homework' },
+      { label: 'Announcements', icon: <Bell className="w-3 h-3" />, path: '/parent/announcements' },
+    ],
+  },
+];
+
 interface ParentSidebarProps {
   collapsed?: boolean;
   isMobile?: boolean;
@@ -38,37 +63,9 @@ interface ParentSidebarProps {
 
 const ParentSidebar = ({ collapsed = false, isMobile = false, onMobileClose }: ParentSidebarProps) => {
   const { logout } = useAuth();
-  const { selectedChild } = useChild();
   const navigate = useNavigate();
   const location = useLocation();
   const [openSections, setOpenSections] = useState<string[]>(['Performance', 'Communication', 'Learning']);
-
-  const navSections: NavSection[] = [
-    {
-      title: 'Performance',
-      icon: <TrendingUp className="w-3.5 h-3.5" />,
-      items: [
-        { label: 'Progress', icon: <TrendingUp className="w-3 h-3" />, path: `/parent/child-progress/${selectedChild?.id || '1'}` },
-        { label: 'Achievements', icon: <Award className="w-3 h-3" />, path: '/parent/achievements' },
-      ],
-    },
-    {
-      title: 'Communication',
-      icon: <MessageSquare className="w-3.5 h-3.5" />,
-      items: [
-        { label: 'Meetings', icon: <Calendar className="w-3 h-3" />, path: '/parent/meetings' },
-        { label: 'Messages', icon: <MessageSquare className="w-3 h-3" />, path: '/parent/communications' },
-      ],
-    },
-    {
-      title: 'Learning',
-      icon: <BookOpen className="w-3.5 h-3.5" />,
-      items: [
-        { label: 'Homework', icon: <BookOpen className="w-3 h-3" />, path: '/parent/homework' },
-        { label: 'Announcements', icon: <Bell className="w-3 h-3" />, path: '/parent/announcements' },
-      ],
-    },
-  ];
 
   const handleLogout = () => {
     logout();
@@ -91,12 +88,16 @@ const ParentSidebar = ({ collapsed = false, isMobile = false, onMobileClose }: P
   };
 
   const isPathActive = (path: string) => {
-    if (path === '/parent') return location.pathname === '/parent';
-    return location.pathname.startsWith(path);
+    if (path.includes('/child-progress/')) {
+      return location.pathname.includes('/child-progress/');
+    }
+    return location.pathname === path;
   };
   
+  const isDashboardActive = location.pathname === '/parent';
+  
   const isSectionActive = (section: NavSection) => 
-    section.items.some(item => location.pathname.startsWith(item.path.split('/').slice(0, 3).join('/')));
+    section.items.some(item => isPathActive(item.path));
 
   const showText = !collapsed || isMobile;
 
@@ -132,7 +133,7 @@ const ParentSidebar = ({ collapsed = false, isMobile = false, onMobileClose }: P
           className={cn(
             "w-full flex items-center gap-2 rounded-lg transition-all duration-200",
             collapsed && !isMobile ? "justify-center p-2" : "px-2.5 py-2",
-            isPathActive('/parent') && location.pathname === '/parent'
+            isDashboardActive
               ? "bg-white/20 text-white" 
               : "text-white/70 hover:bg-white/10 hover:text-white"
           )}
@@ -141,7 +142,7 @@ const ParentSidebar = ({ collapsed = false, isMobile = false, onMobileClose }: P
           {showText && (
             <>
               <span className="text-[11px] font-medium">Dashboard</span>
-              {isPathActive('/parent') && location.pathname === '/parent' && (
+              {isDashboardActive && (
                 <div className="ml-auto w-1.5 h-1.5 rounded-full bg-white" />
               )}
             </>
@@ -232,17 +233,6 @@ const ParentSidebar = ({ collapsed = false, isMobile = false, onMobileClose }: P
         >
           <HelpCircle className="w-4 h-4 flex-shrink-0" />
           {showText && <span className="text-[10px]">Help & Support</span>}
-        </button>
-
-        <button
-          onClick={() => handleNavigate('/parent/settings')}
-          className={cn(
-            "w-full flex items-center gap-2 rounded-lg transition-all duration-200 text-white/60 hover:bg-white/10 hover:text-white",
-            collapsed && !isMobile ? "justify-center p-2" : "px-2.5 py-1.5"
-          )}
-        >
-          <Settings className="w-4 h-4 flex-shrink-0" />
-          {showText && <span className="text-[10px]">Settings</span>}
         </button>
 
         <button

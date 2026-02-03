@@ -5,7 +5,8 @@ import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Menu, Bell, ChevronLeft, User, Settings, LogOut } from 'lucide-react';
+import { Input } from '@/components/ui/input';
+import { Menu, Bell, ChevronLeft, User, Settings, LogOut, Search } from 'lucide-react';
 import ParentSidebar from './ParentSidebar';
 import { ChildProvider, useChild } from '@/contexts/ChildContext';
 import { LanguageProvider } from '@/contexts/LanguageContext';
@@ -73,10 +74,22 @@ const ParentDashboardLayoutInner = ({ children, title = "Parent Dashboard" }: Pa
               </SheetTrigger>
             </Sheet>
             
-            {/* Child Switcher */}
-            {childrenList.length > 1 ? (
+            {/* Search Bar */}
+            <div className="hidden md:flex items-center relative">
+              <Search className="absolute left-3 w-4 h-4 text-muted-foreground" />
+              <Input 
+                placeholder="Search progress, reports..." 
+                className="pl-9 w-64 h-9 bg-muted/50 border-0 focus-visible:ring-1 focus-visible:ring-primary"
+              />
+            </div>
+          </div>
+          
+          {/* Right Side: Notification + Profile */}
+          <div className="flex items-center gap-3">
+            {/* Child Switcher (Compact) */}
+            {childrenList.length > 1 && (
               <Select value={selectedChild?.id} onValueChange={handleChildChange}>
-                <SelectTrigger className="w-[160px] h-9 text-sm">
+                <SelectTrigger className="w-[140px] h-9 text-xs border-0 bg-muted/50">
                   <SelectValue placeholder="Select child" />
                 </SelectTrigger>
                 <SelectContent>
@@ -84,53 +97,46 @@ const ParentDashboardLayoutInner = ({ children, title = "Parent Dashboard" }: Pa
                     <SelectItem key={child.id} value={child.id}>
                       <div className="flex items-center gap-2">
                         <span>{child.avatar}</span>
-                        <span>{child.name}</span>
+                        <span className="text-xs">{child.name}</span>
                       </div>
                     </SelectItem>
                   ))}
                 </SelectContent>
               </Select>
-            ) : selectedChild ? (
-              <div className="flex items-center gap-2 text-sm">
-                <span className="text-lg">{selectedChild.avatar}</span>
-                <div>
-                  <p className="font-medium text-sm">{selectedChild.name}</p>
-                  <p className="text-[10px] text-muted-foreground">{selectedChild.class}</p>
-                </div>
-              </div>
-            ) : null}
-          </div>
-          
-          {/* Right Side: Notification + Profile */}
-          <div className="flex items-center gap-2">
+            )}
+
             <Button 
               variant="ghost" 
               size="icon" 
               className="relative hover:bg-primary/10 hover:text-primary transition-all duration-200 h-9 w-9"
             >
               <Bell className="w-5 h-5" />
-              <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-destructive rounded-full"></span>
+              <span className="absolute top-1 right-1 min-w-[16px] h-4 bg-destructive rounded-full text-[10px] text-white flex items-center justify-center font-medium">3</span>
             </Button>
 
             {/* Profile Dropdown */}
             <Popover>
               <PopoverTrigger asChild>
-                <Button variant="ghost" size="icon" className="h-9 w-9 rounded-full">
-                  <Avatar className="w-8 h-8 border border-border">
+                <Button variant="ghost" className="h-9 px-2 gap-2 rounded-full hover:bg-muted/50">
+                  <Avatar className="w-8 h-8 border border-primary/20">
                     <AvatarImage src="" />
-                    <AvatarFallback className="bg-primary/10 text-primary text-xs">
-                      <User className="w-4 h-4" />
+                    <AvatarFallback className="bg-primary text-primary-foreground text-xs font-medium">
+                      {user?.name?.charAt(0) || 'P'}
                     </AvatarFallback>
                   </Avatar>
+                  <div className="hidden md:flex flex-col items-start">
+                    <span className="text-xs font-medium">{user?.name || 'Parent'}</span>
+                    <span className="text-[10px] text-muted-foreground">{selectedChild?.class || 'Parent'}</span>
+                  </div>
                 </Button>
               </PopoverTrigger>
               <PopoverContent className="w-64 p-0" align="end">
                 <div className="p-4 border-b border-border">
                   <div className="flex items-center gap-3">
-                    <Avatar className="w-10 h-10 border border-border">
+                    <Avatar className="w-10 h-10 border border-primary/20">
                       <AvatarImage src="" />
-                      <AvatarFallback className="bg-primary/10 text-primary">
-                        <User className="w-5 h-5" />
+                      <AvatarFallback className="bg-primary text-primary-foreground">
+                        {user?.name?.charAt(0) || 'P'}
                       </AvatarFallback>
                     </Avatar>
                     <div className="flex-1 min-w-0">
@@ -138,6 +144,11 @@ const ParentDashboardLayoutInner = ({ children, title = "Parent Dashboard" }: Pa
                       <p className="text-xs text-muted-foreground truncate">{user?.email || 'parent@eddge.com'}</p>
                     </div>
                   </div>
+                  {selectedChild && (
+                    <p className="text-[10px] text-muted-foreground mt-2 px-1">
+                      Viewing: {selectedChild.name} • {selectedChild.class}
+                    </p>
+                  )}
                 </div>
                 <div className="p-2">
                   <button 
