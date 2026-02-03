@@ -108,9 +108,9 @@ const StudentSidebar = ({ collapsed = false, isMobile = false, onMobileClose }: 
       {/* Logo - Planti style */}
       <div className={cn(
         "flex items-center h-16 border-b border-gray-100",
-        collapsed && !isMobile ? "justify-center px-3" : "gap-3 px-5"
+        collapsed && !isMobile ? "justify-center px-3" : "gap-3 px-6"
       )}>
-        <div className="w-9 h-9 rounded-xl bg-primary flex items-center justify-center flex-shrink-0">
+        <div className="w-10 h-10 rounded-xl bg-primary flex items-center justify-center flex-shrink-0">
           <Sparkles className="w-5 h-5 text-white" />
         </div>
         {showText && (
@@ -121,15 +121,15 @@ const StudentSidebar = ({ collapsed = false, isMobile = false, onMobileClose }: 
       {/* Navigation */}
       <nav className={cn(
         "flex-1 py-4 overflow-y-auto scrollbar-hide",
-        collapsed && !isMobile ? "px-2" : "px-3"
+        collapsed && !isMobile ? "px-3" : "px-4"
       )}>
         {/* Dashboard - Standalone */}
         <div className="mb-2">
           <button
             onClick={() => handleNavigate('/student')}
             className={cn(
-              "w-full flex items-center rounded-xl transition-all duration-200 h-11",
-              collapsed && !isMobile ? "justify-center px-2" : "gap-3 px-4",
+              "w-full flex items-center rounded-xl transition-all duration-200 h-12",
+              collapsed && !isMobile ? "justify-center px-3" : "gap-3 px-5",
               isPathActive('/student')
                 ? "bg-primary/10 text-primary font-medium" 
                 : "text-gray-600 hover:bg-gray-50 hover:text-gray-900"
@@ -163,8 +163,8 @@ const StudentSidebar = ({ collapsed = false, isMobile = false, onMobileClose }: 
               <CollapsibleTrigger asChild>
                 <button
                   className={cn(
-                    "w-full flex items-center rounded-xl transition-all duration-200 h-11",
-                    collapsed && !isMobile ? "justify-center px-2" : "gap-3 px-4",
+                    "w-full flex items-center rounded-xl transition-all duration-200 h-12",
+                    collapsed && !isMobile ? "justify-center px-3" : "gap-3 px-5",
                     isSectionActive(section)
                       ? "text-primary font-medium" 
                       : "text-gray-600 hover:bg-gray-50 hover:text-gray-900"
@@ -191,15 +191,15 @@ const StudentSidebar = ({ collapsed = false, isMobile = false, onMobileClose }: 
               <CollapsibleContent>
                 <div className={cn(
                   "mt-1 space-y-0.5",
-                  collapsed && !isMobile ? "" : "ml-4 pl-4 border-l border-gray-100"
+                  collapsed && !isMobile ? "" : "ml-5 pl-5 border-l border-gray-200"
                 )}>
                   {section.items.map((item) => (
                     <button
                       key={item.path}
                       onClick={() => handleNavigate(item.path)}
                       className={cn(
-                        "w-full flex items-center rounded-lg transition-all duration-200 h-9",
-                        collapsed && !isMobile ? "justify-center px-2" : "gap-3 px-3",
+                        "w-full flex items-center rounded-lg transition-all duration-200 h-10",
+                        collapsed && !isMobile ? "justify-center px-3" : "gap-3 px-4",
                         isPathActive(item.path)
                           ? "bg-primary/10 text-primary font-medium" 
                           : "text-gray-500 hover:bg-gray-50 hover:text-gray-700"
