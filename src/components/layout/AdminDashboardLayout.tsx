@@ -52,8 +52,8 @@ const AdminDashboardLayout = ({
     <div className="min-h-screen bg-[#f8f9fb] flex font-sans">
       {/* Desktop Sidebar */}
       <aside className={cn(
-        "hidden md:flex flex-col h-screen sticky top-0 flex-shrink-0 transition-all duration-300",
-        collapsed ? "w-[72px]" : "w-[260px]"
+        "hidden md:flex flex-col h-screen sticky top-0 flex-shrink-0 transition-all duration-300 overflow-hidden",
+        collapsed ? "w-0" : "w-[260px]"
       )}>
         <AdminSidebar collapsed={collapsed} />
       </aside>
