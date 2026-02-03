@@ -105,36 +105,36 @@ const StudentSidebar = ({ collapsed = false, isMobile = false, onMobileClose }: 
 
   return (
     <div className="flex flex-col h-full gradient-sidebar font-sans">
-      {/* Logo */}
+      {/* Logo - 16px padding, 48px height */}
       <div className={cn(
-        "flex items-center gap-3 px-4 py-5 border-b border-white/10",
-        collapsed && !isMobile && "justify-center px-2"
+        "flex items-center h-16 border-b border-white/10",
+        collapsed && !isMobile ? "justify-center px-2" : "gap-3 px-4"
       )}>
         <div className={cn(
           "rounded-xl bg-white/20 flex items-center justify-center flex-shrink-0",
-          collapsed && !isMobile ? "w-8 h-8" : "w-9 h-9"
+          collapsed && !isMobile ? "w-8 h-8" : "w-8 h-8"
         )}>
-          <Sparkles className={cn(collapsed && !isMobile ? "w-4 h-4" : "w-5 h-5", "text-white")} />
+          <Sparkles className="w-4 h-4 text-white" />
         </div>
         {showText && (
-          <div>
-            <span className="text-lg font-bold text-white tracking-tight">EDDGE</span>
-            <p className="text-[10px] text-white/70">Student Portal</p>
+          <div className="flex flex-col">
+            <span className="text-base font-bold text-white tracking-tight leading-tight">EDDGE</span>
+            <span className="text-[10px] text-white/70 leading-tight">Student Portal</span>
           </div>
         )}
       </div>
 
-      {/* Navigation */}
+      {/* Navigation - 16px horizontal padding, 8px vertical gaps */}
       <nav className={cn(
-        "flex-1 py-4 space-y-1 overflow-y-auto scrollbar-hide",
+        "flex-1 py-4 overflow-y-auto scrollbar-hide",
         collapsed && !isMobile ? "px-2" : "px-3"
       )}>
-        {/* Dashboard */}
+        {/* Dashboard - 8px vertical margin, 12px horizontal padding */}
         <button
           onClick={() => handleNavigate('/student')}
           className={cn(
-            "w-full flex items-center gap-3 rounded-xl transition-all duration-200",
-            collapsed && !isMobile ? "justify-center p-2.5" : "px-3 py-2.5",
+            "w-full flex items-center rounded-lg transition-all duration-200 h-10",
+            collapsed && !isMobile ? "justify-center px-2" : "gap-3 px-3",
             isPathActive('/student')
               ? "bg-white/20 text-white" 
               : "text-white/80 hover:bg-white/10 hover:text-white"
@@ -143,104 +143,104 @@ const StudentSidebar = ({ collapsed = false, isMobile = false, onMobileClose }: 
           <LayoutDashboard className="w-5 h-5 flex-shrink-0" />
           {showText && (
             <>
-              <span className="text-sm font-medium">Dashboard</span>
+              <span className="text-sm font-medium flex-1 text-left">Dashboard</span>
               {isPathActive('/student') && (
-                <div className="ml-auto w-2 h-2 rounded-full bg-white" />
+                <div className="w-1.5 h-1.5 rounded-full bg-white" />
               )}
             </>
           )}
         </button>
 
-        {/* Spacer */}
-        <div className="h-2" />
+        {/* Spacer - 16px */}
+        <div className="h-4" />
 
-        {/* Collapsible Sections */}
-        {navSections.map((section) => (
-          <div key={section.title}>
-            {collapsed && !isMobile ? (
-              // Collapsed: Show only icons
-              <div className="space-y-1">
-                <div className="w-full flex justify-center py-2 text-white/50">
-                  <span className="flex-shrink-0">{section.icon}</span>
-                </div>
-                {section.items.map((item) => (
-                  <button
-                    key={item.path}
-                    onClick={() => handleNavigate(item.path)}
-                    className={cn(
-                      "w-full flex justify-center p-2.5 rounded-xl transition-all duration-200",
-                      isPathActive(item.path)
-                        ? "bg-white/20 text-white" 
-                        : "text-white/70 hover:bg-white/10 hover:text-white"
-                    )}
-                  >
-                    <span className="flex-shrink-0">{item.icon}</span>
-                  </button>
-                ))}
-              </div>
-            ) : (
-              // Expanded: Full collapsible
-              <Collapsible
-                open={openSections.includes(section.title)}
-                onOpenChange={() => toggleSection(section.title)}
-              >
-                <CollapsibleTrigger asChild>
-                  <button
-                    className="w-full flex items-center gap-3 px-3 py-2 rounded-xl transition-all duration-200 text-white/80 hover:bg-white/10 hover:text-white"
-                  >
-                    <span className="flex-shrink-0">{section.icon}</span>
-                    <span className="text-sm font-medium">{section.title}</span>
-                    <ChevronUp className={cn(
-                      "ml-auto w-4 h-4 transition-transform duration-200",
-                      !openSections.includes(section.title) && "rotate-180"
-                    )} />
-                  </button>
-                </CollapsibleTrigger>
-                <CollapsibleContent className="space-y-0.5 ml-4 pl-4 border-l border-white/20 mt-1">
+        {/* Collapsible Sections - 8px gap between sections */}
+        <div className="space-y-1">
+          {navSections.map((section) => (
+            <div key={section.title}>
+              {collapsed && !isMobile ? (
+                // Collapsed: Show only icons
+                <div className="space-y-1">
+                  <div className="w-full flex justify-center h-8 items-center text-white/50">
+                    {section.icon}
+                  </div>
                   {section.items.map((item) => (
                     <button
                       key={item.path}
                       onClick={() => handleNavigate(item.path)}
                       className={cn(
-                        "w-full flex items-center gap-3 px-3 py-2 rounded-xl transition-all duration-200",
+                        "w-full flex justify-center items-center h-10 rounded-lg transition-all duration-200",
                         isPathActive(item.path)
                           ? "bg-white/20 text-white" 
-                          : "text-white/60 hover:bg-white/10 hover:text-white"
+                          : "text-white/70 hover:bg-white/10 hover:text-white"
                       )}
                     >
-                      <span className="flex-shrink-0">{item.icon}</span>
-                      <span className="text-[13px]">{item.label}</span>
+                      {item.icon}
                     </button>
                   ))}
-                </CollapsibleContent>
-              </Collapsible>
-            )}
-          </div>
-        ))}
+                </div>
+              ) : (
+                // Expanded: Full collapsible
+                <Collapsible
+                  open={openSections.includes(section.title)}
+                  onOpenChange={() => toggleSection(section.title)}
+                >
+                  <CollapsibleTrigger asChild>
+                    <button className="w-full flex items-center gap-3 px-3 h-10 rounded-lg transition-all duration-200 text-white/80 hover:bg-white/10 hover:text-white">
+                      <span className="flex-shrink-0">{section.icon}</span>
+                      <span className="text-sm font-medium flex-1 text-left">{section.title}</span>
+                      <ChevronUp className={cn(
+                        "w-4 h-4 transition-transform duration-200",
+                        !openSections.includes(section.title) && "rotate-180"
+                      )} />
+                    </button>
+                  </CollapsibleTrigger>
+                  <CollapsibleContent className="ml-4 pl-3 border-l border-white/20 mt-1 space-y-0.5">
+                    {section.items.map((item) => (
+                      <button
+                        key={item.path}
+                        onClick={() => handleNavigate(item.path)}
+                        className={cn(
+                          "w-full flex items-center gap-3 px-3 h-9 rounded-lg transition-all duration-200",
+                          isPathActive(item.path)
+                            ? "bg-white/20 text-white" 
+                            : "text-white/60 hover:bg-white/10 hover:text-white"
+                        )}
+                      >
+                        <span className="flex-shrink-0">{item.icon}</span>
+                        <span className="text-[13px] text-left">{item.label}</span>
+                      </button>
+                    ))}
+                  </CollapsibleContent>
+                </Collapsible>
+              )}
+            </div>
+          ))}
+        </div>
       </nav>
 
-      {/* Bottom Section */}
+      {/* Bottom Section - 16px padding, 8px gap between items */}
       <div className="border-t border-white/10 p-3 space-y-1">
         <button
           onClick={() => handleNavigate('/student/help')}
           className={cn(
-            "w-full flex items-center gap-3 rounded-xl transition-all duration-200 text-white/70 hover:bg-white/10 hover:text-white",
-            collapsed && !isMobile ? "justify-center p-2.5" : "px-3 py-2"
+            "w-full flex items-center rounded-lg transition-all duration-200 text-white/70 hover:bg-white/10 hover:text-white h-10",
+            collapsed && !isMobile ? "justify-center px-2" : "gap-3 px-3"
           )}
         >
           <HelpCircle className="w-5 h-5 flex-shrink-0" />
-          {showText && <span className="text-sm">Help & Support</span>}
+          {showText && <span className="text-sm text-left">Help & Support</span>}
         </button>
 
         <button
           onClick={handleLogout}
           className={cn(
-            "w-full flex items-center gap-3 rounded-xl transition-all duration-200 text-white/70 hover:bg-white/10 hover:text-white",
-            collapsed && !isMobile ? "justify-center p-2.5" : "px-3 py-2"
+            "w-full flex items-center rounded-lg transition-all duration-200 text-white/70 hover:bg-white/10 hover:text-white h-10",
+            collapsed && !isMobile ? "justify-center px-2" : "gap-3 px-3"
           )}
         >
           <LogOut className="w-5 h-5 flex-shrink-0" />
-          {showText && <span className="text-sm">Logout</span>}
+          {showText && <span className="text-sm text-left">Logout</span>}
         </button>
       </div>
     </div>
