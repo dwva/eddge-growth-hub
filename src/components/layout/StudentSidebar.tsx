@@ -237,22 +237,41 @@ const StudentSidebar = ({ collapsed = false, isMobile = false, onMobileClose }: 
         </div>
       </nav>
 
-      {/* Bottom section - p-3, space-y-2, border-t */}
+      {/* Bottom section */}
       {showText && (
-        <div className="p-3 space-y-2 border-t border-gray-100 flex-shrink-0">
-          {/* Help & Support - px-4 py-2.5, gap-3 */}
-          <button
-            onClick={() => handleNavigate('/student/help')}
-            className="w-full flex items-center px-4 py-2.5 gap-3 rounded-xl text-gray-600 hover:bg-gray-50 hover:text-gray-900 transition-colors"
-          >
-            <HelpCircle className="w-5 h-5 text-gray-400" />
-            <span className="font-medium text-sm">Help & Support</span>
-          </button>
+        <div className="p-4 space-y-3 flex-shrink-0">
+          {/* Help Center Card - Planti style */}
+          <div className="bg-gradient-to-br from-green-100 via-green-50 to-emerald-100 rounded-2xl p-5 relative overflow-hidden">
+            {/* Decorative background elements */}
+            <div className="absolute top-0 right-0 w-20 h-20 bg-green-200/30 rounded-full -translate-y-1/2 translate-x-1/2" />
+            <div className="absolute bottom-0 left-0 w-16 h-16 bg-green-200/20 rounded-full translate-y-1/2 -translate-x-1/2" />
+            
+            {/* Question mark icon - centered at top */}
+            <div className="flex justify-center -mt-8 mb-4">
+              <div className="w-10 h-10 rounded-full bg-white shadow-md flex items-center justify-center">
+                <HelpCircle className="w-5 h-5 text-gray-600" />
+              </div>
+            </div>
+            
+            <div className="text-center relative z-10">
+              <h4 className="font-semibold text-gray-900 text-base">Help Center</h4>
+              <p className="text-xs text-gray-600 mt-1.5 leading-relaxed">
+                Having trouble in EDDGE.<br />
+                Please contact us for more questions.
+              </p>
+              <button
+                onClick={() => handleNavigate('/student/help')}
+                className="mt-4 w-full bg-white text-gray-800 text-sm font-semibold py-3 px-4 rounded-xl hover:bg-gray-50 transition-colors shadow-sm"
+              >
+                Go To Help Center
+              </button>
+            </div>
+          </div>
 
-          {/* Logout - px-4 py-3, gap-3 */}
+          {/* Logout */}
           <button
             onClick={handleLogout}
-            className="w-full flex items-center px-4 py-3 gap-3 rounded-xl text-red-600 bg-red-50 hover:bg-red-100 transition-colors"
+            className="w-full flex items-center justify-center px-4 py-3 gap-3 rounded-xl text-red-600 bg-red-50 hover:bg-red-100 transition-colors"
           >
             <LogOut className="w-5 h-5" />
             <span className="font-medium text-sm">Logout</span>
