@@ -48,7 +48,7 @@ const navSections: NavSection[] = [
       { label: 'Personalized Learn', icon: <BookOpen className="w-4 h-4" />, path: '/student/learning' },
       { label: 'Practice', icon: <ClipboardCheck className="w-4 h-4" />, path: '/student/practice' },
       { label: 'Revision', icon: <FolderOpen className="w-4 h-4" />, path: '/student/revision' },
-      { label: 'AI Doubt Solver', icon: <MessageSquare className="w-4 h-4" />, path: '/student/doubts' },
+      { label: 'AI Doubt Solver', icon: <MessageSquare className="w-4 h-4" />, path: '/student/doubt-solver' },
     ],
   },
   {
