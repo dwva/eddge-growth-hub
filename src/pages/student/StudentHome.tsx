@@ -70,23 +70,23 @@ const StudentHome = () => {
               <div className="absolute top-1/2 right-1/4 w-32 h-32 bg-white/5 rounded-full" />
               <div className="absolute bottom-0 right-0 w-64 h-64 bg-purple-500/20 rounded-full translate-y-1/2 translate-x-1/4" />
               
-              <CardContent className="relative p-6 flex flex-col justify-between h-full min-h-[200px]">
+              <CardContent className="relative p-8 flex flex-col justify-between h-full min-h-[240px]">
                 {/* Top section - Title aligned to same baseline as My Stats */}
-                <div className="pt-1">
-                  <h2 className="text-xl font-bold text-white leading-tight">
+                <div className="pt-2">
+                  <h2 className="text-2xl font-bold text-white leading-tight">
                     Today's Focus
                   </h2>
-                  <p className="text-white/70 text-sm mt-2 max-w-sm">
+                  <p className="text-white/70 text-sm mt-3 max-w-sm">
                     Your personalized learning plan for today
                   </p>
                 </div>
                 
                 {/* Bottom section - Buttons */}
-                <div className="flex gap-3 pt-4">
-                  <Button className="bg-white text-primary hover:bg-white/90 font-semibold rounded-xl px-5 h-10 shadow-md">
+                <div className="flex gap-3 pt-6">
+                  <Button className="bg-white text-primary hover:bg-white/90 font-semibold rounded-xl px-6 h-11 shadow-md">
                     Start Today's Plan
                   </Button>
-                  <Button variant="outline" className="border-white/40 text-white hover:bg-white/10 rounded-xl px-5 h-10 bg-transparent">
+                  <Button variant="outline" className="border-white/40 text-white hover:bg-white/10 rounded-xl px-6 h-11 bg-transparent">
                     View Progress
                   </Button>
                 </div>
@@ -96,35 +96,35 @@ const StudentHome = () => {
             {/* Stats Card - My Stats (5/12 width on desktop) */}
             <Card className="lg:col-span-5 relative overflow-hidden border-0 shadow-sm rounded-3xl bg-gradient-to-br from-amber-100 via-amber-50 to-orange-100">
               {/* Decorative elements - balanced */}
-              <div className="absolute -top-6 -right-6 w-20 h-20 bg-primary/10 rounded-full" />
-              <div className="absolute bottom-0 right-0 w-32 h-32 bg-orange-200/50 rounded-full translate-y-1/3 translate-x-1/4" />
+              <div className="absolute -top-6 -right-6 w-24 h-24 bg-primary/10 rounded-full" />
+              <div className="absolute bottom-0 right-0 w-40 h-40 bg-orange-200/50 rounded-full translate-y-1/3 translate-x-1/4" />
               
-              <CardContent className="relative p-6 flex flex-col justify-between h-full min-h-[200px]">
+              <CardContent className="relative p-8 flex flex-col justify-between h-full min-h-[240px]">
                 {/* Top section - Title aligned with Today's Focus */}
-                <div className="pt-1">
-                  <h3 className="text-xl font-bold text-gray-900 leading-tight">My Stats</h3>
+                <div className="pt-2">
+                  <h3 className="text-2xl font-bold text-gray-900 leading-tight">My Stats</h3>
                   
                   {/* Stats row - evenly aligned */}
-                  <div className="flex gap-8 mt-4">
+                  <div className="flex gap-10 mt-5">
                     <div>
                       <p className="text-xs text-gray-500 font-medium">Today</p>
-                      <p className="text-xl font-bold text-gray-900 mt-1">2.5 hrs</p>
+                      <p className="text-2xl font-bold text-gray-900 mt-1">2.5 hrs</p>
                     </div>
                     <div>
                       <p className="text-xs text-gray-500 font-medium">This Week</p>
-                      <p className="text-xl font-bold text-gray-900 mt-1">12 hrs</p>
+                      <p className="text-2xl font-bold text-gray-900 mt-1">12 hrs</p>
                     </div>
                   </div>
                   
                   {/* Streak - aligned with stats content */}
-                  <div className="flex items-center gap-1.5 mt-3">
+                  <div className="flex items-center gap-1.5 mt-4">
                     <Flame className="w-4 h-4 text-orange-500" />
                     <span className="text-sm font-semibold text-gray-700">7 day streak</span>
                   </div>
                 </div>
                 
                 {/* Bottom section - CTA aligned with buttons baseline */}
-                <button className="flex items-center gap-2 text-sm font-medium text-gray-700 hover:text-primary transition-colors group pt-4">
+                <button className="flex items-center gap-2 text-sm font-medium text-gray-700 hover:text-primary transition-colors group pt-6">
                   Go to my progress
                   <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
                 </button>
