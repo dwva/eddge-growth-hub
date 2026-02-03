@@ -93,9 +93,9 @@ const StudentDoubtSolverContent = () => {
   };
 
   return (
-    <div className="flex h-[calc(100vh-8rem)] bg-background rounded-xl border border-border overflow-hidden">
+    <div className="flex h-[calc(100vh-7rem)] -m-6 md:-m-8">
       {/* Main Chat Area */}
-      <div className="flex-1 flex flex-col min-w-0">
+      <div className="flex-1 flex flex-col min-w-0 bg-background">
         {/* Header */}
         <header className="flex-shrink-0 h-12 border-b border-border bg-card/50 flex items-center justify-between px-4">
           <div className="flex items-center gap-2">
@@ -116,8 +116,8 @@ const StudentDoubtSolverContent = () => {
           </Button>
         </header>
 
-        {/* Chat Content */}
-        <div className="flex-1 flex flex-col overflow-hidden">
+        {/* Chat Content - Flex grow to fill space */}
+        <div className="flex-1 flex flex-col min-h-0">
           {messages.length === 0 ? (
             <EmptyState onSuggestionClick={handleSuggestionClick} />
           ) : (
@@ -132,13 +132,15 @@ const StudentDoubtSolverContent = () => {
             </ScrollArea>
           )}
 
-          {/* Input - Fixed at bottom */}
-          <ChatInput
-            value={input}
-            onChange={setInput}
-            onSend={handleSend}
-            disabled={isThinking}
-          />
+          {/* Input - Sticky at bottom */}
+          <div className="flex-shrink-0 border-t border-border bg-background">
+            <ChatInput
+              value={input}
+              onChange={setInput}
+              onSend={handleSend}
+              disabled={isThinking}
+            />
+          </div>
         </div>
       </div>
 

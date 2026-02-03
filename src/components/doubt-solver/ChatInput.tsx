@@ -29,7 +29,7 @@ export function ChatInput({ value, onChange, onSend, disabled }: ChatInputProps)
   };
 
   return (
-    <div className="p-4 border-t border-border bg-background">
+    <div className="p-4 bg-background">
       <div className="max-w-3xl mx-auto">
         <div className="relative bg-muted rounded-2xl border border-border focus-within:border-primary/50 focus-within:ring-2 focus-within:ring-primary/20">
           <textarea
