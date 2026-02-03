@@ -143,6 +143,29 @@ const StudentHome = () => {
             </Card>
           </div>
 
+          {/* Overall Progress Tracker Bar */}
+          <div 
+            className="bg-white rounded-2xl shadow-sm px-5 py-3 flex items-center justify-between cursor-pointer hover:shadow-md transition-shadow"
+            onClick={() => navigate('/student/performance')}
+          >
+            <div className="flex items-center gap-3">
+              <div className="w-8 h-8 rounded-xl bg-primary/10 flex items-center justify-center">
+                <Target className="w-4 h-4 text-primary" />
+              </div>
+              <div>
+                <p className="text-xs font-medium text-gray-900">Overall Progress</p>
+                <p className="text-[10px] text-gray-500">You're 62% through your syllabus</p>
+              </div>
+            </div>
+            <div className="flex items-center gap-4 flex-1 max-w-md mx-6">
+              <div className="flex-1 h-2 bg-gray-100 rounded-full overflow-hidden">
+                <div className="h-full bg-gradient-to-r from-primary to-purple-500 rounded-full" style={{ width: '62%' }} />
+              </div>
+              <span className="text-xs font-semibold text-gray-700">62%</span>
+            </div>
+            <ArrowRight className="w-4 h-4 text-gray-400" />
+          </div>
+
           {/* My Learning Section - 3 Card Grid */}
           <div>
             <div className="flex items-center justify-between mb-4">
