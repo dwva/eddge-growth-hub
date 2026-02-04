@@ -9,7 +9,15 @@ import {
   Activity,
   Shield,
   Sparkles,
-  LogOut
+  LogOut,
+  Flag,
+  Bell,
+  Brain,
+  Download,
+  Settings,
+  AlertTriangle,
+  Users,
+  Headphones
 } from 'lucide-react';
 
 interface NavItem {
@@ -25,6 +33,16 @@ const navItems: NavItem[] = [
   { label: 'Billing', icon: <CreditCard className="w-5 h-5" />, path: '/dashboard/superadmin/billing' },
   { label: 'System Health', icon: <Activity className="w-5 h-5" />, path: '/dashboard/superadmin/health' },
   { label: 'Security & Compliance', icon: <Shield className="w-5 h-5" />, path: '/dashboard/superadmin/security' },
+  { label: 'Features', icon: <Flag className="w-5 h-5" />, path: '/dashboard/superadmin/features' },
+  { label: 'Alerts', icon: <Bell className="w-5 h-5" />, path: '/dashboard/superadmin/alerts' },
+  { label: 'Audit', icon: <Shield className="w-5 h-5" />, path: '/dashboard/superadmin/audit' },
+  { label: 'AI Costs', icon: <Brain className="w-5 h-5" />, path: '/dashboard/superadmin/ai-costs' },
+  { label: 'Export', icon: <Download className="w-5 h-5" />, path: '/dashboard/superadmin/export' },
+  { label: 'Admins & Roles', icon: <Users className="w-5 h-5" />, path: '/dashboard/superadmin/admins' },
+  { label: 'Platform Settings', icon: <Settings className="w-5 h-5" />, path: '/dashboard/superadmin/settings' },
+  { label: 'Incidents', icon: <AlertTriangle className="w-5 h-5" />, path: '/dashboard/superadmin/incidents' },
+  { label: 'Adoption', icon: <TrendingUp className="w-5 h-5" />, path: '/dashboard/superadmin/adoption' },
+  { label: 'Support', icon: <Headphones className="w-5 h-5" />, path: '/dashboard/superadmin/support' },
 ];
 
 interface SuperAdminSidebarProps {

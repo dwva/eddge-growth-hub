@@ -25,6 +25,7 @@ export interface School {
   is_active: boolean;
   subscription_status: string;
   created_at: string;
+  lifecycle_state?: 'TRIAL' | 'PILOT' | 'ACTIVE' | 'SUSPENDED' | 'CHURNED';
 }
 
 export interface SchoolSubscription {
@@ -117,18 +118,18 @@ export interface ComplianceLog {
 
 // Mock Data
 const mockSchools: School[] = [
-  { id: "sch-001", name: "Delhi Public School", email: "admin@dps.edu", phone: "+91 11 2345 6789", address: "New Delhi", is_active: true, subscription_status: "Premium", created_at: "2023-01-15" },
-  { id: "sch-002", name: "St. Mary's Academy", email: "contact@stmarys.edu", phone: "+91 22 3456 7890", address: "Mumbai", is_active: true, subscription_status: "Standard", created_at: "2023-02-20" },
-  { id: "sch-003", name: "Kendriya Vidyalaya", email: "kv@gov.in", phone: "+91 80 4567 8901", address: "Bangalore", is_active: true, subscription_status: "Premium", created_at: "2023-03-10" },
-  { id: "sch-004", name: "Modern School", email: "info@modernschool.edu", phone: "+91 44 5678 9012", address: "Chennai", is_active: false, subscription_status: "Basic", created_at: "2023-04-05" },
-  { id: "sch-005", name: "DAV Public School", email: "dav@dav.edu", phone: "+91 33 6789 0123", address: "Kolkata", is_active: true, subscription_status: "Standard", created_at: "2023-05-12" },
-  { id: "sch-006", name: "Ryan International", email: "ryan@ryanint.edu", phone: "+91 40 7890 1234", address: "Hyderabad", is_active: true, subscription_status: "Premium", created_at: "2023-06-18" },
-  { id: "sch-007", name: "Army Public School", email: "aps@army.edu", phone: "+91 79 8901 2345", address: "Ahmedabad", is_active: true, subscription_status: "Standard", created_at: "2023-07-22" },
-  { id: "sch-008", name: "Springdales School", email: "spring@springdales.edu", phone: "+91 141 9012 3456", address: "Jaipur", is_active: false, subscription_status: "Basic", created_at: "2023-08-30" },
-  { id: "sch-009", name: "The Heritage School", email: "heritage@heritage.edu", phone: "+91 522 0123 4567", address: "Lucknow", is_active: true, subscription_status: "Premium", created_at: "2023-09-15" },
-  { id: "sch-010", name: "Bishop Cotton School", email: "bishop@bcotton.edu", phone: "+91 20 1234 5678", address: "Pune", is_active: true, subscription_status: "Standard", created_at: "2023-10-08" },
-  { id: "sch-011", name: "La Martiniere College", email: "lam@lamart.edu", phone: "+91 172 2345 6789", address: "Chandigarh", is_active: true, subscription_status: "Premium", created_at: "2023-11-20" },
-  { id: "sch-012", name: "Scindia School", email: "scindia@scindia.edu", phone: "+91 751 3456 7890", address: "Gwalior", is_active: true, subscription_status: "Basic", created_at: "2023-12-05" },
+  { id: "sch-001", name: "Delhi Public School", email: "admin@dps.edu", phone: "+91 11 2345 6789", address: "New Delhi", is_active: true, subscription_status: "Premium", created_at: "2023-01-15", lifecycle_state: "ACTIVE" },
+  { id: "sch-002", name: "St. Mary's Academy", email: "contact@stmarys.edu", phone: "+91 22 3456 7890", address: "Mumbai", is_active: true, subscription_status: "Standard", created_at: "2023-02-20", lifecycle_state: "PILOT" },
+  { id: "sch-003", name: "Kendriya Vidyalaya", email: "kv@gov.in", phone: "+91 80 4567 8901", address: "Bangalore", is_active: true, subscription_status: "Premium", created_at: "2023-03-10", lifecycle_state: "ACTIVE" },
+  { id: "sch-004", name: "Modern School", email: "info@modernschool.edu", phone: "+91 44 5678 9012", address: "Chennai", is_active: false, subscription_status: "Basic", created_at: "2023-04-05", lifecycle_state: "SUSPENDED" },
+  { id: "sch-005", name: "DAV Public School", email: "dav@dav.edu", phone: "+91 33 6789 0123", address: "Kolkata", is_active: true, subscription_status: "Standard", created_at: "2023-05-12", lifecycle_state: "ACTIVE" },
+  { id: "sch-006", name: "Ryan International", email: "ryan@ryanint.edu", phone: "+91 40 7890 1234", address: "Hyderabad", is_active: true, subscription_status: "Premium", created_at: "2023-06-18", lifecycle_state: "ACTIVE" },
+  { id: "sch-007", name: "Army Public School", email: "aps@army.edu", phone: "+91 79 8901 2345", address: "Ahmedabad", is_active: true, subscription_status: "Standard", created_at: "2023-07-22", lifecycle_state: "PILOT" },
+  { id: "sch-008", name: "Springdales School", email: "spring@springdales.edu", phone: "+91 141 9012 3456", address: "Jaipur", is_active: false, subscription_status: "Basic", created_at: "2023-08-30", lifecycle_state: "CHURNED" },
+  { id: "sch-009", name: "The Heritage School", email: "heritage@heritage.edu", phone: "+91 522 0123 4567", address: "Lucknow", is_active: true, subscription_status: "Premium", created_at: "2023-09-15", lifecycle_state: "ACTIVE" },
+  { id: "sch-010", name: "Bishop Cotton School", email: "bishop@bcotton.edu", phone: "+91 20 1234 5678", address: "Pune", is_active: true, subscription_status: "Standard", created_at: "2023-10-08", lifecycle_state: "TRIAL" },
+  { id: "sch-011", name: "La Martiniere College", email: "lam@lamart.edu", phone: "+91 172 2345 6789", address: "Chandigarh", is_active: true, subscription_status: "Premium", created_at: "2023-11-20", lifecycle_state: "ACTIVE" },
+  { id: "sch-012", name: "Scindia School", email: "scindia@scindia.edu", phone: "+91 751 3456 7890", address: "Gwalior", is_active: true, subscription_status: "Basic", created_at: "2023-12-05", lifecycle_state: "TRIAL" },
 ];
 
 const mockPlans: BillingPlan[] = [

@@ -35,18 +35,18 @@ import type {
 
 // Mock Data (same as internalAdminApi but isolated)
 const mockSchools: School[] = [
-  { id: "sch-001", name: "Delhi Public School", email: "admin@dps.edu", phone: "+91 11 2345 6789", address: "New Delhi", is_active: true, subscription_status: "Premium", created_at: "2023-01-15" },
-  { id: "sch-002", name: "St. Mary's Academy", email: "contact@stmarys.edu", phone: "+91 22 3456 7890", address: "Mumbai", is_active: true, subscription_status: "Standard", created_at: "2023-02-20" },
-  { id: "sch-003", name: "Kendriya Vidyalaya", email: "kv@gov.in", phone: "+91 80 4567 8901", address: "Bangalore", is_active: true, subscription_status: "Premium", created_at: "2023-03-10" },
-  { id: "sch-004", name: "Modern School", email: "info@modernschool.edu", phone: "+91 44 5678 9012", address: "Chennai", is_active: false, subscription_status: "Basic", created_at: "2023-04-05" },
-  { id: "sch-005", name: "DAV Public School", email: "dav@dav.edu", phone: "+91 33 6789 0123", address: "Kolkata", is_active: true, subscription_status: "Standard", created_at: "2023-05-12" },
-  { id: "sch-006", name: "Ryan International", email: "ryan@ryanint.edu", phone: "+91 40 7890 1234", address: "Hyderabad", is_active: true, subscription_status: "Premium", created_at: "2023-06-18" },
-  { id: "sch-007", name: "Army Public School", email: "aps@army.edu", phone: "+91 79 8901 2345", address: "Ahmedabad", is_active: true, subscription_status: "Standard", created_at: "2023-07-22" },
-  { id: "sch-008", name: "Springdales School", email: "spring@springdales.edu", phone: "+91 141 9012 3456", address: "Jaipur", is_active: false, subscription_status: "Basic", created_at: "2023-08-30" },
-  { id: "sch-009", name: "The Heritage School", email: "heritage@heritage.edu", phone: "+91 522 0123 4567", address: "Lucknow", is_active: true, subscription_status: "Premium", created_at: "2023-09-15" },
-  { id: "sch-010", name: "Bishop Cotton School", email: "bishop@bcotton.edu", phone: "+91 20 1234 5678", address: "Pune", is_active: true, subscription_status: "Standard", created_at: "2023-10-08" },
-  { id: "sch-011", name: "La Martiniere College", email: "lam@lamart.edu", phone: "+91 172 2345 6789", address: "Chandigarh", is_active: true, subscription_status: "Premium", created_at: "2023-11-20" },
-  { id: "sch-012", name: "Scindia School", email: "scindia@scindia.edu", phone: "+91 751 3456 7890", address: "Gwalior", is_active: true, subscription_status: "Basic", created_at: "2023-12-05" },
+  { id: "sch-001", name: "Delhi Public School", email: "admin@dps.edu", phone: "+91 11 2345 6789", address: "New Delhi", is_active: true, subscription_status: "Premium", created_at: "2023-01-15", lifecycle_state: "ACTIVE" },
+  { id: "sch-002", name: "St. Mary's Academy", email: "contact@stmarys.edu", phone: "+91 22 3456 7890", address: "Mumbai", is_active: true, subscription_status: "Standard", created_at: "2023-02-20", lifecycle_state: "PILOT" },
+  { id: "sch-003", name: "Kendriya Vidyalaya", email: "kv@gov.in", phone: "+91 80 4567 8901", address: "Bangalore", is_active: true, subscription_status: "Premium", created_at: "2023-03-10", lifecycle_state: "ACTIVE" },
+  { id: "sch-004", name: "Modern School", email: "info@modernschool.edu", phone: "+91 44 5678 9012", address: "Chennai", is_active: false, subscription_status: "Basic", created_at: "2023-04-05", lifecycle_state: "SUSPENDED" },
+  { id: "sch-005", name: "DAV Public School", email: "dav@dav.edu", phone: "+91 33 6789 0123", address: "Kolkata", is_active: true, subscription_status: "Standard", created_at: "2023-05-12", lifecycle_state: "ACTIVE" },
+  { id: "sch-006", name: "Ryan International", email: "ryan@ryanint.edu", phone: "+91 40 7890 1234", address: "Hyderabad", is_active: true, subscription_status: "Premium", created_at: "2023-06-18", lifecycle_state: "ACTIVE" },
+  { id: "sch-007", name: "Army Public School", email: "aps@army.edu", phone: "+91 79 8901 2345", address: "Ahmedabad", is_active: true, subscription_status: "Standard", created_at: "2023-07-22", lifecycle_state: "PILOT" },
+  { id: "sch-008", name: "Springdales School", email: "spring@springdales.edu", phone: "+91 141 9012 3456", address: "Jaipur", is_active: false, subscription_status: "Basic", created_at: "2023-08-30", lifecycle_state: "CHURNED" },
+  { id: "sch-009", name: "The Heritage School", email: "heritage@heritage.edu", phone: "+91 522 0123 4567", address: "Lucknow", is_active: true, subscription_status: "Premium", created_at: "2023-09-15", lifecycle_state: "ACTIVE" },
+  { id: "sch-010", name: "Bishop Cotton School", email: "bishop@bcotton.edu", phone: "+91 20 1234 5678", address: "Pune", is_active: true, subscription_status: "Standard", created_at: "2023-10-08", lifecycle_state: "TRIAL" },
+  { id: "sch-011", name: "La Martiniere College", email: "lam@lamart.edu", phone: "+91 172 2345 6789", address: "Chandigarh", is_active: true, subscription_status: "Premium", created_at: "2023-11-20", lifecycle_state: "ACTIVE" },
+  { id: "sch-012", name: "Scindia School", email: "scindia@scindia.edu", phone: "+91 751 3456 7890", address: "Gwalior", is_active: true, subscription_status: "Basic", created_at: "2023-12-05", lifecycle_state: "TRIAL" },
 ];
 
 const mockPlans: BillingPlan[] = [
@@ -222,6 +222,19 @@ export const superAdminApi = {
     };
   },
 
+  updateSchoolLifecycle: async (schoolId: string, lifecycle_state: 'TRIAL' | 'PILOT' | 'ACTIVE' | 'SUSPENDED' | 'CHURNED'): Promise<void> => {
+    await delay(400);
+    const accessLevel = validateJWTToken();
+    if (!hasPermission(accessLevel!, 'ROOT')) {
+      throw new Error('Only ROOT access level can modify lifecycle state');
+    }
+    const school = mockSchools.find(s => s.id === schoolId);
+    if (school) {
+      // eslint-disable-next-line no-param-reassign
+      (school as any).lifecycle_state = lifecycle_state;
+    }
+  },
+
   toggleSchoolStatus: async (schoolId: string, isActive: boolean): Promise<void> => {
     await delay(500);
     const accessLevel = validateJWTToken();
@@ -355,5 +368,643 @@ export const superAdminApi = {
       total: filtered.length
     };
   }
+};
+
+/**
+ * Phase 2 – Additional SuperAdmin-only APIs
+ * These are kept as separate exports for clarity but conceptually share the same /api/v1/superadmin backend.
+ */
+
+// ---------- Feature Flags & Rollouts ----------
+
+export interface FeatureFlag {
+  id: string;
+  name: string;
+  description: string;
+  enabled: boolean;
+  rolloutPercentage: number; // 0–100
+  isBeta: boolean;
+  updatedAt: string;
+}
+
+const mockFeatureFlags: FeatureFlag[] = [
+  {
+    id: 'feat-doubt-solver-v2',
+    name: 'Doubt Solver v2',
+    description: 'Next-gen AI doubt solving experience',
+    enabled: true,
+    rolloutPercentage: 60,
+    isBeta: true,
+    updatedAt: '2024-01-15T10:00:00Z',
+  },
+  {
+    id: 'feat-foundation-playlists',
+    name: 'Foundation Playlists',
+    description: 'Curated concept playlists for students',
+    enabled: false,
+    rolloutPercentage: 0,
+    isBeta: false,
+    updatedAt: '2024-01-10T08:30:00Z',
+  },
+  {
+    id: 'feat-parent-insights',
+    name: 'Parent Insights',
+    description: 'High-level engagement insights for parents',
+    enabled: true,
+    rolloutPercentage: 100,
+    isBeta: false,
+    updatedAt: '2024-01-12T14:20:00Z',
+  },
+];
+
+export const superAdminFeatureApi = {
+  getFeatureFlags: async (): Promise<FeatureFlag[]> => {
+    await delay(300);
+    validateJWTToken();
+    return mockFeatureFlags;
+  },
+
+  updateFeatureFlagStatus: async (id: string, enabled: boolean): Promise<void> => {
+    await delay(200);
+    validateJWTToken();
+    const flag = mockFeatureFlags.find(f => f.id === id);
+    if (flag) {
+      flag.enabled = enabled;
+      flag.updatedAt = new Date().toISOString();
+    }
+  },
+
+  updateFeatureRollout: async (id: string, percentage: number): Promise<void> => {
+    await delay(200);
+    validateJWTToken();
+    const flag = mockFeatureFlags.find(f => f.id === id);
+    if (flag) {
+      flag.rolloutPercentage = Math.max(0, Math.min(100, percentage));
+      flag.updatedAt = new Date().toISOString();
+    }
+  },
+
+  setFeatureBeta: async (id: string, isBeta: boolean): Promise<void> => {
+    await delay(200);
+    validateJWTToken();
+    const flag = mockFeatureFlags.find(f => f.id === id);
+    if (flag) {
+      flag.isBeta = isBeta;
+      flag.updatedAt = new Date().toISOString();
+    }
+  },
+};
+
+// ---------- Alerts & Thresholds ----------
+
+export interface AlertConfig {
+  dauThreshold: number;
+  errorSpikeThreshold: number;
+  aiUsageLimit: number;
+  systemDowntimeEnabled: boolean;
+  systemDowntimeMinutes: number;
+  updatedAt: string;
+  updatedBy: string;
+}
+
+let mockAlertConfig: AlertConfig = {
+  dauThreshold: 5000,
+  errorSpikeThreshold: 100,
+  aiUsageLimit: 2000,
+  systemDowntimeEnabled: true,
+  systemDowntimeMinutes: 10,
+  updatedAt: '2024-01-15T09:00:00Z',
+  updatedBy: 'superadmin@eddge.com',
+};
+
+export const superAdminAlertsApi = {
+  getAlertConfig: async (): Promise<AlertConfig> => {
+    await delay(300);
+    validateJWTToken();
+    return mockAlertConfig;
+  },
+
+  updateAlertConfig: async (partial: Partial<AlertConfig>, actorEmail: string): Promise<AlertConfig> => {
+    await delay(300);
+    validateJWTToken();
+    mockAlertConfig = {
+      ...mockAlertConfig,
+      ...partial,
+      updatedAt: new Date().toISOString(),
+      updatedBy: actorEmail,
+    };
+    return mockAlertConfig;
+  },
+};
+
+// ---------- Admin Action Logging Helper ----------
+
+export interface AdminActionLogEntry {
+  id: string;
+  actor: string;
+  action: string;
+  target: string;
+  metadata?: string;
+  timestamp: string;
+}
+
+const superAdminActionLogs: AdminActionLogEntry[] = [];
+
+export const superAdminAuditApi = {
+  logAdminAction: async (entry: Omit<AdminActionLogEntry, 'id' | 'timestamp'>): Promise<void> => {
+    await delay(100);
+    validateJWTToken();
+    superAdminActionLogs.unshift({
+      id: `sa-${Date.now()}`,
+      timestamp: new Date().toISOString(),
+      ...entry,
+    });
+  },
+
+  getAdminActions: async (page: number, pageSize: number, actor?: string, actionType?: string): Promise<{ logs: AdminActionLogEntry[]; total: number }> => {
+    await delay(300);
+    validateJWTToken();
+    let filtered = superAdminActionLogs;
+    if (actor) {
+      filtered = filtered.filter(l => l.actor.toLowerCase().includes(actor.toLowerCase()));
+    }
+    if (actionType) {
+      filtered = filtered.filter(l => l.action === actionType);
+    }
+    const start = (page - 1) * pageSize;
+    const end = start + pageSize;
+    return {
+      logs: filtered.slice(start, end),
+      total: filtered.length,
+    };
+  },
+};
+
+// ---------- Usage ↔ Billing Correlation ----------
+
+export interface UsageBillingSignal {
+  schoolId: string;
+  schoolName: string;
+  planName: string;
+  signalType: 'HIGH_USAGE_LOW_PLAN' | 'LOW_USAGE_HIGH_PLAN';
+  message: string;
+}
+
+const mockUsageBillingSignals: UsageBillingSignal[] = [
+  {
+    schoolId: 'sch-001',
+    schoolName: 'Delhi Public School',
+    planName: 'Standard',
+    signalType: 'HIGH_USAGE_LOW_PLAN',
+    message: 'Usage in top 10% but on Standard plan – upgrade opportunity.',
+  },
+  {
+    schoolId: 'sch-006',
+    schoolName: 'Ryan International',
+    planName: 'Premium',
+    signalType: 'LOW_USAGE_HIGH_PLAN',
+    message: 'Usage in bottom 30% on Premium plan – potential downgrade candidate.',
+  },
+];
+
+export const superAdminUsageBillingApi = {
+  getUsageBillingSignals: async (): Promise<UsageBillingSignal[]> => {
+    await delay(300);
+    validateJWTToken();
+    return mockUsageBillingSignals;
+  },
+};
+
+// ---------- Aggregated Data Export ----------
+
+export interface UsageExportSummary {
+  totalUsers: number;
+  totalSchools: number;
+  totalRequests: number;
+}
+
+export interface BillingExportSummary {
+  totalRevenueMonthly: number;
+  totalRevenueYearly: number;
+  planBreakdown: Record<string, number>;
+}
+
+export interface SchoolRegistryExportSummary {
+  totalSchools: number;
+  byPlan: Record<string, number>;
+  byState: Record<string, number>;
+}
+
+export const superAdminExportApi = {
+  getUsageExportSummary: async (): Promise<UsageExportSummary> => {
+    await delay(300);
+    validateJWTToken();
+    return {
+      totalUsers: 45000,
+      totalSchools: 150,
+      totalRequests: 500000,
+    };
+  },
+
+  getBillingExportSummary: async (): Promise<BillingExportSummary> => {
+    await delay(300);
+    validateJWTToken();
+    return {
+      totalRevenueMonthly: 150 * 199, // mock
+      totalRevenueYearly: 150 * 1990,
+      planBreakdown: {
+        Basic: 40,
+        Standard: 70,
+        Premium: 40,
+      },
+    };
+  },
+
+  getSchoolRegistryExportSummary: async (): Promise<SchoolRegistryExportSummary> => {
+    await delay(300);
+    validateJWTToken();
+    return {
+      totalSchools: mockSchools.length,
+      byPlan: mockSchools.reduce<Record<string, number>>((acc, s) => {
+        acc[s.subscription_status] = (acc[s.subscription_status] || 0) + 1;
+        return acc;
+      }, {}),
+      byState: {
+        TRIAL: 5,
+        PILOT: 10,
+        ACTIVE: 120,
+        SUSPENDED: 5,
+        CHURNED: 10,
+      },
+    };
+  },
+};
+
+// ---------- AI Cost Guardrails ----------
+
+export interface SchoolAICap {
+  schoolId: string;
+  schoolName: string;
+  monthlyCapUsd: number;
+  warningThresholdUsd: number;
+}
+
+export interface FeatureAICap {
+  featureId: string;
+  featureName: string;
+  monthlyCapUsd: number;
+}
+
+export interface AICostGuardrails {
+  perSchoolCaps: SchoolAICap[];
+  perFeatureCaps: FeatureAICap[];
+  globalWarningLow: number;
+  globalWarningHigh: number;
+}
+
+let mockAICostGuardrails: AICostGuardrails = {
+  perSchoolCaps: [
+    { schoolId: 'sch-001', schoolName: 'Delhi Public School', monthlyCapUsd: 300, warningThresholdUsd: 250 },
+    { schoolId: 'sch-006', schoolName: 'Ryan International', monthlyCapUsd: 500, warningThresholdUsd: 450 },
+  ],
+  perFeatureCaps: [
+    { featureId: 'doubt_solver', featureName: 'Doubt Solver', monthlyCapUsd: 1500 },
+    { featureId: 'foundation_engine', featureName: 'Foundation Engine', monthlyCapUsd: 800 },
+    { featureId: 'assessments', featureName: 'Assessments', monthlyCapUsd: 600 },
+  ],
+  globalWarningLow: 2000,
+  globalWarningHigh: 5000,
+};
+
+export const superAdminAICostsApi = {
+  getAICostGuardrails: async (): Promise<AICostGuardrails> => {
+    await delay(300);
+    validateJWTToken();
+    return mockAICostGuardrails;
+  },
+
+  updateAICostGuardrails: async (updated: Partial<AICostGuardrails>): Promise<AICostGuardrails> => {
+    await delay(300);
+    validateJWTToken();
+    mockAICostGuardrails = {
+      ...mockAICostGuardrails,
+      ...updated,
+    };
+    return mockAICostGuardrails;
+  },
+};
+
+// ---------- Admins & Roles ----------
+
+export type AdminRole = 'ROOT' | 'OPS' | 'FINANCE';
+
+export interface InternalAdminUser {
+  id: string;
+  email: string;
+  name: string;
+  role: AdminRole;
+  is_active: boolean;
+  last_login_at: string;
+}
+
+const mockAdmins: InternalAdminUser[] = [
+  {
+    id: 'adm-001',
+    email: 'root@eddge.com',
+    name: 'Root SuperAdmin',
+    role: 'ROOT',
+    is_active: true,
+    last_login_at: '2024-01-20T09:15:00Z',
+  },
+  {
+    id: 'adm-002',
+    email: 'ops@eddge.com',
+    name: 'Ops Admin',
+    role: 'OPS',
+    is_active: true,
+    last_login_at: '2024-01-19T14:05:00Z',
+  },
+  {
+    id: 'adm-003',
+    email: 'finance@eddge.com',
+    name: 'Finance Admin',
+    role: 'FINANCE',
+    is_active: true,
+    last_login_at: '2024-01-18T11:30:00Z',
+  },
+];
+
+export const superAdminAdminsApi = {
+  getAdmins: async (): Promise<InternalAdminUser[]> => {
+    await delay(300);
+    validateJWTToken();
+    return mockAdmins;
+  },
+
+  createAdmin: async (admin: { email: string; name: string; role: AdminRole }): Promise<InternalAdminUser> => {
+    await delay(500);
+    const accessLevel = validateJWTToken();
+    if (!hasPermission(accessLevel!, 'ROOT')) {
+      throw new Error('Only ROOT can create new internal admins');
+    }
+    const newAdmin: InternalAdminUser = {
+      id: `adm-${Date.now()}`,
+      email: admin.email,
+      name: admin.name,
+      role: admin.role,
+      is_active: true,
+      last_login_at: '—',
+    };
+    mockAdmins.push(newAdmin);
+    return newAdmin;
+  },
+
+  updateAdminRole: async (adminId: string, role: AdminRole, actorEmail: string): Promise<void> => {
+    await delay(400);
+    const accessLevel = validateJWTToken();
+    if (!hasPermission(accessLevel!, 'ROOT')) {
+      throw new Error('Only ROOT can update admin roles');
+    }
+    const admin = mockAdmins.find(a => a.id === adminId);
+    if (!admin) throw new Error('Admin not found');
+    if (admin.email === actorEmail) {
+      throw new Error('You cannot change your own role');
+    }
+    admin.role = role;
+  },
+
+  disableAdmin: async (adminId: string, actorEmail: string): Promise<void> => {
+    await delay(400);
+    const accessLevel = validateJWTToken();
+    if (!hasPermission(accessLevel!, 'ROOT')) {
+      throw new Error('Only ROOT can disable admins');
+    }
+    const admin = mockAdmins.find(a => a.id === adminId);
+    if (!admin) throw new Error('Admin not found');
+    if (admin.email === actorEmail) {
+      throw new Error('You cannot disable your own account');
+    }
+    admin.is_active = false;
+  },
+};
+
+// ---------- Platform Settings ----------
+
+export interface PlatformSettings {
+  maintenanceMode: boolean;
+  defaultLanguage: string;
+  globalFeatureDefaults: {
+    doubtSolverEnabled: boolean;
+    foundationEngineEnabled: boolean;
+  };
+  platformUsageLimitMonthlyRequests: number;
+  updatedAt: string;
+  updatedBy: string;
+}
+
+let mockPlatformSettings: PlatformSettings = {
+  maintenanceMode: false,
+  defaultLanguage: 'en',
+  globalFeatureDefaults: {
+    doubtSolverEnabled: true,
+    foundationEngineEnabled: true,
+  },
+  platformUsageLimitMonthlyRequests: 1000000,
+  updatedAt: '2024-01-15T10:00:00Z',
+  updatedBy: 'root@eddge.com',
+};
+
+export const superAdminSettingsApi = {
+  getSettings: async (): Promise<PlatformSettings> => {
+    await delay(300);
+    validateJWTToken();
+    return mockPlatformSettings;
+  },
+
+  updateSettings: async (partial: Partial<PlatformSettings>, actorEmail: string): Promise<PlatformSettings> => {
+    await delay(400);
+    validateJWTToken();
+    mockPlatformSettings = {
+      ...mockPlatformSettings,
+      ...partial,
+      updatedAt: new Date().toISOString(),
+      updatedBy: actorEmail,
+    };
+    return mockPlatformSettings;
+  },
+};
+
+// ---------- Incidents ----------
+
+export interface Incident {
+  id: string;
+  title: string;
+  status: 'open' | 'closed';
+  severity: 'low' | 'medium' | 'high';
+  created_at: string;
+  closed_at?: string;
+  summary: string;
+  resolution_notes?: string;
+}
+
+const mockIncidents: Incident[] = [
+  {
+    id: 'inc-001',
+    title: 'Intermittent API latency',
+    status: 'open',
+    severity: 'medium',
+    created_at: '2024-01-18T09:00:00Z',
+    summary: 'Spike in API response times observed in India region.',
+  },
+  {
+    id: 'inc-002',
+    title: 'Billing webhook failures',
+    status: 'closed',
+    severity: 'high',
+    created_at: '2024-01-10T11:30:00Z',
+    closed_at: '2024-01-10T15:00:00Z',
+    summary: 'Third-party billing webhook timeouts.',
+    resolution_notes: 'Increased timeout and added retries; monitoring in place.',
+  },
+];
+
+export const superAdminIncidentsApi = {
+  getIncidents: async (): Promise<Incident[]> => {
+    await delay(300);
+    validateJWTToken();
+    return mockIncidents;
+  },
+
+  logIncident: async (payload: { title: string; severity: Incident['severity']; summary: string }): Promise<Incident> => {
+    await delay(400);
+    validateJWTToken();
+    const incident: Incident = {
+      id: `inc-${Date.now()}`,
+      title: payload.title,
+      severity: payload.severity,
+      status: 'open',
+      created_at: new Date().toISOString(),
+      summary: payload.summary,
+    };
+    mockIncidents.unshift(incident);
+    return incident;
+  },
+
+  addResolutionNotes: async (incidentId: string, notes: string): Promise<void> => {
+    await delay(300);
+    validateJWTToken();
+    const incident = mockIncidents.find(i => i.id === incidentId);
+    if (!incident) throw new Error('Incident not found');
+    if (incident.status === 'closed') return; // immutable after closure
+    incident.resolution_notes = notes;
+  },
+
+  closeIncident: async (incidentId: string): Promise<void> => {
+    await delay(300);
+    validateJWTToken();
+    const incident = mockIncidents.find(i => i.id === incidentId);
+    if (!incident) throw new Error('Incident not found');
+    if (incident.status === 'closed') return;
+    incident.status = 'closed';
+    incident.closed_at = new Date().toISOString();
+  },
+};
+
+// ---------- Adoption & Onboarding (Read-only) ----------
+
+export interface AdoptionSummary {
+  totalSchools: number;
+  onboardingComplete: number;
+  onboardingInProgress: number;
+  lowUsageSchools: number;
+  featureAdoption: {
+    doubtSolver: number;
+    foundationEngine: number;
+    assessments: number;
+  };
+}
+
+export const superAdminAdoptionApi = {
+  getAdoptionSummary: async (): Promise<AdoptionSummary> => {
+    await delay(400);
+    validateJWTToken();
+    return {
+      totalSchools: mockSchools.length,
+      onboardingComplete: 9,
+      onboardingInProgress: 2,
+      lowUsageSchools: 3,
+      featureAdoption: {
+        doubtSolver: 80,
+        foundationEngine: 65,
+        assessments: 72,
+      },
+    };
+  },
+};
+
+// ---------- Support & Escalations ----------
+
+export interface SupportEscalation {
+  id: string;
+  schoolName: string;
+  subject: string;
+  severity: 'low' | 'medium' | 'high';
+  status: 'open' | 'resolved';
+  linkedIncidentId?: string;
+  created_at: string;
+  resolved_at?: string;
+}
+
+const mockEscalations: SupportEscalation[] = [
+  {
+    id: 'esc-001',
+    schoolName: 'Delhi Public School',
+    subject: 'Sync issues with student roster',
+    severity: 'medium',
+    status: 'open',
+    created_at: '2024-01-17T08:15:00Z',
+  },
+  {
+    id: 'esc-002',
+    schoolName: 'Ryan International',
+    subject: 'Assessment results delay',
+    severity: 'low',
+    status: 'resolved',
+    created_at: '2024-01-12T10:45:00Z',
+    resolved_at: '2024-01-12T13:00:00Z',
+  },
+];
+
+export const superAdminSupportApi = {
+  getEscalations: async (): Promise<SupportEscalation[]> => {
+    await delay(300);
+    validateJWTToken();
+    return mockEscalations;
+  },
+
+  tagSeverity: async (id: string, severity: SupportEscalation['severity']): Promise<void> => {
+    await delay(200);
+    validateJWTToken();
+    const esc = mockEscalations.find(e => e.id === id);
+    if (!esc) throw new Error('Escalation not found');
+    esc.severity = severity;
+  },
+
+  linkIncident: async (id: string, incidentId: string): Promise<void> => {
+    await delay(200);
+    validateJWTToken();
+    const esc = mockEscalations.find(e => e.id === id);
+    if (!esc) throw new Error('Escalation not found');
+    esc.linkedIncidentId = incidentId;
+  },
+
+  markResolved: async (id: string): Promise<void> => {
+    await delay(200);
+    validateJWTToken();
+    const esc = mockEscalations.find(e => e.id === id);
+    if (!esc) throw new Error('Escalation not found');
+    esc.status = 'resolved';
+    esc.resolved_at = new Date().toISOString();
+  },
 };
 

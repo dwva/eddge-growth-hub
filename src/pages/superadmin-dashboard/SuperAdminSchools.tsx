@@ -10,7 +10,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { LoadingState } from '@/components/shared/LoadingState';
 import { superAdminApi, School, SchoolSubscription } from '@/services/superAdminApi';
-import { Search, CreditCard, Eye } from 'lucide-react';
+import { Search, CreditCard, Eye, RefreshCw } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 
 const SuperAdminSchools = () => {
@@ -20,10 +20,13 @@ const SuperAdminSchools = () => {
   const [page, setPage] = useState(1);
   const [selectedSchool, setSelectedSchool] = useState<School | null>(null);
   const [dialogOpen, setDialogOpen] = useState(false);
+  const [lifecycleDialogOpen, setLifecycleDialogOpen] = useState(false);
+  const [lifecycleTarget, setLifecycleTarget] = useState<School | null>(null);
+  const [lifecycleValue, setLifecycleValue] = useState<string>('ACTIVE');
   const { toast } = useToast();
   const queryClient = useQueryClient();
 
-  const { data, isLoading } = useQuery({
+  const { data, isLoading, refetch, isRefetching } = useQuery({
     queryKey: ["superadmin", "schools", page, search],
     queryFn: () => superAdminApi.getSchools(page, 50, search),
   });
@@ -66,9 +69,38 @@ const SuperAdminSchools = () => {
     },
   });
 
+  const lifecycleMutation = useMutation({
+    mutationFn: ({ schoolId, lifecycle }: { schoolId: string; lifecycle: string }) =>
+      superAdminApi.updateSchoolLifecycle(
+        schoolId,
+        lifecycle as 'TRIAL' | 'PILOT' | 'ACTIVE' | 'SUSPENDED' | 'CHURNED'
+      ),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["superadmin", "schools"] });
+      setLifecycleDialogOpen(false);
+      toast({
+        title: "Lifecycle updated",
+        description: "School lifecycle state updated successfully",
+      });
+    },
+    onError: (error: Error) => {
+      toast({
+        title: "Error",
+        description: error.message || "Failed to update lifecycle state",
+        variant: "destructive",
+      });
+    },
+  });
+
   const handleViewSchool = (school: School) => {
     setSelectedSchool(school);
     setDialogOpen(true);
+  };
+
+  const openLifecycleDialog = (school: School) => {
+    setLifecycleTarget(school);
+    setLifecycleValue((school as any).lifecycle_state || 'ACTIVE');
+    setLifecycleDialogOpen(true);
   };
 
   const formatDate = (dateStr?: string) => {
@@ -80,10 +112,42 @@ const SuperAdminSchools = () => {
     <SuperAdminDashboardLayout>
       <div className="space-y-6">
         {/* Header */}
-        <div>
-          <h1 className="text-3xl font-bold">School Registry</h1>
-          <p className="text-muted-foreground">Manage all schools on the platform</p>
+        <div className="flex items-center justify-between gap-4 flex-wrap">
+          <div>
+            <h1 className="text-3xl font-bold">School Registry</h1>
+            <p className="text-muted-foreground">Manage all schools on the platform</p>
+          </div>
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => refetch()}
+            disabled={isRefetching}
+          >
+            <RefreshCw className={`mr-2 h-4 w-4 ${isRefetching ? 'animate-spin' : ''}`} />
+            Refresh
+          </Button>
         </div>
+
+        {/* Lifecycle summary chips */}
+        {data?.schools && data.schools.length > 0 && (
+          <div className="flex flex-wrap gap-2">
+            {['TRIAL', 'PILOT', 'ACTIVE', 'SUSPENDED', 'CHURNED'].map((state) => {
+              const count = data.schools.filter((s: any) => s.lifecycle_state === state).length;
+              if (count === 0) return null;
+              const variant =
+                state === 'ACTIVE'
+                  ? 'default'
+                  : state === 'TRIAL' || state === 'PILOT'
+                  ? 'outline'
+                  : 'secondary';
+              return (
+                <Badge key={state} variant={variant as any} className="text-xs px-3 py-1">
+                  {state} • {count}
+                </Badge>
+              );
+            })}
+          </div>
+        )}
 
         {/* Schools Table Card */}
         <Card>
@@ -151,6 +215,7 @@ const SuperAdminSchools = () => {
                       <TableHead>Address</TableHead>
                       <TableHead>Subscription Plan</TableHead>
                       <TableHead>Status</TableHead>
+                      <TableHead>Lifecycle</TableHead>
                       <TableHead>Actions</TableHead>
                     </TableRow>
                   </TableHeader>
@@ -178,6 +243,13 @@ const SuperAdminSchools = () => {
                             >
                               <Eye className="h-4 w-4 mr-1" />
                               View
+                            </Button>
+                            <Button
+                              variant="outline"
+                              size="sm"
+                              onClick={() => openLifecycleDialog(school)}
+                            >
+                              Lifecycle
                             </Button>
                             <Button
                               variant={school.is_active ? "destructive" : "default"}
@@ -289,6 +361,63 @@ const SuperAdminSchools = () => {
                   </div>
                 )}
               </>
+            )}
+          </DialogContent>
+        </Dialog>
+
+        {/* Lifecycle Dialog */}
+        <Dialog open={lifecycleDialogOpen} onOpenChange={setLifecycleDialogOpen}>
+          <DialogContent className="max-w-md">
+            <DialogHeader>
+              <DialogTitle>Change Lifecycle State</DialogTitle>
+              <DialogDescription>
+                Update the lifecycle state for <span className="font-semibold">{lifecycleTarget?.name}</span>.
+                This does not affect billing or historical metrics.
+              </DialogDescription>
+            </DialogHeader>
+            {lifecycleTarget && (
+              <div className="space-y-4">
+                <div className="flex flex-col gap-2">
+                  <Label>Lifecycle state</Label>
+                  <Select value={lifecycleValue} onValueChange={setLifecycleValue}>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select lifecycle state" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="TRIAL">TRIAL</SelectItem>
+                      <SelectItem value="PILOT">PILOT</SelectItem>
+                      <SelectItem value="ACTIVE">ACTIVE</SelectItem>
+                      <SelectItem value="SUSPENDED">SUSPENDED</SelectItem>
+                      <SelectItem value="CHURNED">CHURNED</SelectItem>
+                    </SelectContent>
+                  </Select>
+                  <p className="text-xs text-muted-foreground">
+                    Lifecycle is orthogonal to subscription plan and used for internal success/expansion tracking.
+                  </p>
+                </div>
+                <div className="flex justify-end gap-2">
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => setLifecycleDialogOpen(false)}
+                  >
+                    Cancel
+                  </Button>
+                  <Button
+                    size="sm"
+                    onClick={() =>
+                      lifecycleTarget &&
+                      lifecycleMutation.mutate({
+                        schoolId: lifecycleTarget.id,
+                        lifecycle: lifecycleValue,
+                      })
+                    }
+                    disabled={lifecycleMutation.isPending}
+                  >
+                    Save
+                  </Button>
+                </div>
+              </div>
             )}
           </DialogContent>
         </Dialog>

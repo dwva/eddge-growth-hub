@@ -79,6 +79,16 @@ import SuperAdminAnalytics from "./pages/superadmin-dashboard/SuperAdminAnalytic
 import SuperAdminBilling from "./pages/superadmin-dashboard/SuperAdminBilling";
 import SuperAdminHealth from "./pages/superadmin-dashboard/SuperAdminHealth";
 import SuperAdminSecurity from "./pages/superadmin-dashboard/SuperAdminSecurity";
+import SuperAdminFeatures from "./pages/superadmin-dashboard/SuperAdminFeatures";
+import SuperAdminAlerts from "./pages/superadmin-dashboard/SuperAdminAlerts";
+import SuperAdminAdminAudit from "./pages/superadmin-dashboard/SuperAdminAdminAudit";
+import SuperAdminExport from "./pages/superadmin-dashboard/SuperAdminExport";
+import SuperAdminAICosts from "./pages/superadmin-dashboard/SuperAdminAICosts";
+import SuperAdminAdmins from "./pages/superadmin-dashboard/SuperAdminAdmins";
+import SuperAdminSettings from "./pages/superadmin-dashboard/SuperAdminSettings";
+import SuperAdminIncidents from "./pages/superadmin-dashboard/SuperAdminIncidents";
+import SuperAdminAdoption from "./pages/superadmin-dashboard/SuperAdminAdoption";
+import SuperAdminSupport from "./pages/superadmin-dashboard/SuperAdminSupport";
 
 const queryClient = new QueryClient();
 
@@ -360,6 +370,21 @@ const App = () => (
                 <SuperAdminAnalytics />
               </SuperAdminProtectedRoute>
             } />
+            <Route path="/dashboard/superadmin/features" element={
+              <SuperAdminProtectedRoute>
+                <SuperAdminFeatures />
+              </SuperAdminProtectedRoute>
+            } />
+            <Route path="/dashboard/superadmin/alerts" element={
+              <SuperAdminProtectedRoute>
+                <SuperAdminAlerts />
+              </SuperAdminProtectedRoute>
+            } />
+            <Route path="/dashboard/superadmin/audit" element={
+              <SuperAdminProtectedRoute>
+                <SuperAdminAdminAudit />
+              </SuperAdminProtectedRoute>
+            } />
             <Route path="/dashboard/superadmin/billing" element={
               <SuperAdminProtectedRoute>
                 <SuperAdminBilling />
@@ -373,6 +398,41 @@ const App = () => (
             <Route path="/dashboard/superadmin/security" element={
               <SuperAdminProtectedRoute>
                 <SuperAdminSecurity />
+              </SuperAdminProtectedRoute>
+            } />
+            <Route path="/dashboard/superadmin/export" element={
+              <SuperAdminProtectedRoute>
+                <SuperAdminExport />
+              </SuperAdminProtectedRoute>
+            } />
+            <Route path="/dashboard/superadmin/ai-costs" element={
+              <SuperAdminProtectedRoute>
+                <SuperAdminAICosts />
+              </SuperAdminProtectedRoute>
+            } />
+            <Route path="/dashboard/superadmin/admins" element={
+              <SuperAdminProtectedRoute>
+                <SuperAdminAdmins />
+              </SuperAdminProtectedRoute>
+            } />
+            <Route path="/dashboard/superadmin/settings" element={
+              <SuperAdminProtectedRoute>
+                <SuperAdminSettings />
+              </SuperAdminProtectedRoute>
+            } />
+            <Route path="/dashboard/superadmin/incidents" element={
+              <SuperAdminProtectedRoute>
+                <SuperAdminIncidents />
+              </SuperAdminProtectedRoute>
+            } />
+            <Route path="/dashboard/superadmin/adoption" element={
+              <SuperAdminProtectedRoute>
+                <SuperAdminAdoption />
+              </SuperAdminProtectedRoute>
+            } />
+            <Route path="/dashboard/superadmin/support" element={
+              <SuperAdminProtectedRoute>
+                <SuperAdminSupport />
               </SuperAdminProtectedRoute>
             } />
             <Route path="/dashboard/superadmin/*" element={

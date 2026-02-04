@@ -8,7 +8,7 @@ import { Label } from '@/components/ui/label';
 import { Badge } from '@/components/ui/badge';
 import { LoadingState } from '@/components/shared/LoadingState';
 import { EmptyState } from '@/components/shared/EmptyState';
-import { superAdminApi, UsageAnalytics } from '@/services/superAdminApi';
+import { superAdminApi, UsageAnalytics, superAdminUsageBillingApi, type UsageBillingSignal } from '@/services/superAdminApi';
 import { TrendingUp, Zap, Brain, RefreshCw, AlertCircle } from 'lucide-react';
 import { format, subDays } from 'date-fns';
 
@@ -19,6 +19,11 @@ const SuperAdminAnalytics = () => {
   const { data, isLoading, error, refetch, isRefetching } = useQuery<UsageAnalytics>({
     queryKey: ["superadmin", "analytics", startDate, endDate],
     queryFn: () => superAdminApi.getUsageAnalytics(startDate, endDate),
+  });
+
+  const { data: signals } = useQuery<UsageBillingSignal[]>({
+    queryKey: ["superadmin", "usage-billing-signals"],
+    queryFn: () => superAdminUsageBillingApi.getUsageBillingSignals(),
   });
 
   const handleRefresh = () => {
@@ -224,6 +229,61 @@ const SuperAdminAnalytics = () => {
             </CardContent>
           </Card>
         </div>
+
+        {/* Usage & Billing Signals */}
+        <Card>
+          <CardHeader>
+            <CardTitle>Usage &amp; Billing Signals</CardTitle>
+            <CardDescription>
+              Read-only hints about schools that may be under- or over-provisioned based on current plan and usage.
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            {!signals || signals.length === 0 ? (
+              <p className="text-sm text-muted-foreground">
+                Signals will appear here once enough usage and billing data is available.
+              </p>
+            ) : (
+              <div className="grid gap-4 md:grid-cols-2">
+                <div className="space-y-2">
+                  <h3 className="text-sm font-semibold">High Usage, Low Plan</h3>
+                  {signals.filter(s => s.signalType === 'HIGH_USAGE_LOW_PLAN').length === 0 ? (
+                    <p className="text-xs text-muted-foreground">No candidates detected.</p>
+                  ) : (
+                    <ul className="space-y-1">
+                      {signals
+                        .filter(s => s.signalType === 'HIGH_USAGE_LOW_PLAN')
+                        .map((s) => (
+                          <li key={s.schoolId} className="text-xs text-muted-foreground">
+                            <span className="font-medium text-foreground">{s.schoolName}</span> – {s.planName}{' '}
+                            <span className="text-[11px] text-emerald-700">({s.message})</span>
+                          </li>
+                        ))}
+                    </ul>
+                  )}
+                </div>
+
+                <div className="space-y-2">
+                  <h3 className="text-sm font-semibold">Low Usage, High Plan</h3>
+                  {signals.filter(s => s.signalType === 'LOW_USAGE_HIGH_PLAN').length === 0 ? (
+                    <p className="text-xs text-muted-foreground">No candidates detected.</p>
+                  ) : (
+                    <ul className="space-y-1">
+                      {signals
+                        .filter(s => s.signalType === 'LOW_USAGE_HIGH_PLAN')
+                        .map((s) => (
+                          <li key={s.schoolId} className="text-xs text-muted-foreground">
+                            <span className="font-medium text-foreground">{s.schoolName}</span> – {s.planName}{' '}
+                            <span className="text-[11px] text-amber-700">({s.message})</span>
+                          </li>
+                        ))}
+                    </ul>
+                  )}
+                </div>
+              </div>
+            )}
+          </CardContent>
+        </Card>
       </div>
     </SuperAdminDashboardLayout>
   );

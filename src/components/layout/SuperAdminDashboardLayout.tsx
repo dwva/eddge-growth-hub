@@ -1,4 +1,4 @@
-import { ReactNode, useState } from 'react';
+import { ReactNode, useState, useMemo } from 'react';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
@@ -26,6 +26,17 @@ const SuperAdminDashboardLayout = ({ children }: SuperAdminDashboardLayoutProps)
 
   const firstName = user?.name?.split(' ')[0] || 'Admin';
   const accessLevel = getAccessLevel();
+
+  const envBadge = useMemo(() => {
+    const mode = import.meta.env.MODE;
+    if (mode === 'production') {
+      return { label: 'PRODUCTION', className: 'bg-emerald-100 text-emerald-700 border-emerald-200' };
+    }
+    if (mode === 'staging') {
+      return { label: 'STAGING', className: 'bg-amber-100 text-amber-800 border-amber-200' };
+    }
+    return { label: 'DEVELOPMENT', className: 'bg-slate-100 text-slate-700 border-slate-200' };
+  }, []);
 
   return (
     <div className="min-h-screen bg-[#f8f9fb] flex font-sans">
@@ -76,8 +87,15 @@ const SuperAdminDashboardLayout = ({ children }: SuperAdminDashboardLayoutProps)
             </div>
           </div>
           
-          {/* Right: Icons + Avatar */}
+          {/* Right: Env Badge + Icons + Avatar */}
           <div className="flex items-center gap-2">
+            {/* Environment Badge */}
+            <div className="hidden sm:flex items-center">
+              <span className={`px-2.5 py-1 rounded-full text-[11px] font-semibold border uppercase tracking-wide ${envBadge.className}`}>
+                {envBadge.label}
+              </span>
+            </div>
+
             {/* Messages */}
             <Button 
               variant="ghost" 
