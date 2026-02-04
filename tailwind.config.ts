@@ -17,6 +17,16 @@ export default {
         sans: ['Inter', 'system-ui', 'sans-serif'],
         display: ['Poppins', 'system-ui', 'sans-serif'],
       },
+      fontSize: {
+        /* EDDGE typography scale – use text-heading, text-subheading, etc. */
+        heading: ['1.875rem', { lineHeight: '2.25rem' }],    // ~30px – page title (add font-semibold)
+        subheading: ['1.25rem', { lineHeight: '1.75rem' }], // 20px – section (e.g. Today's Focus)
+        title: ['1rem', { lineHeight: '1.5rem' }],          // 16px – block title (e.g. Quick actions)
+        body: ['0.875rem', { lineHeight: '1.25rem' }],      // 14px – default content
+        caption: ['0.75rem', { lineHeight: '1rem' }],       // 12px – hints, metadata
+        /* Hero size for landing/marketing only */
+        hero: ['2.25rem', { lineHeight: '2.5rem' }],        // 36px – hero (add font-bold)
+      },
       colors: {
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
