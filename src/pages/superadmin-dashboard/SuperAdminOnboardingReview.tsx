@@ -15,7 +15,6 @@ import { superAdminOnboardingApi, type SchoolOnboardingInvite, type OnboardingSt
 import { School, CheckCircle, XCircle, AlertCircle, RefreshCw, Eye, MessageSquare } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { useAuth } from '@/contexts/AuthContext';
-import { Textarea } from '@/components/ui/textarea';
 
 const SuperAdminOnboardingReview = () => {
   const queryClient = useQueryClient();

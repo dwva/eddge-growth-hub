@@ -705,6 +705,7 @@ export interface InternalAdminUser {
   role: AdminRole;
   is_active: boolean;
   last_login_at: string;
+  created_at: string;
 }
 
 const mockAdmins: InternalAdminUser[] = [
@@ -715,6 +716,7 @@ const mockAdmins: InternalAdminUser[] = [
     role: 'ROOT',
     is_active: true,
     last_login_at: '2024-01-20T09:15:00Z',
+    created_at: '2023-01-01T00:00:00Z',
   },
   {
     id: 'adm-002',
@@ -723,6 +725,7 @@ const mockAdmins: InternalAdminUser[] = [
     role: 'OPS',
     is_active: true,
     last_login_at: '2024-01-19T14:05:00Z',
+    created_at: '2023-06-15T10:00:00Z',
   },
   {
     id: 'adm-003',
@@ -731,6 +734,7 @@ const mockAdmins: InternalAdminUser[] = [
     role: 'FINANCE',
     is_active: true,
     last_login_at: '2024-01-18T11:30:00Z',
+    created_at: '2023-09-20T14:30:00Z',
   },
 ];
 
@@ -754,6 +758,7 @@ export const superAdminAdminsApi = {
       role: admin.role,
       is_active: true,
       last_login_at: '—',
+      created_at: new Date().toISOString(),
     };
     mockAdmins.push(newAdmin);
     return newAdmin;
@@ -1010,7 +1015,8 @@ export const superAdminSupportApi = {
 
 // ---------- School Onboarding ----------
 
-export type OnboardingStatus = 'INVITED' | 'IN_PROGRESS' | 'SUBMITTED' | 'APPROVED' | 'ACTIVE' | 'SUSPENDED';
+export type LifecycleState = 'TRIAL' | 'PILOT' | 'ACTIVE' | 'SUSPENDED' | 'CHURNED';
+export type OnboardingStatus = 'INVITED' | 'IN_PROGRESS' | 'SUBMITTED' | 'APPROVED' | 'ACTIVE' | 'SUSPENDED' | 'CANCELLED';
 
 export interface SchoolOnboardingInvite {
   id: string;
@@ -1184,7 +1190,7 @@ export const superAdminOnboardingApi = {
     mockOnboardingQueue.push(invite);
     await superAdminAuditApi.logAdminAction({
       actor: actorEmail,
-      action: 'SCHOOL_INVITE_SENT',
+      action: 'SCHOOL_INVITED',
       target: invite.id,
       metadata: `School: ${data.schoolName}, Plan: ${data.initialPlan}`,
     });
@@ -1222,16 +1228,40 @@ export const superAdminOnboardingApi = {
       throw new Error('Only submitted schools can be approved');
     }
 
-    invite.onboardingStatus = 'APPROVED';
+    // Get step data for school creation
+    const stepData = mockOnboardingStepData[inviteId];
+    const schoolName = stepData?.schoolProfile?.schoolName || invite.schoolName;
+
+    // Create school record
+    const schoolId = `sch-${Date.now()}`;
+    const newSchool: School = {
+      id: schoolId,
+      name: schoolName,
+      email: invite.contactEmail,
+      phone: invite.phone,
+      address: invite.location,
+      is_active: true,
+      subscription_status: invite.initialPlan,
+      created_at: new Date().toISOString().split('T')[0],
+      lifecycle_state: 'ACTIVE', // Set lifecycle to ACTIVE on approval
+    };
+    mockSchools.push(newSchool);
+
+    // Create school admin user ID (mock - in real implementation, would create actual user record)
+    const schoolAdminId = `admin-${Date.now()}`;
+
+    // Update invite status to ACTIVE (not APPROVED) and set lifecycle to ACTIVE
+    invite.onboardingStatus = 'ACTIVE';
+    invite.lifecycleState = 'ACTIVE';
     invite.approvedAt = new Date().toISOString();
-    invite.schoolId = `sch-${Date.now()}`;
-    invite.schoolAdminId = `admin-${Date.now()}`;
+    invite.schoolId = schoolId;
+    invite.schoolAdminId = schoolAdminId;
 
     await superAdminAuditApi.logAdminAction({
       actor: actorEmail,
-      action: 'ONBOARDING_APPROVED',
+      action: 'SCHOOL_APPROVED',
       target: inviteId,
-      metadata: `School: ${invite.schoolName}, School ID: ${invite.schoolId}`,
+      metadata: `School: ${invite.schoolName}, School ID: ${schoolId}, Admin ID: ${schoolAdminId}`,
     });
   },
 
@@ -1277,12 +1307,42 @@ export const superAdminOnboardingApi = {
     });
   },
 
+  cancelOnboarding: async (inviteId: string, actorEmail: string): Promise<void> => {
+    await delay(300);
+    const accessLevel = validateJWTToken();
+    if (!hasPermission(accessLevel!, 'ROOT')) {
+      throw new Error('Only ROOT access level can cancel onboarding');
+    }
+
+    const invite = mockOnboardingQueue.find(i => i.id === inviteId);
+    if (!invite) throw new Error('Invite not found');
+
+    // Only allow cancellation for INVITED, IN_PROGRESS, or SUBMITTED
+    if (invite.onboardingStatus !== 'INVITED' && invite.onboardingStatus !== 'IN_PROGRESS' && invite.onboardingStatus !== 'SUBMITTED') {
+      throw new Error('Can only cancel onboarding in INVITED, IN_PROGRESS, or SUBMITTED status');
+    }
+
+    const previousStatus = invite.onboardingStatus;
+    
+    // Mark as cancelled
+    invite.onboardingStatus = 'CANCELLED';
+    // Invalidate token by setting expiry to past
+    invite.tokenExpiresAt = new Date(Date.now() - 1000).toISOString();
+
+    await superAdminAuditApi.logAdminAction({
+      actor: actorEmail,
+      action: 'ONBOARDING_CANCELLED',
+      target: inviteId,
+      metadata: `School: ${invite.schoolName}, Previous status: ${previousStatus}`,
+    });
+  },
+
   checkOnboardingSLA: async (): Promise<Array<{ inviteId: string; daysInState: number; isStuck: boolean; warningLabel: string }>> => {
     await delay(300);
     validateJWTToken();
 
-    const INVITED_THRESHOLD_DAYS = 3; // X days for INVITED state
-    const IN_PROGRESS_THRESHOLD_DAYS = 7; // X days for IN_PROGRESS state
+    const INVITED_THRESHOLD_DAYS = 3; // 3 days for INVITED state
+    const IN_PROGRESS_THRESHOLD_DAYS = 5; // 5 days for IN_PROGRESS state
 
     const now = new Date();
     const slaResults: Array<{ inviteId: string; daysInState: number; isStuck: boolean; warningLabel: string }> = [];
@@ -1339,7 +1399,7 @@ export const superAdminOnboardingApi = {
 
     await superAdminAuditApi.logAdminAction({
       actor: actorEmail,
-      action: 'ONBOARDING_INVITE_RESENT',
+      action: 'INVITE_RESENT',
       target: inviteId,
       metadata: `School: ${invite.schoolName}, Email: ${invite.contactEmail}`,
     });
@@ -1366,7 +1426,7 @@ export const superAdminOnboardingApi = {
 
     await superAdminAuditApi.logAdminAction({
       actor: actorEmail,
-      action: 'ONBOARDING_TOKEN_REGENERATED',
+      action: 'TOKEN_REGENERATED',
       target: inviteId,
       metadata: `School: ${invite.schoolName}, Previous token invalidated`,
     });
@@ -1506,6 +1566,14 @@ export const schoolOnboardingApi = {
     invite.onboardingStatus = 'SUBMITTED';
     invite.submittedAt = new Date().toISOString();
     invite.onboardingProgress = 100;
+
+    // Log audit event for submission
+    await superAdminAuditApi.logAdminAction({
+      actor: invite.contactEmail, // School admin email
+      action: 'ONBOARDING_SUBMITTED',
+      target: invite.id,
+      metadata: `School: ${invite.schoolName}, Submitted for review`,
+    });
   },
 };
 

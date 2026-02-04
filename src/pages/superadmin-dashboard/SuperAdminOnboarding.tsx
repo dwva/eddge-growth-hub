@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import React, { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import SuperAdminDashboardLayout from '@/components/layout/SuperAdminDashboardLayout';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -13,12 +13,13 @@ import { Progress } from '@/components/ui/progress';
 import { LoadingState } from '@/components/shared/LoadingState';
 import { EmptyState } from '@/components/shared/EmptyState';
 import { superAdminOnboardingApi, superAdminAuditApi, type SchoolOnboardingInvite, type LifecycleState } from '@/services/superAdminApi';
-import { School, Mail, Phone, MapPin, RefreshCw, AlertCircle, Plus, Copy, CheckCircle, Mail as MailIcon, RefreshCw as RefreshCwIcon, AlertTriangle } from 'lucide-react';
+import { School, Mail, Phone, MapPin, RefreshCw, AlertCircle, Plus, Copy, CheckCircle, Mail as MailIcon, RefreshCw as RefreshCwIcon, AlertTriangle, X } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { useAuth } from '@/contexts/AuthContext';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from '@/components/ui/alert-dialog';
 import { Textarea } from '@/components/ui/textarea';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 
 const SuperAdminOnboarding = () => {
   const queryClient = useQueryClient();
@@ -31,8 +32,10 @@ const SuperAdminOnboarding = () => {
   const [selectedInvite, setSelectedInvite] = useState<SchoolOnboardingInvite | null>(null);
   const [resendDialogOpen, setResendDialogOpen] = useState(false);
   const [regenerateDialogOpen, setRegenerateDialogOpen] = useState(false);
+  const [cancelDialogOpen, setCancelDialogOpen] = useState(false);
   const [emailPreviewDialogOpen, setEmailPreviewDialogOpen] = useState(false);
   const [emailPreview, setEmailPreview] = useState<string>('');
+  const [statusFilter, setStatusFilter] = useState<string>('all');
 
   const [formData, setFormData] = useState({
     schoolName: '',
@@ -99,6 +102,29 @@ const SuperAdminOnboarding = () => {
     },
   });
 
+  const cancelOnboardingMutation = useMutation({
+    mutationFn: async (inviteId: string) => {
+      return await superAdminOnboardingApi.cancelOnboarding(inviteId, user?.email || 'superadmin@eddge.com');
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['superadmin', 'onboarding-queue'] });
+      queryClient.invalidateQueries({ queryKey: ['superadmin', 'onboarding-sla'] });
+      setCancelDialogOpen(false);
+      setSelectedInvite(null);
+      toast({
+        title: 'Onboarding Cancelled',
+        description: 'School onboarding has been cancelled and token invalidated.',
+      });
+    },
+    onError: (error: Error) => {
+      toast({
+        title: 'Error',
+        description: error.message || 'Failed to cancel onboarding',
+        variant: 'destructive',
+      });
+    },
+  });
+
   const createInviteMutation = useMutation({
     mutationFn: async (data: typeof formData) => {
       return await superAdminOnboardingApi.createSchoolInvite(data, user?.email || 'superadmin@eddge.com');
@@ -116,7 +142,7 @@ const SuperAdminOnboarding = () => {
         lifecycleState: 'TRIAL',
       });
       toast({
-        title: 'Invite Created',
+        title: 'Invite sent successfully',
         description: `Onboarding invite sent to ${invite.contactEmail}. Token: ${invite.token}`,
       });
     },
@@ -130,7 +156,7 @@ const SuperAdminOnboarding = () => {
   });
 
   const handleCreateInvite = () => {
-    if (!formData.schoolName || !formData.contactEmail || !formData.board) {
+    if (!formData.schoolName || !formData.contactEmail || !formData.board || !formData.phone || !formData.location || !formData.initialPlan || !formData.lifecycleState) {
       toast({
         title: 'Validation Error',
         description: 'Please fill in all required fields',
@@ -159,6 +185,7 @@ const SuperAdminOnboarding = () => {
       APPROVED: 'default',
       ACTIVE: 'default',
       SUSPENDED: 'destructive',
+      CANCELLED: 'destructive',
     };
     return <Badge variant={variants[status] || 'outline'}>{status.replace('_', ' ')}</Badge>;
   };
@@ -181,18 +208,46 @@ const SuperAdminOnboarding = () => {
     return Math.floor((now.getTime() - referenceDate.getTime()) / (1000 * 60 * 60 * 24));
   };
 
+  // Filter queue by status
+  const filteredQueue = queue?.filter((invite) => {
+    if (statusFilter === 'all') return true;
+    if (statusFilter === 'stuck') {
+      const warning = getSLAWarning(invite.id);
+      return warning?.isStuck || false;
+    }
+    return invite.onboardingStatus === statusFilter;
+  }) || [];
+
+  const stuckCount = slaData?.filter(s => s.isStuck).length || 0;
+
+  // #region agent log
+  React.useEffect(() => {
+    fetch('http://127.0.0.1:7244/ingest/551a3c41-c60e-4d3d-a721-a180211fd5c0',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'SuperAdminOnboarding.tsx:222',message:'Component render - access level check',data:{accessLevel,canModify,stuckCount,createDialogOpen},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'A'})}).catch(()=>{});
+    setTimeout(() => {
+      const button = document.querySelector('[data-testid="add-new-school-btn"]') || document.querySelector('button:has-text("Add New School")') || Array.from(document.querySelectorAll('button')).find(b => b.textContent?.includes('Add New School'));
+      if (button) {
+        const styles = window.getComputedStyle(button);
+        const htmlButton = button as HTMLElement;
+        fetch('http://127.0.0.1:7244/ingest/551a3c41-c60e-4d3d-a721-a180211fd5c0',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'SuperAdminOnboarding.tsx:225',message:'Button found in DOM - checking styles',data:{display:styles.display,visibility:styles.visibility,opacity:styles.opacity,width:styles.width,height:styles.height,position:styles.position,zIndex:styles.zIndex,isVisible:htmlButton.offsetParent !== null},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'B'})}).catch(()=>{});
+      } else {
+        fetch('http://127.0.0.1:7244/ingest/551a3c41-c60e-4d3d-a721-a180211fd5c0',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'SuperAdminOnboarding.tsx:228',message:'Button NOT found in DOM',data:{allButtons:Array.from(document.querySelectorAll('button')).map(b => ({text:b.textContent,classes:b.className}))},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'C'})}).catch(()=>{});
+      }
+    }, 100);
+  }, [accessLevel, canModify, stuckCount, createDialogOpen]);
+  // #endregion
+
   return (
     <SuperAdminDashboardLayout>
       <div className="space-y-6">
-        {/* Header */}
-        <div className="flex items-center justify-between">
+        {/* Operations Header */}
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
           <div>
             <h1 className="text-3xl font-bold">School Onboarding</h1>
             <p className="text-muted-foreground">
-              Create onboarding invites for new schools. Invites generate one-time tokens valid for 24 hours.
+              Manage new school onboarding and activation
             </p>
           </div>
-          <div className="flex gap-2">
+          <div className="flex gap-2 flex-wrap items-center">
             <Button
               variant="outline"
               size="sm"
@@ -202,12 +257,49 @@ const SuperAdminOnboarding = () => {
               <RefreshCw className={`mr-2 h-4 w-4 ${isLoading ? 'animate-spin' : ''}`} />
               Refresh
             </Button>
-            <Button onClick={() => setCreateDialogOpen(true)}>
-              <Plus className="mr-2 h-4 w-4" />
-              Create Invite
-            </Button>
+            {stuckCount > 0 && (
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => setStatusFilter('stuck')}
+              >
+                <AlertTriangle className="mr-2 h-4 w-4" />
+                View Stuck ({stuckCount})
+              </Button>
+            )}
+            {canModify && (
+              <Button 
+                data-testid="add-new-school-btn"
+                onClick={() => {
+                  // #region agent log
+                  fetch('http://127.0.0.1:7244/ingest/551a3c41-c60e-4d3d-a721-a180211fd5c0',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'SuperAdminOnboarding.tsx:260',message:'Add New School button clicked',data:{canModify,accessLevel},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'D'})}).catch(()=>{});
+                  // #endregion
+                  setCreateDialogOpen(true);
+                }} 
+                className="bg-primary hover:bg-primary/90 text-white font-medium shadow-md"
+                size="default"
+              >
+                <Plus className="mr-2 h-4 w-4" />
+                Add New School
+              </Button>
+            )}
           </div>
         </div>
+
+        {/* Status Tabs */}
+        <Tabs value={statusFilter} onValueChange={setStatusFilter} className="w-full">
+          <TabsList className="grid w-full grid-cols-7">
+            <TabsTrigger value="all">All</TabsTrigger>
+            <TabsTrigger value="INVITED">Invited</TabsTrigger>
+            <TabsTrigger value="IN_PROGRESS">In Progress</TabsTrigger>
+            <TabsTrigger value="SUBMITTED">Submitted</TabsTrigger>
+            <TabsTrigger value="stuck">
+              Stuck {stuckCount > 0 && `(${stuckCount})`}
+            </TabsTrigger>
+            <TabsTrigger value="SUSPENDED">Suspended</TabsTrigger>
+            <TabsTrigger value="CANCELLED">Cancelled</TabsTrigger>
+          </TabsList>
+        </Tabs>
 
         {/* Onboarding Queue */}
         <Card>
@@ -224,6 +316,12 @@ const SuperAdminOnboarding = () => {
                 title="No onboarding invites"
                 description="Create your first school onboarding invite to get started."
               />
+            ) : filteredQueue.length === 0 ? (
+              <EmptyState
+                icon={School}
+                title={`No ${statusFilter === 'all' ? '' : statusFilter.replace('_', ' ').toLowerCase()} schools`}
+                description="No schools match the selected filter."
+              />
             ) : (
               <Table>
                 <TableHeader>
@@ -239,7 +337,7 @@ const SuperAdminOnboarding = () => {
                   </TableRow>
                 </TableHeader>
                 <TableBody>
-                  {queue.map((invite) => {
+                  {filteredQueue.map((invite) => {
                     const slaWarning = getSLAWarning(invite.id);
                     const daysInState = computeDaysInState(invite);
                     return (
@@ -313,7 +411,7 @@ const SuperAdminOnboarding = () => {
                           {formatDate(invite.invitedAt)}
                         </TableCell>
                         <TableCell>
-                          {canModify && (invite.onboardingStatus === 'INVITED' || invite.onboardingStatus === 'IN_PROGRESS') && (
+                          {canModify && (
                             <DropdownMenu>
                               <DropdownMenuTrigger asChild>
                                 <Button variant="outline" size="sm">
@@ -321,24 +419,50 @@ const SuperAdminOnboarding = () => {
                                 </Button>
                               </DropdownMenuTrigger>
                               <DropdownMenuContent align="end">
-                                <DropdownMenuItem
-                                  onClick={() => {
-                                    setSelectedInvite(invite);
-                                    setResendDialogOpen(true);
-                                  }}
-                                >
-                                  <MailIcon className="h-4 w-4 mr-2" />
-                                  Resend Invite
-                                </DropdownMenuItem>
-                                <DropdownMenuItem
-                                  onClick={() => {
-                                    setSelectedInvite(invite);
-                                    setRegenerateDialogOpen(true);
-                                  }}
-                                >
-                                  <RefreshCwIcon className="h-4 w-4 mr-2" />
-                                  Regenerate Token
-                                </DropdownMenuItem>
+                                {(invite.onboardingStatus === 'INVITED' || invite.onboardingStatus === 'IN_PROGRESS') && (
+                                  <>
+                                    <DropdownMenuItem
+                                      onClick={() => {
+                                        setSelectedInvite(invite);
+                                        setResendDialogOpen(true);
+                                      }}
+                                    >
+                                      <MailIcon className="h-4 w-4 mr-2" />
+                                      Resend Invite
+                                    </DropdownMenuItem>
+                                    <DropdownMenuItem
+                                      onClick={() => {
+                                        setSelectedInvite(invite);
+                                        setRegenerateDialogOpen(true);
+                                      }}
+                                    >
+                                      <RefreshCwIcon className="h-4 w-4 mr-2" />
+                                      Regenerate Token
+                                    </DropdownMenuItem>
+                                    <DropdownMenuItem
+                                      onClick={() => {
+                                        setSelectedInvite(invite);
+                                        setCancelDialogOpen(true);
+                                      }}
+                                      className="text-red-600"
+                                    >
+                                      <X className="h-4 w-4 mr-2" />
+                                      Cancel Onboarding
+                                    </DropdownMenuItem>
+                                  </>
+                                )}
+                                {invite.onboardingStatus === 'SUBMITTED' && (
+                                  <DropdownMenuItem
+                                    onClick={() => {
+                                      setSelectedInvite(invite);
+                                      setCancelDialogOpen(true);
+                                    }}
+                                    className="text-red-600"
+                                  >
+                                    <X className="h-4 w-4 mr-2" />
+                                    Cancel Onboarding
+                                  </DropdownMenuItem>
+                                )}
                               </DropdownMenuContent>
                             </DropdownMenu>
                           )}
@@ -356,7 +480,7 @@ const SuperAdminOnboarding = () => {
         <Dialog open={createDialogOpen} onOpenChange={setCreateDialogOpen}>
           <DialogContent className="max-w-2xl">
             <DialogHeader>
-              <DialogTitle>Create School Onboarding Invite</DialogTitle>
+              <DialogTitle>Invite School to EDDGE</DialogTitle>
               <DialogDescription>
                 Create a new onboarding invite. A one-time token will be generated and sent to the contact email.
               </DialogDescription>
@@ -404,29 +528,31 @@ const SuperAdminOnboarding = () => {
                   />
                 </div>
                 <div>
-                  <Label htmlFor="phone">Phone</Label>
+                  <Label htmlFor="phone">Phone *</Label>
                   <Input
                     id="phone"
                     value={formData.phone}
                     onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
                     placeholder="+91 11 2345 6789"
+                    required
                   />
                 </div>
               </div>
 
               <div>
-                <Label htmlFor="location">Location</Label>
+                <Label htmlFor="location">Location *</Label>
                 <Input
                   id="location"
                   value={formData.location}
                   onChange={(e) => setFormData({ ...formData, location: e.target.value })}
                   placeholder="City, State"
+                  required
                 />
               </div>
 
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <Label htmlFor="initialPlan">Initial Plan</Label>
+                  <Label htmlFor="initialPlan">Initial Plan *</Label>
                   <Select
                     value={formData.initialPlan}
                     onValueChange={(value) => setFormData({ ...formData, initialPlan: value })}
@@ -442,7 +568,7 @@ const SuperAdminOnboarding = () => {
                   </Select>
                 </div>
                 <div>
-                  <Label htmlFor="lifecycleState">Lifecycle State</Label>
+                  <Label htmlFor="lifecycleState">Initial Lifecycle *</Label>
                   <Select
                     value={formData.lifecycleState}
                     onValueChange={(value: LifecycleState) => setFormData({ ...formData, lifecycleState: value })}
@@ -511,6 +637,35 @@ const SuperAdminOnboarding = () => {
                 disabled={regenerateTokenMutation.isPending}
               >
                 {regenerateTokenMutation.isPending ? 'Regenerating...' : 'Regenerate Token'}
+              </AlertDialogAction>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
+
+        {/* Cancel Onboarding Confirmation Dialog */}
+        <AlertDialog open={cancelDialogOpen} onOpenChange={setCancelDialogOpen}>
+          <AlertDialogContent>
+            <AlertDialogHeader>
+              <AlertDialogTitle>Cancel Onboarding</AlertDialogTitle>
+              <AlertDialogDescription>
+                Are you sure you want to cancel onboarding for {selectedInvite?.schoolName}?
+                This will:
+                <ul className="list-disc list-inside mt-2 space-y-1">
+                  <li>Mark the onboarding as CANCELLED</li>
+                  <li>Invalidate the onboarding token</li>
+                  <li>Prevent the school admin from accessing the onboarding wizard</li>
+                </ul>
+                This action can only be performed for schools in INVITED, IN_PROGRESS, or SUBMITTED status.
+              </AlertDialogDescription>
+            </AlertDialogHeader>
+            <AlertDialogFooter>
+              <AlertDialogCancel>Keep Onboarding</AlertDialogCancel>
+              <AlertDialogAction
+                onClick={() => selectedInvite && cancelOnboardingMutation.mutate(selectedInvite.id)}
+                disabled={cancelOnboardingMutation.isPending}
+                className="bg-red-600 hover:bg-red-700"
+              >
+                {cancelOnboardingMutation.isPending ? 'Cancelling...' : 'Cancel Onboarding'}
               </AlertDialogAction>
             </AlertDialogFooter>
           </AlertDialogContent>

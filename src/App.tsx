@@ -438,6 +438,16 @@ const App = () => (
                 <SuperAdminSupport />
               </SuperAdminProtectedRoute>
             } />
+            <Route path="/dashboard/superadmin/onboarding" element={
+              <SuperAdminProtectedRoute>
+                <SuperAdminOnboarding />
+              </SuperAdminProtectedRoute>
+            } />
+            <Route path="/dashboard/superadmin/onboarding/review" element={
+              <SuperAdminProtectedRoute>
+                <SuperAdminOnboardingReview />
+              </SuperAdminProtectedRoute>
+            } />
             <Route path="/dashboard/superadmin/*" element={
               <SuperAdminProtectedRoute>
                 <SuperAdminOverview />
