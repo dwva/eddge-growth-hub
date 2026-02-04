@@ -27,12 +27,17 @@ const PURPLE_LEVELS_LIGHT = [
 const DAY_LABELS = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
 const MONTH_LABELS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
 
-function getWeekNumber(date: Date): number {
-  const d = new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate()));
-  const dayNum = d.getUTCDay();
-  d.setUTCDate(d.getUTCDate() + 4 - dayNum);
-  const yearStart = new Date(Date.UTC(d.getUTCFullYear(), 0, 1));
-  return Math.ceil((((d.getTime() - yearStart.getTime()) / 86400000) + 1) / 7);
+const MS_PER_DAY = 86400000;
+
+/** Sunday of the week that contains Jan 1 (so calendar starts correctly; Jan 1 = Thursday → first circle is there). */
+function getFirstSundayOfYear(year: number): Date {
+  const jan1 = new Date(year, 0, 1);
+  return new Date(year, 0, 1 - jan1.getDay());
+}
+
+/** Date at (column, row): column = week index, row = day of week (0=Sun .. 6=Sat). */
+function dateAtCell(firstSunday: Date, col: number, row: number): Date {
+  return new Date(firstSunday.getTime() + (col * 7 + row) * MS_PER_DAY);
 }
 
 function getDayKey(date: Date): string {
@@ -40,6 +45,12 @@ function getDayKey(date: Date): string {
   const m = String(date.getMonth() + 1).padStart(2, '0');
   const d = String(date.getDate()).padStart(2, '0');
   return `${y}-${m}-${d}`;
+}
+
+function formatDateLong(date: Date): string {
+  const dayNames = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+  const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+  return `${dayNames[date.getDay()]}, ${monthNames[date.getMonth()]} ${date.getDate()}, ${date.getFullYear()}`;
 }
 
 type CellData = { dateKey: string; date: Date; count: number; level: number } | null;
@@ -64,35 +75,41 @@ export function ContributionHeatmap({
   const isLight = variant === 'light';
   const PURPLE_LEVELS = isLight ? PURPLE_LEVELS_LIGHT : PURPLE_LEVELS_DARK;
   const { grid, total, monthColStart } = useMemo(() => {
-    const start = new Date(year, 0, 1);
-    const end = new Date(year, 11, 31);
-    const totalDays = Math.ceil((end.getTime() - start.getTime()) / 86400000) + 1;
-    const firstDayOfWeek = start.getDay();
+    const firstSunday = getFirstSundayOfYear(year);
+    const jan1 = new Date(year, 0, 1);
+    const dec31 = new Date(year, 11, 31);
 
-    // Build 53 weeks × 7 days (GitHub layout: columns = weeks, rows = Sun–Sat)
+    // 53 columns = weeks (Sun–Sat). First column contains Jan 1, last column contains Dec 31. Row = day of week (0=Sun .. 6=Sat).
     const weeks: CellData[][] = Array.from({ length: 53 }, () => Array(7).fill(null));
-
     let totalContributions = 0;
-    for (let i = 0; i < totalDays; i++) {
-      const date = new Date(year, 0, 1 + i);
-      const dayOfWeek = date.getDay();
-      const weekNum = Math.min(52, getWeekNumber(date));
-      const dateKey = getDayKey(date);
-      const count = contributions[dateKey] ?? 0;
-      totalContributions += count;
-      const level = count === 0 ? 0 : Math.min(4, Math.ceil(count / 2));
-      weeks[weekNum][dayOfWeek] = { dateKey, date, count, level };
+
+    for (let col = 0; col < 53; col++) {
+      for (let row = 0; row < 7; row++) {
+        const date = dateAtCell(firstSunday, col, row);
+        if (date < jan1 || date > dec31) {
+          weeks[col][row] = null; // before Jan 1 or after Dec 31 → empty, no circle
+          continue;
+        }
+        const dateKey = getDayKey(date);
+        const count = contributions[dateKey] ?? 0;
+        totalContributions += count;
+        const level = count === 0 ? 0 : Math.min(4, Math.ceil(count / 2));
+        weeks[col][row] = { dateKey, date, count, level };
+      }
     }
 
-    // Start week index for each month (first day of month)
+    // Column where each month's first day falls (for month labels)
     const monthColStart: number[] = [];
     for (let m = 0; m < 12; m++) {
-      const d = new Date(year, m, 1);
-      monthColStart.push(getWeekNumber(d));
+      const firstDay = new Date(year, m, 1);
+      const daysFromStart = Math.round((firstDay.getTime() - firstSunday.getTime()) / MS_PER_DAY);
+      monthColStart.push(Math.max(0, Math.min(52, Math.floor(daysFromStart / 7))));
     }
 
     return { grid: weeks, total: totalContributions, monthColStart };
   }, [year, contributions]);
+
+  const daysInYear = useMemo(() => (new Date(year, 1, 29).getDate() === 29 ? 366 : 365), [year]);
 
   const containerClass = isLight
     ? 'rounded-xl border-0 bg-transparent p-0 text-gray-900'
@@ -116,7 +133,7 @@ export function ContributionHeatmap({
           {total} contribution{total !== 1 ? 's' : ''} in {year}
         </h3>
         <p className={`text-xs mt-0.5 ${subtitleClass}`}>
-          Each task, practice or learning you complete adds a contribution and helps boost your XP.
+          All {daysInYear} days of the year · each task, practice or learning adds a contribution and helps boost your XP.
         </p>
       </div>
 
@@ -156,7 +173,16 @@ export function ContributionHeatmap({
                 {grid.map((week, weekIdx) => (
                   <div key={weekIdx} className="flex flex-1 flex-col gap-[2px] min-w-0">
                     {week.map((cell, dayIdx) => {
-                      const level = cell?.level ?? 0;
+                      if (!cell) {
+                        return (
+                          <div
+                            key={dayIdx}
+                            className="w-full aspect-square min-w-[8px] min-h-[8px] flex-shrink-0"
+                            aria-hidden
+                          />
+                        );
+                      }
+                      const level = cell.level;
                       const bg = PURPLE_LEVELS[level];
                       return (
                         <Tooltip key={dayIdx}>
@@ -164,27 +190,21 @@ export function ContributionHeatmap({
                             <button
                               type="button"
                               className={`w-full aspect-square min-w-[8px] min-h-[8px] rounded-sm ${bg} hover:ring-2 hover:ring-purple-400 hover:ring-offset-1 ${ringOffsetClass} transition-all focus:outline-none flex-shrink-0`}
-                              aria-label={cell ? `${cell.dateKey}: ${cell.count} contributions` : 'No contributions'}
+                              aria-label={`${cell.dateKey}: ${cell.count} contributions`}
                             />
                           </TooltipTrigger>
                           <TooltipContent
                             side="top"
                             className={tooltipContentClass}
                           >
-                            {cell ? (
-                              <>
-                                <p className="font-medium">
-                                  {cell.count} contribution{cell.count !== 1 ? 's' : ''} on {cell.dateKey}
-                                </p>
-                                <p className={`text-xs mt-0.5 ${tooltipMutedClass}`}>
-                                  {cell.count === 0
-                                    ? 'No activity'
-                                    : 'Tasks, practice & learning completed'}
-                                </p>
-                              </>
-                            ) : (
-                              <p className={tooltipMutedClass}>No contributions</p>
-                            )}
+                            <p className="font-medium">
+                              {formatDateLong(cell.date)}
+                            </p>
+                            <p className={`text-xs mt-0.5 ${tooltipMutedClass}`}>
+                              {cell.count === 0
+                                ? 'No contributions'
+                                : `${cell.count} contribution${cell.count !== 1 ? 's' : ''} · tasks, practice & learning`}
+                            </p>
                           </TooltipContent>
                         </Tooltip>
                       );
