@@ -70,7 +70,7 @@ export function ContributionHeatmap({
   contributions,
   year = new Date().getFullYear(),
   onLearnMore,
-  variant = 'dark',
+  variant = 'light',
 }: ContributionHeatmapProps) {
   const isLight = variant === 'light';
   const PURPLE_LEVELS = isLight ? PURPLE_LEVELS_LIGHT : PURPLE_LEVELS_DARK;
@@ -128,7 +128,7 @@ export function ContributionHeatmap({
 
   return (
     <div className={containerClass}>
-      <div className={isLight ? 'mb-3' : 'mb-4'}>
+      <div className={isLight ? 'mb-2' : 'mb-3'}>
         <h3 className={`text-sm font-semibold ${titleClass}`}>
           {total} contribution{total !== 1 ? 's' : ''} in {year}
         </h3>
@@ -140,7 +140,7 @@ export function ContributionHeatmap({
       <div className="w-full overflow-x-auto scrollbar-hide">
         <div className="w-full flex flex-col min-w-0">
           {/* Month labels - same structure as grid row (spacer + 53 equal-width slots) for alignment */}
-          <div className="mb-2 flex w-full gap-[2px] min-w-0">
+          <div className="mb-1 flex w-full gap-[2px] min-w-0">
             <div className="w-8 flex-shrink-0" aria-hidden />
             <div className="flex flex-1 gap-[2px] min-w-0">
               {grid.map((_, weekIdx) => {
@@ -161,7 +161,7 @@ export function ContributionHeatmap({
             {/* Day labels - Mon, Wed, Fri to match GitHub style */}
             <div className="flex w-8 flex-shrink-0 flex-col gap-[2px] pt-[2px]">
               {[0, 1, 2, 3, 4, 5, 6].map((d) => (
-                <div key={d} className={`min-h-[10px] flex-1 text-[10px] leading-none flex items-center ${labelClass}`}>
+                <div key={d} className={`min-h-[8px] flex-1 text-[10px] leading-none flex items-center ${labelClass}`}>
                   {[1, 3, 5].includes(d) ? DAY_LABELS[d] : ''}
                 </div>
               ))}
@@ -177,7 +177,7 @@ export function ContributionHeatmap({
                         return (
                           <div
                             key={dayIdx}
-                            className="w-full aspect-square min-w-[8px] min-h-[8px] flex-shrink-0"
+                            className="w-full aspect-square min-w-[6px] min-h-[6px] flex-shrink-0"
                             aria-hidden
                           />
                         );
@@ -189,7 +189,7 @@ export function ContributionHeatmap({
                           <TooltipTrigger asChild>
                             <button
                               type="button"
-                              className={`w-full aspect-square min-w-[8px] min-h-[8px] rounded-sm ${bg} hover:ring-2 hover:ring-purple-400 hover:ring-offset-1 ${ringOffsetClass} transition-all focus:outline-none flex-shrink-0`}
+                              className={`w-full aspect-square min-w-[6px] min-h-[6px] rounded-sm ${bg} hover:ring-2 hover:ring-purple-400 hover:ring-offset-1 ${ringOffsetClass} transition-all focus:outline-none flex-shrink-0`}
                               aria-label={`${cell.dateKey}: ${cell.count} contributions`}
                             />
                           </TooltipTrigger>
@@ -218,7 +218,7 @@ export function ContributionHeatmap({
       </div>
 
       {/* Footer */}
-      <div className={`mt-4 flex items-center justify-between text-xs ${labelClass}`}>
+      <div className={`mt-3 flex items-center justify-between text-xs ${labelClass}`}>
         <button
           type="button"
           className={linkClass}
