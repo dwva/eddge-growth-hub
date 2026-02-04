@@ -89,7 +89,7 @@ export const attendance = {
     { date: '2026-02-01', status: 'present' },
     { date: '2026-01-31', status: 'present' },
     { date: '2026-01-30', status: 'present' },
-    { date: '2026-01-29', status: 'late' },
+    { date: '2026-01-29', status: 'late', arrivalTime: '09:12 AM', lateByMinutes: 12 },
     { date: '2026-01-28', status: 'present' },
     { date: '2026-01-27', status: 'absent' },
     { date: '2026-01-26', status: 'present' },

@@ -2,15 +2,19 @@ import StudentDashboardLayout from '@/components/layout/StudentDashboardLayout';
 import StatCard from '@/components/shared/StatCard';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { 
+import {
   Calendar,
   CheckCircle2,
   XCircle,
-  Clock
+  Clock,
 } from 'lucide-react';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { useState } from 'react';
 import { attendance } from '@/data/mockData';
 
 const StudentAttendance = () => {
+  const [range, setRange] = useState<'thisMonth' | 'lastMonth' | 'all'>('thisMonth');
+
   const getStatusIcon = (status: string) => {
     switch (status) {
       case 'present':
@@ -36,6 +40,30 @@ const StudentAttendance = () => {
         return null;
     }
   };
+
+  const filteredRecentDays = attendance.recentDays.filter((day) => {
+    const date = new Date(day.date);
+    const now = new Date();
+
+    if (range === 'all') return true;
+
+    const thisMonth = now.getMonth();
+    const thisYear = now.getFullYear();
+
+    const lastMonthDate = new Date(thisYear, thisMonth - 1, 1);
+    const lastMonth = lastMonthDate.getMonth();
+    const lastYear = lastMonthDate.getFullYear();
+
+    if (range === 'thisMonth') {
+      return date.getMonth() === thisMonth && date.getFullYear() === thisYear;
+    }
+
+    if (range === 'lastMonth') {
+      return date.getMonth() === lastMonth && date.getFullYear() === lastYear;
+    }
+
+    return true;
+  });
 
   return (
     <StudentDashboardLayout title="Attendance">
@@ -116,30 +144,65 @@ const StudentAttendance = () => {
 
         {/* Recent Days */}
         <Card>
-          <CardHeader>
+          <CardHeader className="flex flex-row items-center justify-between gap-3">
             <CardTitle className="text-lg">Recent Attendance</CardTitle>
+            <Select value={range} onValueChange={(value) => setRange(value as 'thisMonth' | 'lastMonth' | 'all')}>
+              <SelectTrigger className="h-8 w-[160px] text-xs">
+                <SelectValue placeholder="This month" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="thisMonth">This month</SelectItem>
+                <SelectItem value="lastMonth">Last month</SelectItem>
+                <SelectItem value="all">All records</SelectItem>
+              </SelectContent>
+            </Select>
           </CardHeader>
           <CardContent>
-            <div className="space-y-3">
-              {attendance.recentDays.map((day, index) => (
-                <div 
-                  key={index}
-                  className="flex items-center justify-between p-3 bg-secondary/50 rounded-lg"
-                >
-                  <div className="flex items-center gap-3">
-                    {getStatusIcon(day.status)}
-                    <span className="font-medium">
-                      {new Date(day.date).toLocaleDateString('en-US', { 
-                        weekday: 'long', 
-                        month: 'short', 
-                        day: 'numeric' 
-                      })}
-                    </span>
-                  </div>
-                  {getStatusBadge(day.status)}
+            {filteredRecentDays.length === 0 ? (
+              <div className="flex flex-col items-center justify-center py-8 text-center gap-2">
+                <div className="flex h-12 w-12 items-center justify-center rounded-full bg-muted">
+                  <Calendar className="h-6 w-6 text-muted-foreground" />
                 </div>
-              ))}
-            </div>
+                <p className="text-sm font-medium text-gray-900">
+                  No attendance data for this period
+                </p>
+                <p className="text-xs text-muted-foreground max-w-xs">
+                  Attendance data will appear once classes begin or when records are available for the selected range.
+                </p>
+              </div>
+            ) : (
+              <div className="space-y-3">
+                {filteredRecentDays.map((day, index) => (
+                  <div
+                    key={index}
+                    className="flex items-center justify-between p-3 bg-secondary/50 rounded-lg"
+                  >
+                    <div className="flex items-center gap-3">
+                      {getStatusIcon(day.status)}
+                      <span className="font-medium">
+                        {new Date(day.date).toLocaleDateString('en-US', {
+                          weekday: 'long',
+                          month: 'short',
+                          day: 'numeric',
+                        })}
+                      </span>
+                    </div>
+                    <div className="flex flex-col items-end gap-1">
+                      {getStatusBadge(day.status)}
+                      {day.status === 'late' && (
+                        <p className="text-[11px] text-amber-700">
+                          {typeof (day as any).lateByMinutes === 'number'
+                            ? `Late by ${(day as any).lateByMinutes} minutes`
+                            : (day as any).arrivalTime
+                            ? `Arrived at ${(day as any).arrivalTime}`
+                            : 'Late arrival'}
+                        </p>
+                      )}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
           </CardContent>
         </Card>
       </div>
