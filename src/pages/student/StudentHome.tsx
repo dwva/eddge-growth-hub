@@ -70,7 +70,7 @@ const StudentHome = () => {
           {/* Hero Row: Focus Card + Stats Card */}
           <div className="grid grid-cols-1 lg:grid-cols-[1fr_360px] gap-4 items-stretch">
             
-            {/* Hero Card - Today's Focus (flexible width) */}
+            {/* Hero Card - Exam countdown + daily plan (flexible width) */}
             <Card className="relative overflow-hidden border-0 dark:border dark:border-white/10 shadow-sm rounded-3xl bg-gradient-to-br from-primary via-primary to-purple-700 min-w-0">
                 {/* Decorative elements - balanced, not distracting */}
                 <div className="absolute top-0 right-0 w-48 h-48 bg-white/5 rounded-full -translate-y-1/4 translate-x-1/4" />
@@ -78,30 +78,44 @@ const StudentHome = () => {
                 <div className="absolute bottom-0 right-0 w-64 h-64 bg-purple-500/20 rounded-full translate-y-1/2 translate-x-1/4" />
                 
                 <CardContent className="relative p-8 flex flex-col justify-between h-full min-h-[240px]">
-                  {/* Top section - Title aligned to same baseline as My Stats */}
-                  <div className="pt-2">
+                  {/* Top section - exam countdown headline */}
+                  <div className="pt-2 space-y-2">
                     <h2 className="text-xl font-semibold text-white leading-tight">
-                      Today's Focus
+                      250 days to exams
                     </h2>
-                    <p className="text-white/90 text-sm font-medium mt-1.5">
-                      3 tasks · 1 practice · 45 mins
+                    <p className="text-white/80 text-sm">
+                      Board Exam · 12 March · 2027
                     </p>
-                    <p className="text-white/70 text-xs mt-1 max-w-sm">
-                      Focus today: Pick a topic to start
+                  </div>
+
+                  {/* Middle section - today's mission preview */}
+                  <div className="mt-4 rounded-2xl border border-white/30 bg-white/5 px-4 py-3 max-w-md">
+                    <p className="text-[11px] font-semibold tracking-wide text-white/80 uppercase flex items-center gap-1">
+                      <span role="img" aria-hidden="true">
+                        📌
+                      </span>
+                      Today&apos;s mission
+                    </p>
+                    <p className="text-sm text-white/90 mt-2 font-medium">
+                      3 tasks · 1 practice set · ~45 mins
+                    </p>
+                    <p className="text-xs text-white/70 mt-1">
+                      Finish 1 chapter + 10 MCQs to stay on track for your target.
                     </p>
                   </div>
                   
                   {/* Bottom section - Buttons */}
                   <div className="flex gap-3 pt-6">
                     <Button 
-                      className="bg-white text-primary hover:bg-white/90 font-semibold rounded-xl px-6 h-11 shadow-md"
+                      className="bg-white text-primary hover:bg-white/90 font-semibold rounded-xl px-6 h-11 shadow-md flex items-center gap-2"
                       onClick={() => navigate('/student/planner')}
                     >
-                      Start Today's Plan
+                      <span>⚡</span>
+                      <span>Start Today&apos;s Plan</span>
                     </Button>
                     <Button 
                       variant="outline" 
-                      className="border-white/40 text-white hover:bg-white/10 rounded-xl px-6 h-11 bg-transparent"
+                      className="border-white/50 text-white hover:bg-white/10 rounded-xl px-6 h-11 bg-transparent"
                       onClick={() => navigate('/student/performance')}
                     >
                       View Progress
