@@ -24,6 +24,61 @@ export const chapters = {
   ],
 };
 
+// Learning Engine: topics per chapter (subject id -> chapter id -> topics)
+export type TopicDifficulty = 'easy' | 'medium' | 'hard';
+export interface LearningTopic {
+  id: string;
+  name: string;
+  chapterId: string;
+  difficulty?: TopicDifficulty;
+  description?: string;
+}
+
+// Key: subjectId-chapterId (e.g. '1-c1' for Mathematics Algebra Basics)
+export const learningTopics: Record<string, LearningTopic[]> = {
+  '1-c1': [
+    { id: 't1', name: 'Linear Expressions', chapterId: 'c1', difficulty: 'easy', description: 'Introduction to algebraic expressions with one variable.' },
+    { id: 't2', name: 'Factorization', chapterId: 'c1', difficulty: 'medium', description: 'Factorizing algebraic expressions using common factors and identities.' },
+  ],
+  '1-c2': [
+    { id: 't3', name: 'One Variable Equations', chapterId: 'c2', difficulty: 'easy', description: 'Solving equations of the form ax + b = c.' },
+    { id: 't4', name: 'Word Problems', chapterId: 'c2', difficulty: 'medium', description: 'Forming and solving linear equations from real-world problems.' },
+  ],
+  '1-c3': [
+    { id: 't5', name: 'Factorization Method', chapterId: 'c3', difficulty: 'medium', description: 'Solving quadratic equations by factorization.' },
+    { id: 't6', name: 'Quadratic Formula', chapterId: 'c3', difficulty: 'hard', description: 'Using the quadratic formula to find roots.' },
+  ],
+  '1-c4': [
+    { id: 't7', name: 'Polynomial Identities', chapterId: 'c4', difficulty: 'medium' },
+    { id: 't8', name: 'Remainder Theorem', chapterId: 'c4', difficulty: 'hard' },
+  ],
+  '2-c1': [
+    { id: 't9', name: 'Matter and States', chapterId: 'c1', difficulty: 'easy' },
+    { id: 't10', name: 'Energy Forms', chapterId: 'c1', difficulty: 'medium' },
+  ],
+  '2-c2': [
+    { id: 't11', name: "Newton's Laws", chapterId: 'c2', difficulty: 'medium', description: 'Laws of motion and their applications.' },
+    { id: 't12', name: 'Friction and Motion', chapterId: 'c2', difficulty: 'easy' },
+  ],
+};
+
+// O-D-P-E-T-W-X stages for Learning Pathway
+export const learningStages = [
+  { id: 'foundation', letter: 'O', name: 'Foundation', description: 'Overview and why this topic matters.' },
+  { id: 'deep', letter: 'D', name: 'Deep Learn', description: 'Core concepts and detailed explanation.' },
+  { id: 'concept', letter: 'P', name: 'Concept Anchoring', description: 'Practice and reinforce understanding.' },
+  { id: 'micro', letter: 'E', name: 'Micro Check', description: 'Quick checkpoints to validate learning.' },
+];
+
+// Recently studied chapters (for Learn dashboard)
+export const recentlyStudiedChapters = [
+  { chapterId: 'c3', chapterName: 'Quadratic Equations', subjectName: 'Mathematics', progress: 75, topicsCompleted: 3, topicsTotal: 4, lastStudied: '2 days ago' },
+  { chapterId: 'c2', chapterName: 'Linear Equations', subjectName: 'Mathematics', progress: 100, topicsCompleted: 4, topicsTotal: 4, lastStudied: '1 week ago' },
+  { chapterId: 'c1', chapterName: 'Algebra Basics', subjectName: 'Mathematics', progress: 60, topicsCompleted: 2, topicsTotal: 3, lastStudied: '2 weeks ago' },
+  { chapterId: 'c2', chapterName: 'Force and Motion', subjectName: 'Science', progress: 40, topicsCompleted: 1, topicsTotal: 3, lastStudied: '3 days ago' },
+  { chapterId: 'c1', chapterName: 'Matter and Energy', subjectName: 'Science', progress: 100, topicsCompleted: 4, topicsTotal: 4, lastStudied: '1 month ago' },
+];
+
 export const practiceQuestions = [
   {
     id: 'q1',
