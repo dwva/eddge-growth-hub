@@ -225,12 +225,15 @@ const StudentHome = () => {
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
                   <Button
                     variant="outline"
-                    className="h-auto py-4 px-4 flex flex-col items-center gap-1.5 rounded-xl border-gray-200 hover:border-primary hover:bg-primary/5 transition-all duration-200 hover:shadow-sm group"
+                    className="relative h-auto py-4 px-4 flex flex-col items-center gap-1.5 rounded-xl border-gray-200 hover:border-primary hover:bg-primary/5 transition-all duration-200 hover:shadow-sm group overflow-visible"
                     onClick={() => navigate('/student/homework')}
                   >
+                    <span className="absolute -top-1 -right-1 min-w-[1.25rem] h-5 px-1 flex items-center justify-center rounded-full bg-red-500 text-white text-xs font-semibold shadow-md ring-2 ring-white">
+                      2
+                    </span>
                     <FileText className="w-6 h-6 text-primary transition-transform duration-200 group-hover:scale-110" />
                     <span className="text-sm font-medium">Homework</span>
-                    <span className="text-xs text-gray-500">2 pending</span>
+                    <span className="text-xs text-amber-600 font-medium">2 pending</span>
                   </Button>
                   <Button
                     variant="outline"
