@@ -1,10 +1,9 @@
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import StudentDashboardLayout from '@/components/layout/StudentDashboardLayout';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { 
-  Zap,
   BookOpen,
   Calculator,
   Atom,
@@ -14,47 +13,11 @@ import {
   CheckCircle,
   MessageSquare,
   FileText,
-  Clock,
   CalendarDays,
   Target,
   Award
 } from 'lucide-react';
-import { useAuth } from '@/contexts/AuthContext';
-import { chapters as chaptersData } from '@/data/mockData';
-
-// Subject names for chapter list
-const subjectNames: Record<string, string> = {
-  '1': 'Mathematics',
-  '2': 'Science',
-  '3': 'Aptitude',
-};
-
-// Build flat list of leftover chapters (not completed) from mockData + placeholder Aptitude
-function buildStudiedChapters(): { key: string; subjectId: string; subjectName: string; chapterId: string; chapterName: string; concepts: number; progress: number }[] {
-  const list: { key: string; subjectId: string; subjectName: string; chapterId: string; chapterName: string; concepts: number; progress: number }[] = [];
-  (Object.keys(chaptersData) as (keyof typeof chaptersData)[]).forEach((subjectId) => {
-    const subjectName = subjectNames[subjectId] ?? 'Subject';
-    chaptersData[subjectId].forEach((ch) => {
-      if (!ch.completed) {
-        list.push({
-          key: `${subjectId}-${ch.id}`,
-          subjectId,
-          subjectName,
-          chapterId: ch.id,
-          chapterName: ch.name,
-          concepts: ch.concepts,
-          progress: 0,
-        });
-      }
-    });
-  });
-  // Placeholder leftover chapters for Aptitude (no chapters in mockData)
-  list.push({ key: '3-a1', subjectId: '3', subjectName: 'Aptitude', chapterId: 'a1', chapterName: 'Logical Reasoning', concepts: 6, progress: 0 });
-  list.push({ key: '3-a2', subjectId: '3', subjectName: 'Aptitude', chapterId: 'a2', chapterName: 'Patterns & Sequences', concepts: 5, progress: 0 });
-  return list;
-}
-
-const initialStudiedChapters = buildStudiedChapters();
+import { ContributionHeatmap, type ContributionMap } from '@/components/ContributionHeatmap';
 
 const subjects = [
   { id: 1, name: 'Mathematics', icon: <Calculator className="w-8 h-8" />, color: 'bg-blue-50', iconColor: 'text-blue-500', progress: 65 },
@@ -62,22 +25,28 @@ const subjects = [
   { id: 3, name: 'Aptitude', icon: <Brain className="w-8 h-8" />, color: 'bg-purple-50', iconColor: 'text-purple-500', progress: 72 },
 ];
 
+/** Mock contribution counts per day (homework, practice, learning, etc.). More activity = deeper purple; contributes to XP. */
+function getMockContributions(): ContributionMap {
+  const map: ContributionMap = {};
+  const year = new Date().getFullYear();
+  const today = new Date();
+  for (let d = new Date(year, 0, 1); d <= today; d.setDate(d.getDate() + 1)) {
+    const key = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+    const dayOfWeek = d.getDay();
+    const isWeekend = dayOfWeek === 0 || dayOfWeek === 6;
+    const daysAgo = Math.floor((today.getTime() - d.getTime()) / 86400000);
+    if (daysAgo > 60) continue;
+    if (isWeekend) map[key] = Math.random() > 0.6 ? 1 : 0;
+    else map[key] = Math.floor(Math.random() * 5) + 1;
+  }
+  return map;
+}
+
 const StudentHome = () => {
-  const { user } = useAuth();
   const navigate = useNavigate();
   const [completedSuggestions, setCompletedSuggestions] = useState<string[]>([]);
-  const [studiedChapters, setStudiedChapters] = useState(initialStudiedChapters);
   const [showAllAiSuggestions, setShowAllAiSuggestions] = useState(false);
-
-  const handleStudiedAgain = (key: string) => {
-    setStudiedChapters((prev) => {
-      const idx = prev.findIndex((c) => c.key === key);
-      if (idx <= 0) return prev;
-      const item = prev[idx];
-      return [item, ...prev.slice(0, idx), ...prev.slice(idx + 1)];
-    });
-    navigate('/student/learning');
-  };
+  const contributions = useMemo(() => getMockContributions(), []);
 
   // Calculate overall progress from subjects
   const overallProgress = Math.round(
@@ -118,7 +87,7 @@ const StudentHome = () => {
                       3 tasks · 1 practice · 45 mins
                     </p>
                     <p className="text-white/70 text-xs mt-1 max-w-sm">
-                      Focus today: {studiedChapters.length > 0 ? studiedChapters.slice(0, 2).map((c) => c.chapterName).join(' + ') : 'Pick a topic to start'}
+                      Focus today: Pick a topic to start
                     </p>
                   </div>
                   
@@ -214,11 +183,11 @@ const StudentHome = () => {
             <ArrowRight className="w-4 h-4 text-gray-400" />
           </div>
 
-          {/* Main Content Grid - Left (Quick actions + Continue Learn) + Right (AI Study Suggestions) */}
+          {/* Main Content Grid - Left (Quick actions + Contributions) + Right (AI Study Suggestions) */}
           <div className="grid grid-cols-1 lg:grid-cols-[1fr_340px] gap-6 items-stretch">
             
-            {/* Left Column - flex so Continue Learn fills space; max-h keeps section from touching bottom */}
-            <div className="flex flex-col gap-6 min-h-0 max-h-[460px]">
+            {/* Left Column - Quick actions then Contribution heatmap (where Continue Learn was) */}
+            <div className="flex flex-col gap-6">
               {/* Quick actions - 3 buttons */}
               <div className="rounded-2xl border border-gray-100 bg-white shadow-sm p-4 flex-shrink-0">
                 <h3 className="text-base font-semibold text-gray-900 mb-4">Quick actions</h3>
@@ -256,50 +225,13 @@ const StudentHome = () => {
                 </div>
               </div>
 
-              {/* Continue Learn - fills remaining height, bottom aligns with AI Suggestions */}
-              <div className="flex-1 flex flex-col min-h-0">
-                <div 
-                  className="rounded-2xl border border-gray-100 bg-white shadow-sm overflow-hidden h-full flex flex-col min-h-0"
-                  style={{ scrollBehavior: 'smooth' }}
-                >
-                  <div className="flex items-center justify-between px-4 pt-4 pb-3 border-b border-gray-50 flex-shrink-0">
-                    <h3 className="text-base font-semibold text-gray-900">Continue Learn</h3>
-                    <button 
-                      className="flex items-center gap-1 text-xs text-gray-500 hover:text-primary transition-colors"
-                      onClick={() => navigate('/student/learning')}
-                    >
-                      View All <ArrowRight className="w-3.5 h-3.5" />
-                    </button>
-                  </div>
-                  <div className="flex-1 min-h-0 overflow-y-auto overflow-x-hidden scroll-smooth py-1 pr-1 [scrollbar-gutter:stable]">
-                    {studiedChapters.map((item) => (
-                      <button
-                        key={item.key}
-                        type="button"
-                        className="w-full flex items-center justify-between gap-3 px-4 py-3 rounded-xl hover:bg-gray-50 transition-colors text-left group"
-                        onClick={() => handleStudiedAgain(item.key)}
-                      >
-                        <div className="min-w-0 flex-1">
-                          <p className="text-sm font-medium text-gray-900 truncate">
-                            {item.subjectName} · {item.chapterName}
-                          </p>
-                          <div className="flex items-center gap-2 mt-1.5">
-                            <div className="flex-1 min-w-0 h-2 bg-gray-200 rounded-full overflow-hidden">
-                              <div
-                                className="h-full bg-primary rounded-full min-w-[2px] transition-[width] duration-300"
-                                style={{ width: `${item.progress}%` }}
-                              />
-                            </div>
-                            <span className="text-xs text-gray-500 whitespace-nowrap">
-                              {item.progress}% complete · {item.concepts} concepts
-                            </span>
-                          </div>
-                        </div>
-                        <ArrowRight className="w-4 h-4 text-gray-400 flex-shrink-0 group-hover:translate-x-0.5 transition-transform" />
-                      </button>
-                    ))}
-                  </div>
-                </div>
+              {/* Contribution heatmap – daily activity (tasks, practice, learning) boosts XP */}
+              <div className="rounded-2xl border border-gray-100 bg-white shadow-sm p-4 flex-1 min-h-0">
+                <ContributionHeatmap
+                  contributions={contributions}
+                  onLearnMore={() => navigate('/student/help')}
+                  variant="light"
+                />
               </div>
             </div>
 
