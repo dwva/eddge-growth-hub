@@ -125,13 +125,9 @@ const StudentAnnouncements = () => {
     }
   };
 
-  const getPriorityColor = (priority: Priority) => {
-    switch (priority) {
-      case 'high': return 'border-l-red-500';
-      case 'medium': return 'border-l-amber-500';
-      case 'low': return 'border-l-green-500';
-      default: return 'border-l-gray-300';
-    }
+  const getPriorityColor = (_priority: Priority) => {
+    // Priority color no longer shown on the left edge – keep for API compatibility.
+    return '';
   };
 
   const shouldShowNewBadge = (announcement: Announcement) => {
@@ -143,15 +139,25 @@ const StudentAnnouncements = () => {
   };
 
   const filterByTab = (tab: 'all' | 'events' | 'notices' | 'holidays' | 'completed') => {
+    const now = new Date();
+
     switch (tab) {
       case 'events':
-        return announcements.filter((a) => a.type === 'event' || a.type === 'meeting');
+        // Only upcoming events/meetings
+        return announcements.filter((a) => {
+          const d = new Date(a.date);
+          return d >= now && (a.type === 'event' || a.type === 'meeting');
+        });
       case 'notices':
         return announcements.filter((a) => a.type === 'notice');
       case 'holidays':
-        return announcements.filter((a) => a.type === 'holiday');
-      case 'completed': {
-        const now = new Date();
+        // Only upcoming holidays
+        return announcements.filter((a) => {
+          const d = new Date(a.date);
+          return d >= now && a.type === 'holiday';
+        });
+      case 'completed':
+        // All past events / meetings / holidays
         return announcements.filter((a) => {
           const d = new Date(a.date);
           return (
@@ -159,7 +165,6 @@ const StudentAnnouncements = () => {
             (a.type === 'event' || a.type === 'meeting' || a.type === 'holiday')
           );
         });
-      }
       default:
         return announcements;
     }
@@ -436,40 +441,72 @@ const StudentAnnouncements = () => {
                     : 'Event / Notice'}
                 </DialogDescription>
               </DialogHeader>
-              <div className="space-y-3 text-sm">
-                <p className="text-muted-foreground">{selectedAnnouncement.description}</p>
-                <div className="flex flex-wrap gap-3 text-xs text-muted-foreground">
-                  <span className="inline-flex items-center gap-1">
-                    <Calendar className="w-3.5 h-3.5" />
-                    {new Date(selectedAnnouncement.date).toLocaleDateString('en-US', {
-                      weekday: 'long',
-                      month: 'short',
-                      day: 'numeric',
-                      year: 'numeric',
-                    })}
-                  </span>
-                  {selectedAnnouncement.time && (
-                    <span className="inline-flex items-center gap-1">
-                      <Clock className="w-3.5 h-3.5" />
-                      {selectedAnnouncement.time}
-                    </span>
-                  )}
-                  {selectedAnnouncement.location && (
-                    <span className="inline-flex items-center gap-1">
-                      <MapPin className="w-3.5 h-3.5" />
-                      {selectedAnnouncement.location}
-                    </span>
-                  )}
-                </div>
-                <div className="flex flex-wrap gap-2">
-                  <Badge className={getTypeColor(selectedAnnouncement.type)}>
-                    {selectedAnnouncement.type}
-                  </Badge>
-                  {new Date(selectedAnnouncement.date) < today && (
-                    <Badge className="bg-gray-100 text-gray-700 border border-gray-200">
-                      Completed
-                    </Badge>
-                  )}
+              <div className="space-y-4 text-base">
+                <p className="text-muted-foreground leading-relaxed text-[15px]">
+                  {selectedAnnouncement.description}
+                </p>
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm text-muted-foreground">
+                  <div className="space-y-1">
+                    <p className="font-semibold text-[11px] uppercase tracking-wide text-gray-500">
+                      Schedule
+                    </p>
+                    <div className="flex flex-col gap-1">
+                      <span className="inline-flex items-center gap-1.5">
+                        <Calendar className="w-3.5 h-3.5" />
+                        {new Date(selectedAnnouncement.date).toLocaleDateString('en-US', {
+                          weekday: 'long',
+                          month: 'short',
+                          day: 'numeric',
+                          year: 'numeric',
+                        })}
+                      </span>
+                      {selectedAnnouncement.time && (
+                        <span className="inline-flex items-center gap-1.5">
+                          <Clock className="w-3.5 h-3.5" />
+                          {selectedAnnouncement.time}
+                        </span>
+                      )}
+                      {selectedAnnouncement.location && (
+                        <span className="inline-flex items-center gap-1.5">
+                          <MapPin className="w-3.5 h-3.5" />
+                          {selectedAnnouncement.location}
+                        </span>
+                      )}
+                    </div>
+                  </div>
+
+                  <div className="space-y-1">
+                    <p className="font-semibold text-[11px] uppercase tracking-wide text-gray-500">
+                      Meta
+                    </p>
+                    <div className="flex flex-wrap gap-2 items-center">
+                      <Badge className={getTypeColor(selectedAnnouncement.type)}>
+                        {selectedAnnouncement.type}
+                      </Badge>
+                      <Badge variant="outline" className="text-[11px]">
+                        Priority: {selectedAnnouncement.priority}
+                      </Badge>
+                      {new Date(selectedAnnouncement.date) < today ? (
+                        <Badge className="bg-gray-100 text-gray-700 border border-gray-200">
+                          Status: Completed
+                        </Badge>
+                      ) : (
+                        <Badge className="bg-emerald-50 text-emerald-700 border border-emerald-200">
+                          Status: Upcoming
+                        </Badge>
+                      )}
+                    </div>
+                    <p className="mt-2 text-[11px] text-muted-foreground">
+                      Added to portal on{' '}
+                      {new Date(selectedAnnouncement.createdAt).toLocaleDateString('en-US', {
+                        month: 'short',
+                        day: 'numeric',
+                        year: 'numeric',
+                      })}
+                      .
+                    </p>
+                  </div>
                 </div>
               </div>
             </DialogContent>
@@ -506,7 +543,6 @@ const AnnouncementCard = ({
       className={`
         group relative cursor-pointer border border-gray-100
         hover:shadow-md transition-shadow
-        border-l-4 ${getPriorityColor(announcement.priority)}
       `}
       onClick={() => onSelect(announcement)}
     >
@@ -531,21 +567,11 @@ const AnnouncementCard = ({
                   </Badge>
                 )}
               </div>
-              <p className="text-sm text-muted-foreground line-clamp-2">
+              <p className="text-base text-muted-foreground">
                 {announcement.description}
               </p>
 
-              {/* AI insight strip for important items */}
-              {isImportant && (
-                <div className="mt-2 rounded-lg bg-primary/5 px-3 py-1.5 text-[11px] text-primary flex items-center gap-1.5">
-                  <span className="font-semibold">AI tip:</span>
-                  <span className="text-primary/80">
-                    Attendance recommended based on your progress and upcoming plans.
-                  </span>
-                </div>
-              )}
-
-              <div className="flex items-center gap-4 mt-2 text-xs text-muted-foreground flex-wrap">
+              <div className="flex items-center gap-4 mt-2 text-[13px] text-muted-foreground flex-wrap">
                 <span className="flex items-center gap-1">
                   <Calendar className="w-3 h-3" />
                   {new Date(announcement.date).toLocaleDateString('en-US', { 
