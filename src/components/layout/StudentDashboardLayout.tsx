@@ -5,7 +5,7 @@ import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Input } from '@/components/ui/input';
-import { Menu, Bell, MessageSquare, Settings, LogOut, Search, SlidersHorizontal } from 'lucide-react';
+import { Menu, Bell, Settings, LogOut, Search, SlidersHorizontal, HelpCircle } from 'lucide-react';
 import StudentSidebar from './StudentSidebar';
 import { useAuth } from '@/contexts/AuthContext';
 import { useNavigate } from 'react-router-dom';
@@ -48,7 +48,7 @@ const StudentDashboardLayout = ({ children }: StudentDashboardLayoutProps) => {
       {/* Main Content */}
       <div className="flex-1 flex flex-col min-w-0 min-h-0 overflow-hidden">
         {/* Top Bar - Planti style */}
-        <header className="h-20 bg-white px-6 md:px-8 flex items-center justify-between sticky top-0 z-10 flex-shrink-0">
+        <header className="h-20 bg-white px-6 md:px-8 flex items-center justify-between sticky top-0 z-10 flex-shrink-0 border-b border-transparent">
           {/* Left: Welcome Text */}
           <div className="flex items-center gap-4">
             {/* Mobile Menu */}
@@ -93,13 +93,15 @@ const StudentDashboardLayout = ({ children }: StudentDashboardLayoutProps) => {
           
           {/* Right: Icons + Avatar - Planti style */}
           <div className="flex items-center gap-2">
-            {/* Messages */}
-            <Button 
-              variant="ghost" 
-              size="icon" 
+            {/* Help */}
+            <Button
+              variant="ghost"
+              size="icon"
               className="h-10 w-10 hover:bg-gray-100 rounded-xl"
+              onClick={() => navigate('/student/help')}
+              aria-label="Help"
             >
-              <MessageSquare className="w-5 h-5 text-gray-500" />
+              <HelpCircle className="w-5 h-5 text-gray-500" />
             </Button>
 
             {/* Notifications */}
@@ -124,8 +126,8 @@ const StudentDashboardLayout = ({ children }: StudentDashboardLayoutProps) => {
                   </Avatar>
                 </button>
               </PopoverTrigger>
-              <PopoverContent className="w-64 p-0 bg-white rounded-xl shadow-lg border-0" align="end">
-                <div className="p-4 border-b border-gray-100">
+              <PopoverContent className="w-64 p-0 bg-white dark:bg-card rounded-xl shadow-lg border-0 dark:border-border" align="end">
+                <div className="p-4 border-b border-gray-100 dark:border-border">
                   <div className="flex items-center gap-3">
                     <Avatar className="w-12 h-12 border-2 border-primary/20">
                       <AvatarImage src="" />
@@ -134,8 +136,8 @@ const StudentDashboardLayout = ({ children }: StudentDashboardLayoutProps) => {
                       </AvatarFallback>
                     </Avatar>
                     <div className="flex-1 min-w-0">
-                      <p className="text-sm font-medium text-gray-900 truncate">{user?.name || 'Student'}</p>
-                      <p className="text-xs text-gray-500 truncate">{user?.email || 'student@eddge.com'}</p>
+                      <p className="text-sm font-medium text-gray-900 dark:text-foreground truncate">{user?.name || 'Student'}</p>
+                      <p className="text-xs text-gray-500 dark:text-muted-foreground truncate">{user?.email || 'student@eddge.com'}</p>
                       <p className="text-xs text-primary font-medium mt-0.5">Class 9 • CBSE</p>
                     </div>
                   </div>
@@ -143,14 +145,14 @@ const StudentDashboardLayout = ({ children }: StudentDashboardLayoutProps) => {
                 <div className="p-2">
                   <button 
                     onClick={() => navigate('/student/settings')}
-                    className="w-full flex items-center gap-3 px-3 py-2.5 text-sm rounded-lg hover:bg-gray-50 transition-colors text-gray-700"
+                    className="w-full flex items-center gap-3 px-3 py-2.5 text-sm rounded-lg hover:bg-gray-50 dark:hover:bg-muted transition-colors text-gray-700 dark:text-foreground"
                   >
                     <Settings className="w-4 h-4" />
                     Settings
                   </button>
                   <button 
                     onClick={handleLogout}
-                    className="w-full flex items-center gap-3 px-3 py-2.5 text-sm rounded-lg hover:bg-red-50 transition-colors text-red-600"
+                    className="w-full flex items-center gap-3 px-3 py-2.5 text-sm rounded-lg hover:bg-red-50 dark:hover:bg-red-950/30 transition-colors text-red-600"
                   >
                     <LogOut className="w-4 h-4" />
                     Logout

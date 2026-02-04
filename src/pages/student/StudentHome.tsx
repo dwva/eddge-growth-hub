@@ -71,7 +71,7 @@ const StudentHome = () => {
           <div className="grid grid-cols-1 lg:grid-cols-[1fr_360px] gap-4 items-stretch">
             
             {/* Hero Card - Today's Focus (flexible width) */}
-            <Card className="relative overflow-hidden border-0 shadow-sm rounded-3xl bg-gradient-to-br from-primary via-primary to-purple-700 min-w-0">
+            <Card className="relative overflow-hidden border-0 dark:border dark:border-white/10 shadow-sm rounded-3xl bg-gradient-to-br from-primary via-primary to-purple-700 min-w-0">
                 {/* Decorative elements - balanced, not distracting */}
                 <div className="absolute top-0 right-0 w-48 h-48 bg-white/5 rounded-full -translate-y-1/4 translate-x-1/4" />
                 <div className="absolute top-1/2 right-1/4 w-32 h-32 bg-white/5 rounded-full" />
@@ -111,38 +111,38 @@ const StudentHome = () => {
             </Card>
 
             {/* Stats Card - My Stats (fixed width) */}
-            <Card className="relative overflow-hidden border-0 shadow-sm rounded-3xl bg-gradient-to-br from-amber-100 via-amber-50 to-orange-100 min-w-0">
+            <Card className="relative overflow-hidden border-0 shadow-sm rounded-3xl bg-gradient-to-br from-amber-100 via-amber-50 to-orange-100 dark:from-card dark:via-card dark:to-card dark:border dark:border-border min-w-0">
               {/* Decorative elements - balanced */}
-              <div className="absolute -top-6 -right-6 w-24 h-24 bg-primary/10 rounded-full" />
-              <div className="absolute bottom-0 right-0 w-40 h-40 bg-orange-200/50 rounded-full translate-y-1/3 translate-x-1/4" />
+              <div className="absolute -top-6 -right-6 w-24 h-24 bg-primary/10 dark:bg-primary/20 rounded-full" />
+              <div className="absolute bottom-0 right-0 w-40 h-40 bg-orange-200/50 dark:bg-primary/10 rounded-full translate-y-1/3 translate-x-1/4" />
               
               <CardContent className="relative p-8 flex flex-col justify-between h-full min-h-[240px]">
                 {/* Top section - Title aligned with Today's Focus */}
                 <div className="pt-2">
-                  <h3 className="text-lg font-semibold text-gray-900 leading-tight">My Stats</h3>
+                  <h3 className="text-lg font-semibold text-gray-900 dark:text-foreground leading-tight">My Stats</h3>
                   
                   {/* Stats row - evenly aligned */}
                   <div className="flex gap-10 mt-4">
                     <div>
-                      <p className="text-xs text-gray-500">Today</p>
-                      <p className="text-xl font-semibold text-gray-900 mt-1">2.5 hrs</p>
+                      <p className="text-xs text-gray-500 dark:text-muted-foreground">Today</p>
+                      <p className="text-xl font-semibold text-gray-900 dark:text-foreground mt-1">2.5 hrs</p>
                     </div>
                     <div>
-                      <p className="text-xs text-gray-500">This Week</p>
-                      <p className="text-xl font-semibold text-gray-900 mt-1">12 hrs</p>
+                      <p className="text-xs text-gray-500 dark:text-muted-foreground">This Week</p>
+                      <p className="text-xl font-semibold text-gray-900 dark:text-foreground mt-1">12 hrs</p>
                     </div>
                   </div>
                   
                   {/* Streak - aligned with stats content */}
                   <div className="flex items-center gap-1.5 mt-3">
-                    <Flame className="w-4 h-4 text-orange-500" />
-                    <span className="text-xs font-medium text-gray-700">7 day streak</span>
+                    <Flame className="w-4 h-4 text-orange-500 dark:text-orange-400" />
+                    <span className="text-xs font-medium text-gray-700 dark:text-muted-foreground">7 day streak</span>
                   </div>
                 </div>
                 
                 {/* Bottom section - CTA aligned with buttons baseline */}
                 <button 
-                  className="flex items-center gap-2 text-sm font-medium text-gray-700 hover:text-primary transition-colors group pt-6"
+                  className="flex items-center gap-2 text-sm font-medium text-gray-700 dark:text-muted-foreground hover:text-primary transition-colors group pt-6"
                   onClick={() => navigate('/student/performance')}
                 >
                   Go to my progress
@@ -154,7 +154,7 @@ const StudentHome = () => {
 
           {/* Overall Progress Tracker Bar */}
           <div 
-            className="bg-white rounded-2xl shadow-sm border border-gray-100 px-5 py-4 flex items-center justify-between cursor-pointer"
+            className="bg-white dark:bg-card rounded-2xl shadow-sm border border-gray-100 dark:border-border px-5 py-4 flex items-center justify-between cursor-pointer"
             onClick={() => navigate('/student/performance')}
           >
             {/* Left section - Icon and text */}
@@ -163,24 +163,24 @@ const StudentHome = () => {
                 <Target className="w-5 h-5 text-white" />
               </div>
               <div>
-                <p className="text-sm font-medium text-gray-900">Syllabus Completion – {overallProgress}%</p>
-                <p className="text-xs text-gray-500 mt-0.5">{getProgressMessage(overallProgress)}</p>
+                <p className="text-sm font-medium text-gray-900 dark:text-foreground">Syllabus Completion – {overallProgress}%</p>
+                <p className="text-xs text-gray-500 dark:text-muted-foreground mt-0.5">{getProgressMessage(overallProgress)}</p>
               </div>
             </div>
             
             {/* Center section - Progress bar */}
             <div className="flex items-center gap-4 flex-1 max-w-lg mx-8">
-              <div className="flex-1 h-2.5 bg-gray-100 rounded-full overflow-hidden">
+              <div className="flex-1 h-2.5 bg-gray-100 dark:bg-muted rounded-full overflow-hidden">
                 <div 
                   className="h-full bg-gradient-to-r from-primary to-purple-500 rounded-full"
                   style={{ width: `${overallProgress}%` }}
                 />
               </div>
-              <span className="text-sm font-semibold text-gray-700">{overallProgress}%</span>
+              <span className="text-sm font-semibold text-gray-700 dark:text-foreground">{overallProgress}%</span>
             </div>
             
             {/* Right section - Arrow */}
-            <ArrowRight className="w-4 h-4 text-gray-400" />
+            <ArrowRight className="w-4 h-4 text-gray-400 dark:text-muted-foreground" />
           </div>
 
           {/* Main Content Grid - Left (Quick actions + Contributions) + Right (AI Study Suggestions) */}
@@ -189,38 +189,38 @@ const StudentHome = () => {
             {/* Left Column - Quick actions then Contribution heatmap (where Continue Learn was) */}
             <div className="flex flex-col gap-6">
               {/* Quick actions - 3 buttons */}
-              <div className="rounded-2xl border border-gray-100 bg-white shadow-sm p-4 flex-shrink-0">
-                <h3 className="text-base font-semibold text-gray-900 mb-4">Quick actions</h3>
+              <div className="rounded-2xl border border-gray-100 dark:border-border bg-white dark:bg-card shadow-sm p-4 flex-shrink-0">
+                <h3 className="text-base font-semibold text-gray-900 dark:text-foreground mb-4">Quick actions</h3>
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
                   <Button
                     variant="outline"
-                    className="relative h-auto py-4 px-4 flex flex-col items-center gap-1.5 rounded-xl border-gray-200 hover:border-primary hover:bg-primary/5 transition-all duration-200 hover:shadow-sm group overflow-visible"
+                    className="relative h-auto py-4 px-4 flex flex-col items-center gap-1.5 rounded-xl border-gray-200 dark:border-border hover:border-primary hover:bg-primary/5 dark:hover:bg-primary/10 transition-all duration-200 hover:shadow-sm group overflow-visible"
                     onClick={() => navigate('/student/homework')}
                   >
-                    <span className="absolute -top-1 -right-1 min-w-[1.25rem] h-5 px-1 flex items-center justify-center rounded-full bg-red-500 text-white text-xs font-semibold shadow-md ring-2 ring-white">
+                    <span className="absolute -top-1 -right-1 min-w-[1.25rem] h-5 px-1 flex items-center justify-center rounded-full bg-red-500 text-white text-xs font-semibold shadow-md ring-2 ring-white dark:ring-card">
                       2
                     </span>
                     <FileText className="w-6 h-6 text-primary transition-transform duration-200 group-hover:scale-110" />
-                    <span className="text-sm font-medium">Homework</span>
-                    <span className="text-xs text-amber-600 font-medium">2 pending</span>
+                    <span className="text-sm font-medium text-gray-900 dark:text-foreground">Homework</span>
+                    <span className="text-xs text-amber-600 dark:text-amber-400 font-medium">2 pending</span>
                   </Button>
                   <Button
                     variant="outline"
-                    className="h-auto py-4 px-4 flex flex-col items-center gap-1.5 rounded-xl border-gray-200 hover:border-primary hover:bg-primary/5 transition-all duration-200 hover:shadow-sm group"
+                    className="h-auto py-4 px-4 flex flex-col items-center gap-1.5 rounded-xl border-gray-200 dark:border-border hover:border-primary hover:bg-primary/5 dark:hover:bg-primary/10 transition-all duration-200 hover:shadow-sm group"
                     onClick={() => navigate('/student/doubt-solver')}
                   >
-                    <MessageSquare className="w-6 h-6 text-amber-600 transition-transform duration-200 group-hover:scale-110" />
-                    <span className="text-sm font-medium">Ask Doubt</span>
-                    <span className="text-xs text-gray-500">Ready</span>
+                    <MessageSquare className="w-6 h-6 text-amber-600 dark:text-amber-400 transition-transform duration-200 group-hover:scale-110" />
+                    <span className="text-sm font-medium text-gray-900 dark:text-foreground">Ask Doubt</span>
+                    <span className="text-xs text-gray-500 dark:text-muted-foreground">Ready</span>
                   </Button>
                   <Button
                     variant="outline"
-                    className="h-auto py-4 px-4 flex flex-col items-center gap-1.5 rounded-xl border-gray-200 hover:border-primary hover:bg-primary/5 transition-all duration-200 hover:shadow-sm group"
+                    className="h-auto py-4 px-4 flex flex-col items-center gap-1.5 rounded-xl border-gray-200 dark:border-border hover:border-primary hover:bg-primary/5 dark:hover:bg-primary/10 transition-all duration-200 hover:shadow-sm group"
                     onClick={() => navigate('/student/achievements')}
                   >
-                    <Award className="w-6 h-6 text-emerald-600 transition-transform duration-200 group-hover:scale-110" />
-                    <span className="text-sm font-medium">Achievements</span>
-                    <span className="text-xs text-gray-500">3 earned</span>
+                    <Award className="w-6 h-6 text-emerald-600 dark:text-emerald-400 transition-transform duration-200 group-hover:scale-110" />
+                    <span className="text-sm font-medium text-gray-900 dark:text-foreground">Achievements</span>
+                    <span className="text-xs text-gray-500 dark:text-muted-foreground">3 earned</span>
                   </Button>
                 </div>
               </div>
@@ -237,14 +237,14 @@ const StudentHome = () => {
 
             {/* Right Column - AI Study Suggestions (same row height as left); reduced height */}
             <div className="lg:pl-2 flex flex-col min-h-0 max-h-[460px]">
-              <Card className="border border-gray-100 shadow-sm rounded-2xl bg-white flex-1 flex flex-col min-h-0">
+              <Card className="border border-gray-100 dark:border-border shadow-sm rounded-2xl bg-white dark:bg-card flex-1 flex flex-col min-h-0">
                 <CardContent className="p-6 flex flex-col flex-1 min-h-0">
                   <div className="mb-4 flex-shrink-0">
-                    <h3 className="text-sm font-medium text-gray-700 flex items-center gap-2">
+                    <h3 className="text-sm font-medium text-gray-700 dark:text-foreground flex items-center gap-2">
                       <Brain className="w-3.5 h-3.5 text-primary" />
                       AI Study Suggestions
                     </h3>
-                    <p className="text-xs text-gray-500 mt-0.5">
+                    <p className="text-xs text-gray-500 dark:text-muted-foreground mt-0.5">
                       Based on your recent learning
                     </p>
                   </div>
@@ -298,19 +298,19 @@ const StudentHome = () => {
                         <button
                           key={suggestion.id}
                           type="button"
-                          className={`w-full flex items-center justify-between gap-4 px-4 py-3 rounded-xl text-left min-h-[52px] transition-colors ${isCompleted ? 'bg-gray-50' : 'hover:bg-gray-50'}`}
+                          className={`w-full flex items-center justify-between gap-4 px-4 py-3 rounded-xl text-left min-h-[52px] transition-colors ${isCompleted ? 'bg-gray-50 dark:bg-muted' : 'hover:bg-gray-50 dark:hover:bg-muted'}`}
                           onClick={handleClick}
                         >
                           <div className="flex items-center gap-3 min-w-0 flex-1">
-                            <div className="w-8 h-8 rounded-full bg-gray-100 flex items-center justify-center flex-shrink-0">
+                            <div className="w-8 h-8 rounded-full bg-gray-100 dark:bg-muted flex items-center justify-center flex-shrink-0">
                               {suggestion.icon}
                             </div>
                             <div className="min-w-0">
-                              <p className="text-sm font-medium text-gray-900 leading-snug text-left truncate">{suggestion.label}</p>
-                              <p className="text-xs text-gray-500 mt-0.5">{suggestion.priority}{isCompleted && ' • Completed'}</p>
+                              <p className="text-sm font-medium text-gray-900 dark:text-foreground leading-snug text-left truncate">{suggestion.label}</p>
+                              <p className="text-xs text-gray-500 dark:text-muted-foreground mt-0.5">{suggestion.priority}{isCompleted && ' • Completed'}</p>
                             </div>
                           </div>
-                          {isCompleted ? <CheckCircle className="w-4 h-4 text-emerald-500 flex-shrink-0" /> : <ArrowRight className="w-4 h-4 text-gray-400 flex-shrink-0" />}
+                          {isCompleted ? <CheckCircle className="w-4 h-4 text-emerald-500 flex-shrink-0" /> : <ArrowRight className="w-4 h-4 text-gray-400 dark:text-muted-foreground flex-shrink-0" />}
                         </button>
                       );
                     };
@@ -323,7 +323,7 @@ const StudentHome = () => {
                         <div className="flex-1 min-h-0 flex flex-col">
                           <button
                             type="button"
-                            className="text-xs font-medium text-gray-500 hover:text-primary transition-colors mb-2 flex-shrink-0 text-left"
+                            className="text-xs font-medium text-gray-500 dark:text-muted-foreground hover:text-primary transition-colors mb-2 flex-shrink-0 text-left"
                             onClick={() => setShowAllAiSuggestions((v) => !v)}
                           >
                             {showAllAiSuggestions ? 'Show less' : `View all (${restSuggestions.length})`}

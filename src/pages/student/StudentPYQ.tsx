@@ -265,13 +265,13 @@ const StudentPYQ = () => {
             placeholder="Search by paper name"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="pl-10 rounded-xl border-gray-200 bg-white"
+            className="pl-10 rounded-xl border-gray-200 dark:border-border bg-white dark:bg-card"
           />
         </div>
 
         {/* 3 Widgets: Subject, Year, Status */}
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-          <Card className="border-gray-100 bg-white shadow-sm rounded-2xl overflow-hidden">
+          <Card className="border-gray-100 dark:border-border bg-white dark:bg-card shadow-sm rounded-2xl overflow-hidden">
             <CardContent className="p-0">
               <div className="flex items-center gap-3 px-4 py-3 border-b border-gray-50">
                 <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center">
@@ -299,7 +299,7 @@ const StudentPYQ = () => {
             </CardContent>
           </Card>
 
-          <Card className="border-gray-100 bg-white shadow-sm rounded-2xl overflow-hidden">
+          <Card className="border-gray-100 dark:border-border bg-white dark:bg-card shadow-sm rounded-2xl overflow-hidden">
             <CardContent className="p-0">
               <div className="flex items-center gap-3 px-4 py-3 border-b border-gray-50">
                 <div className="w-10 h-10 rounded-xl bg-violet-100 flex items-center justify-center">
@@ -327,7 +327,7 @@ const StudentPYQ = () => {
             </CardContent>
           </Card>
 
-          <Card className="border-gray-100 bg-white shadow-sm rounded-2xl overflow-hidden">
+          <Card className="border-gray-100 dark:border-border bg-white dark:bg-card shadow-sm rounded-2xl overflow-hidden">
             <CardContent className="p-0">
               <div className="flex items-center gap-3 px-4 py-3 border-b border-gray-50">
                 <div className="w-10 h-10 rounded-xl bg-green-100 flex items-center justify-center">
@@ -363,7 +363,7 @@ const StudentPYQ = () => {
             {filteredPapers.map((paper) => (
               <Card
                 key={paper.id}
-                className="border-gray-100 bg-white shadow-sm rounded-2xl overflow-hidden hover:shadow-md transition-shadow"
+                className="border-gray-100 dark:border-border bg-white dark:bg-card shadow-sm rounded-2xl overflow-hidden hover:shadow-md transition-shadow"
               >
                 <CardContent className="p-5">
                   <div className="flex flex-col lg:flex-row lg:items-center gap-4">
@@ -451,7 +451,7 @@ const StudentPYQ = () => {
         </div>
 
         {filteredPapers.length === 0 && (
-          <Card className="border-gray-100 rounded-2xl">
+          <Card className="border-gray-100 dark:border-border rounded-2xl bg-white dark:bg-card">
             <CardContent className="py-12 text-center">
               <FileText className="w-12 h-12 mx-auto text-muted-foreground/50 mb-3" />
               <h3 className="text-sm font-medium text-gray-900 mb-1">No papers found</h3>
@@ -474,7 +474,7 @@ const StudentPYQ = () => {
 
         {/* 5. Smart Practice Modal */}
         <Dialog open={!!smartPracticePaperId} onOpenChange={() => closeSmartPractice()}>
-          <DialogContent className="sm:max-w-md rounded-2xl border-gray-100">
+          <DialogContent className="sm:max-w-md rounded-2xl border-gray-100 dark:border-border">
             <DialogHeader>
               <DialogTitle className="flex items-center gap-2">
                 <Sparkles className="w-5 h-5 text-primary" />
@@ -545,7 +545,7 @@ const StudentPYQ = () => {
 
         {/* 6. Post-Practice Feedback (mock – shown after Smart Practice option) */}
         <Dialog open={showFeedback} onOpenChange={setShowFeedback}>
-          <DialogContent className="sm:max-w-md rounded-2xl border-gray-100">
+          <DialogContent className="sm:max-w-md rounded-2xl border-gray-100 dark:border-border">
             <DialogHeader>
               <DialogTitle className="flex items-center gap-2">
                 <TrendingUp className="w-5 h-5 text-primary" />

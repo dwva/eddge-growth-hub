@@ -116,7 +116,7 @@ const StudentResources = () => {
             placeholder="Search by topic, chapter, or exam keyword"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="pl-10 rounded-xl border-gray-200 bg-white"
+            className="pl-10 rounded-xl border-gray-200 dark:border-border bg-white dark:bg-card"
           />
         </div>
 
@@ -132,8 +132,8 @@ const StudentResources = () => {
                 className={cn(
                   'p-4 rounded-xl border text-left transition-all',
                   selectedSubject === folder.name
-                    ? 'border-primary bg-primary/5'
-                    : 'border-gray-200 bg-white hover:border-primary/30'
+                    ? 'border-primary bg-primary/5 dark:bg-primary/15'
+                    : 'border-gray-200 dark:border-border bg-white dark:bg-card hover:border-primary/30'
                 )}
               >
                 <div
@@ -160,7 +160,7 @@ const StudentResources = () => {
             {filteredResources.map((resource) => (
               <Card
                 key={resource.id}
-                className="border-gray-100 bg-white hover:shadow-sm transition-shadow overflow-hidden"
+                className="border-gray-100 dark:border-border bg-white dark:bg-card hover:shadow-sm transition-shadow overflow-hidden"
               >
                 <CardContent className="p-4">
                   <div className="flex flex-col sm:flex-row gap-4">
@@ -169,7 +169,7 @@ const StudentResources = () => {
                       <img
                         src={resource.cover}
                         alt={resource.title}
-                        className="w-full sm:w-32 h-40 sm:h-44 object-cover rounded-xl border border-gray-100"
+                        className="w-full sm:w-32 h-40 sm:h-44 object-cover rounded-xl border border-gray-100 dark:border-border"
                       />
                     </div>
                     {/* Right: name + details + actions */}
@@ -229,7 +229,7 @@ const StudentResources = () => {
         </div>
 
         {filteredResources.length === 0 && (
-          <div className="rounded-2xl border border-gray-100 bg-gray-50/50 py-12 text-center">
+          <div className="rounded-2xl border border-gray-100 dark:border-border bg-gray-50/50 dark:bg-muted/40 py-12 text-center">
             <p className="text-sm text-muted-foreground">No resources match your filters.</p>
             <button
               type="button"

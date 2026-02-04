@@ -351,7 +351,7 @@ const StudentPlanner = () => {
             <PlannerHeader />
 
             <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-              <TabsList className="max-w-[400px] w-full bg-white border border-gray-200 shadow-sm rounded-xl p-1 h-auto">
+              <TabsList className="max-w-[400px] w-full bg-white dark:bg-card border border-gray-200 dark:border-border shadow-sm rounded-xl p-1 h-auto">
                 <TabsTrigger value="dashboard" className="gap-2 data-[state=active]:bg-purple-500 data-[state=active]:text-white data-[state=active]:shadow-sm rounded-lg px-4 py-2">
                   <LayoutDashboard className="w-4 h-4" />
                   Dashboard
