@@ -7,13 +7,31 @@ import {
   CheckCircle2,
   XCircle,
   Clock,
+  ChevronLeft,
+  ChevronRight,
+  Grid3X3,
+  List,
 } from 'lucide-react';
+import { Button } from '@/components/ui/button';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { useState } from 'react';
 import { attendance } from '@/data/mockData';
 
 const StudentAttendance = () => {
-  const [range, setRange] = useState<'thisMonth' | 'lastMonth'>('thisMonth');
+  const now = new Date();
+  const [viewDate, setViewDate] = useState(new Date(now.getFullYear(), now.getMonth(), 1));
+
+  const goToPrevMonth = () => {
+    setViewDate(new Date(viewDate.getFullYear(), viewDate.getMonth() - 1, 1));
+  };
+
+  const goToNextMonth = () => {
+    setViewDate(new Date(viewDate.getFullYear(), viewDate.getMonth() + 1, 1));
+  };
+
+  const goToToday = () => {
+    setViewDate(new Date(now.getFullYear(), now.getMonth(), 1));
+  };
 
   const getStatusIcon = (status: string) => {
     switch (status) {
@@ -42,13 +60,8 @@ const StudentAttendance = () => {
   };
 
   // Calendar view helpers
-  const now = new Date();
-  const thisMonthDate = new Date(now.getFullYear(), now.getMonth(), 1);
-  const lastMonthDate = new Date(now.getFullYear(), now.getMonth() - 1, 1);
-
-  const viewMonthDate = range === 'lastMonth' ? lastMonthDate : thisMonthDate;
-  const viewYear = viewMonthDate.getFullYear();
-  const viewMonth = viewMonthDate.getMonth(); // 0-11
+  const viewYear = viewDate.getFullYear();
+  const viewMonth = viewDate.getMonth(); // 0-11
 
   const firstDayOfWeek = new Date(viewYear, viewMonth, 1).getDay(); // 0-6 (Sun-Sat)
   const daysInMonth = new Date(viewYear, viewMonth + 1, 0).getDate();
@@ -173,57 +186,118 @@ const StudentAttendance = () => {
                     }}
                   />
                 </div>
+
+                {/* Mini last-7-days strip */}
+                <div className="mt-4 space-y-2">
+                  <div className="flex items-center justify-between text-xs text-muted-foreground">
+                    <span className="font-medium text-gray-700">Last 7 days</span>
+                    <span>
+                      {attendance.recentDays.filter((d) => d.status === 'present').length} present ·{' '}
+                      {attendance.recentDays.filter((d) => d.status === 'absent').length} absent
+                    </span>
+                  </div>
+                  <div className="flex items-center gap-1.5">
+                    {attendance.recentDays.map((day, index) => {
+                      const status = (day as any).status;
+                      const bg =
+                        status === 'present'
+                          ? 'bg-emerald-500'
+                          : status === 'absent'
+                          ? 'bg-rose-500'
+                          : 'bg-muted';
+                      return (
+                        <div
+                          key={index}
+                          className={`h-3 flex-1 rounded-full ${bg}`}
+                          aria-hidden="true"
+                        />
+                      );
+                    })}
+                  </div>
+                </div>
               </div>
             </div>
           </CardContent>
         </Card>
 
         {/* Monthly Attendance Calendar */}
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between gap-3">
-            <CardTitle className="text-lg">Attendance Calendar</CardTitle>
-            <Select value={range} onValueChange={(value) => setRange(value as 'thisMonth' | 'lastMonth')}>
-              <SelectTrigger className="h-8 w-[160px] text-xs">
-                <SelectValue placeholder="This month" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="thisMonth">This month</SelectItem>
-                <SelectItem value="lastMonth">Last month</SelectItem>
-              </SelectContent>
-            </Select>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-4">
-              <div className="flex items-center justify-between text-xs text-muted-foreground">
-                <span className="font-medium">
-                  {viewMonthDate.toLocaleDateString('en-US', {
+        <Card className="overflow-hidden">
+          <CardContent className="p-6">
+            {/* Calendar Header */}
+            <div className="flex items-center justify-between mb-6">
+              <div className="flex items-center gap-2">
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className="h-8 w-8"
+                  onClick={goToPrevMonth}
+                >
+                  <ChevronLeft className="h-4 w-4" />
+                </Button>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="h-8 px-3 text-sm font-medium"
+                  onClick={goToToday}
+                >
+                  Today
+                </Button>
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className="h-8 w-8"
+                  onClick={goToNextMonth}
+                >
+                  <ChevronRight className="h-4 w-4" />
+                </Button>
+                <h2 className="text-xl font-bold text-gray-900 ml-4">
+                  {viewDate.toLocaleDateString('en-US', {
                     month: 'long',
                     year: 'numeric',
                   })}
-                </span>
-                <div className="flex items-center gap-3">
-                  <div className="flex items-center gap-1.5">
-                    <span className="inline-flex h-2.5 w-2.5 rounded-full bg-emerald-500" />
-                    <span>Present</span>
-                  </div>
-                  <div className="flex items-center gap-1.5">
-                    <span className="inline-flex h-2.5 w-2.5 rounded-full bg-rose-500" />
-                    <span>Absent</span>
-                  </div>
+                </h2>
+              </div>
+              <div className="flex items-center gap-2">
+                <Select defaultValue="monthly">
+                  <SelectTrigger className="h-9 w-[130px] text-sm">
+                    <SelectValue placeholder="Monthly" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="monthly">Monthly</SelectItem>
+                  </SelectContent>
+                </Select>
+                <div className="flex items-center border rounded-md">
+                  <Button variant="ghost" size="icon" className="h-9 w-9 rounded-r-none">
+                    <Grid3X3 className="h-4 w-4" />
+                  </Button>
+                  <Button variant="ghost" size="icon" className="h-9 w-9 rounded-l-none border-l">
+                    <List className="h-4 w-4" />
+                  </Button>
                 </div>
               </div>
+            </div>
 
-              <div className="grid grid-cols-7 gap-1 text-[11px] text-muted-foreground mb-1">
+            {/* Calendar Grid */}
+            <div className="border rounded-xl overflow-hidden">
+              {/* Day Headers */}
+              <div className="grid grid-cols-7 border-b bg-white">
                 {['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].map((day) => (
-                  <div key={day} className="text-center font-medium">
+                  <div
+                    key={day}
+                    className="py-3 text-center text-sm font-medium text-gray-600 border-r last:border-r-0"
+                  >
                     {day}
                   </div>
                 ))}
               </div>
 
-              <div className="grid grid-cols-7 gap-1 text-xs">
+              {/* Month grid */}
+              <div className="grid grid-cols-7">
                 {Array.from({ length: firstDayOfWeek }).map((_, index) => (
-                  <div key={`empty-${index}`} className="h-9 rounded-md bg-transparent" />
+                  <div
+                    key={`empty-${index}`}
+                    className="h-20 bg-gray-50/50 border-r border-b last:border-r-0"
+                  />
                 ))}
                 {Array.from({ length: daysInMonth }).map((_, index) => {
                   const day = index + 1;
@@ -233,28 +307,46 @@ const StudentAttendance = () => {
                     viewMonth === now.getMonth() &&
                     day === now.getDate();
 
-                  let bgClass = 'bg-muted';
-                  let textClass = 'text-gray-700';
+                  let cellBg = 'bg-white';
+                  let textColor = 'text-gray-700';
 
                   if (status === 'present' || status === 'late') {
-                    bgClass = 'bg-emerald-500/80';
-                    textClass = 'text-white';
+                    cellBg = 'bg-gradient-to-br from-emerald-400 to-emerald-500';
+                    textColor = 'text-white';
                   } else if (status === 'absent') {
-                    bgClass = 'bg-rose-500/85';
-                    textClass = 'text-white';
+                    cellBg = 'bg-gradient-to-br from-rose-400 to-rose-500';
+                    textColor = 'text-white';
+                  } else if (isToday) {
+                    cellBg = 'bg-amber-50';
                   }
 
                   return (
                     <div
                       key={day}
-                      className={`flex h-9 items-center justify-center rounded-md text-xs ${bgClass} ${textClass} ${
-                        !status ? 'bg-muted/40 text-gray-600' : ''
-                      } ${isToday ? 'ring-2 ring-primary ring-offset-2 ring-offset-background' : ''}`}
+                      className={`h-20 ${cellBg} border-r border-b last:border-r-0 relative`}
                     >
-                      {day}
+                      <span className={`absolute top-2 right-3 text-sm font-medium ${textColor}`}>
+                        {day}
+                      </span>
                     </div>
                   );
                 })}
+              </div>
+            </div>
+
+            {/* Legend */}
+            <div className="flex items-center justify-end gap-4 mt-4 text-xs text-muted-foreground">
+              <div className="flex items-center gap-1.5">
+                <span className="inline-flex h-3 w-3 rounded bg-gradient-to-br from-emerald-400 to-emerald-500" />
+                <span>Present</span>
+              </div>
+              <div className="flex items-center gap-1.5">
+                <span className="inline-flex h-3 w-3 rounded bg-gradient-to-br from-rose-400 to-rose-500" />
+                <span>Absent</span>
+              </div>
+              <div className="flex items-center gap-1.5">
+                <span className="inline-flex h-3 w-3 rounded bg-amber-50 border border-amber-200" />
+                <span>Today</span>
               </div>
             </div>
           </CardContent>
