@@ -139,10 +139,17 @@ export const topPerformers = [
   { id: 'tp5', name: 'Michael Lee', avatar: 'ML', improvement: 3, score: 79 },
 ];
 
-export const upcomingEvents = [
-  { id: 'ue1', title: 'Parent-Teacher Meeting', date: '2026-02-15' },
-  { id: 'ue2', title: 'Science Exhibition', date: '2026-02-20' },
-  { id: 'ue3', title: 'Mid-Term Exams Begin', date: '2026-02-25' },
+export interface UpcomingEvent {
+  id: string;
+  title: string;
+  date: string;
+  time: string;
+}
+
+export const upcomingEvents: UpcomingEvent[] = [
+  { id: 'ue1', title: 'Parent-Teacher Meeting', date: '2026-02-15', time: '10:00 AM' },
+  { id: 'ue2', title: 'Science Exhibition', date: '2026-02-20', time: '2:00 PM' },
+  { id: 'ue3', title: 'Mid-Term Exams Begin', date: '2026-02-25', time: '9:00 AM' },
 ];
 
 export const messagesOverview = {
