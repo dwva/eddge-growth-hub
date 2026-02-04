@@ -426,36 +426,6 @@ const TeacherClassAnalyticsContent = () => {
     </div>
   );
 };
-                    subject.avgScore >= 75 ? 'bg-emerald-50 text-emerald-700' :
-                    subject.avgScore >= 60 ? 'bg-amber-50 text-amber-700' : 'bg-red-50 text-red-700'
-                  }`}>
-                    {subject.avgScore}%
-                  </span>
-                </div>
-                <div className="space-y-3">
-                  <div>
-                    <div className="flex justify-between text-xs mb-1.5">
-                      <span className="text-gray-500">Average Score</span>
-                      <span className="font-semibold text-gray-900">{subject.avgScore}%</span>
-                    </div>
-                    <Progress value={subject.avgScore} className="h-2" />
-                  </div>
-                  <div>
-                    <div className="flex justify-between text-xs mb-1.5">
-                      <span className="text-gray-500">Pass Rate</span>
-                      <span className="font-semibold text-gray-900">{subject.passRate}%</span>
-                    </div>
-                    <Progress value={subject.passRate} className="h-2" />
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-          ))}
-        </div>
-      </div>
-    </div>
-  );
-};
 
 const TeacherClassAnalytics = () => {
   return (

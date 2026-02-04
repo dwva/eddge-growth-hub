@@ -89,17 +89,15 @@ const StudentHome = () => {
                   </div>
 
                   {/* Middle section - today's mission preview */}
-                  <div className="mt-4 rounded-2xl border border-white/30 bg-white/5 px-4 py-3 max-w-md">
-                    <p className="text-[11px] font-semibold tracking-wide text-white/80 uppercase flex items-center gap-1">
-                      <span role="img" aria-hidden="true">
-                        📌
-                      </span>
+                  <div className="mt-2 rounded-xl border border-white/30 bg-white/5 px-3 py-2 max-w-sm">
+                    <p className="text-[10px] font-semibold tracking-wide text-white/80 uppercase flex items-center gap-1">
+                      <span role="img" aria-hidden="true">📌</span>
                       Today&apos;s mission
                     </p>
-                    <p className="text-sm text-white/90 mt-2 font-medium">
+                    <p className="text-xs text-white/90 mt-1 font-medium">
                       3 tasks · 1 practice set · ~45 mins
                     </p>
-                    <p className="text-xs text-white/70 mt-1">
+                    <p className="text-[11px] text-white/70 mt-0.5">
                       Finish 1 chapter + 10 MCQs to stay on track for your target.
                     </p>
                   </div>
