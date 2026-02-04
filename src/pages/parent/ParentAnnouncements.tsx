@@ -23,8 +23,6 @@ const ParentAnnouncementsContent = () => {
 
   const filters = [
     { id: 'all', label: 'All' },
-    { id: 'meeting', label: 'Meeting' },
-    { id: 'fee', label: 'Fee' },
     { id: 'holiday', label: 'Holiday' },
     { id: 'event', label: 'Event' },
     { id: 'information', label: 'Information' },
@@ -57,7 +55,10 @@ const ParentAnnouncementsContent = () => {
       const matchesSearch = a.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
         a.description.toLowerCase().includes(searchQuery.toLowerCase());
       const matchesFilter = activeFilter === 'all' || a.type === activeFilter;
-      return matchesSearch && matchesFilter;
+      // Exclude fee and meeting type announcements entirely
+      const isNotFee = a.type !== 'fee';
+      const isNotMeeting = a.type !== 'meeting';
+      return matchesSearch && matchesFilter && isNotFee && isNotMeeting;
     })
     .sort((a, b) => {
       if (a.important && !b.important) return -1;
@@ -104,7 +105,7 @@ const ParentAnnouncementsContent = () => {
 
       {/* Announcements List */}
       {filteredAnnouncements.length > 0 ? (
-        <div className="space-y-4">
+        <div className="space-y-4 text-xs">
           {filteredAnnouncements.map((announcement) => (
             <Card
               key={announcement.id}
@@ -119,7 +120,7 @@ const ParentAnnouncementsContent = () => {
                   announcement.important ? 'bg-red-500' : 'bg-primary'
                 )}
               />
-              <CardContent className="p-4 pl-6">
+              <CardContent className="p-4 pl-6 text-xs">
                 <div className="flex items-start gap-4">
                   <div className={cn(
                     'p-2 rounded-lg',
@@ -135,24 +136,16 @@ const ParentAnnouncementsContent = () => {
                     )}
                   </div>
                   <div className="flex-1">
-                    <div className="flex items-start justify-between gap-2">
-                      <h3 className="font-semibold">{announcement.title}</h3>
-                      <div className="flex items-center gap-2 flex-shrink-0">
-                        <Badge className={getTypeBadge(announcement.type)}>
-                          {announcement.type}
-                        </Badge>
-                        {announcement.important && (
-                          <Badge className="bg-red-100 text-red-700">Important</Badge>
-                        )}
-                      </div>
+                    <div className="flex items-start gap-2">
+                      <h3 className="font-semibold text-sm">{announcement.title}</h3>
                     </div>
-                    <p className="text-xs text-muted-foreground mt-1">
+                    <p className="text-[10px] text-muted-foreground mt-1">
                       By {announcement.author}
                     </p>
-                    <p className="text-sm text-muted-foreground mt-2">
+                    <p className="text-[11px] text-muted-foreground mt-2">
                       {announcement.description}
                     </p>
-                    <p className="text-xs text-muted-foreground mt-3">
+                    <p className="text-[10px] text-muted-foreground mt-3">
                       {new Date(announcement.date).toLocaleDateString('en-US', {
                         weekday: 'short',
                         year: 'numeric',

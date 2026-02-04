@@ -4,7 +4,7 @@ import ParentDashboardLayout from '@/components/layout/ParentDashboardLayout';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Tabs, TabsContent } from '@/components/ui/tabs';
 import { useChild } from '@/contexts/ChildContext';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { recentTests, weeklyProgressData, monthlyProgressData } from '@/data/parentMockData';
@@ -128,71 +128,8 @@ const ParentChildProgressContent = () => {
         </CardContent>
       </Card>
 
-      {/* Tabs */}
-      <Tabs defaultValue="subjects" className="space-y-4">
-        <TabsList className="grid w-full grid-cols-4 h-auto">
-          <TabsTrigger value="subjects" className="text-xs py-2">{t('progress.subjectPerformance')}</TabsTrigger>
-          <TabsTrigger value="tests" className="text-xs py-2">{t('progress.testInsights')}</TabsTrigger>
-          <TabsTrigger value="trend" className="text-xs py-2">{t('progress.progressTrend')}</TabsTrigger>
-          <TabsTrigger value="attendance" className="text-xs py-2">{t('progress.attendanceDetails')}</TabsTrigger>
-        </TabsList>
-
-        {/* Subject Performance Tab */}
-        <TabsContent value="subjects" className="space-y-4">
-          <Card>
-            <CardHeader>
-              <CardTitle className="text-lg">Subject Performance</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="h-64">
-                <ResponsiveContainer width="100%" height="100%">
-                  <BarChart data={subjectChartData}>
-                    <CartesianGrid strokeDasharray="3 3" />
-                    <XAxis dataKey="name" tick={{ fontSize: 12 }} />
-                    <YAxis domain={[0, 100]} />
-                    <Tooltip />
-                    <Bar dataKey="score" fill="#3b82f6" radius={[4, 4, 0, 0]} />
-                  </BarChart>
-                </ResponsiveContainer>
-              </div>
-            </CardContent>
-          </Card>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            {child.subjects?.map((subject, index) => (
-              <Card key={index}>
-                <CardContent className="p-4">
-                  <div className="flex items-center justify-between mb-3">
-                    <div className="flex items-center gap-2">
-                      <div 
-                        className="w-8 h-8 rounded-lg flex items-center justify-center"
-                        style={{ backgroundColor: `${subject.color}20` }}
-                      >
-                        <BookOpen className="w-4 h-4" style={{ color: subject.color }} />
-                      </div>
-                      <span className="font-medium text-sm">{subject.name}</span>
-                    </div>
-                    <div className="flex items-center gap-1">
-                      {getTrendIcon(subject.trend)}
-                      {subject.trend !== 'stable' && (
-                        <span className={`text-xs ${subject.trend === 'up' ? 'text-green-600' : 'text-red-600'}`}>
-                          {subject.trendValue}%
-                        </span>
-                      )}
-                    </div>
-                  </div>
-                  <div className="flex items-center justify-between mb-2">
-                    <span className="text-2xl font-bold">{subject.score}%</span>
-                    <Badge className={subject.score >= 80 ? 'bg-green-100 text-green-700' : 'bg-yellow-100 text-yellow-700'}>
-                      {subject.grade}
-                    </Badge>
-                  </div>
-                  <Progress value={subject.score} className="h-2" />
-                </CardContent>
-              </Card>
-            ))}
-          </div>
-        </TabsContent>
+      {/* Tabs (without visible tab bar) */}
+      <Tabs defaultValue="tests" className="space-y-4">
 
         {/* Test & Exam Insights Tab */}
         <TabsContent value="tests" className="space-y-4">
