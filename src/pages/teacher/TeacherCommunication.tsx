@@ -228,7 +228,6 @@ const TeacherCommunicationContent = () => {
     </div>
   );
 };
-};
 
 const TeacherCommunication = () => {
   return (
