@@ -67,6 +67,7 @@ const StudentHome = () => {
   const navigate = useNavigate();
   const [completedSuggestions, setCompletedSuggestions] = useState<string[]>([]);
   const [studiedChapters, setStudiedChapters] = useState(initialStudiedChapters);
+  const [showAllAiSuggestions, setShowAllAiSuggestions] = useState(false);
 
   const handleStudiedAgain = (key: string) => {
     setStudiedChapters((prev) => {
@@ -113,8 +114,11 @@ const StudentHome = () => {
                     <h2 className="text-xl font-semibold text-white leading-tight">
                       Today's Focus
                     </h2>
-                    <p className="text-white/70 text-xs mt-2 max-w-sm">
-                      Your personalized learning plan for today
+                    <p className="text-white/90 text-sm font-medium mt-1.5">
+                      3 tasks · 1 practice · 45 mins
+                    </p>
+                    <p className="text-white/70 text-xs mt-1 max-w-sm">
+                      Focus today: {studiedChapters.length > 0 ? studiedChapters.slice(0, 2).map((c) => c.chapterName).join(' + ') : 'Pick a topic to start'}
                     </p>
                   </div>
                   
@@ -190,7 +194,7 @@ const StudentHome = () => {
                 <Target className="w-5 h-5 text-white" />
               </div>
               <div>
-                <p className="text-sm font-medium text-gray-900">Overall Progress</p>
+                <p className="text-sm font-medium text-gray-900">Syllabus Completion – {overallProgress}%</p>
                 <p className="text-xs text-gray-500 mt-0.5">{getProgressMessage(overallProgress)}</p>
               </div>
             </div>
@@ -221,27 +225,30 @@ const StudentHome = () => {
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
                   <Button
                     variant="outline"
-                    className="h-auto py-4 px-4 flex flex-col items-center gap-2 rounded-xl border-gray-200 hover:border-primary hover:bg-primary/5"
+                    className="h-auto py-4 px-4 flex flex-col items-center gap-1.5 rounded-xl border-gray-200 hover:border-primary hover:bg-primary/5 transition-all duration-200 hover:shadow-sm group"
                     onClick={() => navigate('/student/homework')}
                   >
-                    <FileText className="w-6 h-6 text-primary" />
+                    <FileText className="w-6 h-6 text-primary transition-transform duration-200 group-hover:scale-110" />
                     <span className="text-sm font-medium">Homework</span>
+                    <span className="text-xs text-gray-500">2 pending</span>
                   </Button>
                   <Button
                     variant="outline"
-                    className="h-auto py-4 px-4 flex flex-col items-center gap-2 rounded-xl border-gray-200 hover:border-primary hover:bg-primary/5"
+                    className="h-auto py-4 px-4 flex flex-col items-center gap-1.5 rounded-xl border-gray-200 hover:border-primary hover:bg-primary/5 transition-all duration-200 hover:shadow-sm group"
                     onClick={() => navigate('/student/doubt-solver')}
                   >
-                    <MessageSquare className="w-6 h-6 text-amber-600" />
+                    <MessageSquare className="w-6 h-6 text-amber-600 transition-transform duration-200 group-hover:scale-110" />
                     <span className="text-sm font-medium">Ask Doubt</span>
+                    <span className="text-xs text-gray-500">Ready</span>
                   </Button>
                   <Button
                     variant="outline"
-                    className="h-auto py-4 px-4 flex flex-col items-center gap-2 rounded-xl border-gray-200 hover:border-primary hover:bg-primary/5"
+                    className="h-auto py-4 px-4 flex flex-col items-center gap-1.5 rounded-xl border-gray-200 hover:border-primary hover:bg-primary/5 transition-all duration-200 hover:shadow-sm group"
                     onClick={() => navigate('/student/achievements')}
                   >
-                    <Award className="w-6 h-6 text-emerald-600" />
+                    <Award className="w-6 h-6 text-emerald-600 transition-transform duration-200 group-hover:scale-110" />
                     <span className="text-sm font-medium">Achievements</span>
+                    <span className="text-xs text-gray-500">3 earned</span>
                   </Button>
                 </div>
               </div>
@@ -274,13 +281,13 @@ const StudentHome = () => {
                             {item.subjectName} · {item.chapterName}
                           </p>
                           <div className="flex items-center gap-2 mt-1.5">
-                            <div className="flex-1 min-w-0 h-1.5 bg-gray-100 rounded-full overflow-hidden max-w-[80px]">
+                            <div className="flex-1 min-w-0 h-2 bg-gray-200 rounded-full overflow-hidden">
                               <div
-                                className="h-full bg-primary rounded-full"
+                                className="h-full bg-primary rounded-full min-w-[2px] transition-[width] duration-300"
                                 style={{ width: `${item.progress}%` }}
                               />
                             </div>
-                            <span className="text-xs text-gray-500">
+                            <span className="text-xs text-gray-500 whitespace-nowrap">
                               {item.progress}% complete · {item.concepts} concepts
                             </span>
                           </div>
@@ -297,17 +304,18 @@ const StudentHome = () => {
             <div className="lg:pl-2 flex flex-col min-h-0 max-h-[460px]">
               <Card className="border border-gray-100 shadow-sm rounded-2xl bg-white flex-1 flex flex-col min-h-0">
                 <CardContent className="p-6 flex flex-col flex-1 min-h-0">
-                  <div className="mb-5 flex-shrink-0">
-                    <h3 className="text-base font-semibold text-gray-900 flex items-center gap-2">
-                      <Brain className="w-4 h-4 text-primary" />
+                  <div className="mb-4 flex-shrink-0">
+                    <h3 className="text-sm font-medium text-gray-700 flex items-center gap-2">
+                      <Brain className="w-3.5 h-3.5 text-primary" />
                       AI Study Suggestions
                     </h3>
-                    <p className="text-xs text-gray-500 mt-1">
+                    <p className="text-xs text-gray-500 mt-0.5">
                       Based on your recent learning
                     </p>
                   </div>
-                  <div className="space-y-2 flex-1 min-h-0 overflow-y-auto">
-                  {[
+                  <div className="flex flex-col gap-3 flex-1 min-h-0 overflow-hidden">
+                  {(() => {
+                    const allSuggestions = [
                     {
                       id: 'learn',
                       label: 'Continue learning: Quadratic Equations',
@@ -343,49 +351,57 @@ const StudentHome = () => {
                       path: '/student/doubt-solver',
                       priority: 'Low',
                     },
-                  ].map((suggestion) => {
-                    const isCompleted = completedSuggestions.includes(suggestion.id);
-
-                    const handleClick = () => {
-                      if (!isCompleted) {
-                        setCompletedSuggestions((prev) =>
-                          prev.includes(suggestion.id) ? prev : [...prev, suggestion.id]
-                        );
-                      }
-                      navigate(suggestion.path);
+                  ];
+                    const [topSuggestion, ...restSuggestions] = allSuggestions;
+                    const renderSuggestion = (suggestion: typeof allSuggestions[0]) => {
+                      const isCompleted = completedSuggestions.includes(suggestion.id);
+                      const handleClick = () => {
+                        if (!isCompleted) setCompletedSuggestions((prev) => prev.includes(suggestion.id) ? prev : [...prev, suggestion.id]);
+                        navigate(suggestion.path);
+                      };
+                      return (
+                        <button
+                          key={suggestion.id}
+                          type="button"
+                          className={`w-full flex items-center justify-between gap-4 px-4 py-3 rounded-xl text-left min-h-[52px] transition-colors ${isCompleted ? 'bg-gray-50' : 'hover:bg-gray-50'}`}
+                          onClick={handleClick}
+                        >
+                          <div className="flex items-center gap-3 min-w-0 flex-1">
+                            <div className="w-8 h-8 rounded-full bg-gray-100 flex items-center justify-center flex-shrink-0">
+                              {suggestion.icon}
+                            </div>
+                            <div className="min-w-0">
+                              <p className="text-sm font-medium text-gray-900 leading-snug text-left truncate">{suggestion.label}</p>
+                              <p className="text-xs text-gray-500 mt-0.5">{suggestion.priority}{isCompleted && ' • Completed'}</p>
+                            </div>
+                          </div>
+                          {isCompleted ? <CheckCircle className="w-4 h-4 text-emerald-500 flex-shrink-0" /> : <ArrowRight className="w-4 h-4 text-gray-400 flex-shrink-0" />}
+                        </button>
+                      );
                     };
-
                     return (
-                      <button
-                        key={suggestion.id}
-                        type="button"
-                        className={`w-full flex items-center justify-between gap-4 px-4 py-4 rounded-xl text-left min-h-[56px] transition-colors ${
-                          isCompleted ? 'bg-gray-50' : 'hover:bg-gray-50'
-                        }`}
-                        onClick={handleClick}
-                      >
-                        <div className="flex items-center gap-3 min-w-0 flex-1">
-                          <div className="w-9 h-9 rounded-full bg-gray-100 flex items-center justify-center flex-shrink-0">
-                            {suggestion.icon}
-                          </div>
-                          <div className="min-w-0">
-                            <p className="text-sm font-medium text-gray-900 leading-snug text-left truncate">
-                              {suggestion.label}
-                            </p>
-                            <p className="text-xs text-gray-500 mt-0.5">
-                              Priority: {suggestion.priority}
-                              {isCompleted && ' • Completed'}
-                            </p>
-                          </div>
+                      <>
+                        <div className="flex-shrink-0">
+                          <p className="text-xs font-medium text-primary mb-2">Top suggestion</p>
+                          {renderSuggestion(topSuggestion)}
                         </div>
-                        {isCompleted ? (
-                          <CheckCircle className="w-4 h-4 text-emerald-500 flex-shrink-0" />
-                        ) : (
-                          <ArrowRight className="w-4 h-4 text-gray-400 flex-shrink-0" />
-                        )}
-                      </button>
+                        <div className="flex-1 min-h-0 flex flex-col">
+                          <button
+                            type="button"
+                            className="text-xs font-medium text-gray-500 hover:text-primary transition-colors mb-2 flex-shrink-0 text-left"
+                            onClick={() => setShowAllAiSuggestions((v) => !v)}
+                          >
+                            {showAllAiSuggestions ? 'Show less' : `View all (${restSuggestions.length})`}
+                          </button>
+                          {showAllAiSuggestions && (
+                            <div className="space-y-1 overflow-y-auto flex-1 min-h-0">
+                              {restSuggestions.map((s) => renderSuggestion(s))}
+                            </div>
+                          )}
+                        </div>
+                      </>
                     );
-                  })}
+                  })()}
                   </div>
                 </CardContent>
               </Card>
