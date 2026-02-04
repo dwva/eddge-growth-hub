@@ -60,17 +60,18 @@ const TeacherReportsContent = () => {
   };
 
   return (
-    <div className="space-y-6 max-w-7xl">
-      <PageHeader
-        title="Reports"
-        subtitle="Generate and export reports"
-        action={
-          <Button variant="outline" size="sm" className="h-8 px-3 text-xs rounded-lg gap-1.5" onClick={handleExportPDF}>
-            <Download className="w-4 h-4" />
-            Export PDF
-          </Button>
-        }
-      />
+    <div className="space-y-10 max-w-[1600px]">
+      {/* Page Header - Clean */}
+      <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4 pb-6 border-b border-gray-100">
+        <div>
+          <h1 className="text-3xl font-bold text-gray-900">Reports</h1>
+          <p className="text-sm text-gray-500 mt-2">Generate and export reports</p>
+        </div>
+        <Button variant="outline" size="sm" className="h-10 px-4 rounded-xl border-gray-200 gap-2" onClick={handleExportPDF}>
+          <Download className="w-4 h-4" />
+          Export PDF
+        </Button>
+      </div>
 
       <Tabs value={activeTab} onValueChange={handleTabChange}>
         <TabsList className={cn(

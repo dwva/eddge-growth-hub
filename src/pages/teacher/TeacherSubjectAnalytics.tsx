@@ -81,23 +81,24 @@ const TeacherSubjectAnalyticsContent = () => {
   const weakestChapter = filteredChapters[0]?.name || 'N/A';
 
   return (
-    <div className="space-y-6 max-w-7xl">
-      {/* Header */}
-      <div className="flex items-center gap-4">
-        <Button variant="ghost" size="icon" onClick={() => navigate('/teacher')}>
-          <ArrowLeft className="w-5 h-5" />
-        </Button>
+    <div className="space-y-10 max-w-[1600px]">
+      {/* Page Header - Clean */}
+      <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4 pb-6 border-b border-gray-100">
         <div>
-          <h1 className="text-lg md:text-xl font-bold">Subject Analytics</h1>
-          <p className="text-sm text-muted-foreground">Analyze chapter and topic-level performance</p>
+          <h1 className="text-3xl font-bold text-gray-900">Subject Analytics</h1>
+          <p className="text-sm text-gray-500 mt-2">Analyze chapter and topic-level performance</p>
         </div>
+        <Button variant="ghost" size="sm" className="h-10 rounded-xl" onClick={() => navigate('/teacher')}>
+          <ArrowLeft className="w-4 h-4 mr-2" />
+          Back
+        </Button>
       </div>
 
       <Tabs value={activeTab} onValueChange={handleTabChange}>
         <TabsList className="grid w-full grid-cols-3 lg:w-auto lg:inline-grid h-8 p-1 rounded-lg bg-gray-100">
-          <TabsTrigger value="chapters" className="text-xs px-2.5 py-1.5 h-7 data-[state=active]:bg-white data-[state=active]:shadow-sm rounded-md">Chapters</TabsTrigger>
-          <TabsTrigger value="topics" className="text-xs px-2.5 py-1.5 h-7 data-[state=active]:bg-white data-[state=active]:shadow-sm rounded-md">Topics</TabsTrigger>
-          <TabsTrigger value="mistakes" className="text-xs px-2.5 py-1.5 h-7 data-[state=active]:bg-white data-[state=active]:shadow-sm rounded-md">Common Mistakes</TabsTrigger>
+          <TabsTrigger value="chapters" className="text-xs px-3 py-1.5 h-7 data-[state=active]:bg-white data-[state=active]:shadow-sm rounded-md">Chapters</TabsTrigger>
+          <TabsTrigger value="topics" className="text-xs px-3 py-1.5 h-7 data-[state=active]:bg-white data-[state=active]:shadow-sm rounded-md">Topics</TabsTrigger>
+          <TabsTrigger value="mistakes" className="text-xs px-3 py-1.5 h-7 data-[state=active]:bg-white data-[state=active]:shadow-sm rounded-md">Common Mistakes</TabsTrigger>
         </TabsList>
 
         {/* Chapters Tab */}

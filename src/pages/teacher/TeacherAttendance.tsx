@@ -75,24 +75,24 @@ const TeacherAttendanceContent = () => {
   const getAttendancePercent = (student: typeof classStudents[0]) => Math.min(100, student.overallScore + 8);
 
   return (
-    <div className="space-y-6">
-      {/* Page Header */}
-      <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
+    <div className="space-y-10 max-w-[1600px]">
+      {/* Page Header - Clean */}
+      <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4 pb-6 border-b border-gray-100">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">Mark Attendance</h1>
-          <p className="text-sm text-gray-500 mt-1">Class 10-A • Record daily attendance</p>
+          <h1 className="text-3xl font-bold text-gray-900">Mark Attendance</h1>
+          <p className="text-sm text-gray-500 mt-2">Class 10-A • Record daily attendance</p>
         </div>
         <div className="flex items-center gap-3">
           <Input
             type="date"
             value={selectedDate}
             onChange={(e) => setSelectedDate(e.target.value)}
-            className="w-40 h-9 rounded-xl"
+            className="w-44 h-10 rounded-xl border-gray-200"
           />
-          <Button variant="outline" size="sm" className="h-9 rounded-xl" onClick={handleMarkAllPresent}>
+          <Button variant="outline" size="sm" className="h-10 rounded-xl border-gray-200" onClick={handleMarkAllPresent}>
             Mark All Present
           </Button>
-          <Button size="sm" className="h-9 rounded-xl" onClick={handleSubmit}>
+          <Button size="sm" className="h-10 rounded-xl" onClick={handleSubmit}>
             Submit
           </Button>
         </div>

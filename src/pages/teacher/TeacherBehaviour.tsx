@@ -130,12 +130,12 @@ const TeacherBehaviourContent = () => {
   };
 
   return (
-    <div className="space-y-6">
-      {/* Page Header */}
-      <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
+    <div className="space-y-10 max-w-[1600px]">
+      {/* Page Header - Clean */}
+      <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4 pb-6 border-b border-gray-100">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">Behaviour & Notes</h1>
-          <p className="text-sm text-gray-500 mt-1">Track and record student behavior observations</p>
+          <h1 className="text-3xl font-bold text-gray-900">Behaviour & Notes</h1>
+          <p className="text-sm text-gray-500 mt-2">Track and record student behavior observations</p>
         </div>
         <Dialog open={isDialogOpen} onOpenChange={(open) => {
           setIsDialogOpen(open);
@@ -145,7 +145,7 @@ const TeacherBehaviourContent = () => {
           }
         }}>
           <DialogTrigger asChild>
-            <Button size="sm" className="gap-2 h-9 rounded-xl">
+            <Button size="sm" className="gap-2 h-10 rounded-xl">
               <Plus className="w-4 h-4" />
               Add Note
             </Button>

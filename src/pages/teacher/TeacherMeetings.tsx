@@ -100,18 +100,20 @@ const TeacherMeetingsContent = () => {
   };
 
   return (
-    <div className="space-y-6 max-w-7xl">
-      <PageHeader
-        title="PTM Scheduling"
-        subtitle="Schedule and manage parent-teacher meetings"
-        action={
-          <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-            <DialogTrigger asChild>
-              <Button size="sm" className="gap-1.5 h-8 px-3 text-xs rounded-lg">
-                <Plus className="w-3.5 h-3.5" />
-                Schedule Meeting
-              </Button>
-            </DialogTrigger>
+    <div className="space-y-10 max-w-[1600px]">
+      {/* Page Header - Clean */}
+      <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4 pb-6 border-b border-gray-100">
+        <div>
+          <h1 className="text-3xl font-bold text-gray-900">PTM Scheduling</h1>
+          <p className="text-sm text-gray-500 mt-2">Schedule and manage parent-teacher meetings</p>
+        </div>
+        <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+          <DialogTrigger asChild>
+            <Button size="sm" className="gap-2 h-10 rounded-xl">
+              <Plus className="w-4 h-4" />
+              Schedule Meeting
+            </Button>
+          </DialogTrigger>
           <DialogContent>
             <DialogHeader>
               <DialogTitle>Schedule New Meeting</DialogTitle>
@@ -191,8 +193,7 @@ const TeacherMeetingsContent = () => {
             </div>
           </DialogContent>
         </Dialog>
-        }
-      />
+      </div>
 
       <Tabs defaultValue="calendar" className="space-y-4">
         <TabsList className="h-8 p-1 rounded-lg bg-gray-100 w-full sm:w-auto">
@@ -396,3 +397,4 @@ const TeacherMeetings = () => {
 };
 
 export default TeacherMeetings;
+

@@ -35,112 +35,104 @@ const TeacherClassAnalyticsContent = () => {
   }
 
   return (
-    <div className="space-y-6">
-      {/* Page Header */}
-      <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
+    <div className="space-y-10 max-w-[1600px]">
+      {/* Page Header - Clean */}
+      <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4 pb-6 border-b border-gray-100">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">Class Analytics</h1>
-          <p className="text-sm text-gray-500 mt-1">Performance metrics for Class 10-A</p>
+          <h1 className="text-3xl font-bold text-gray-900">Class Analytics</h1>
+          <p className="text-sm text-gray-500 mt-2">Performance metrics for Class 10-A</p>
         </div>
         <div className="flex items-center gap-3">
-          <Button variant="outline" size="sm" className="gap-2 h-9 rounded-xl" onClick={() => toast.success('Exporting report...')}>
+          <Button variant="outline" size="sm" className="gap-2 h-10 rounded-xl border-gray-200" onClick={() => toast.success('Exporting report...')}>
             <Download className="w-4 h-4" />
             Export Report
           </Button>
         </div>
       </div>
 
-      <div className="space-y-6 mt-6">
-          {/* KPI Cards */}
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-            <StatCard 
-              title="Class Average" 
-              value={`${classAnalyticsData.classAverage}%`} 
-              icon={<Target className="w-5 h-5" />} 
-              trend={{ value: 3, isPositive: true }}
-              iconBg="bg-emerald-50 text-emerald-600"
-            />
-            <StatCard 
-              title="Total Students" 
-              value={classAnalyticsData.totalStudents} 
-              icon={<Users className="w-5 h-5" />} 
-              iconBg="bg-blue-50 text-blue-600"
-            />
-            <StatCard 
-              title="Pass Rate" 
-              value={`${classAnalyticsData.overallAccuracy}%`} 
-              icon={<BarChart3 className="w-5 h-5" />} 
-              iconBg="bg-violet-50 text-violet-600"
-            />
-            <StatCard 
-              title="At-Risk" 
-              value={atRiskData.length} 
-              icon={<AlertTriangle className="w-5 h-5" />} 
-              iconBg="bg-red-50 text-red-600"
-            />
-          </div>
+      {/* Section 1: Key Metrics */}
+      <div>
+        <h2 className="text-sm font-semibold text-gray-400 uppercase tracking-wide mb-5">Key Metrics</h2>
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-5">
+          <StatCard 
+            title="Class Average" 
+            value={`${classAnalyticsData.classAverage}%`} 
+            icon={<Target className="w-5 h-5" />} 
+            trend={{ value: 3, isPositive: true }}
+            iconBg="bg-emerald-50 text-emerald-600"
+          />
+          <StatCard 
+            title="Total Students" 
+            value={classAnalyticsData.totalStudents} 
+            icon={<Users className="w-5 h-5" />} 
+            iconBg="bg-blue-50 text-blue-600"
+          />
+          <StatCard 
+            title="Pass Rate" 
+            value={`${classAnalyticsData.overallAccuracy}%`} 
+            icon={<BarChart3 className="w-5 h-5" />} 
+            iconBg="bg-violet-50 text-violet-600"
+          />
+          <StatCard 
+            title="At-Risk" 
+            value={atRiskData.length} 
+            icon={<AlertTriangle className="w-5 h-5" />} 
+            iconBg="bg-red-50 text-red-600"
+          />
+        </div>
+      </div>
 
-          {/* Performance Trend */}
-          <Card className="rounded-2xl shadow-sm border-gray-100 overflow-hidden">
-            <CardHeader className="pb-2">
-              <div className="flex items-center justify-between">
-                <div>
-                  <CardTitle className="text-lg font-semibold">Performance Trend</CardTitle>
-                  <p className="text-sm text-gray-500">Weekly class average scores</p>
-                </div>
-                <div className="flex items-center gap-2 text-sm text-emerald-600">
-                  <TrendingUp className="w-4 h-4" />
-                  <span>+3% this month</span>
-                </div>
+      {/* Section 2: Performance Trends */}
+      <div>
+        <h2 className="text-sm font-semibold text-gray-400 uppercase tracking-wide mb-5">Performance Trends</h2>
+        <Card className="border-0 shadow-sm rounded-2xl">
+          <CardHeader className="pb-4">
+            <div className="flex items-center justify-between">
+              <div>
+                <CardTitle className="text-lg font-semibold text-gray-900">Performance Over Time</CardTitle>
+                <p className="text-sm text-gray-500 mt-1">Weekly class average scores</p>
               </div>
-            </CardHeader>
-            <CardContent>
-              <div className="h-64">
-                <ResponsiveContainer width="100%" height="100%">
-                  <AreaChart data={classAnalyticsData.performanceTrend} margin={{ top: 10, right: 10, left: -10, bottom: 0 }}>
-                    <defs>
-                      <linearGradient id="areaGradient" x1="0" y1="0" x2="0" y2="1">
-                        <stop offset="0%" stopColor="#8b5cf6" stopOpacity={0.3} />
-                        <stop offset="100%" stopColor="#8b5cf6" stopOpacity={0} />
-                      </linearGradient>
-                    </defs>
-                    <CartesianGrid strokeDasharray="3 3" stroke="#f3f4f6" vertical={false} />
-                    <XAxis dataKey="week" tick={{ fontSize: 12, fill: '#9ca3af' }} axisLine={false} tickLine={false} />
-                    <YAxis domain={[0, 100]} tick={{ fontSize: 12, fill: '#9ca3af' }} axisLine={false} tickLine={false} />
-                    <Tooltip contentStyle={{ borderRadius: '12px', border: 'none', boxShadow: '0 4px 20px rgba(0,0,0,0.1)' }} formatter={(v: number) => [`${v}%`, 'Score']} />
-                    <Area type="monotone" dataKey="score" stroke="#8b5cf6" strokeWidth={3} fill="url(#areaGradient)" />
-                  </AreaChart>
-                </ResponsiveContainer>
+              <div className="flex items-center gap-2 text-sm px-3 py-1.5 rounded-full bg-emerald-50 text-emerald-700">
+                <TrendingUp className="w-4 h-4" />
+                <span className="font-medium">+3% this month</span>
               </div>
-            </CardContent>
-          </Card>
+            </div>
+          </CardHeader>
+          <CardContent className="p-6">
+            <div className="h-80">
+              <ResponsiveContainer width="100%" height="100%">
+                <AreaChart data={classAnalyticsData.performanceTrend} margin={{ top: 10, right: 20, left: 0, bottom: 0 }}>
+                  <defs>
+                    <linearGradient id="areaGradient" x1="0" y1="0" x2="0" y2="1">
+                      <stop offset="0%" stopColor="#8b5cf6" stopOpacity={0.2} />
+                      <stop offset="100%" stopColor="#8b5cf6" stopOpacity={0} />
+                    </linearGradient>
+                  </defs>
+                  <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" vertical={false} />
+                  <XAxis dataKey="week" tick={{ fontSize: 13, fill: '#9ca3af' }} axisLine={false} tickLine={false} />
+                  <YAxis domain={[0, 100]} tick={{ fontSize: 13, fill: '#9ca3af' }} axisLine={false} tickLine={false} />
+                  <Tooltip 
+                    contentStyle={{ borderRadius: '12px', border: 'none', boxShadow: '0 10px 40px rgba(0,0,0,0.1)', padding: '12px 16px' }} 
+                    formatter={(v: number) => [`${v}%`, 'Score']} 
+                  />
+                  <Area type="monotone" dataKey="score" stroke="#8b5cf6" strokeWidth={2.5} fill="url(#areaGradient)" />
+                </AreaChart>
+              </ResponsiveContainer>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
 
-          {/* Subject Comparison Chart + Distribution in one row */}
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            <Card className="rounded-2xl shadow-sm border-gray-100 overflow-hidden">
+      {/* Section 3: Distribution & Subject Comparison */}
+      <div>
+        <h2 className="text-sm font-semibold text-gray-400 uppercase tracking-wide mb-5">Distribution & Subject Comparison</h2>
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            {/* Distribution Pie Chart - 1 column */}
+            <Card className="lg:col-span-1 border-0 shadow-sm rounded-2xl">
               <CardHeader>
-                <CardTitle className="text-lg font-semibold">Subject Performance Comparison</CardTitle>
+                <CardTitle className="text-lg font-semibold text-gray-900">Distribution</CardTitle>
               </CardHeader>
-              <CardContent>
-                <div className="h-64">
-                  <ResponsiveContainer width="100%" height="100%">
-                    <BarChart data={[...classAnalyticsData.subjectPerformance].sort((a, b) => b.avgScore - a.avgScore)} margin={{ top: 10, right: 10, left: -10, bottom: 0 }}>
-                      <CartesianGrid strokeDasharray="3 3" stroke="#f3f4f6" vertical={false} />
-                      <XAxis dataKey="subject" tick={{ fontSize: 11, fill: '#9ca3af' }} axisLine={false} tickLine={false} />
-                      <YAxis domain={[0, 100]} tick={{ fontSize: 12, fill: '#9ca3af' }} axisLine={false} tickLine={false} />
-                      <Tooltip contentStyle={{ borderRadius: '12px', border: 'none', boxShadow: '0 4px 20px rgba(0,0,0,0.1)' }} formatter={(v: number) => [`${v}%`, 'Avg Score']} />
-                      <Bar dataKey="avgScore" fill="#8b5cf6" radius={[8, 8, 0, 0]} maxBarSize={48} />
-                    </BarChart>
-                  </ResponsiveContainer>
-                </div>
-              </CardContent>
-            </Card>
-
-            <Card className="rounded-2xl shadow-sm border-gray-100">
-              <CardHeader>
-                <CardTitle className="text-lg font-semibold">Performance Distribution</CardTitle>
-              </CardHeader>
-              <CardContent>
+              <CardContent className="p-6">
                 <div className="flex gap-6 items-center">
                   <div className="h-40 w-40 flex-shrink-0">
                     <ResponsiveContainer width="100%" height="100%">
@@ -150,7 +142,7 @@ const TeacherClassAnalyticsContent = () => {
                             <Cell key={`cell-${index}`} fill={entry.color} />
                           ))}
                         </Pie>
-                        <Tooltip contentStyle={{ borderRadius: '12px', border: 'none', boxShadow: '0 4px 20px rgba(0,0,0,0.1)' }} formatter={(v: number, name: string) => [`${v} students`, name]} />
+                        <Tooltip contentStyle={{ borderRadius: '12px', border: 'none', boxShadow: '0 10px 40px rgba(0,0,0,0.1)' }} formatter={(v: number, name: string) => [`${v} students`, name]} />
                       </PieChart>
                     </ResponsiveContainer>
                   </div>
@@ -167,50 +159,71 @@ const TeacherClassAnalyticsContent = () => {
                 </div>
               </CardContent>
             </Card>
-          </div>
 
-          {/* Subject Cards */}
-          <Card className="rounded-2xl shadow-sm border-gray-100">
-            <CardHeader>
-              <CardTitle className="text-lg font-semibold">Subject-wise Breakdown</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4">
-                {classAnalyticsData.subjectPerformance.map((subject) => (
-                  <div key={subject.subject} className="p-4 rounded-xl border border-gray-100 hover:border-gray-200 transition-colors">
-                    <div className="flex items-start justify-between mb-3">
-                      <div>
-                        <h3 className="font-semibold text-gray-900 text-sm">{subject.subject}</h3>
-                        <p className="text-xs text-gray-500">{subject.teacher}</p>
-                      </div>
-                      <span className={`px-2 py-0.5 rounded-full text-xs font-semibold ${
-                        subject.avgScore >= 75 ? 'bg-emerald-50 text-emerald-700' :
-                        subject.avgScore >= 60 ? 'bg-amber-50 text-amber-700' : 'bg-red-50 text-red-700'
-                      }`}>
-                        {subject.avgScore}%
-                      </span>
-                    </div>
-                    <div className="space-y-2">
-                      <div>
-                        <div className="flex justify-between text-xs mb-0.5">
-                          <span className="text-gray-500">Avg</span>
-                          <span className="font-medium">{subject.avgScore}%</span>
-                        </div>
-                        <Progress value={subject.avgScore} className="h-1.5" />
-                      </div>
-                      <div>
-                        <div className="flex justify-between text-xs mb-0.5">
-                          <span className="text-gray-500">Pass Rate</span>
-                          <span className="font-medium">{subject.passRate}%</span>
-                        </div>
-                        <Progress value={subject.passRate} className="h-1.5" />
-                      </div>
-                    </div>
+            {/* Subject Comparison - 2 columns */}
+            <Card className="lg:col-span-2 border-0 shadow-sm rounded-2xl">
+              <CardHeader>
+                <CardTitle className="text-lg font-semibold text-gray-900">Subject Comparison</CardTitle>
+              </CardHeader>
+              <CardContent className="p-6">
+                <div className="h-72">
+                  <ResponsiveContainer width="100%" height="100%">
+                    <BarChart data={[...classAnalyticsData.subjectPerformance].sort((a, b) => b.avgScore - a.avgScore)} margin={{ top: 10, right: 20, left: 0, bottom: 0 }}>
+                      <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" vertical={false} />
+                      <XAxis dataKey="subject" tick={{ fontSize: 11, fill: '#9ca3af' }} axisLine={false} tickLine={false} />
+                      <YAxis domain={[0, 100]} tick={{ fontSize: 13, fill: '#9ca3af' }} axisLine={false} tickLine={false} />
+                      <Tooltip 
+                        contentStyle={{ borderRadius: '12px', border: 'none', boxShadow: '0 10px 40px rgba(0,0,0,0.1)', padding: '12px 16px' }} 
+                        formatter={(v: number) => [`${v}%`, 'Avg Score']} 
+                      />
+                      <Bar dataKey="avgScore" fill="#8b5cf6" radius={[8, 8, 0, 0]} maxBarSize={48} />
+                    </BarChart>
+                  </ResponsiveContainer>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+        </div>
+
+      {/* Section 4: Subject Breakdown */}
+      <div>
+        <h2 className="text-sm font-semibold text-gray-400 uppercase tracking-wide mb-5">Subject Details</h2>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4">
+          {classAnalyticsData.subjectPerformance.map((subject) => (
+            <Card key={subject.subject} className="border-0 shadow-sm rounded-2xl hover:shadow-md transition-shadow">
+              <CardContent className="p-5">
+                <div className="flex items-start justify-between mb-4">
+                  <div>
+                    <h3 className="font-semibold text-gray-900 text-sm">{subject.subject}</h3>
+                    <p className="text-xs text-gray-500 mt-0.5">{subject.teacher}</p>
                   </div>
-                ))}
-              </div>
-            </CardContent>
-          </Card>
+                  <span className={`px-2.5 py-1 rounded-lg text-xs font-semibold ${
+                    subject.avgScore >= 75 ? 'bg-emerald-50 text-emerald-700' :
+                    subject.avgScore >= 60 ? 'bg-amber-50 text-amber-700' : 'bg-red-50 text-red-700'
+                  }`}>
+                    {subject.avgScore}%
+                  </span>
+                </div>
+                <div className="space-y-3">
+                  <div>
+                    <div className="flex justify-between text-xs mb-1.5">
+                      <span className="text-gray-500">Average Score</span>
+                      <span className="font-semibold text-gray-900">{subject.avgScore}%</span>
+                    </div>
+                    <Progress value={subject.avgScore} className="h-2" />
+                  </div>
+                  <div>
+                    <div className="flex justify-between text-xs mb-1.5">
+                      <span className="text-gray-500">Pass Rate</span>
+                      <span className="font-semibold text-gray-900">{subject.passRate}%</span>
+                    </div>
+                    <Progress value={subject.passRate} className="h-2" />
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          ))}
+        </div>
       </div>
     </div>
   );

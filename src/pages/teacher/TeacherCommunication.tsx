@@ -62,26 +62,26 @@ const TeacherCommunicationContent = () => {
   const totalUnread = parentConversations.reduce((acc, c) => acc + c.unread, 0);
 
   return (
-    <div className="flex flex-col h-[calc(100vh-8rem)] min-h-[500px]">
-      {/* Page Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 pb-4">
+    <div className="flex flex-col h-[calc(100vh-8rem)] min-h-[500px] space-y-6">
+      {/* Page Header - Clean */}
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 pb-6 border-b border-gray-100">
         <div className="min-w-0">
-          <h1 className="text-xl sm:text-2xl font-bold text-gray-900 truncate">Parent Messages</h1>
-          <p className="text-sm text-gray-500 mt-0.5">
+          <h1 className="text-3xl font-bold text-gray-900 truncate">Parent Messages</h1>
+          <p className="text-sm text-gray-500 mt-2">
             Communicate with parents
             {totalUnread > 0 && <span className="ml-1 text-primary font-medium">• {totalUnread} unread</span>}
           </p>
         </div>
-        <Button size="sm" className="gap-2 h-9 rounded-xl shrink-0">
+        <Button size="sm" className="gap-2 h-10 rounded-xl shrink-0">
           <Plus className="w-4 h-4" />
           New Message
         </Button>
       </div>
 
       {/* Two-column layout: Conversation list + Chat */}
-      <div className="flex-1 grid grid-cols-1 lg:grid-cols-12 gap-4 min-h-0 overflow-hidden">
-        {/* Conversation List - responsive: full width on mobile, 4 cols on lg */}
-        <Card className="lg:col-span-4 flex flex-col rounded-2xl shadow-sm border-gray-100 overflow-hidden min-h-[280px] lg:min-h-0">
+      <div className="flex-1 grid grid-cols-1 lg:grid-cols-12 gap-6 min-h-0 overflow-hidden">
+        {/* Conversation List */}
+        <Card className="lg:col-span-4 flex flex-col border-0 shadow-sm rounded-2xl overflow-hidden min-h-[280px] lg:min-h-0">
           <div className="p-3 sm:p-4 border-b border-gray-100 shrink-0">
             <div className="relative">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
@@ -115,18 +115,24 @@ const TeacherCommunicationContent = () => {
                       <span className="absolute bottom-0 right-0 w-3 h-3 bg-emerald-500 rounded-full border-2 border-white" />
                     )}
                   </div>
-                  <div className="flex-1 min-w-0">
-                    <div className="flex items-center justify-between gap-2">
-                      <p className="font-semibold text-gray-900 truncate text-sm">
+                  <div className="flex-1 min-w-0 overflow-hidden">
+                    <div className="flex items-start justify-between gap-3">
+                      <p className="font-semibold text-gray-900 text-sm truncate min-w-0">
                         {(conv as typeof parentConversations[0]).parentName}
                       </p>
-                      <span className="text-xs text-gray-400 flex-shrink-0">{conv.timestamp}</span>
+                      <span className="text-xs text-gray-400 whitespace-nowrap shrink-0 tabular-nums">
+                        {conv.timestamp}
+                      </span>
                     </div>
-                    <p className="text-xs text-gray-500 mt-0.5 truncate">{conv.studentName} • {conv.studentClass}</p>
-                    <p className="text-sm text-gray-600 truncate mt-1">{conv.lastMessage}</p>
+                    <p className="text-xs text-gray-500 mt-0.5 truncate">
+                      {conv.studentName} • {conv.studentClass}
+                    </p>
+                    <p className="text-sm text-gray-600 mt-1 line-clamp-2 break-words">
+                      {conv.lastMessage}
+                    </p>
                   </div>
                   {conv.unread > 0 && (
-                    <Badge className="bg-primary text-white text-xs h-5 px-2 rounded-full flex-shrink-0">
+                    <Badge className="bg-primary text-white text-xs h-5 min-w-[20px] px-2 rounded-full shrink-0">
                       {conv.unread}
                     </Badge>
                   )}
@@ -136,8 +142,8 @@ const TeacherCommunicationContent = () => {
           </ScrollArea>
         </Card>
 
-        {/* Chat Area - 8 cols on lg */}
-        <Card className="lg:col-span-8 flex flex-col rounded-2xl shadow-sm border-gray-100 overflow-hidden min-h-[400px] lg:min-h-0">
+        {/* Chat Area */}
+        <Card className="lg:col-span-8 flex flex-col border-0 shadow-sm rounded-2xl overflow-hidden min-h-[400px] lg:min-h-0">
           {selectedConversation && currentConversation ? (
             <>
               <div className="p-3 sm:p-4 border-b border-gray-100 bg-white shrink-0">

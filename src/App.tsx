@@ -65,10 +65,10 @@ import AdminHome from "./pages/admin/AdminHome";
 import AdminTeachers from "./pages/admin/AdminTeachers";
 import AdminStudents from "./pages/admin/AdminStudents";
 import AdminClasses from "./pages/admin/AdminClasses";
+import AdminClassAnalysis from "./pages/admin/AdminClassAnalysis";
 import AdminAttendance from "./pages/admin/AdminAttendance";
 import AdminReports from "./pages/admin/AdminReports";
 import AdminAnnouncements from "./pages/admin/AdminAnnouncements";
-import AdminFinance from "./pages/admin/AdminFinance";
 import AdminSettings from "./pages/admin/AdminSettings";
 
 // SuperAdmin Dashboard Pages
@@ -289,6 +289,11 @@ const App = () => (
                 <AdminClasses />
               </ProtectedRoute>
             } />
+            <Route path="/admin/class-analysis" element={
+              <ProtectedRoute allowedRoles={['admin']}>
+                <AdminClassAnalysis />
+              </ProtectedRoute>
+            } />
             <Route path="/admin/attendance" element={
               <ProtectedRoute allowedRoles={['admin']}>
                 <AdminAttendance />
@@ -302,11 +307,6 @@ const App = () => (
             <Route path="/admin/announcements" element={
               <ProtectedRoute allowedRoles={['admin']}>
                 <AdminAnnouncements />
-              </ProtectedRoute>
-            } />
-            <Route path="/admin/finance" element={
-              <ProtectedRoute allowedRoles={['admin']}>
-                <AdminFinance />
               </ProtectedRoute>
             } />
             <Route path="/admin/settings" element={

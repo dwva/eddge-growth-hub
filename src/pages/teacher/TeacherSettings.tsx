@@ -45,34 +45,35 @@ const TeacherSettingsContent = () => {
   };
 
   return (
-    <div className="space-y-6">
-      <div>
-        <h1 className="text-2xl font-bold">Settings</h1>
-        <p className="text-muted-foreground">Manage your profile and preferences</p>
+    <div className="space-y-10 max-w-[1600px]">
+      {/* Page Header - Clean */}
+      <div className="pb-6 border-b border-gray-100">
+        <h1 className="text-3xl font-bold text-gray-900">Settings</h1>
+        <p className="text-sm text-gray-500 mt-2">Manage your profile and preferences</p>
       </div>
 
       <Tabs defaultValue="profile">
         <TabsList className="grid w-full grid-cols-4 lg:w-auto lg:inline-grid h-8 p-1 rounded-lg bg-gray-100">
-          <TabsTrigger value="profile" className="gap-1.5 text-xs px-2.5 py-1.5 h-7 data-[state=active]:bg-white data-[state=active]:shadow-sm rounded-md">
+          <TabsTrigger value="profile" className="gap-1.5 text-xs px-3 py-1.5 h-7 data-[state=active]:bg-white data-[state=active]:shadow-sm rounded-md">
             <User className="w-3.5 h-3.5" />
             Profile
           </TabsTrigger>
-          <TabsTrigger value="notifications" className="gap-1.5 text-xs px-2.5 py-1.5 h-7 data-[state=active]:bg-white data-[state=active]:shadow-sm rounded-md">
+          <TabsTrigger value="notifications" className="gap-1.5 text-xs px-3 py-1.5 h-7 data-[state=active]:bg-white data-[state=active]:shadow-sm rounded-md">
             <Bell className="w-3.5 h-3.5" />
             Notifications
           </TabsTrigger>
-          <TabsTrigger value="appearance" className="gap-1.5 text-xs px-2.5 py-1.5 h-7 data-[state=active]:bg-white data-[state=active]:shadow-sm rounded-md">
+          <TabsTrigger value="appearance" className="gap-1.5 text-xs px-3 py-1.5 h-7 data-[state=active]:bg-white data-[state=active]:shadow-sm rounded-md">
             <Palette className="w-3.5 h-3.5" />
             Appearance
           </TabsTrigger>
-          <TabsTrigger value="security" className="gap-1.5 text-xs px-2.5 py-1.5 h-7 data-[state=active]:bg-white data-[state=active]:shadow-sm rounded-md">
+          <TabsTrigger value="security" className="gap-1.5 text-xs px-3 py-1.5 h-7 data-[state=active]:bg-white data-[state=active]:shadow-sm rounded-md">
             <Lock className="w-3.5 h-3.5" />
             Security
           </TabsTrigger>
         </TabsList>
 
         {/* Profile Tab */}
-        <TabsContent value="profile" className="space-y-6">
+        <TabsContent value="profile" className="space-y-6 mt-6">
           <Card>
             <CardHeader>
               <CardTitle>Profile Information</CardTitle>

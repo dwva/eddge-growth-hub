@@ -80,55 +80,53 @@ const TeacherStudentsContent = () => {
   };
 
   return (
-    <div className="space-y-6">
-      {/* Page Header */}
-      <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
+    <div className="space-y-10 max-w-[1600px]">
+      {/* Page Header - Clean */}
+      <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4 pb-6 border-b border-gray-100">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">Students</h1>
-          <p className="text-sm text-gray-500 mt-1">Class 10-A • {classStudents.length} students enrolled</p>
+          <h1 className="text-3xl font-bold text-gray-900">Students</h1>
+          <p className="text-sm text-gray-500 mt-2">Class 10-A • {classStudents.length} students enrolled</p>
         </div>
         <div className="flex items-center gap-3">
-          <Button variant="outline" size="sm" className="gap-2 h-9 rounded-xl">
+          <Button variant="outline" size="sm" className="gap-2 h-10 rounded-xl border-gray-200">
             <FileText className="w-4 h-4" />
             Export
           </Button>
         </div>
       </div>
 
-      {/* Filters Bar */}
-      <Card className="rounded-2xl shadow-sm border-gray-100">
-        <CardContent className="p-4">
-          <div className="flex flex-col sm:flex-row gap-4">
-            <div className="relative flex-1">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
-              <Input
-                placeholder="Search students by name..."
-                value={searchQuery}
-                onChange={(e) => { setSearchQuery(e.target.value); setCurrentPage(1); }}
-                className="pl-10 h-10 rounded-xl border-gray-200 bg-gray-50 focus:bg-white"
-              />
-            </div>
-            <div className="flex items-center gap-3">
-              <Select value={performanceFilter} onValueChange={(v) => { setPerformanceFilter(v); setCurrentPage(1); }}>
-                <SelectTrigger className="w-44 h-10 rounded-xl border-gray-200">
-                  <Filter className="w-4 h-4 mr-2 text-gray-400" />
-                  <SelectValue placeholder="Filter" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="all">All Students</SelectItem>
-                  <SelectItem value="high">High (≥85%)</SelectItem>
-                  <SelectItem value="medium">Medium (70-84%)</SelectItem>
-                  <SelectItem value="low">Low (&lt;70%)</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-          </div>
-        </CardContent>
-      </Card>
+      {/* Filters Bar - Clean, No Card */}
+      <div className="flex flex-col sm:flex-row gap-3">
+        <div className="relative flex-1">
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+          <Input
+            placeholder="Search students by name..."
+            value={searchQuery}
+            onChange={(e) => { setSearchQuery(e.target.value); setCurrentPage(1); }}
+            className="pl-10 h-12 rounded-xl border-gray-200"
+          />
+        </div>
+        <Select value={performanceFilter} onValueChange={(v) => { setPerformanceFilter(v); setCurrentPage(1); }}>
+          <SelectTrigger className="w-full sm:w-[200px] h-12 rounded-xl border-gray-200">
+            <Filter className="w-4 h-4 mr-2 text-gray-400" />
+            <SelectValue placeholder="Filter" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="all">All Students</SelectItem>
+            <SelectItem value="high">High (≥85%)</SelectItem>
+            <SelectItem value="medium">Medium (70-84%)</SelectItem>
+            <SelectItem value="low">Low (&lt;70%)</SelectItem>
+          </SelectContent>
+        </Select>
+      </div>
 
       {/* Students List */}
-      {paginatedStudents.length > 0 ? (
-        <Card className="rounded-2xl shadow-sm border-gray-100 overflow-hidden">
+      <div>
+        <h2 className="text-sm font-semibold text-gray-400 uppercase tracking-wide mb-5">
+          {filteredStudents.length} Students
+        </h2>
+        {paginatedStudents.length > 0 ? (
+          <Card className="border-0 shadow-sm rounded-2xl overflow-hidden">
           {/* Table Header */}
           <div className="hidden md:grid grid-cols-12 gap-4 px-6 py-3 bg-gray-50 border-b border-gray-100 text-xs font-semibold text-gray-500 uppercase tracking-wide">
             <div className="col-span-4">Student</div>
@@ -269,22 +267,23 @@ const TeacherStudentsContent = () => {
               </Button>
             </div>
           </div>
-        </Card>
-      ) : (
-        <Card className="rounded-2xl shadow-sm border-gray-100">
-          <CardContent className="py-16">
-            <div className="text-center">
-              <div className="w-16 h-16 rounded-2xl bg-gray-100 flex items-center justify-center mx-auto mb-4">
-                <Users className="w-8 h-8 text-gray-400" />
+          </Card>
+        ) : (
+          <Card className="border-0 shadow-sm rounded-2xl">
+            <CardContent className="py-16">
+              <div className="text-center">
+                <div className="w-16 h-16 rounded-2xl bg-gray-100 flex items-center justify-center mx-auto mb-4">
+                  <Users className="w-8 h-8 text-gray-400" />
+                </div>
+                <h3 className="text-lg font-semibold text-gray-900 mb-2">No students found</h3>
+                <p className="text-gray-500 text-sm">
+                  {searchQuery ? 'Try a different search term' : 'No students match the current filter'}
+                </p>
               </div>
-              <h3 className="text-lg font-semibold text-gray-900 mb-2">No students found</h3>
-              <p className="text-gray-500 text-sm">
-                {searchQuery ? 'Try a different search term' : 'No students match the current filter'}
-              </p>
-            </div>
-          </CardContent>
-        </Card>
-      )}
+            </CardContent>
+          </Card>
+        )}
+      </div>
     </div>
   );
 };

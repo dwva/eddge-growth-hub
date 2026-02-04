@@ -127,26 +127,27 @@ const TeacherAIToolsContent = () => {
   const selectedChapter = chapters.find(ch => ch.id === formData.chapter);
 
   return (
-    <div className="space-y-6">
-      {/* Header */}
-      <div className="flex items-center gap-4">
-        <Button variant="ghost" size="icon" onClick={() => navigate('/teacher')}>
-          <ArrowLeft className="w-5 h-5" />
-        </Button>
+    <div className="space-y-10 max-w-[1600px]">
+      {/* Page Header - Clean */}
+      <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4 pb-6 border-b border-gray-100">
         <div>
-          <h1 className="text-2xl font-bold">AI Tools</h1>
-          <p className="text-muted-foreground">Generate CBSE-aligned questions and worksheets using AI</p>
+          <h1 className="text-3xl font-bold text-gray-900">AI Tools</h1>
+          <p className="text-sm text-gray-500 mt-2">Generate CBSE-aligned questions and worksheets using AI</p>
         </div>
+        <Button variant="ghost" size="sm" className="h-10 rounded-xl" onClick={() => navigate('/teacher')}>
+          <ArrowLeft className="w-4 h-4 mr-2" />
+          Back
+        </Button>
       </div>
 
       <Tabs value={activeTab} onValueChange={setActiveTab}>
-        <TabsList>
-          <TabsTrigger value="questions" className="gap-2">
-            <Sparkles className="w-4 h-4" />
+        <TabsList className="h-8 p-1 rounded-lg bg-gray-100">
+          <TabsTrigger value="questions" className="gap-2 text-xs px-3 py-1.5 h-7 data-[state=active]:bg-white data-[state=active]:shadow-sm rounded-md">
+            <Sparkles className="w-3.5 h-3.5" />
             Question Generator
           </TabsTrigger>
-          <TabsTrigger value="worksheet" className="gap-2">
-            <FileText className="w-4 h-4" />
+          <TabsTrigger value="worksheet" className="gap-2 text-xs px-3 py-1.5 h-7 data-[state=active]:bg-white data-[state=active]:shadow-sm rounded-md">
+            <FileText className="w-3.5 h-3.5" />
             Worksheet Generator
           </TabsTrigger>
         </TabsList>

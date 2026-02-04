@@ -92,16 +92,16 @@ const TeacherAssessmentsContent = () => {
   const avgScore = Math.round(assessmentResults.reduce((acc, r) => acc + r.avgScore, 0) / assessmentResults.length);
 
   return (
-    <div className="space-y-6">
-      {/* Page Header */}
-      <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
+    <div className="space-y-10 max-w-[1600px]">
+      {/* Page Header - Clean */}
+      <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4 pb-6 border-b border-gray-100">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">Assessments</h1>
-          <p className="text-sm text-gray-500 mt-1">Create and manage assessments for your classes</p>
+          <h1 className="text-3xl font-bold text-gray-900">Assessments</h1>
+          <p className="text-sm text-gray-500 mt-2">Create and manage assessments for your classes</p>
         </div>
         <Dialog open={isCreateOpen} onOpenChange={setIsCreateOpen}>
           <DialogTrigger asChild>
-            <Button size="sm" className="gap-2 h-9 rounded-xl">
+            <Button size="sm" className="gap-2 h-10 rounded-xl">
               <Plus className="w-4 h-4" />
               Create Assessment
             </Button>
@@ -202,78 +202,81 @@ const TeacherAssessmentsContent = () => {
         </Dialog>
       </div>
 
-      {/* KPI Cards */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-        <StatCard 
-          title="Total Assessments" 
-          value={assessments.length} 
-          icon={<ClipboardList className="w-5 h-5" />} 
-          iconBg="bg-blue-50 text-blue-600"
-        />
-        <StatCard 
-          title="Published" 
-          value={publishedCount} 
-          icon={<CheckCircle2 className="w-5 h-5" />} 
-          iconBg="bg-emerald-50 text-emerald-600"
-        />
-        <StatCard 
-          title="Drafts" 
-          value={draftCount} 
-          icon={<FileText className="w-5 h-5" />} 
-          iconBg="bg-gray-100 text-gray-600"
-        />
-        <StatCard 
-          title="Avg Score" 
-          value={`${avgScore}%`} 
-          icon={<BarChart3 className="w-5 h-5" />} 
-          iconBg="bg-violet-50 text-violet-600"
-        />
+      {/* Section 1: Overview Metrics */}
+      <div>
+        <h2 className="text-sm font-semibold text-gray-400 uppercase tracking-wide mb-5">Overview</h2>
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-5">
+          <StatCard 
+            title="Total Assessments" 
+            value={assessments.length} 
+            icon={<ClipboardList className="w-5 h-5" />} 
+            iconBg="bg-blue-50 text-blue-600"
+          />
+          <StatCard 
+            title="Published" 
+            value={publishedCount} 
+            icon={<CheckCircle2 className="w-5 h-5" />} 
+            iconBg="bg-emerald-50 text-emerald-600"
+          />
+          <StatCard 
+            title="Drafts" 
+            value={draftCount} 
+            icon={<FileText className="w-5 h-5" />} 
+            iconBg="bg-gray-100 text-gray-600"
+          />
+          <StatCard 
+            title="Avg Score" 
+            value={`${avgScore}%`} 
+            icon={<BarChart3 className="w-5 h-5" />} 
+            iconBg="bg-violet-50 text-violet-600"
+          />
+        </div>
       </div>
 
       <Tabs defaultValue="all">
-        <TabsList className="w-full lg:w-auto inline-flex h-10 p-1 rounded-xl bg-gray-100">
-          <TabsTrigger value="all" className="px-4 py-2 text-sm rounded-lg data-[state=active]:bg-white data-[state=active]:shadow-sm">
+        <TabsList className="w-full lg:w-auto inline-flex h-8 p-1 rounded-lg bg-gray-100">
+          <TabsTrigger value="all" className="px-4 py-1.5 text-xs rounded-lg data-[state=active]:bg-white data-[state=active]:shadow-sm">
             All Assessments
           </TabsTrigger>
-          <TabsTrigger value="results" className="px-4 py-2 text-sm rounded-lg data-[state=active]:bg-white data-[state=active]:shadow-sm">
+          <TabsTrigger value="results" className="px-4 py-1.5 text-xs rounded-lg data-[state=active]:bg-white data-[state=active]:shadow-sm">
             Results
           </TabsTrigger>
         </TabsList>
 
         {/* All Assessments Tab */}
-        <TabsContent value="all" className="space-y-4 mt-6">
-          {/* Filters */}
-          <Card className="rounded-2xl shadow-sm border-gray-100">
-            <CardContent className="p-4">
-              <div className="flex flex-col sm:flex-row gap-4">
-                <div className="relative flex-1">
-                  <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
-                  <Input
-                    placeholder="Search assessments..."
-                    value={searchQuery}
-                    onChange={(e) => setSearchQuery(e.target.value)}
-                    className="pl-10 h-10 rounded-xl border-gray-200 bg-gray-50 focus:bg-white"
-                  />
-                </div>
-                <Select value={statusFilter} onValueChange={setStatusFilter}>
-                  <SelectTrigger className="w-40 h-10 rounded-xl border-gray-200">
-                    <SelectValue placeholder="All Status" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="all">All Status</SelectItem>
-                    <SelectItem value="draft">Draft</SelectItem>
-                    <SelectItem value="published">Published</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-            </CardContent>
-          </Card>
+        <TabsContent value="all" className="space-y-6 mt-6">
+          {/* Filters - Clean Bar */}
+          <div className="flex flex-col sm:flex-row gap-3">
+            <div className="relative flex-1">
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+              <Input
+                placeholder="Search assessments..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="pl-10 h-12 rounded-xl border-gray-200"
+              />
+            </div>
+            <Select value={statusFilter} onValueChange={setStatusFilter}>
+              <SelectTrigger className="w-full sm:w-[180px] h-12 rounded-xl border-gray-200">
+                <SelectValue placeholder="All Status" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">All Status</SelectItem>
+                <SelectItem value="draft">Draft</SelectItem>
+                <SelectItem value="published">Published</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
 
-          {/* Assessment Cards Grid */}
-          {filteredAssessments.length > 0 ? (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-              {filteredAssessments.map((assessment) => (
-                <Card key={assessment.id} className="rounded-2xl shadow-sm border-gray-100 hover:shadow-md transition-shadow overflow-hidden">
+          {/* Section 2: Assessments */}
+          <div>
+            <h2 className="text-sm font-semibold text-gray-400 uppercase tracking-wide mb-5">
+              {filteredAssessments.length} Assessments
+            </h2>
+            {filteredAssessments.length > 0 ? (
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                {filteredAssessments.map((assessment) => (
+                  <Card key={assessment.id} className="border-0 shadow-sm rounded-2xl hover:shadow-md transition-shadow overflow-hidden">
                   <CardContent className="p-5">
                     {/* Header */}
                     <div className="flex items-start justify-between mb-4">
@@ -350,9 +353,9 @@ const TeacherAssessmentsContent = () => {
               </CardContent>
             </Card>
           )}
+          </div>
         </TabsContent>
 
-        {/* Results Tab */}
         <TabsContent value="results" className="space-y-6 mt-6">
           {/* Results Cards */}
           {assessmentResults.map((result) => (
