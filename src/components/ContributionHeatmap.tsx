@@ -120,38 +120,41 @@ export function ContributionHeatmap({
         </p>
       </div>
 
-      <div className="overflow-x-auto scrollbar-hide">
-        <div className="inline-block min-w-0">
-          {/* Month labels - one per month at its first week */}
-          <div className="mb-2 flex gap-[3px] pl-8">
-            {grid.map((_, weekIdx) => {
-              const monthIdx = monthColStart.findIndex((w) => w === weekIdx);
-              return (
-                <div
-                  key={weekIdx}
-                  className={`h-3 w-3 flex-shrink-0 text-[10px] leading-none flex items-center ${labelClass}`}
-                >
-                  {monthIdx >= 0 ? MONTH_LABELS[monthIdx] : ''}
-                </div>
-              );
-            })}
+      <div className="w-full overflow-x-auto scrollbar-hide">
+        <div className="w-full flex flex-col min-w-0">
+          {/* Month labels - same structure as grid row (spacer + 53 equal-width slots) for alignment */}
+          <div className="mb-2 flex w-full gap-[2px] min-w-0">
+            <div className="w-8 flex-shrink-0" aria-hidden />
+            <div className="flex flex-1 gap-[2px] min-w-0">
+              {grid.map((_, weekIdx) => {
+                const monthIdx = monthColStart.findIndex((w) => w === weekIdx);
+                return (
+                  <div
+                    key={weekIdx}
+                    className={`flex-1 min-w-0 text-[10px] leading-none flex items-center justify-center overflow-hidden ${labelClass}`}
+                  >
+                    {monthIdx >= 0 ? MONTH_LABELS[monthIdx] : ''}
+                  </div>
+                );
+              })}
+            </div>
           </div>
 
-          <div className="flex gap-[3px]">
+          <div className="flex w-full gap-[2px] min-w-0">
             {/* Day labels - Mon, Wed, Fri to match GitHub style */}
-            <div className="flex w-8 flex-shrink-0 flex-col gap-[3px] pt-[2px]">
+            <div className="flex w-8 flex-shrink-0 flex-col gap-[2px] pt-[2px]">
               {[0, 1, 2, 3, 4, 5, 6].map((d) => (
-                <div key={d} className={`h-3 text-[10px] leading-none flex items-center ${labelClass}`}>
+                <div key={d} className={`min-h-[10px] flex-1 text-[10px] leading-none flex items-center ${labelClass}`}>
                   {[1, 3, 5].includes(d) ? DAY_LABELS[d] : ''}
                 </div>
               ))}
             </div>
 
-            {/* Grid */}
+            {/* Grid - fills remaining width; 53 columns share space equally */}
             <TooltipProvider delayDuration={0}>
-              <div className="flex gap-[3px]">
+              <div className="flex flex-1 gap-[2px] min-w-0">
                 {grid.map((week, weekIdx) => (
-                  <div key={weekIdx} className="flex flex-col gap-[3px]">
+                  <div key={weekIdx} className="flex flex-1 flex-col gap-[2px] min-w-0">
                     {week.map((cell, dayIdx) => {
                       const level = cell?.level ?? 0;
                       const bg = PURPLE_LEVELS[level];
@@ -160,7 +163,7 @@ export function ContributionHeatmap({
                           <TooltipTrigger asChild>
                             <button
                               type="button"
-                              className={`h-3 w-3 rounded-sm ${bg} hover:ring-2 hover:ring-purple-400 hover:ring-offset-1 ${ringOffsetClass} transition-all focus:outline-none`}
+                              className={`w-full aspect-square min-w-[8px] min-h-[8px] rounded-sm ${bg} hover:ring-2 hover:ring-purple-400 hover:ring-offset-1 ${ringOffsetClass} transition-all focus:outline-none flex-shrink-0`}
                               aria-label={cell ? `${cell.dateKey}: ${cell.count} contributions` : 'No contributions'}
                             />
                           </TooltipTrigger>
