@@ -7,7 +7,8 @@ import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogFooter } from '@/components/ui/dialog';
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from '@/components/ui/alert-dialog';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { superAdminAdminsApi, superAdminAuditApi, type InternalAdminUser, type AdminRole } from '@/services/superAdminApi';
 import { LoadingState } from '@/components/shared/LoadingState';
@@ -21,7 +22,10 @@ const SuperAdminAdmins = () => {
   const queryClient = useQueryClient();
 
   const [createDialogOpen, setCreateDialogOpen] = useState(false);
+  const [createConfirmOpen, setCreateConfirmOpen] = useState(false);
   const [editDialogOpen, setEditDialogOpen] = useState(false);
+  const [disableConfirmOpen, setDisableConfirmOpen] = useState(false);
+  const [roleChangeConfirmOpen, setRoleChangeConfirmOpen] = useState(false);
   const [selectedAdmin, setSelectedAdmin] = useState<InternalAdminUser | null>(null);
 
   const [newAdminEmail, setNewAdminEmail] = useState('');
@@ -55,12 +59,13 @@ const SuperAdminAdmins = () => {
         name: newAdminName,
         role: newAdminRole,
       });
-      await logAction('CREATE_INTERNAL_ADMIN', created.id, `role=${created.role}`);
+      await logAction('ADMIN_CREATED', created.id, `role=${created.role}`);
       return created;
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['superadmin', 'admins'] });
       setCreateDialogOpen(false);
+      setCreateConfirmOpen(false);
       setNewAdminEmail('');
       setNewAdminName('');
       setNewAdminRole('OPS');
@@ -75,11 +80,24 @@ const SuperAdminAdmins = () => {
     },
   });
 
+  const handleCreateConfirm = () => {
+    if (!newAdminEmail || !newAdminName) {
+      toast({
+        title: 'Validation Error',
+        description: 'Please fill in all required fields',
+        variant: 'destructive',
+      });
+      return;
+    }
+    setCreateDialogOpen(false);
+    setCreateConfirmOpen(true);
+  };
+
   const updateRoleMutation = useMutation({
     mutationFn: async () => {
       if (!selectedAdmin) return;
       await superAdminAdminsApi.updateAdminRole(selectedAdmin.id, roleValue, user?.email || '');
-      await logAction('UPDATE_INTERNAL_ADMIN_ROLE', selectedAdmin.id, `role=${roleValue}`);
+      await logAction('ADMIN_ROLE_CHANGED', selectedAdmin.id, `role=${roleValue}`);
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['superadmin', 'admins'] });
@@ -102,6 +120,7 @@ const SuperAdminAdmins = () => {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['superadmin', 'admins'] });
+      setDisableConfirmOpen(false);
       toast({ title: 'Admin disabled', description: 'Admin access has been disabled.' });
     },
     onError: (error: Error) => {
@@ -112,6 +131,38 @@ const SuperAdminAdmins = () => {
       });
     },
   });
+
+  const handleDisableClick = (admin: InternalAdminUser) => {
+    if (admin.email === user?.email) {
+      toast({
+        title: 'Cannot disable yourself',
+        description: 'You cannot disable your own account.',
+        variant: 'destructive',
+      });
+      return;
+    }
+    setSelectedAdmin(admin);
+    setDisableConfirmOpen(true);
+  };
+
+  const handleRoleChangeClick = (admin: InternalAdminUser) => {
+    if (admin.email === user?.email) {
+      toast({
+        title: 'Cannot change your own role',
+        description: 'You cannot change your own role. Please ask another ROOT admin.',
+        variant: 'destructive',
+      });
+      return;
+    }
+    setSelectedAdmin(admin);
+    setRoleValue(admin.role);
+    setRoleChangeConfirmOpen(true);
+  };
+
+  const handleRoleChangeConfirm = () => {
+    setRoleChangeConfirmOpen(false);
+    setEditDialogOpen(true);
+  };
 
   return (
     <SuperAdminDashboardLayout>
@@ -176,6 +227,7 @@ const SuperAdminAdmins = () => {
                     <TableHead>Role</TableHead>
                     <TableHead>Status</TableHead>
                     <TableHead>Last Login</TableHead>
+                    <TableHead>Created At</TableHead>
                     <TableHead>Actions</TableHead>
                   </TableRow>
                 </TableHeader>
@@ -197,17 +249,17 @@ const SuperAdminAdmins = () => {
                           ? '—'
                           : new Date(admin.last_login_at).toLocaleString()}
                       </TableCell>
+                      <TableCell className="text-xs text-muted-foreground">
+                        {admin.created_at ? new Date(admin.created_at).toLocaleDateString() : 'N/A'}
+                      </TableCell>
                       <TableCell>
                         <div className="flex gap-2">
                           <Button
                             size="sm"
                             variant="outline"
-                            onClick={() => {
-                              setSelectedAdmin(admin);
-                              setRoleValue(admin.role);
-                              setEditDialogOpen(true);
-                            }}
-                            disabled={!admin.is_active}
+                            onClick={() => handleRoleChangeClick(admin)}
+                            disabled={!admin.is_active || admin.email === user?.email}
+                            title={admin.email === user?.email ? 'You cannot change your own role' : ''}
                           >
                             <Edit2 className="mr-1 h-4 w-4" />
                             Role
@@ -215,8 +267,9 @@ const SuperAdminAdmins = () => {
                           <Button
                             size="sm"
                             variant="destructive"
-                            onClick={() => disableMutation.mutate(admin)}
-                            disabled={!admin.is_active}
+                            onClick={() => handleDisableClick(admin)}
+                            disabled={!admin.is_active || admin.email === user?.email}
+                            title={admin.email === user?.email ? 'You cannot disable your own account' : ''}
                           >
                             <Ban className="mr-1 h-4 w-4" />
                             Disable
@@ -273,18 +326,18 @@ const SuperAdminAdmins = () => {
                   </SelectContent>
                 </Select>
               </div>
-              <div className="flex justify-end gap-2">
+              <DialogFooter>
                 <Button variant="outline" size="sm" onClick={() => setCreateDialogOpen(false)}>
                   Cancel
                 </Button>
                 <Button
                   size="sm"
-                  onClick={() => createMutation.mutate()}
-                  disabled={!newAdminEmail || !newAdminName || createMutation.isPending}
+                  onClick={handleCreateConfirm}
+                  disabled={!newAdminEmail || !newAdminName}
                 >
-                  Create
+                  Continue
                 </Button>
-              </div>
+              </DialogFooter>
             </div>
           </DialogContent>
         </Dialog>
@@ -313,22 +366,91 @@ const SuperAdminAdmins = () => {
                     </SelectContent>
                   </Select>
                 </div>
-                <div className="flex justify-end gap-2">
+                <DialogFooter>
                   <Button variant="outline" size="sm" onClick={() => setEditDialogOpen(false)}>
                     Cancel
                   </Button>
                   <Button
                     size="sm"
                     onClick={() => updateRoleMutation.mutate()}
-                    disabled={updateRoleMutation.isPending}
+                    disabled={updateRoleMutation.isPending || selectedAdmin?.email === user?.email}
                   >
-                    Save
+                    {updateRoleMutation.isPending ? 'Saving...' : 'Save Changes'}
                   </Button>
-                </div>
+                </DialogFooter>
               </div>
             )}
           </DialogContent>
         </Dialog>
+
+        {/* Disable Admin Confirmation Dialog */}
+        <AlertDialog open={disableConfirmOpen} onOpenChange={setDisableConfirmOpen}>
+          <AlertDialogContent>
+            <AlertDialogHeader>
+              <AlertDialogTitle>Disable Admin Access?</AlertDialogTitle>
+              <AlertDialogDescription>
+                Are you sure you want to disable access for <span className="font-semibold">{selectedAdmin?.email}</span>?
+                This will prevent them from logging in to the SuperAdmin dashboard. This action cannot be undone.
+              </AlertDialogDescription>
+            </AlertDialogHeader>
+            <AlertDialogFooter>
+              <AlertDialogCancel>Cancel</AlertDialogCancel>
+              <AlertDialogAction
+                onClick={() => selectedAdmin && disableMutation.mutate(selectedAdmin)}
+                disabled={disableMutation.isPending}
+                className="bg-red-600 hover:bg-red-700"
+              >
+                {disableMutation.isPending ? 'Disabling...' : 'Disable Admin'}
+              </AlertDialogAction>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
+
+        {/* Create Admin Confirmation Dialog */}
+        <AlertDialog open={createConfirmOpen} onOpenChange={setCreateConfirmOpen}>
+          <AlertDialogContent>
+            <AlertDialogHeader>
+              <AlertDialogTitle>Create New Internal Admin?</AlertDialogTitle>
+              <AlertDialogDescription>
+                You are about to create a new internal admin with the following details:
+                <ul className="list-disc list-inside mt-2 space-y-1">
+                  <li><span className="font-semibold">Name:</span> {newAdminName}</li>
+                  <li><span className="font-semibold">Email:</span> {newAdminEmail}</li>
+                  <li><span className="font-semibold">Role:</span> {newAdminRole}</li>
+                </ul>
+                This will grant them access to the SuperAdmin dashboard. Are you sure you want to proceed?
+              </AlertDialogDescription>
+            </AlertDialogHeader>
+            <AlertDialogFooter>
+              <AlertDialogCancel onClick={() => setCreateDialogOpen(true)}>Back</AlertDialogCancel>
+              <AlertDialogAction
+                onClick={() => createMutation.mutate()}
+                disabled={createMutation.isPending}
+              >
+                {createMutation.isPending ? 'Creating...' : 'Create Admin'}
+              </AlertDialogAction>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
+
+        {/* Role Change Confirmation Dialog */}
+        <AlertDialog open={roleChangeConfirmOpen} onOpenChange={setRoleChangeConfirmOpen}>
+          <AlertDialogContent>
+            <AlertDialogHeader>
+              <AlertDialogTitle>Change Admin Role?</AlertDialogTitle>
+              <AlertDialogDescription>
+                You are about to change the role for <span className="font-semibold">{selectedAdmin?.email}</span>.
+                This will affect their access permissions. Are you sure you want to proceed?
+              </AlertDialogDescription>
+            </AlertDialogHeader>
+            <AlertDialogFooter>
+              <AlertDialogCancel>Cancel</AlertDialogCancel>
+              <AlertDialogAction onClick={handleRoleChangeConfirm}>
+                Continue to Role Selection
+              </AlertDialogAction>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
       </div>
     </SuperAdminDashboardLayout>
   );

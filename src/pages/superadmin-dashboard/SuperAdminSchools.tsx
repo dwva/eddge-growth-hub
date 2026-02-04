@@ -17,6 +17,7 @@ const SuperAdminSchools = () => {
   const [search, setSearch] = useState('');
   const [statusFilter, setStatusFilter] = useState<string>('all');
   const [planFilter, setPlanFilter] = useState<string>('all');
+  const [lifecycleFilter, setLifecycleFilter] = useState<string>('all');
   const [page, setPage] = useState(1);
   const [selectedSchool, setSelectedSchool] = useState<School | null>(null);
   const [dialogOpen, setDialogOpen] = useState(false);
@@ -31,7 +32,7 @@ const SuperAdminSchools = () => {
     queryFn: () => superAdminApi.getSchools(page, 50, search),
   });
 
-  // Filter schools client-side by status and plan
+  // Filter schools client-side by status, plan, and lifecycle
   const filteredSchools = useMemo(() => {
     if (!data?.schools) return [];
     return data.schools.filter(school => {
@@ -40,9 +41,10 @@ const SuperAdminSchools = () => {
         (statusFilter === 'suspended' && !school.is_active) ||
         (statusFilter === 'trial' && school.subscription_status === 'Trial');
       const matchesPlan = planFilter === 'all' || school.subscription_status === planFilter;
-      return matchesStatus && matchesPlan;
+      const matchesLifecycle = lifecycleFilter === 'all' || (school as any).lifecycle_state === lifecycleFilter;
+      return matchesStatus && matchesPlan && matchesLifecycle;
     });
-  }, [data?.schools, statusFilter, planFilter]);
+  }, [data?.schools, statusFilter, planFilter, lifecycleFilter]);
 
   const { data: subscriptionData } = useQuery({
     queryKey: ["superadmin", "school-subscription", selectedSchool?.id],
@@ -192,6 +194,19 @@ const SuperAdminSchools = () => {
                     <SelectItem value="Premium">Premium</SelectItem>
                   </SelectContent>
                 </Select>
+                <Select value={lifecycleFilter} onValueChange={(value) => { setLifecycleFilter(value); setPage(1); }}>
+                  <SelectTrigger className="w-40">
+                    <SelectValue placeholder="Filter by lifecycle" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="all">All Lifecycle</SelectItem>
+                    <SelectItem value="TRIAL">Trial</SelectItem>
+                    <SelectItem value="PILOT">Pilot</SelectItem>
+                    <SelectItem value="ACTIVE">Active</SelectItem>
+                    <SelectItem value="SUSPENDED">Suspended</SelectItem>
+                    <SelectItem value="CHURNED">Churned</SelectItem>
+                  </SelectContent>
+                </Select>
               </div>
             </div>
           </CardHeader>
@@ -274,7 +289,7 @@ const SuperAdminSchools = () => {
                   <div className="flex items-center justify-between mt-4">
                     <div className="text-sm text-muted-foreground">
                       Showing {filteredSchools.length} of {data?.total || 0} schools
-                      {(statusFilter !== 'all' || planFilter !== 'all') && ' (filtered)'}
+                      {(statusFilter !== 'all' || planFilter !== 'all' || lifecycleFilter !== 'all') && ' (filtered)'}
                     </div>
                     <div className="flex gap-2">
                       <Button
