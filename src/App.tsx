@@ -84,6 +84,9 @@ import SuperAdminAlerts from "./pages/superadmin-dashboard/SuperAdminAlerts";
 import SuperAdminAdminAudit from "./pages/superadmin-dashboard/SuperAdminAdminAudit";
 import SuperAdminExport from "./pages/superadmin-dashboard/SuperAdminExport";
 import SuperAdminAICosts from "./pages/superadmin-dashboard/SuperAdminAICosts";
+import SuperAdminOnboarding from "./pages/superadmin-dashboard/SuperAdminOnboarding";
+import SuperAdminOnboardingReview from "./pages/superadmin-dashboard/SuperAdminOnboardingReview";
+import SchoolOnboardingWizard from "./pages/onboarding/SchoolOnboardingWizard";
 import SuperAdminAdmins from "./pages/superadmin-dashboard/SuperAdminAdmins";
 import SuperAdminSettings from "./pages/superadmin-dashboard/SuperAdminSettings";
 import SuperAdminIncidents from "./pages/superadmin-dashboard/SuperAdminIncidents";
@@ -440,6 +443,9 @@ const App = () => (
                 <SuperAdminOverview />
               </SuperAdminProtectedRoute>
             } />
+
+            {/* School Onboarding Wizard - Public route with token validation */}
+            <Route path="/onboarding/school" element={<SchoolOnboardingWizard />} />
 
             {/* Catch-all */}
             <Route path="*" element={<NotFound />} />

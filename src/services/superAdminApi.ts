@@ -1008,3 +1008,504 @@ export const superAdminSupportApi = {
   },
 };
 
+// ---------- School Onboarding ----------
+
+export type OnboardingStatus = 'INVITED' | 'IN_PROGRESS' | 'SUBMITTED' | 'APPROVED' | 'ACTIVE' | 'SUSPENDED';
+
+export interface SchoolOnboardingInvite {
+  id: string;
+  schoolName: string;
+  board: string;
+  contactEmail: string;
+  phone: string;
+  location: string;
+  initialPlan: string;
+  lifecycleState: LifecycleState;
+  onboardingStatus: OnboardingStatus;
+  onboardingProgress: number; // 0-100
+  token: string; // One-time token
+  tokenExpiresAt: string;
+  invitedAt: string;
+  submittedAt?: string;
+  approvedAt?: string;
+  schoolId?: string; // Created when approved
+  schoolAdminId?: string; // Created when approved
+}
+
+export interface OnboardingStepData {
+  schoolProfile?: {
+    schoolName: string;
+    logoUrl?: string;
+    academicYear: string;
+  };
+  academicSetup?: {
+    classes: string[];
+    sections: Record<string, string[]>; // class -> sections
+    subjectsPerClass: Record<string, string[]>; // class -> subjects
+  };
+  teacherSetup?: {
+    teachers: Array<{ name: string; email: string; subject?: string }>;
+  };
+  platformPreferences?: {
+    languagePreference: string;
+    notificationSettings: Record<string, boolean>;
+  };
+}
+
+const mockOnboardingQueue: SchoolOnboardingInvite[] = [
+  {
+    id: 'inv-001',
+    schoolName: 'Greenwood High School',
+    board: 'CBSE',
+    contactEmail: 'admin@greenwood.edu',
+    phone: '+91 11 2345 6789',
+    location: 'New Delhi',
+    initialPlan: 'Standard',
+    lifecycleState: 'TRIAL',
+    onboardingStatus: 'SUBMITTED',
+    onboardingProgress: 100,
+    token: 'token-greenwood-001',
+    tokenExpiresAt: new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString(),
+    invitedAt: '2024-01-10T10:00:00Z',
+    submittedAt: '2024-01-15T14:30:00Z',
+  },
+  {
+    id: 'inv-002',
+    schoolName: 'Riverside Academy',
+    board: 'ICSE',
+    contactEmail: 'contact@riverside.edu',
+    phone: '+91 22 3456 7890',
+    location: 'Mumbai',
+    initialPlan: 'Premium',
+    lifecycleState: 'PILOT',
+    onboardingStatus: 'IN_PROGRESS',
+    onboardingProgress: 60,
+    token: 'token-riverside-002',
+    tokenExpiresAt: new Date(Date.now() + 12 * 60 * 60 * 1000).toISOString(),
+    invitedAt: '2024-01-12T09:00:00Z',
+  },
+  {
+    id: 'inv-003',
+    schoolName: 'Sunshine Public School',
+    board: 'State Board',
+    contactEmail: 'info@sunshine.edu',
+    phone: '+91 80 4567 8901',
+    location: 'Bangalore',
+    initialPlan: 'Basic',
+    lifecycleState: 'TRIAL',
+    onboardingStatus: 'INVITED',
+    onboardingProgress: 0,
+    token: 'token-sunshine-003',
+    tokenExpiresAt: new Date(Date.now() + 20 * 60 * 60 * 1000).toISOString(),
+    invitedAt: '2024-01-14T11:00:00Z',
+  },
+];
+
+const mockOnboardingStepData: Record<string, OnboardingStepData> = {
+  'inv-001': {
+    schoolProfile: {
+      schoolName: 'Greenwood High School',
+      academicYear: '2024-2025',
+    },
+    academicSetup: {
+      classes: ['Class 9', 'Class 10', 'Class 11', 'Class 12'],
+      sections: {
+        'Class 9': ['A', 'B'],
+        'Class 10': ['A', 'B', 'C'],
+        'Class 11': ['A', 'B'],
+        'Class 12': ['A', 'B'],
+      },
+      subjectsPerClass: {
+        'Class 9': ['Mathematics', 'Science', 'English'],
+        'Class 10': ['Mathematics', 'Science', 'English'],
+        'Class 11': ['Mathematics', 'Physics', 'Chemistry'],
+        'Class 12': ['Mathematics', 'Physics', 'Chemistry'],
+      },
+    },
+    teacherSetup: {
+      teachers: [
+        { name: 'Dr. Priya Sharma', email: 'priya@greenwood.edu', subject: 'Mathematics' },
+        { name: 'Mr. Raj Kumar', email: 'raj@greenwood.edu', subject: 'Science' },
+      ],
+    },
+    platformPreferences: {
+      languagePreference: 'en',
+      notificationSettings: { email: true, sms: false },
+    },
+  },
+  'inv-002': {
+    schoolProfile: {
+      schoolName: 'Riverside Academy',
+      academicYear: '2024-2025',
+    },
+    academicSetup: {
+      classes: ['Class 9', 'Class 10'],
+      sections: {
+        'Class 9': ['A'],
+        'Class 10': ['A', 'B'],
+      },
+      subjectsPerClass: {
+        'Class 9': ['Mathematics', 'Science'],
+        'Class 10': ['Mathematics', 'Science'],
+      },
+    },
+  },
+};
+
+export const superAdminOnboardingApi = {
+  createSchoolInvite: async (data: {
+    schoolName: string;
+    board: string;
+    contactEmail: string;
+    phone: string;
+    location: string;
+    initialPlan: string;
+    lifecycleState: LifecycleState;
+  }, actorEmail: string): Promise<SchoolOnboardingInvite> => {
+    await delay(400);
+    const accessLevel = validateJWTToken();
+    if (!hasPermission(accessLevel!, 'ROOT')) {
+      throw new Error('Only ROOT access level can create school invites');
+    }
+
+    const token = `token-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
+    const expiresAt = new Date(Date.now() + 24 * 60 * 60 * 1000); // 24 hours
+
+    const invite: SchoolOnboardingInvite = {
+      id: `inv-${Date.now()}`,
+      ...data,
+      onboardingStatus: 'INVITED',
+      onboardingProgress: 0,
+      token,
+      tokenExpiresAt: expiresAt.toISOString(),
+      invitedAt: new Date().toISOString(),
+    };
+
+    mockOnboardingQueue.push(invite);
+    await superAdminAuditApi.logAdminAction({
+      actor: actorEmail,
+      action: 'SCHOOL_INVITE_SENT',
+      target: invite.id,
+      metadata: `School: ${data.schoolName}, Plan: ${data.initialPlan}`,
+    });
+
+    return invite;
+  },
+
+  getOnboardingQueue: async (): Promise<SchoolOnboardingInvite[]> => {
+    await delay(300);
+    validateJWTToken();
+    return mockOnboardingQueue;
+  },
+
+  getSchoolOnboardingStatus: async (inviteId: string): Promise<SchoolOnboardingInvite & { stepData?: OnboardingStepData }> => {
+    await delay(300);
+    validateJWTToken();
+    const invite = mockOnboardingQueue.find(i => i.id === inviteId);
+    if (!invite) throw new Error('Invite not found');
+    return {
+      ...invite,
+      stepData: mockOnboardingStepData[inviteId],
+    };
+  },
+
+  approveSchool: async (inviteId: string, actorEmail: string): Promise<void> => {
+    await delay(400);
+    const accessLevel = validateJWTToken();
+    if (!hasPermission(accessLevel!, 'ROOT')) {
+      throw new Error('Only ROOT access level can approve schools');
+    }
+
+    const invite = mockOnboardingQueue.find(i => i.id === inviteId);
+    if (!invite) throw new Error('Invite not found');
+    if (invite.onboardingStatus !== 'SUBMITTED') {
+      throw new Error('Only submitted schools can be approved');
+    }
+
+    invite.onboardingStatus = 'APPROVED';
+    invite.approvedAt = new Date().toISOString();
+    invite.schoolId = `sch-${Date.now()}`;
+    invite.schoolAdminId = `admin-${Date.now()}`;
+
+    await superAdminAuditApi.logAdminAction({
+      actor: actorEmail,
+      action: 'ONBOARDING_APPROVED',
+      target: inviteId,
+      metadata: `School: ${invite.schoolName}, School ID: ${invite.schoolId}`,
+    });
+  },
+
+  requestCorrection: async (inviteId: string, notes: string, actorEmail: string): Promise<{ emailPreview?: string }> => {
+    await delay(300);
+    validateJWTToken();
+    const invite = mockOnboardingQueue.find(i => i.id === inviteId);
+    if (!invite) throw new Error('Invite not found');
+    
+    // Render email template
+    const emailPreview = renderEmailTemplate('correction_request_email', {
+      school_name: invite.schoolName,
+      onboarding_link: `${typeof window !== 'undefined' ? window.location.origin : 'https://eddge.com'}/onboarding/school?token=${invite.token}`,
+      correction_notes: notes,
+    });
+
+    await superAdminAuditApi.logAdminAction({
+      actor: actorEmail,
+      action: 'ONBOARDING_CORRECTION_REQUESTED',
+      target: inviteId,
+      metadata: notes,
+    });
+
+    return { emailPreview };
+  },
+
+  suspendOnboarding: async (inviteId: string, actorEmail: string): Promise<void> => {
+    await delay(300);
+    const accessLevel = validateJWTToken();
+    if (!hasPermission(accessLevel!, 'ROOT')) {
+      throw new Error('Only ROOT access level can suspend onboarding');
+    }
+
+    const invite = mockOnboardingQueue.find(i => i.id === inviteId);
+    if (!invite) throw new Error('Invite not found');
+    invite.onboardingStatus = 'SUSPENDED';
+
+    await superAdminAuditApi.logAdminAction({
+      actor: actorEmail,
+      action: 'ONBOARDING_SUSPENDED',
+      target: inviteId,
+      metadata: `School: ${invite.schoolName}`,
+    });
+  },
+
+  checkOnboardingSLA: async (): Promise<Array<{ inviteId: string; daysInState: number; isStuck: boolean; warningLabel: string }>> => {
+    await delay(300);
+    validateJWTToken();
+
+    const INVITED_THRESHOLD_DAYS = 3; // X days for INVITED state
+    const IN_PROGRESS_THRESHOLD_DAYS = 7; // X days for IN_PROGRESS state
+
+    const now = new Date();
+    const slaResults: Array<{ inviteId: string; daysInState: number; isStuck: boolean; warningLabel: string }> = [];
+
+    mockOnboardingQueue.forEach((invite) => {
+      let referenceDate: Date;
+      let threshold: number;
+      let warningLabel: string;
+
+      if (invite.onboardingStatus === 'INVITED') {
+        referenceDate = new Date(invite.invitedAt);
+        threshold = INVITED_THRESHOLD_DAYS;
+        warningLabel = 'Invite Pending Too Long';
+      } else if (invite.onboardingStatus === 'IN_PROGRESS') {
+        referenceDate = new Date(invite.invitedAt); // Could also track last activity
+        threshold = IN_PROGRESS_THRESHOLD_DAYS;
+        warningLabel = 'Onboarding Incomplete';
+      } else {
+        return; // Skip other states
+      }
+
+      const daysInState = Math.floor((now.getTime() - referenceDate.getTime()) / (1000 * 60 * 60 * 24));
+      const isStuck = daysInState > threshold;
+
+      if (isStuck) {
+        slaResults.push({
+          inviteId: invite.id,
+          daysInState,
+          isStuck: true,
+          warningLabel,
+        });
+      }
+    });
+
+    return slaResults;
+  },
+
+  resendInvite: async (inviteId: string, actorEmail: string): Promise<{ emailSent: boolean; preview?: string }> => {
+    await delay(400);
+    const accessLevel = validateJWTToken();
+    if (!hasPermission(accessLevel!, 'ROOT')) {
+      throw new Error('Only ROOT access level can resend invites');
+    }
+
+    const invite = mockOnboardingQueue.find(i => i.id === inviteId);
+    if (!invite) throw new Error('Invite not found');
+
+    // Mock email rendering
+    const emailPreview = renderEmailTemplate('school_invite_email', {
+      school_admin_name: 'School Admin',
+      school_name: invite.schoolName,
+      onboarding_link: `${window.location.origin}/onboarding/school?token=${invite.token}`,
+    });
+
+    await superAdminAuditApi.logAdminAction({
+      actor: actorEmail,
+      action: 'ONBOARDING_INVITE_RESENT',
+      target: inviteId,
+      metadata: `School: ${invite.schoolName}, Email: ${invite.contactEmail}`,
+    });
+
+    return { emailSent: true, preview: emailPreview };
+  },
+
+  regenerateInviteToken: async (inviteId: string, actorEmail: string): Promise<{ newToken: string; expiresAt: string }> => {
+    await delay(400);
+    const accessLevel = validateJWTToken();
+    if (!hasPermission(accessLevel!, 'ROOT')) {
+      throw new Error('Only ROOT access level can regenerate tokens');
+    }
+
+    const invite = mockOnboardingQueue.find(i => i.id === inviteId);
+    if (!invite) throw new Error('Invite not found');
+
+    // Invalidate previous token and generate new one
+    const newToken = `token-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
+    const expiresAt = new Date(Date.now() + 24 * 60 * 60 * 1000); // Reset to 24 hours
+
+    invite.token = newToken;
+    invite.tokenExpiresAt = expiresAt.toISOString();
+
+    await superAdminAuditApi.logAdminAction({
+      actor: actorEmail,
+      action: 'ONBOARDING_TOKEN_REGENERATED',
+      target: inviteId,
+      metadata: `School: ${invite.schoolName}, Previous token invalidated`,
+    });
+
+    return { newToken, expiresAt: expiresAt.toISOString() };
+  },
+
+  renderEmailTemplate: async (templateId: string, variables: Record<string, string>): Promise<string> => {
+    await delay(200);
+    validateJWTToken();
+
+    return renderEmailTemplate(templateId, variables);
+  },
+};
+
+// Email template rendering helper (mock)
+function renderEmailTemplate(templateId: string, variables: Record<string, string>): string {
+  const templates: Record<string, { subject: string; body: string }> = {
+    school_invite_email: {
+      subject: "You're invited to onboard your school on EDDGE",
+      body: `Hello ${variables.school_admin_name || 'School Admin'},
+
+You've been invited to onboard ${variables.school_name || 'your school'} on EDDGE.
+Please complete onboarding using the link below (expires in 24 hours):
+
+${variables.onboarding_link || 'N/A'}
+
+Thank you,
+EDDGE Team`,
+    },
+    approval_email: {
+      subject: 'Your school has been activated on EDDGE',
+      body: `Congratulations! ${variables.school_name || 'Your school'} is now active on EDDGE.
+
+You can access the dashboard using your credentials.
+
+Welcome to EDDGE!
+EDDGE Team`,
+    },
+    correction_request_email: {
+      subject: 'Action required: Complete your school onboarding',
+      body: `Hello,
+
+We need a few corrections to complete onboarding for ${variables.school_name || 'your school'}.
+
+Please revisit the onboarding link:
+${variables.onboarding_link || 'N/A'}
+
+${variables.correction_notes ? `\nCorrection Notes:\n${variables.correction_notes}\n` : ''}
+
+Thank you,
+EDDGE Team`,
+    },
+  };
+
+  const template = templates[templateId];
+  if (!template) {
+    return `Template "${templateId}" not found.`;
+  }
+
+  return `Subject: ${template.subject}\n\n${template.body}`;
+}
+
+// ---------- School Admin Onboarding Wizard API ----------
+
+export const schoolOnboardingApi = {
+  validateOnboardingToken: async (token: string): Promise<{ valid: boolean; inviteId?: string; expiresAt?: string }> => {
+    await delay(200);
+    const invite = mockOnboardingQueue.find(i => i.token === token);
+    if (!invite) {
+      return { valid: false };
+    }
+
+    const expiresAt = new Date(invite.tokenExpiresAt);
+    if (expiresAt < new Date()) {
+      return { valid: false };
+    }
+
+    return { valid: true, inviteId: invite.id, expiresAt: invite.tokenExpiresAt };
+  },
+
+  getOnboardingProgress: async (token: string): Promise<{ invite: SchoolOnboardingInvite; stepData?: OnboardingStepData }> => {
+    await delay(300);
+    const validation = await schoolOnboardingApi.validateOnboardingToken(token);
+    if (!validation.valid || !validation.inviteId) {
+      throw new Error('Invalid or expired token');
+    }
+
+    const invite = mockOnboardingQueue.find(i => i.id === validation.inviteId);
+    if (!invite) throw new Error('Invite not found');
+
+    return {
+      invite,
+      stepData: mockOnboardingStepData[invite.id],
+    };
+  },
+
+  saveOnboardingStep: async (token: string, step: keyof OnboardingStepData, data: any): Promise<void> => {
+    await delay(300);
+    const validation = await schoolOnboardingApi.validateOnboardingToken(token);
+    if (!validation.valid || !validation.inviteId) {
+      throw new Error('Invalid or expired token');
+    }
+
+    const invite = mockOnboardingQueue.find(i => i.id === validation.inviteId);
+    if (!invite) throw new Error('Invite not found');
+
+    if (!mockOnboardingStepData[invite.id]) {
+      mockOnboardingStepData[invite.id] = {};
+    }
+
+    mockOnboardingStepData[invite.id][step] = data;
+    invite.onboardingStatus = 'IN_PROGRESS';
+
+    // Calculate progress
+    const steps = ['schoolProfile', 'academicSetup', 'teacherSetup', 'platformPreferences'];
+    const completedSteps = steps.filter(s => mockOnboardingStepData[invite.id][s as keyof OnboardingStepData]);
+    invite.onboardingProgress = Math.round((completedSteps.length / steps.length) * 100);
+  },
+
+  submitOnboarding: async (token: string): Promise<void> => {
+    await delay(400);
+    const validation = await schoolOnboardingApi.validateOnboardingToken(token);
+    if (!validation.valid || !validation.inviteId) {
+      throw new Error('Invalid or expired token');
+    }
+
+    const invite = mockOnboardingQueue.find(i => i.id === validation.inviteId);
+    if (!invite) throw new Error('Invite not found');
+
+    // Validate required steps
+    const stepData = mockOnboardingStepData[invite.id];
+    if (!stepData?.schoolProfile || !stepData?.academicSetup) {
+      throw new Error('Required steps (School Profile, Academic Setup) must be completed');
+    }
+
+    invite.onboardingStatus = 'SUBMITTED';
+    invite.submittedAt = new Date().toISOString();
+    invite.onboardingProgress = 100;
+  },
+};
+

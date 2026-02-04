@@ -17,7 +17,9 @@ import {
   Settings,
   AlertTriangle,
   Users,
-  Headphones
+  Headphones,
+  UserPlus,
+  ClipboardCheck
 } from 'lucide-react';
 
 interface NavItem {
@@ -29,6 +31,7 @@ interface NavItem {
 const navItems: NavItem[] = [
   { label: 'Platform Overview', icon: <LayoutDashboard className="w-5 h-5" />, path: '/dashboard/superadmin' },
   { label: 'School Registry', icon: <School className="w-5 h-5" />, path: '/dashboard/superadmin/schools' },
+  { label: 'School Onboarding', icon: <UserPlus className="w-5 h-5" />, path: '/dashboard/superadmin/onboarding' },
   { label: 'Usage Analytics', icon: <TrendingUp className="w-5 h-5" />, path: '/dashboard/superadmin/analytics' },
   { label: 'Billing', icon: <CreditCard className="w-5 h-5" />, path: '/dashboard/superadmin/billing' },
   { label: 'System Health', icon: <Activity className="w-5 h-5" />, path: '/dashboard/superadmin/health' },
