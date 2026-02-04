@@ -93,8 +93,8 @@ const StudentHome = () => {
   return (
     <StudentDashboardLayout>
       <div className="w-full">
-        {/* Main Grid - Full Width */}
-        <div className="space-y-6">
+        {/* Main Grid - Full Width; bottom padding so content doesn't touch screen edge */}
+        <div className="space-y-6 pb-10">
           
           {/* Hero Row: Focus Card + Stats Card */}
           <div className="grid grid-cols-1 lg:grid-cols-[1fr_360px] gap-4 items-stretch">
@@ -209,18 +209,49 @@ const StudentHome = () => {
             <ArrowRight className="w-4 h-4 text-gray-400" />
           </div>
 
-          {/* Main Content Grid - Left (My Learning + Stats) + Right (AI Study Suggestions) */}
-          <div className="grid grid-cols-1 lg:grid-cols-[1fr_340px] gap-6">
+          {/* Main Content Grid - Left (Quick actions + Continue Learn) + Right (AI Study Suggestions) */}
+          <div className="grid grid-cols-1 lg:grid-cols-[1fr_340px] gap-6 items-stretch">
             
-            {/* Left Column */}
-            <div className="space-y-6">
-              {/* Continue Learn - chapters studied, scrollable, updates when studied again */}
-              <div>
+            {/* Left Column - flex so Continue Learn fills space; max-h keeps section from touching bottom */}
+            <div className="flex flex-col gap-6 min-h-0 max-h-[460px]">
+              {/* Quick actions - 3 buttons */}
+              <div className="rounded-2xl border border-gray-100 bg-white shadow-sm p-4 flex-shrink-0">
+                <h3 className="text-base font-semibold text-gray-900 mb-4">Quick actions</h3>
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                  <Button
+                    variant="outline"
+                    className="h-auto py-4 px-4 flex flex-col items-center gap-2 rounded-xl border-gray-200 hover:border-primary hover:bg-primary/5"
+                    onClick={() => navigate('/student/planner')}
+                  >
+                    <CalendarDays className="w-6 h-6 text-primary" />
+                    <span className="text-sm font-medium">Planner</span>
+                  </Button>
+                  <Button
+                    variant="outline"
+                    className="h-auto py-4 px-4 flex flex-col items-center gap-2 rounded-xl border-gray-200 hover:border-primary hover:bg-primary/5"
+                    onClick={() => navigate('/student/practice')}
+                  >
+                    <Calculator className="w-6 h-6 text-emerald-600" />
+                    <span className="text-sm font-medium">Practice</span>
+                  </Button>
+                  <Button
+                    variant="outline"
+                    className="h-auto py-4 px-4 flex flex-col items-center gap-2 rounded-xl border-gray-200 hover:border-primary hover:bg-primary/5"
+                    onClick={() => navigate('/student/doubt-solver')}
+                  >
+                    <MessageSquare className="w-6 h-6 text-amber-600" />
+                    <span className="text-sm font-medium">Ask Doubt</span>
+                  </Button>
+                </div>
+              </div>
+
+              {/* Continue Learn - fills remaining height, bottom aligns with AI Suggestions */}
+              <div className="flex-1 flex flex-col min-h-0">
                 <div 
-                  className="rounded-2xl border border-gray-100 bg-white shadow-sm overflow-hidden"
+                  className="rounded-2xl border border-gray-100 bg-white shadow-sm overflow-hidden h-full flex flex-col min-h-0"
                   style={{ scrollBehavior: 'smooth' }}
                 >
-                  <div className="flex items-center justify-between px-4 pt-4 pb-3 border-b border-gray-50">
+                  <div className="flex items-center justify-between px-4 pt-4 pb-3 border-b border-gray-50 flex-shrink-0">
                     <h3 className="text-base font-semibold text-gray-900">Continue Learn</h3>
                     <button 
                       className="flex items-center gap-1 text-xs text-gray-500 hover:text-primary transition-colors"
@@ -229,7 +260,7 @@ const StudentHome = () => {
                       View All <ArrowRight className="w-3.5 h-3.5" />
                     </button>
                   </div>
-                  <div className="max-h-[220px] overflow-y-auto overflow-x-hidden scroll-smooth py-1 pr-1 [scrollbar-gutter:stable]">
+                  <div className="flex-1 min-h-0 overflow-y-auto overflow-x-hidden scroll-smooth py-1 pr-1 [scrollbar-gutter:stable]">
                     {studiedChapters.map((item) => (
                       <button
                         key={item.key}
@@ -261,11 +292,11 @@ const StudentHome = () => {
               </div>
             </div>
 
-            {/* Right Column - AI Study Suggestions */}
-            <div className="lg:pl-2">
-              <Card className="border border-gray-100 shadow-sm rounded-2xl bg-white min-h-[380px]">
-                <CardContent className="p-6">
-                  <div className="mb-5">
+            {/* Right Column - AI Study Suggestions (same row height as left); reduced height */}
+            <div className="lg:pl-2 flex flex-col min-h-0 max-h-[460px]">
+              <Card className="border border-gray-100 shadow-sm rounded-2xl bg-white flex-1 flex flex-col min-h-0">
+                <CardContent className="p-6 flex flex-col flex-1 min-h-0">
+                  <div className="mb-5 flex-shrink-0">
                     <h3 className="text-base font-semibold text-gray-900 flex items-center gap-2">
                       <Brain className="w-4 h-4 text-primary" />
                       AI Study Suggestions
@@ -274,7 +305,7 @@ const StudentHome = () => {
                       Based on your recent learning
                     </p>
                   </div>
-                  <div className="space-y-2">
+                  <div className="space-y-2 flex-1 min-h-0 overflow-y-auto">
                   {[
                     {
                       id: 'learn',
