@@ -1,16 +1,34 @@
 import { useState } from 'react';
+import { useLocation } from 'react-router-dom';
 import StudentDashboardLayout from '@/components/layout/StudentDashboardLayout';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { 
+import {
   Lightbulb,
   CheckCircle2,
-  XCircle
+  XCircle,
+  FileText,
 } from 'lucide-react';
 import { practiceQuestions } from '@/data/mockData';
 
+type PyqPracticeState = {
+  fromPyq?: boolean;
+  paperId?: string;
+  mode?: 'full' | 'mcq' | 'case-study' | 'long-answer';
+};
+
+const MODE_LABELS: Record<string, string> = {
+  full: 'Full Paper (Exam Mode)',
+  mcq: 'MCQs',
+  'case-study': 'Case Study',
+  'long-answer': 'Long Answer',
+};
+
 const StudentPractice = () => {
+  const location = useLocation();
+  const pyqState = (location.state as PyqPracticeState) || {};
+  const { fromPyq, mode } = pyqState;
   const [currentQuestion, setCurrentQuestion] = useState(0);
   const [selectedAnswer, setSelectedAnswer] = useState<number | null>(null);
   const [showHint, setShowHint] = useState(false);
@@ -47,6 +65,25 @@ const StudentPractice = () => {
   return (
     <StudentDashboardLayout title="Practice">
       <div className="max-w-2xl mx-auto space-y-6">
+        {/* PYQ context banner when opened from Previous Year Papers */}
+        {fromPyq && mode && (
+          <Card className="border-primary/20 bg-primary/5">
+            <CardContent className="py-3 px-4 flex items-center gap-3">
+              <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center">
+                <FileText className="w-5 h-5 text-primary" />
+              </div>
+              <div>
+                <p className="text-sm font-medium text-gray-900">
+                  PYQ Practice · {MODE_LABELS[mode] ?? mode}
+                </p>
+                <p className="text-xs text-muted-foreground">
+                  Answer the questions below. Your progress is saved.
+                </p>
+              </div>
+            </CardContent>
+          </Card>
+        )}
+
         {/* Progress */}
         <div className="flex items-center justify-between">
           <p className="text-sm text-muted-foreground">
