@@ -117,82 +117,66 @@ const StudentAttendance = () => {
             </div>
           </CardHeader>
           <CardContent>
-            <div className="flex flex-col md:flex-row items-center md:items-center md:justify-between gap-6">
-              <div className="relative w-40 h-40">
-                <div className="absolute inset-0 rounded-full bg-gradient-to-br from-primary/10 via-primary/5 to-transparent" />
-                <svg className="w-full h-full transform -rotate-90 relative">
-                  <circle
-                    cx="80"
-                    cy="80"
-                    r="64"
-                    stroke="hsl(var(--muted))"
-                    strokeWidth="12"
-                    fill="none"
-                  />
-                  <circle
-                    cx="80"
-                    cy="80"
-                    r="64"
-                    stroke="url(#attendanceGradient)"
-                    strokeWidth="12"
-                    fill="none"
-                    strokeLinecap="round"
-                    strokeDasharray={`${(attendance.percentage / 100) * 402} 402`}
-                  />
-                  <defs>
-                    <linearGradient id="attendanceGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-                      <stop offset="0%" stopColor="hsl(var(--primary))" />
-                      <stop offset="100%" stopColor="hsl(var(--primary-foreground))" />
-                    </linearGradient>
-                  </defs>
-                </svg>
-                <div className="absolute inset-0 flex flex-col items-center justify-center">
-                  <span className="text-3xl font-bold">{attendance.percentage}%</span>
-                  <span className="text-xs text-muted-foreground mt-1">Overall attendance</span>
-                </div>
-              </div>
-
-              <div className="w-full md:w-auto space-y-3 text-sm">
-                <div className="flex items-center justify-between gap-4">
-                  <div className="flex items-center gap-2">
-                    <span className="inline-flex h-2.5 w-2.5 rounded-full bg-primary" />
-                    <span className="font-medium">Present</span>
+            <div className="flex flex-col gap-6">
+              {/* Main stacked attendance bar */}
+              <div>
+                <div className="flex items-baseline justify-between mb-3">
+                  <div>
+                    <p className="text-[11px] font-semibold text-muted-foreground uppercase tracking-wide">
+                      Overall attendance
+                    </p>
+                    <p className="text-3xl font-bold text-gray-900 leading-tight">
+                      {attendance.percentage}%
+                    </p>
                   </div>
-                  <span className="text-muted-foreground">
-                    {attendance.presentDays} days
-                  </span>
+                  <p className="text-xs text-muted-foreground">
+                    {attendance.presentDays} days present · {attendance.absentDays} days absent
+                  </p>
                 </div>
-                <div className="h-1.5 w-full rounded-full bg-muted overflow-hidden">
+                <div className="h-3 w-full rounded-full bg-muted/70 overflow-hidden flex shadow-inner">
                   <div
-                    className="h-full rounded-full bg-primary"
+                    className="h-full bg-gradient-to-r from-primary/80 to-primary/60"
                     style={{
                       width: `${(attendance.presentDays / attendance.totalDays) * 100}%`,
                     }}
                   />
-                </div>
-
-                <div className="flex items-center justify-between gap-4 mt-4">
-                  <div className="flex items-center gap-2">
-                    <span className="inline-flex h-2.5 w-2.5 rounded-full bg-destructive" />
-                    <span className="font-medium">Absent</span>
-                  </div>
-                  <span className="text-muted-foreground">
-                    {attendance.absentDays} days
-                  </span>
-                </div>
-                <div className="h-1.5 w-full rounded-full bg-muted overflow-hidden">
                   <div
-                    className="h-full rounded-full bg-destructive"
+                    className="h-full bg-gradient-to-r from-rose-400 to-rose-500"
                     style={{
                       width: `${(attendance.absentDays / attendance.totalDays) * 100}%`,
                     }}
                   />
                 </div>
+              </div>
 
-                {/* Mini last-7-days strip */}
-                <div className="mt-4 space-y-2">
+              {/* Present / Absent breakdown + last 7 days chips */}
+              <div className="grid gap-4 md:grid-cols-[2fr,1.5fr] text-sm">
+                <div className="space-y-3 border rounded-xl p-4 bg-white shadow-xs">
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-2">
+                      <span className="inline-flex h-2.5 w-2.5 rounded-full bg-primary" />
+                      <span className="font-medium">Present</span>
+                    </div>
+                    <span className="text-muted-foreground">
+                      {attendance.presentDays} days (
+                      {Math.round((attendance.presentDays / attendance.totalDays) * 100)}%)
+                    </span>
+                  </div>
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-2">
+                      <span className="inline-flex h-2.5 w-2.5 rounded-full bg-rose-500" />
+                      <span className="font-medium">Absent</span>
+                    </div>
+                    <span className="text-muted-foreground">
+                      {attendance.absentDays} days (
+                      {Math.round((attendance.absentDays / attendance.totalDays) * 100)}%)
+                    </span>
+                  </div>
+                </div>
+
+                <div className="space-y-2 rounded-xl bg-muted/40 p-3">
                   <div className="flex items-center justify-between text-xs text-muted-foreground">
-                    <span className="font-medium text-gray-700">Last 7 days</span>
+                    <span className="font-medium text-gray-700">Last 7 days snapshot</span>
                     <span>
                       {attendance.recentDays.filter((d) => d.status === 'present').length} present ·{' '}
                       {attendance.recentDays.filter((d) => d.status === 'absent').length} absent
@@ -210,7 +194,7 @@ const StudentAttendance = () => {
                       return (
                         <div
                           key={index}
-                          className={`h-3 flex-1 rounded-full ${bg}`}
+                          className={`h-3 w-6 rounded-full ${bg}`}
                           aria-hidden="true"
                         />
                       );
