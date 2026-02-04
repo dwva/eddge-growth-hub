@@ -29,12 +29,14 @@ const StudentDashboardLayout = ({ children }: StudentDashboardLayoutProps) => {
   const firstName = user?.name?.split(' ')[0] || 'Student';
 
   return (
-    <div className="h-screen min-h-0 bg-[#f8f9fb] flex font-sans overflow-hidden">
+    <div className="h-screen bg-[#f8f9fb] flex font-sans overflow-x-hidden">
       {/* Desktop Sidebar - Fixed, Slim - Planti style */}
-      <aside className={cn(
-        "hidden md:flex flex-col h-screen sticky top-0 flex-shrink-0 transition-all duration-300 overflow-hidden",
-        collapsed ? "w-0" : "w-[260px]"
-      )}>
+      <aside
+        className={cn(
+          "hidden md:flex flex-col h-screen sticky top-0 flex-shrink-0 transition-all duration-300 overflow-hidden",
+          collapsed ? "w-0" : "w-[260px]"
+        )}
+      >
         <StudentSidebar collapsed={collapsed} />
       </aside>
 
@@ -46,7 +48,7 @@ const StudentDashboardLayout = ({ children }: StudentDashboardLayoutProps) => {
       </Sheet>
 
       {/* Main Content */}
-      <div className="flex-1 flex flex-col min-w-0 min-h-0 overflow-hidden">
+      <div className="flex-1 flex flex-col min-w-0 min-h-0">
         {/* Top Bar - Planti style */}
         <header className="h-20 bg-white px-6 md:px-8 flex items-center justify-between sticky top-0 z-10 flex-shrink-0 border-b border-transparent">
           {/* Left: Welcome Text */}
@@ -163,8 +165,8 @@ const StudentDashboardLayout = ({ children }: StudentDashboardLayoutProps) => {
           </div>
         </header>
 
-        {/* Page Content - no scroll, fits viewport */}
-        <main className="flex-1 min-h-0 p-6 md:p-8 overflow-hidden">
+        {/* Page Content - scrolls within viewport height */}
+        <main className="flex-1 min-h-0 p-6 md:p-8 overflow-y-auto">
           {children}
         </main>
       </div>

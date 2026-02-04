@@ -531,19 +531,9 @@ const AnnouncementCard = ({
                   </Badge>
                 )}
               </div>
-              <p className="text-sm text-muted-foreground line-clamp-2">
+              <p className="text-sm text-muted-foreground">
                 {announcement.description}
               </p>
-
-              {/* AI insight strip for important items */}
-              {isImportant && (
-                <div className="mt-2 rounded-lg bg-primary/5 px-3 py-1.5 text-[11px] text-primary flex items-center gap-1.5">
-                  <span className="font-semibold">AI tip:</span>
-                  <span className="text-primary/80">
-                    Attendance recommended based on your progress and upcoming plans.
-                  </span>
-                </div>
-              )}
 
               <div className="flex items-center gap-4 mt-2 text-xs text-muted-foreground flex-wrap">
                 <span className="flex items-center gap-1">
