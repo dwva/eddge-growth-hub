@@ -16,7 +16,8 @@ import {
   FileText,
   Clock,
   CalendarDays,
-  Target
+  Target,
+  Award
 } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
 import { chapters as chaptersData } from '@/data/mockData';
@@ -221,18 +222,10 @@ const StudentHome = () => {
                   <Button
                     variant="outline"
                     className="h-auto py-4 px-4 flex flex-col items-center gap-2 rounded-xl border-gray-200 hover:border-primary hover:bg-primary/5"
-                    onClick={() => navigate('/student/planner')}
+                    onClick={() => navigate('/student/homework')}
                   >
-                    <CalendarDays className="w-6 h-6 text-primary" />
-                    <span className="text-sm font-medium">Planner</span>
-                  </Button>
-                  <Button
-                    variant="outline"
-                    className="h-auto py-4 px-4 flex flex-col items-center gap-2 rounded-xl border-gray-200 hover:border-primary hover:bg-primary/5"
-                    onClick={() => navigate('/student/practice')}
-                  >
-                    <Calculator className="w-6 h-6 text-emerald-600" />
-                    <span className="text-sm font-medium">Practice</span>
+                    <FileText className="w-6 h-6 text-primary" />
+                    <span className="text-sm font-medium">Homework</span>
                   </Button>
                   <Button
                     variant="outline"
@@ -241,6 +234,14 @@ const StudentHome = () => {
                   >
                     <MessageSquare className="w-6 h-6 text-amber-600" />
                     <span className="text-sm font-medium">Ask Doubt</span>
+                  </Button>
+                  <Button
+                    variant="outline"
+                    className="h-auto py-4 px-4 flex flex-col items-center gap-2 rounded-xl border-gray-200 hover:border-primary hover:bg-primary/5"
+                    onClick={() => navigate('/student/achievements')}
+                  >
+                    <Award className="w-6 h-6 text-emerald-600" />
+                    <span className="text-sm font-medium">Achievements</span>
                   </Button>
                 </div>
               </div>
