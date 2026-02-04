@@ -75,12 +75,12 @@ const TeacherAttendanceContent = () => {
   const getAttendancePercent = (student: typeof classStudents[0]) => Math.min(100, student.overallScore + 8);
 
   return (
-    <div className="space-y-10 max-w-[1600px]">
+    <div className="space-y-5 max-w-[1600px]">
       {/* Page Header - Clean */}
-      <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4 pb-6 border-b border-gray-100">
+      <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
         <div>
-          <h1 className="text-3xl font-bold text-gray-900">Mark Attendance</h1>
-          <p className="text-sm text-gray-500 mt-2">Class 10-A • Record daily attendance</p>
+          <h1 className="text-2xl font-bold text-gray-900">Mark Attendance</h1>
+          <p className="text-sm text-gray-500 mt-1">Class 10-A • Record daily attendance</p>
         </div>
         <div className="flex items-center gap-3">
           <Input

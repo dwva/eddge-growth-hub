@@ -3,12 +3,10 @@ import TeacherDashboardLayout from '@/components/layout/TeacherDashboardLayout';
 import { Card } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { 
-  Search, MessageCircle, Send, Paperclip, Smile, Check, CheckCheck, 
-  Plus, Phone, Video, MoreVertical
+  Search, MessageCircle, Send, Check, CheckCheck
 } from 'lucide-react';
 import { parentConversations } from '@/data/teacherMockData';
 
@@ -62,80 +60,71 @@ const TeacherCommunicationContent = () => {
   const totalUnread = parentConversations.reduce((acc, c) => acc + c.unread, 0);
 
   return (
-    <div className="flex flex-col h-[calc(100vh-8rem)] min-h-[500px] space-y-6">
-      {/* Page Header - Clean */}
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 pb-6 border-b border-gray-100">
-        <div className="min-w-0">
-          <h1 className="text-3xl font-bold text-gray-900 truncate">Parent Messages</h1>
-          <p className="text-sm text-gray-500 mt-2">
-            Communicate with parents
-            {totalUnread > 0 && <span className="ml-1 text-primary font-medium">• {totalUnread} unread</span>}
-          </p>
-        </div>
-        <Button size="sm" className="gap-2 h-10 rounded-xl shrink-0">
-          <Plus className="w-4 h-4" />
-          New Message
-        </Button>
+    <div className="flex flex-col h-[calc(100vh-8rem)] min-h-[500px]">
+      {/* Page Header */}
+      <div className="mb-3">
+        <h1 className="text-xl font-bold text-gray-900">Messages & Inbox</h1>
+        <p className="text-xs text-gray-500 mt-0.5">
+          Client and team communications
+        </p>
       </div>
 
-      {/* Two-column layout: Conversation list + Chat */}
-      <div className="flex-1 grid grid-cols-1 lg:grid-cols-12 gap-6 min-h-0 overflow-hidden">
+      {/* Messaging Interface */}
+      <div className="flex-1 grid grid-cols-1 lg:grid-cols-3 gap-3 min-h-0 overflow-hidden">
         {/* Conversation List */}
-        <Card className="lg:col-span-4 flex flex-col border-0 shadow-sm rounded-2xl overflow-hidden min-h-[280px] lg:min-h-0">
-          <div className="p-3 sm:p-4 border-b border-gray-100 shrink-0">
+        <Card className="flex flex-col border-0 shadow-sm bg-gray-50/50 overflow-hidden rounded-2xl">
+          <div className="p-3 shrink-0">
             <div className="relative">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-gray-400" />
               <Input
-                placeholder="Search parents..."
+                placeholder="Search ....."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="pl-10 h-10 rounded-xl border-gray-200 bg-gray-50 focus:bg-white"
+                className="pl-9 h-9 text-xs bg-white border-gray-200 rounded-xl"
               />
             </div>
           </div>
-          <ScrollArea className="flex-1 min-h-0">
-            <div className="p-2 space-y-1">
+          <ScrollArea className="flex-1">
+            <div className="px-2 pb-2 space-y-0.5">
               {filteredConversations.map((conv) => (
                 <button
                   key={conv.id}
                   onClick={() => setSelectedConversation(conv.id)}
-                  className={`w-full flex items-start gap-3 p-3 rounded-xl transition-all text-left ${
+                  className={`w-full flex items-start gap-2.5 p-2.5 rounded-xl transition text-left ${
                     selectedConversation === conv.id 
-                      ? 'bg-primary/10 border border-primary/20' 
-                      : 'hover:bg-gray-50 border border-transparent'
+                      ? 'bg-white shadow-sm' 
+                      : 'hover:bg-white/60'
                   }`}
                 >
-                  <div className="relative flex-shrink-0">
-                    <Avatar className="w-11 h-11 border-2 border-white shadow-sm">
-                      <AvatarFallback className="bg-gradient-to-br from-primary/20 to-primary/10 text-primary font-semibold text-sm">
+                  <div className="relative shrink-0">
+                    <Avatar className="w-9 h-9">
+                      <AvatarFallback className="bg-primary/10 text-primary font-semibold text-xs">
                         {conv.avatar}
                       </AvatarFallback>
                     </Avatar>
-                    {conv.online && (
-                      <span className="absolute bottom-0 right-0 w-3 h-3 bg-emerald-500 rounded-full border-2 border-white" />
-                    )}
+                    <div className="absolute -bottom-0.5 -right-0.5 w-2.5 h-2.5 bg-green-500 rounded-full border-2 border-white"></div>
                   </div>
-                  <div className="flex-1 min-w-0 overflow-hidden">
-                    <div className="flex items-start justify-between gap-3">
-                      <p className="font-semibold text-gray-900 text-sm truncate min-w-0">
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-center justify-between gap-2 mb-0.5">
+                      <p className="font-semibold text-xs truncate text-gray-900">
                         {(conv as typeof parentConversations[0]).parentName}
                       </p>
-                      <span className="text-xs text-gray-400 whitespace-nowrap shrink-0 tabular-nums">
-                        {conv.timestamp}
-                      </span>
+                      {conv.unread > 0 && (
+                        <div className="w-4 h-4 rounded-full bg-yellow-400 flex items-center justify-center shrink-0">
+                          <span className="text-[10px] text-gray-900 font-semibold">{conv.unread}</span>
+                        </div>
+                      )}
                     </div>
-                    <p className="text-xs text-gray-500 mt-0.5 truncate">
-                      {conv.studentName} • {conv.studentClass}
+                    <p className="text-[10px] text-gray-500 mb-0.5">
+                      {conv.studentName}
                     </p>
-                    <p className="text-sm text-gray-600 mt-1 line-clamp-2 break-words">
+                    <p className="text-[10px] text-gray-600 truncate leading-tight">
                       {conv.lastMessage}
                     </p>
+                    <p className="text-[10px] text-gray-400 mt-0.5">
+                      {conv.timestamp}
+                    </p>
                   </div>
-                  {conv.unread > 0 && (
-                    <Badge className="bg-primary text-white text-xs h-5 min-w-[20px] px-2 rounded-full shrink-0">
-                      {conv.unread}
-                    </Badge>
-                  )}
                 </button>
               ))}
             </div>
@@ -143,75 +132,52 @@ const TeacherCommunicationContent = () => {
         </Card>
 
         {/* Chat Area */}
-        <Card className="lg:col-span-8 flex flex-col border-0 shadow-sm rounded-2xl overflow-hidden min-h-[400px] lg:min-h-0">
+        <Card className="lg:col-span-2 flex flex-col border-0 shadow-sm bg-white overflow-hidden rounded-2xl">
           {selectedConversation && currentConversation ? (
             <>
-              <div className="p-3 sm:p-4 border-b border-gray-100 bg-white shrink-0">
-                <div className="flex items-center justify-between gap-2">
-                  <div className="flex items-center gap-3 min-w-0">
-                    <div className="relative flex-shrink-0">
-                      <Avatar className="w-10 h-10 sm:w-11 sm:h-11 border-2 border-white shadow-sm">
-                        <AvatarFallback className="bg-gradient-to-br from-primary/20 to-primary/10 text-primary font-semibold text-sm">
+              <div className="p-3 border-b bg-white shrink-0">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-2.5">
+                    <div className="relative">
+                      <Avatar className="w-9 h-9">
+                        <AvatarFallback className="bg-primary/10 text-primary font-semibold text-xs">
                           {currentConversation.avatar}
                         </AvatarFallback>
                       </Avatar>
-                      {currentConversation.online && (
-                        <span className="absolute bottom-0 right-0 w-2.5 h-2.5 sm:w-3 sm:h-3 bg-emerald-500 rounded-full border-2 border-white" />
-                      )}
+                      <div className="absolute -bottom-0.5 -right-0.5 w-2.5 h-2.5 bg-green-500 rounded-full border-2 border-white"></div>
                     </div>
-                    <div className="min-w-0">
-                      <p className="font-semibold text-gray-900 truncate text-sm sm:text-base">{displayName}</p>
-                      <p className="text-xs text-gray-500 truncate">
-                        {currentConversation.studentName} • {currentConversation.online ? 
-                          <span className="text-emerald-600">Online</span> : 
-                          'Last seen recently'}
-                      </p>
+                    <div>
+                      <p className="font-semibold text-xs text-gray-900">{displayName}</p>
+                      <p className="text-[10px] text-gray-500">{currentConversation.studentName}</p>
                     </div>
                   </div>
-                  <div className="flex items-center gap-1 flex-shrink-0">
-                    <Button variant="ghost" size="icon" className="h-8 w-8 sm:h-9 sm:w-9 rounded-lg">
-                      <Phone className="w-4 h-4 text-gray-500" />
-                    </Button>
-                    <Button variant="ghost" size="icon" className="h-8 w-8 sm:h-9 sm:w-9 rounded-lg">
-                      <Video className="w-4 h-4 text-gray-500" />
-                    </Button>
-                    <Button variant="ghost" size="icon" className="h-8 w-8 sm:h-9 sm:w-9 rounded-lg">
-                      <MoreVertical className="w-4 h-4 text-gray-500" />
+                  <div className="flex items-center gap-2">
+                    <Button variant="ghost" size="icon" className="h-7 w-7 rounded-lg">
+                      <Search className="w-3.5 h-3.5 text-gray-600" />
                     </Button>
                   </div>
                 </div>
               </div>
 
-              <ScrollArea className="flex-1 min-h-0 p-4 bg-gray-50/50">
-                <div className="space-y-4 max-w-2xl">
-                  <div className="flex items-center gap-4 py-2">
-                    <div className="flex-1 h-px bg-gray-200" />
-                    <span className="text-xs text-gray-400 px-2">Today</span>
-                    <div className="flex-1 h-px bg-gray-200" />
-                  </div>
-
+              <ScrollArea className="flex-1 p-4 bg-white">
+                <div className="space-y-3 max-w-3xl">
                   {messages.map((msg) => (
                     <div
                       key={msg.id}
                       className={`flex ${msg.sender === 'teacher' ? 'justify-end' : 'justify-start'}`}
                     >
                       <div
-                        className={`max-w-[85%] sm:max-w-[75%] rounded-2xl px-3 py-2 sm:px-4 sm:py-3 ${
+                        className={`max-w-[70%] rounded-2xl px-3 py-2 ${
                           msg.sender === 'teacher'
-                            ? 'bg-primary text-white rounded-br-md'
-                            : 'bg-white border border-gray-100 shadow-sm rounded-bl-md'
+                            ? 'bg-blue-500 text-white'
+                            : 'bg-gray-100 text-gray-900'
                         }`}
                       >
-                        <p className="text-sm leading-relaxed break-words">{msg.content}</p>
-                        <div className={`flex items-center gap-1.5 mt-1.5 ${msg.sender === 'teacher' ? 'justify-end' : ''}`}>
-                          <span className={`text-[11px] ${msg.sender === 'teacher' ? 'text-primary-foreground/70' : 'text-gray-400'}`}>
+                        <p className="text-xs leading-relaxed">{msg.content}</p>
+                        <div className={`flex items-center gap-1 mt-0.5 ${msg.sender === 'teacher' ? 'justify-end' : ''}`}>
+                          <span className={`text-[10px] ${msg.sender === 'teacher' ? 'text-white/80' : 'text-gray-500'}`}>
                             {msg.timestamp}
                           </span>
-                          {msg.sender === 'teacher' && (
-                            msg.read 
-                              ? <CheckCheck className="w-3.5 h-3.5 text-primary-foreground/70" />
-                              : <Check className="w-3.5 h-3.5 text-primary-foreground/70" />
-                          )}
                         </div>
                       </div>
                     </div>
@@ -219,49 +185,49 @@ const TeacherCommunicationContent = () => {
                 </div>
               </ScrollArea>
 
-              <div className="p-3 sm:p-4 border-t border-gray-100 bg-white shrink-0">
-                <div className="flex items-center gap-2 sm:gap-3">
-                  <Button variant="ghost" size="icon" className="h-9 w-9 sm:h-10 sm:w-10 rounded-xl flex-shrink-0">
-                    <Paperclip className="w-4 h-4 sm:w-5 sm:h-5 text-gray-500" />
-                  </Button>
-                  <div className="flex-1 min-w-0 relative">
+              <div className="p-3 border-t bg-white shrink-0">
+                <div className="flex items-center gap-2">
+                  <div className="flex-1 relative">
                     <Input
-                      placeholder="Type a message..."
+                      placeholder="Search ..."
                       value={newMessage}
                       onChange={(e) => setNewMessage(e.target.value)}
                       onKeyDown={(e) => e.key === 'Enter' && handleSend()}
-                      className="pr-10 sm:pr-12 h-10 sm:h-11 rounded-xl border-gray-200 bg-gray-50 focus:bg-white"
+                      className="h-9 pr-9 text-xs rounded-xl border-gray-200"
                     />
-                    <Button variant="ghost" size="icon" className="absolute right-1 top-1/2 -translate-y-1/2 h-8 w-8 rounded-lg">
-                      <Smile className="w-4 h-4 sm:w-5 sm:h-5 text-gray-400" />
+                    <Button 
+                      variant="ghost" 
+                      size="icon" 
+                      className="absolute right-1 top-1/2 -translate-y-1/2 h-7 w-7 rounded-lg"
+                    >
+                      <Search className="w-3.5 h-3.5 text-gray-400" />
                     </Button>
                   </div>
                   <Button 
                     onClick={handleSend} 
                     size="icon"
-                    className="h-10 w-10 sm:h-11 sm:w-11 rounded-xl flex-shrink-0"
+                    className="h-9 w-9 rounded-xl bg-gray-900 hover:bg-gray-800"
                     disabled={!newMessage.trim()}
                   >
-                    <Send className="w-4 h-4 sm:w-5 sm:h-5" />
+                    <Send className="w-3.5 h-3.5" />
                   </Button>
                 </div>
               </div>
             </>
           ) : (
-            <div className="flex-1 flex flex-col items-center justify-center text-center p-6 sm:p-8 bg-gray-50/50">
-              <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-2xl bg-gray-100 flex items-center justify-center mb-4">
-                <MessageCircle className="w-8 h-8 sm:w-10 sm:h-10 text-gray-400" />
+            <div className="flex-1 flex flex-col items-center justify-center text-center p-6 bg-white">
+              <div className="w-14 h-14 rounded-2xl bg-gray-100 flex items-center justify-center mb-2">
+                <MessageCircle className="w-7 h-7 text-gray-400" />
               </div>
-              <h3 className="text-base sm:text-lg font-semibold text-gray-900 mb-2">Select a Conversation</h3>
-              <p className="text-gray-500 text-sm max-w-xs">
-                Choose a parent from the list to start messaging
-              </p>
+              <p className="text-xs text-gray-600 font-medium">Select a conversation</p>
+              <p className="text-[10px] text-gray-500 mt-0.5">Choose a parent to start messaging</p>
             </div>
           )}
         </Card>
       </div>
     </div>
   );
+};
 };
 
 const TeacherCommunication = () => {

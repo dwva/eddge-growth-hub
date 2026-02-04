@@ -81,15 +81,15 @@ const TeacherSubjectAnalyticsContent = () => {
   const weakestChapter = filteredChapters[0]?.name || 'N/A';
 
   return (
-    <div className="space-y-10 max-w-[1600px]">
-      {/* Page Header - Clean */}
-      <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4 pb-6 border-b border-gray-100">
+    <div className="space-y-5 max-w-[1600px]">
+      {/* Page Header */}
+      <div className="flex items-center justify-between gap-4">
         <div>
-          <h1 className="text-3xl font-bold text-gray-900">Subject Analytics</h1>
-          <p className="text-sm text-gray-500 mt-2">Analyze chapter and topic-level performance</p>
+          <h1 className="text-2xl font-bold text-gray-900">Subject Analytics</h1>
+          <p className="text-sm text-gray-500 mt-1">Analyze chapter and topic-level performance</p>
         </div>
-        <Button variant="ghost" size="sm" className="h-10 rounded-xl" onClick={() => navigate('/teacher')}>
-          <ArrowLeft className="w-4 h-4 mr-2" />
+        <Button variant="ghost" size="sm" className="gap-2 h-9 rounded-xl" onClick={() => navigate('/teacher')}>
+          <ArrowLeft className="w-4 h-4" />
           Back
         </Button>
       </div>
@@ -102,13 +102,13 @@ const TeacherSubjectAnalyticsContent = () => {
         </TabsList>
 
         {/* Chapters Tab */}
-        <TabsContent value="chapters" className="space-y-6">
+        <TabsContent value="chapters" className="space-y-4 mt-4">
           {/* Filters */}
-          <Card className="rounded-xl shadow-sm border-gray-100">
-            <CardContent className="pt-6">
-              <div className="flex flex-col sm:flex-row gap-4">
+          <Card className="shadow-sm border-0 rounded-2xl">
+            <CardContent className="p-4">
+              <div className="flex flex-col sm:flex-row gap-3">
                 <Select value={subjectFilter} onValueChange={setSubjectFilter}>
-                  <SelectTrigger className="w-full sm:w-48">
+                  <SelectTrigger className="w-full sm:w-48 h-9 rounded-xl">
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
@@ -117,7 +117,7 @@ const TeacherSubjectAnalyticsContent = () => {
                   </SelectContent>
                 </Select>
                 <Select value={masteryFilter} onValueChange={setMasteryFilter}>
-                  <SelectTrigger className="w-full sm:w-48">
+                  <SelectTrigger className="w-full sm:w-48 h-9 rounded-xl">
                     <SelectValue placeholder="Filter by mastery" />
                   </SelectTrigger>
                   <SelectContent>
@@ -132,9 +132,9 @@ const TeacherSubjectAnalyticsContent = () => {
           </Card>
 
           {/* Summary Stats */}
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-            <Card className="rounded-xl shadow-sm border-gray-100">
-              <CardContent className="pt-6">
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
+            <Card className="shadow-sm border-0 rounded-2xl">
+              <CardContent className="p-4">
                 <div className="flex items-center gap-3">
                   <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center">
                     <BookOpen className="w-5 h-5 text-primary" />
@@ -146,41 +146,41 @@ const TeacherSubjectAnalyticsContent = () => {
                 </div>
               </CardContent>
             </Card>
-            <Card className="rounded-xl shadow-sm border-gray-100">
-              <CardContent className="pt-6">
+            <Card className="shadow-sm border-0 rounded-2xl">
+              <CardContent className="p-4">
                 <div className="flex items-center gap-3">
                   <div className="w-10 h-10 rounded-lg bg-red-500/10 flex items-center justify-center">
                     <AlertTriangle className="w-5 h-5 text-red-500" />
                   </div>
                   <div>
-                    <p className="text-sm text-muted-foreground">High-Risk</p>
-                    <p className="text-2xl font-bold text-red-500">{highRiskChapters}</p>
+                    <p className="text-xs text-muted-foreground">High-Risk</p>
+                    <p className="text-xl font-bold text-red-500">{highRiskChapters}</p>
                   </div>
                 </div>
               </CardContent>
             </Card>
-            <Card className="rounded-xl shadow-sm border-gray-100">
-              <CardContent className="pt-6">
+            <Card className="shadow-sm border-0 rounded-2xl">
+              <CardContent className="p-4">
                 <div className="flex items-center gap-3">
                   <div className="w-10 h-10 rounded-lg bg-green-500/10 flex items-center justify-center">
                     <TrendingUp className="w-5 h-5 text-green-500" />
                   </div>
                   <div>
-                    <p className="text-sm text-muted-foreground">Avg Mastery</p>
-                    <p className="text-2xl font-bold">{avgMastery}%</p>
+                    <p className="text-xs text-muted-foreground">Avg Mastery</p>
+                    <p className="text-xl font-bold">{avgMastery}%</p>
                   </div>
                 </div>
               </CardContent>
             </Card>
-            <Card className="rounded-xl shadow-sm border-gray-100">
-              <CardContent className="pt-6">
+            <Card className="shadow-sm border-0 rounded-2xl">
+              <CardContent className="p-4">
                 <div className="flex items-center gap-3">
                   <div className="w-10 h-10 rounded-lg bg-yellow-500/10 flex items-center justify-center">
                     <AlertCircle className="w-5 h-5 text-yellow-500" />
                   </div>
                   <div>
-                    <p className="text-sm text-muted-foreground">Weakest</p>
-                    <p className="text-lg font-bold truncate">{weakestChapter}</p>
+                    <p className="text-xs text-muted-foreground">Weakest</p>
+                    <p className="text-base font-bold truncate">{weakestChapter}</p>
                   </div>
                 </div>
               </CardContent>
@@ -188,10 +188,10 @@ const TeacherSubjectAnalyticsContent = () => {
           </div>
 
           {/* Chapters Grid */}
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-3">
             {filteredChapters.map((chapter) => (
-              <Card key={chapter.id} className="rounded-xl shadow-sm border-gray-100 hover:border-primary/50 transition-colors cursor-pointer">
-                <CardContent className="pt-6">
+              <Card key={chapter.id} className="shadow-sm border-0 rounded-2xl hover:shadow-md transition-shadow cursor-pointer">
+                <CardContent className="p-4">
                   <div className="flex items-start justify-between mb-4">
                     <div className="flex items-center gap-3">
                       <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center">
@@ -245,15 +245,15 @@ const TeacherSubjectAnalyticsContent = () => {
         </TabsContent>
 
         {/* Topics Tab */}
-        <TabsContent value="topics" className="space-y-6 mt-6">
-          <Card className="rounded-xl shadow-sm border-gray-100">
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
+        <TabsContent value="topics" className="space-y-4 mt-4">
+          <Card className="shadow-sm border-0 rounded-2xl">
+            <CardHeader className="pb-3">
+              <CardTitle className="flex items-center gap-2 text-lg">
                 <BookOpen className="w-5 h-5" />
                 Topic Analysis
               </CardTitle>
             </CardHeader>
-            <CardContent>
+            <CardContent className="pt-0">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 {topics.map((topic) => (
                   <div key={topic.id} className="p-4 rounded-xl border border-gray-100 bg-gray-50/50 hover:bg-gray-50 transition-colors">
@@ -289,15 +289,15 @@ const TeacherSubjectAnalyticsContent = () => {
         </TabsContent>
 
         {/* Common Mistakes Tab */}
-        <TabsContent value="mistakes" className="space-y-6 mt-6">
-          <Card className="rounded-xl shadow-sm border-gray-100">
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
+        <TabsContent value="mistakes" className="space-y-4 mt-4">
+          <Card className="shadow-sm border-0 rounded-2xl">
+            <CardHeader className="pb-3">
+              <CardTitle className="flex items-center gap-2 text-lg">
                 <Brain className="w-5 h-5" />
                 Common Mistake Patterns
               </CardTitle>
             </CardHeader>
-            <CardContent className="space-y-4">
+            <CardContent className="space-y-3 pt-0">
               {commonMistakes.map((mistake) => (
                 <div key={mistake.id} className="p-4 rounded-xl border border-gray-100 bg-gray-50/50 hover:bg-gray-50 transition-colors">
                   <div className="flex items-start justify-between gap-4 mb-3">

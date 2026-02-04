@@ -47,15 +47,15 @@ const TeacherSubjectStudentsContent = () => {
   };
 
   return (
-    <div className="space-y-10 max-w-[1600px]">
-      {/* Page Header - Clean */}
-      <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4 pb-6 border-b border-gray-100">
+    <div className="space-y-5 max-w-[1600px]">
+      {/* Page Header */}
+      <div className="flex items-center justify-between gap-4">
         <div>
-          <h1 className="text-3xl font-bold text-gray-900">My Students</h1>
-          <p className="text-sm text-gray-500 mt-2">View students across all classes for your subject</p>
+          <h1 className="text-2xl font-bold text-gray-900">My Students</h1>
+          <p className="text-sm text-gray-500 mt-1">View students across all classes for your subject</p>
         </div>
         <Select value={classFilter} onValueChange={setClassFilter}>
-          <SelectTrigger className="w-full sm:w-[200px] h-10 rounded-xl border-gray-200">
+          <SelectTrigger className="w-full sm:w-[200px] h-9 rounded-xl border-gray-200">
             <SelectValue placeholder="Class" />
           </SelectTrigger>
           <SelectContent>
@@ -68,7 +68,7 @@ const TeacherSubjectStudentsContent = () => {
         </Select>
       </div>
 
-      {/* Filters - Clean Bar */}
+      {/* Filters */}
       <div className="flex flex-col sm:flex-row gap-3">
         <div className="relative flex-1">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
@@ -76,7 +76,7 @@ const TeacherSubjectStudentsContent = () => {
             placeholder="Search students..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="pl-10 h-12 rounded-xl border-gray-200"
+            className="pl-10 h-10 rounded-xl border-gray-200"
           />
         </div>
         <Select value={subjectFilter} onValueChange={setSubjectFilter}>

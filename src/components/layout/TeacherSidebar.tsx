@@ -47,7 +47,6 @@ const classTeacherNavItems: NavItem[] = [
     ],
   },
   { id: 'class-analytics', label: 'Class Analytics', icon: <BarChart3 className="w-5 h-5" />, path: '/teacher/class-analytics' },
-  { id: 'assessments', label: 'Assessments', icon: <ClipboardList className="w-5 h-5" />, path: '/teacher/assessments' },
   {
     id: 'communication',
     label: 'Communication',

@@ -31,15 +31,15 @@ const TeacherSubjectClassesContent = () => {
   const filteredClasses = subjectClasses.filter(c => c.subject === selectedSubject);
 
   return (
-    <div className="space-y-10 max-w-[1600px]">
-      {/* Page Header - Clean */}
-      <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4 pb-6 border-b border-gray-100">
+    <div className="space-y-5 max-w-[1600px]">
+      {/* Page Header */}
+      <div className="flex items-center justify-between gap-4">
         <div>
-          <h1 className="text-3xl font-bold text-gray-900">My Classes</h1>
-          <p className="text-sm text-gray-500 mt-2">View all classes where you teach your subject</p>
+          <h1 className="text-2xl font-bold text-gray-900">My Classes</h1>
+          <p className="text-sm text-gray-500 mt-1">View all classes where you teach your subject</p>
         </div>
         <Select value={selectedSubject} onValueChange={setSelectedSubject}>
-          <SelectTrigger className="w-full sm:w-[200px] h-10 rounded-xl border-gray-200">
+          <SelectTrigger className="w-full sm:w-[200px] h-9 rounded-xl border-gray-200">
             <SelectValue />
           </SelectTrigger>
           <SelectContent>
@@ -51,10 +51,10 @@ const TeacherSubjectClassesContent = () => {
 
       {/* Section: Classes */}
       <div>
-        <h2 className="text-sm font-semibold text-gray-400 uppercase tracking-wide mb-5">
+        <h2 className="text-xs font-semibold text-gray-400 uppercase tracking-wide mb-3">
           {filteredClasses.length} Classes
         </h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
           {filteredClasses.map((cls) => (
             <Card key={cls.id} className="border-0 shadow-sm rounded-2xl hover:shadow-md transition-shadow cursor-pointer">
               <CardContent className="pt-6">
