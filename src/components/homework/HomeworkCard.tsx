@@ -5,35 +5,25 @@ import { cn } from '@/lib/utils';
 export type HomeworkStatus = 'pending' | 'submitted' | 'graded' | 'overdue';
 
 export interface HomeworkCardProps {
-  id: string;
   title: string;
   subject: string;
+  classSection?: string;
+  teacher?: string;
+  postedAt?: string;
+  shortInstructions?: string;
   status: HomeworkStatus;
   dueDate: string;
   /** Precomputed relative due label, e.g. "Due tomorrow", "Overdue by 2 days" */
   dueLabel: string;
   /** Optional: used to visually emphasize urgency on overdue cards */
   isOverdue?: boolean;
+  /** Whether to render this card in a more conversational stream style */
+  variant?: 'list' | 'stream';
   onOpenDetails: () => void;
 }
 
-// Map subjects to EDDGE brand colors for the left strip
-const getSubjectColor = (subject: string) => {
-  switch (subject) {
-    case 'Mathematics':
-      return 'bg-blue-500';
-    case 'Science':
-      return 'bg-purple-500';
-    case 'English':
-      return 'bg-pink-500';
-    case 'History':
-      return 'bg-amber-500';
-    case 'Geography':
-      return 'bg-teal-500';
-    default:
-      return 'bg-gray-500';
-  }
-};
+// Neutral subject indicator – keep the strip for structure, but no strong colors.
+const getSubjectColor = () => 'bg-slate-200';
 
 const getStatusChipStyles = (status: HomeworkStatus) => {
   switch (status) {
@@ -52,19 +42,38 @@ const getStatusChipStyles = (status: HomeworkStatus) => {
 
 // Lightweight, single-responsibility card focused on "what this homework is" and "when it's due"
 export const HomeworkCard = ({
-  id,
   title,
   subject,
+  classSection,
+  teacher,
+  postedAt,
+  shortInstructions,
   status,
   dueDate,
   dueLabel,
   isOverdue,
+  variant = 'list',
   onOpenDetails,
 }: HomeworkCardProps) => {
+  const teacherName = teacher || 'Teacher';
+  const teacherInitials =
+    teacherName
+      .split(' ')
+      .map((n) => n[0])
+      .join('')
+      .slice(0, 2) || 'T';
+
   return (
-    <button
-      type="button"
+    <div
+      role="button"
+      tabIndex={0}
       onClick={onOpenDetails}
+      onKeyDown={(e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          onOpenDetails();
+        }
+      }}
       className={cn(
         'w-full text-left rounded-xl border bg-background shadow-sm hover:shadow-md hover:-translate-y-[1px] transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2',
         isOverdue && 'border-red-300 ring-1 ring-red-200 bg-red-50/40'
@@ -72,18 +81,42 @@ export const HomeworkCard = ({
       aria-label={`Open details for ${title}`}
     >
       <div className="flex">
-        {/* Subject color strip on the left, matching Google Classroom mental model */}
+        {/* Neutral subject strip on the left to keep structure without strong color */}
         <div
           className={cn(
             'w-1.5 rounded-l-xl',
-            getSubjectColor(subject),
+            getSubjectColor(),
             isOverdue && 'animate-pulse'
           )}
         />
 
-        <div className="flex-1 p-4 flex flex-col gap-1">
+        <div className="flex-1 p-4 flex flex-col gap-2">
           <div className="flex items-center justify-between gap-2">
-            <h3 className="font-semibold text-sm md:text-base truncate">{title}</h3>
+            <div className="space-y-1">
+              <h3 className="font-semibold text-sm md:text-base truncate">
+                {title}
+              </h3>
+              <div className="flex flex-wrap items-center gap-2 text-[11px] text-muted-foreground">
+                <span className="font-medium">
+                  {subject}
+                  {classSection && ` • ${classSection}`}
+                </span>
+                <span
+                  className={cn(
+                    'inline-flex items-center gap-1 rounded-full px-2 py-0.5 font-medium',
+                    dueLabel.toLowerCase().includes('overdue')
+                      ? 'bg-red-50 text-red-700'
+                      : dueLabel.toLowerCase().includes('today') ||
+                        dueLabel.toLowerCase().includes('tomorrow')
+                      ? 'bg-amber-50 text-amber-700'
+                      : 'bg-slate-50 text-slate-700'
+                  )}
+                >
+                  <Calendar className="w-3 h-3" />
+                  <span>{dueLabel}</span>
+                </span>
+              </div>
+            </div>
             <Badge
               className={cn(
                 'text-[11px] font-medium capitalize',
@@ -94,16 +127,24 @@ export const HomeworkCard = ({
             </Badge>
           </div>
 
-          <div className="flex flex-wrap items-center gap-3 text-xs text-muted-foreground">
-            <span className="font-medium">{subject}</span>
-            <span className="inline-flex items-center gap-1">
-              <Calendar className="w-3 h-3" />
-              <span>{dueLabel}</span>
-            </span>
+          <div className="flex items-center justify-between gap-3 text-[11px] text-muted-foreground">
+            <div className="flex items-center gap-2">
+              <div className="flex h-6 w-6 items-center justify-center rounded-full bg-muted text-[10px] font-semibold text-foreground">
+                {teacherInitials}
+              </div>
+              <span className="truncate max-w-[140px] md:max-w-[200px]">
+                {teacherName}
+              </span>
+            </div>
+            {postedAt && (
+              <span className="text-[10px] text-muted-foreground">
+                Posted {postedAt}
+              </span>
+            )}
           </div>
         </div>
       </div>
-    </button>
+    </div>
   );
 };
 

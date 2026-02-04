@@ -176,6 +176,7 @@ const StudentHomework = () => {
               id: h.id,
               title: h.title,
               subject: h.subject,
+              teacher: h.teacher,
               status: h.status,
               dueDate: h.dueDate,
             }))}

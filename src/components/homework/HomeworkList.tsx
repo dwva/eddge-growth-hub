@@ -8,6 +8,10 @@ export interface HomeworkListItem {
   id: string;
   title: string;
   subject: string;
+  classSection?: string;
+  teacher: string;
+  postedAt?: string;
+  shortInstructions?: string;
   status: HomeworkStatus;
   dueDate: string;
 }
@@ -115,13 +119,15 @@ export const HomeworkList = ({ items, onOpenAssignment }: HomeworkListProps) => 
             filteredItems.map((item) => (
               <HomeworkCard
                 key={item.id}
-                id={item.id}
                 title={item.title}
                 subject={item.subject}
+                classSection={item.classSection}
+                teacher={item.teacher}
                 status={item.status}
                 dueDate={item.dueDate}
                 dueLabel={getRelativeDueLabel(item.dueDate, item.status)}
                 isOverdue={item.status === 'overdue'}
+                variant="list"
                 onOpenDetails={() => onOpenAssignment(item.id)}
               />
             ))
