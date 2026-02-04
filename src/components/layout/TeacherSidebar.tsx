@@ -44,7 +44,6 @@ const classTeacherNavItems: NavItem[] = [
     children: [
       { id: 'students', label: 'Students', icon: <Users className="w-4 h-4" />, path: '/teacher/my-class/students' },
       { id: 'attendance', label: 'Mark Attendance', icon: <Calendar className="w-4 h-4" />, path: '/teacher/my-class/attendance' },
-      { id: 'class-summary', label: 'Class Summary', icon: <FileText className="w-4 h-4" />, path: '/teacher/reports/class-summary' },
     ],
   },
   { id: 'class-analytics', label: 'Class Analytics', icon: <BarChart3 className="w-5 h-5" />, path: '/teacher/class-analytics' },
