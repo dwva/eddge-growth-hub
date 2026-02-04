@@ -65,6 +65,8 @@ const StudentAttendance = () => {
 
   const firstDayOfWeek = new Date(viewYear, viewMonth, 1).getDay(); // 0-6 (Sun-Sat)
   const daysInMonth = new Date(viewYear, viewMonth + 1, 0).getDate();
+  const totalCells = firstDayOfWeek + daysInMonth;
+  const trailingEmptyCells = (7 - (totalCells % 7)) % 7;
 
   const dayStatusMap = attendance.recentDays.reduce<Record<string, string>>((map, day) => {
     map[day.date] = (day as any).status;
@@ -284,7 +286,7 @@ const StudentAttendance = () => {
                 {['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].map((day) => (
                   <div
                     key={day}
-                    className="py-3 text-center text-sm font-medium text-gray-600 border-r last:border-r-0"
+                    className="py-3 text-center text-sm font-semibold text-gray-800 border-r last:border-r-0"
                   >
                     {day}
                   </div>
@@ -311,13 +313,13 @@ const StudentAttendance = () => {
                   let textColor = 'text-gray-700';
 
                   if (status === 'present' || status === 'late') {
-                    cellBg = 'bg-gradient-to-br from-emerald-400 to-emerald-500';
-                    textColor = 'text-white';
+                    cellBg = 'bg-emerald-50 border-emerald-200';
+                    textColor = 'text-emerald-900';
                   } else if (status === 'absent') {
-                    cellBg = 'bg-gradient-to-br from-rose-400 to-rose-500';
-                    textColor = 'text-white';
+                    cellBg = 'bg-rose-50 border-rose-200';
+                    textColor = 'text-rose-900';
                   } else if (isToday) {
-                    cellBg = 'bg-amber-50';
+                    cellBg = 'bg-amber-50 border-amber-200';
                   }
 
                   return (
@@ -331,6 +333,12 @@ const StudentAttendance = () => {
                     </div>
                   );
                 })}
+                {Array.from({ length: trailingEmptyCells }).map((_, index) => (
+                  <div
+                    key={`trailing-${index}`}
+                    className="h-20 bg-gray-50/50 border-r border-b last:border-r-0"
+                  />
+                ))}
               </div>
             </div>
 
