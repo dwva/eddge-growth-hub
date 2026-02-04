@@ -7,7 +7,6 @@ import { LayoutDashboard, Calendar as CalendarIcon, ListTodo, AlertCircle, Brain
 import { format, isSameDay } from 'date-fns';
 import { useAuth } from '@/contexts/AuthContext';
 import { plannerStubs } from '@/data/planner.stubs';
-import { PlannerHeader } from '@/components/planner/PlannerHeader';
 
 // ----- Planner types (merged from planner.types.ts) -----
 export type TaskIntent = 'learn' | 'practice' | 'revision' | 'test' | 'fixWeakArea';
@@ -309,7 +308,7 @@ const StudentPlanner = () => {
 
   return (
     <StudentDashboardLayout>
-      <div className="space-y-6">
+      <div className="w-full space-y-6">
         {loadError && (
           <div className="rounded-xl border border-red-200 bg-red-50 px-4 py-3 flex items-center justify-between gap-4">
             <div className="flex items-center gap-2">
@@ -348,8 +347,6 @@ const StudentPlanner = () => {
           </div>
         ) : (
           <>
-            <PlannerHeader />
-
             <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
               <TabsList className="max-w-[400px] w-full bg-white dark:bg-card border border-gray-200 dark:border-border shadow-sm rounded-xl p-1 h-auto">
                 <TabsTrigger value="dashboard" className="gap-2 data-[state=active]:bg-purple-500 data-[state=active]:text-white data-[state=active]:shadow-sm rounded-lg px-4 py-2">
