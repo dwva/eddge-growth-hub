@@ -7,8 +7,7 @@ import {
   Search,
   Download,
   Star,
-  CalendarPlus,
-  Bookmark,
+  Eye,
 } from 'lucide-react';
 import { useState } from 'react';
 import { cn } from '@/lib/utils';
@@ -30,92 +29,33 @@ type Resource = {
   cover: string; // image URL for book/resource cover
 };
 
-// Mock resources – books only, with name and cover photo (Arihant covers in public/resources/)
+// Guide names per subject – Mathematics (user list) + Physics, Chemistry, Biology, English
 const resources: Resource[] = [
-  {
-    id: '1',
-    title: 'All in One Mathematics Class 12',
-    source: 'Arihant',
-    subject: 'Mathematics',
-    chapter: 'Class 12',
-    rating: 4.8,
-    purpose: 'learn',
-    examWeight: 'high',
-    size: '2.4 MB',
-    cover: '/resources/arihant-mathematics.png',
-  },
-  {
-    id: '2',
-    title: 'All in One English Core CBSE Class 12',
-    source: 'Arihant',
-    subject: 'English',
-    chapter: 'Class 12',
-    rating: 4.9,
-    purpose: 'learn',
-    examWeight: 'high',
-    size: '3.1 MB',
-    cover: '/resources/arihant-english.png',
-  },
-  {
-    id: '3',
-    title: 'All in One Chemistry Class 12',
-    source: 'Arihant',
-    subject: 'Chemistry',
-    chapter: 'Class 12',
-    rating: 4.7,
-    purpose: 'learn',
-    examWeight: 'high',
-    size: '2.8 MB',
-    cover: '/resources/arihant-chemistry.png',
-  },
-  {
-    id: '4',
-    title: 'NCERT Solutions Mathematics',
-    source: 'Oswaal',
-    subject: 'Mathematics',
-    chapter: 'Chapter 3–6',
-    rating: 4.6,
-    purpose: 'practice',
-    examWeight: 'high',
-    size: '1.9 MB',
-    cover: '/resources/arihant-mathematics.png',
-  },
-  {
-    id: '5',
-    title: 'Physics Concepts & Numericals',
-    source: 'HC Verma',
-    subject: 'Physics',
-    chapter: 'Chapter 2–5',
-    rating: 4.5,
-    purpose: 'practice',
-    examWeight: 'medium',
-    size: '4.2 MB',
-    cover: '/resources/arihant-chemistry.png',
-  },
-  {
-    id: '6',
-    title: 'Grammar & Writing Handbook',
-    source: 'RD Sharma',
-    subject: 'English',
-    chapter: 'All Chapters',
-    rating: 4.6,
-    purpose: 'revision',
-    examWeight: 'medium',
-    size: '5.1 MB',
-    cover: '/resources/arihant-english.png',
-  },
-  {
-    id: '7',
-    title: 'Biology NCERT Solutions Class 12',
-    source: 'Oswaal',
-    subject: 'Biology',
-    chapter: 'Class 12',
-    rating: 4.6,
-    purpose: 'learn',
-    examWeight: 'high',
-    size: '3.2 MB',
-    cover: '/resources/arihant-chemistry.png',
-  },
+  // Mathematics – 10 guides
+  { id: 'm1', title: 'RD Sharma – Mathematics Class 12 (MOST trusted)', source: 'RD Sharma', subject: 'Mathematics', chapter: 'Class 12', rating: 4.9, purpose: 'learn', examWeight: 'high', size: '4.1 MB', cover: '/resources/arihant-mathematics.png' },
+  { id: 'm2', title: 'RS Aggarwal – Mathematics Class 12', source: 'RS Aggarwal', subject: 'Mathematics', chapter: 'Class 12', rating: 4.8, purpose: 'learn', examWeight: 'high', size: '3.2 MB', cover: '/resources/arihant-mathematics.png' },
+  { id: 'm3', title: 'Arihant Mathematics Class 12 (All-in-One)', source: 'Arihant', subject: 'Mathematics', chapter: 'Class 12', rating: 4.8, purpose: 'learn', examWeight: 'high', size: '2.4 MB', cover: '/resources/arihant-mathematics.png' },
+  { id: 'm4', title: 'ML Aggarwal Class 12 Mathematics', source: 'ML Aggarwal', subject: 'Mathematics', chapter: 'Class 12', rating: 4.7, purpose: 'practice', examWeight: 'high', size: '2.9 MB', cover: '/resources/arihant-mathematics.png' },
+  { id: 'm5', title: 'Cengage Mathematics Class 12', source: 'Cengage', subject: 'Mathematics', chapter: 'Class 12', rating: 4.7, purpose: 'practice', examWeight: 'high', size: '5.2 MB', cover: '/resources/arihant-mathematics.png' },
+  { id: 'm6', title: 'Oswaal Question Bank – Mathematics', source: 'Oswaal', subject: 'Mathematics', chapter: 'Class 12', rating: 4.7, purpose: 'practice', examWeight: 'high', size: '1.9 MB', cover: '/resources/arihant-mathematics.png' },
+  { id: 'm7', title: 'Xam Idea Mathematics Class 12', source: 'Xam Idea', subject: 'Mathematics', chapter: 'Class 12', rating: 4.6, purpose: 'revision', examWeight: 'high', size: '2.1 MB', cover: '/resources/arihant-mathematics.png' },
+  { id: 'm8', title: 'MTG Mathematics Class 12', source: 'MTG', subject: 'Mathematics', chapter: 'Class 12', rating: 4.6, purpose: 'practice', examWeight: 'medium', size: '3.0 MB', cover: '/resources/arihant-mathematics.png' },
+  { id: 'm9', title: 'Pearson Mathematics Class 12', source: 'Pearson', subject: 'Mathematics', chapter: 'Class 12', rating: 4.6, purpose: 'learn', examWeight: 'high', size: '4.0 MB', cover: '/resources/arihant-mathematics.png' },
+  { id: 'm10', title: 'Together With Mathematics Class 12', source: 'Together With', subject: 'Mathematics', chapter: 'Class 12', rating: 4.5, purpose: 'revision', examWeight: 'medium', size: '2.6 MB', cover: '/resources/arihant-mathematics.png' },
+  // Physics
+  { id: 'p1', title: 'HC Verma – Physics Class 12', source: 'HC Verma', subject: 'Physics', chapter: 'Class 12', rating: 4.9, purpose: 'learn', examWeight: 'high', size: '4.2 MB', cover: '/resources/arihant-chemistry.png' },
+  { id: 'p2', title: 'DC Pandey Physics Class 12', source: 'DC Pandey', subject: 'Physics', chapter: 'Class 12', rating: 4.8, purpose: 'practice', examWeight: 'high', size: '3.5 MB', cover: '/resources/arihant-chemistry.png' },
+  { id: 'p3', title: 'Arihant Physics Class 12 (All-in-One)', source: 'Arihant', subject: 'Physics', chapter: 'Class 12', rating: 4.7, purpose: 'learn', examWeight: 'high', size: '2.8 MB', cover: '/resources/arihant-chemistry.png' },
+  // Chemistry
+  { id: 'c1', title: 'OP Tandon – Chemistry Class 12', source: 'OP Tandon', subject: 'Chemistry', chapter: 'Class 12', rating: 4.8, purpose: 'learn', examWeight: 'high', size: '3.2 MB', cover: '/resources/arihant-chemistry.png' },
+  { id: 'c2', title: 'Arihant Chemistry Class 12 (All-in-One)', source: 'Arihant', subject: 'Chemistry', chapter: 'Class 12', rating: 4.7, purpose: 'learn', examWeight: 'high', size: '2.8 MB', cover: '/resources/arihant-chemistry.png' },
+  { id: 'c3', title: 'Oswaal Question Bank – Chemistry', source: 'Oswaal', subject: 'Chemistry', chapter: 'Class 12', rating: 4.6, purpose: 'practice', examWeight: 'high', size: '1.8 MB', cover: '/resources/arihant-chemistry.png' },
+  // Biology
+  { id: 'b1', title: 'NCERT Biology Class 12 (Exemplar)', source: 'NCERT', subject: 'Biology', chapter: 'Class 12', rating: 4.8, purpose: 'learn', examWeight: 'high', size: '3.0 MB', cover: '/resources/arihant-chemistry.png' },
+  { id: 'b2', title: 'Oswaal Biology Class 12', source: 'Oswaal', subject: 'Biology', chapter: 'Class 12', rating: 4.6, purpose: 'practice', examWeight: 'high', size: '2.5 MB', cover: '/resources/arihant-chemistry.png' },
+  // English
+  { id: 'e1', title: 'Arihant English Core CBSE Class 12 (All-in-One)', source: 'Arihant', subject: 'English', chapter: 'Class 12', rating: 4.8, purpose: 'learn', examWeight: 'high', size: '3.1 MB', cover: '/resources/arihant-english.png' },
+  { id: 'e2', title: 'Oswaal English Class 12', source: 'Oswaal', subject: 'English', chapter: 'Class 12', rating: 4.6, purpose: 'revision', examWeight: 'medium', size: '2.2 MB', cover: '/resources/arihant-english.png' },
 ];
 
 // Subject cards with usage (mock) – order: Mathematics, Physics, Chemistry, Biology, English
@@ -271,17 +211,13 @@ const StudentResources = () => {
                         </span>
                       </div>
                       <div className="flex flex-wrap gap-2 mt-auto pt-1">
+                        <Button size="sm" variant="outline" className="rounded-lg" onClick={() => {}}>
+                          <Eye className="w-4 h-4 mr-1.5" />
+                          Preview
+                        </Button>
                         <Button size="sm" className="rounded-lg" onClick={() => {}}>
                           <Download className="w-4 h-4 mr-1.5" />
                           Download
-                        </Button>
-                        <Button size="sm" variant="outline" className="rounded-lg" onClick={() => {}}>
-                          <CalendarPlus className="w-4 h-4 mr-1.5" />
-                          Add to Planner
-                        </Button>
-                        <Button size="sm" variant="outline" className="rounded-lg" onClick={() => {}}>
-                          <Bookmark className="w-4 h-4 mr-1.5" />
-                          Save for Revision
                         </Button>
                       </div>
                     </div>
