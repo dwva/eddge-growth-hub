@@ -4,7 +4,8 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Clock, CheckCircle2, AlertCircle, Upload } from 'lucide-react';
 import { HomeworkList } from '@/components/homework/HomeworkList';
 import { AssignmentDetail } from '@/components/homework/AssignmentDetail';
-import type { HomeworkStatus } from '@/components/homework/HomeworkCard';
+
+type HomeworkStatus = 'pending' | 'submitted' | 'graded';
 
 // Mock homework data – kept local to avoid API coupling while we refine UX.
 const initialHomework = [
@@ -73,7 +74,7 @@ const getHomeworkStats = (items: typeof initialHomework) => ({
   pending: items.filter((h) => h.status === 'pending').length,
   submitted: items.filter((h) => h.status === 'submitted').length,
   graded: items.filter((h) => h.status === 'graded').length,
-  overdue: items.filter((h) => h.status === 'overdue').length,
+  overdue: items.filter((h) => h.status === ('overdue' as HomeworkStatus)).length,
 });
 
 const StudentHomework = () => {
@@ -113,57 +114,80 @@ const StudentHomework = () => {
   return (
     <StudentDashboardLayout title="Homework">
       <div className="space-y-6">
-        {/* Stats Overview – light orientation only, no interaction */}
+        {/* Stats Overview – compact KPIs for quick status glance */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-5">
-          <Card className="py-1 md:py-2">
-            <CardContent className="p-4 md:p-5">
-              <div className="flex items-center gap-3 md:gap-4">
-                <div className="w-11 h-11 md:w-12 md:h-12 rounded-xl bg-amber-100 flex items-center justify-center">
-                  <Clock className="w-5 h-5 md:w-6 md:h-6 text-amber-600" />
-                </div>
-                <div>
-                  <p className="text-xl md:text-2xl font-semibold">{homeworkStats.pending}</p>
-                  <p className="text-xs md:text-sm text-muted-foreground">Pending</p>
-                </div>
+          <Card className="h-full rounded-2xl border border-amber-200 bg-background/80 shadow-sm">
+            <CardContent className="p-4 md:p-5 flex items-center gap-3 md:gap-4">
+              <div className="relative flex h-11 w-11 md:h-12 md:w-12 items-center justify-center rounded-xl bg-amber-50">
+                <Clock className="w-5 h-5 md:w-6 md:h-6 text-amber-600" />
+              </div>
+              <div className="space-y-1">
+                <p className="text-xl md:text-2xl font-semibold leading-none">
+                  {homeworkStats.pending}
+                </p>
+                <p className="text-xs md:text-sm font-medium text-foreground">
+                  Pending
+                </p>
+                <p className="text-[11px] text-amber-700/80">
+                  Needs your attention
+                </p>
               </div>
             </CardContent>
           </Card>
-          <Card className="py-1 md:py-2">
-            <CardContent className="p-4 md:p-5">
-              <div className="flex items-center gap-3 md:gap-4">
-                <div className="w-11 h-11 md:w-12 md:h-12 rounded-xl bg-blue-100 flex items-center justify-center">
-                  <Upload className="w-5 h-5 md:w-6 md:h-6 text-blue-600" />
-                </div>
-                <div>
-                  <p className="text-xl md:text-2xl font-semibold">{homeworkStats.submitted}</p>
-                  <p className="text-xs md:text-sm text-muted-foreground">Submitted</p>
-                </div>
+
+          <Card className="h-full rounded-2xl border border-blue-200 bg-background/80 shadow-sm">
+            <CardContent className="p-4 md:p-5 flex items-center gap-3 md:gap-4">
+              <div className="relative flex h-11 w-11 md:h-12 md:w-12 items-center justify-center rounded-xl bg-blue-50">
+                <Upload className="w-5 h-5 md:w-6 md:h-6 text-blue-600" />
+              </div>
+              <div className="space-y-1">
+                <p className="text-xl md:text-2xl font-semibold leading-none">
+                  {homeworkStats.submitted}
+                </p>
+                <p className="text-xs md:text-sm font-medium text-foreground">
+                  Submitted
+                </p>
+                <p className="text-[11px] text-muted-foreground">
+                  Waiting for grading
+                </p>
               </div>
             </CardContent>
           </Card>
-          <Card className="py-1 md:py-2">
-            <CardContent className="p-4 md:p-5">
-              <div className="flex items-center gap-3 md:gap-4">
-                <div className="w-11 h-11 md:w-12 md:h-12 rounded-xl bg-green-100 flex items-center justify-center">
-                  <CheckCircle2 className="w-5 h-5 md:w-6 md:h-6 text-green-600" />
-                </div>
-                <div>
-                  <p className="text-xl md:text-2xl font-semibold">{homeworkStats.graded}</p>
-                  <p className="text-xs md:text-sm text-muted-foreground">Graded</p>
-                </div>
+
+          <Card className="h-full rounded-2xl border border-emerald-200 bg-background/80 shadow-sm">
+            <CardContent className="p-4 md:p-5 flex items-center gap-3 md:gap-4">
+              <div className="relative flex h-11 w-11 md:h-12 md:w-12 items-center justify-center rounded-xl bg-emerald-50">
+                <CheckCircle2 className="w-5 h-5 md:w-6 md:h-6 text-emerald-600" />
+              </div>
+              <div className="space-y-1">
+                <p className="text-xl md:text-2xl font-semibold leading-none">
+                  {homeworkStats.graded}
+                </p>
+                <p className="text-xs md:text-sm font-medium text-foreground">
+                  Graded
+                </p>
+                <p className="text-[11px] text-emerald-700/80">
+                  Feedback available
+                </p>
               </div>
             </CardContent>
           </Card>
-          <Card className="py-1 md:py-2">
-            <CardContent className="p-4 md:p-5">
-              <div className="flex items-center gap-3 md:gap-4">
-                <div className="w-11 h-11 md:w-12 md:h-12 rounded-xl bg-red-100 flex items-center justify-center">
-                  <AlertCircle className="w-5 h-5 md:w-6 md:h-6 text-red-600" />
-                </div>
-                <div>
-                  <p className="text-xl md:text-2xl font-semibold">{homeworkStats.overdue}</p>
-                  <p className="text-xs md:text-sm text-muted-foreground">Overdue</p>
-                </div>
+
+          <Card className="h-full rounded-2xl border border-red-200 bg-background/80 shadow-sm">
+            <CardContent className="p-4 md:p-5 flex items-center gap-3 md:gap-4">
+              <div className="relative flex h-11 w-11 md:h-12 md:w-12 items-center justify-center rounded-xl bg-red-50">
+                <AlertCircle className="w-5 h-5 md:w-6 md:h-6 text-red-600" />
+              </div>
+              <div className="space-y-1">
+                <p className="text-xl md:text-2xl font-semibold leading-none">
+                  {homeworkStats.overdue}
+                </p>
+                <p className="text-xs md:text-sm font-medium text-foreground">
+                  Overdue
+                </p>
+                <p className="text-[11px] text-red-700/80">
+                  Do these first
+                </p>
               </div>
             </CardContent>
           </Card>

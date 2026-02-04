@@ -73,38 +73,53 @@ export const HomeworkList = ({ items, onOpenAssignment }: HomeworkListProps) => 
     <div className="space-y-4">
       <Tabs
         value={activeTab}
-        onValueChange={(value) =>
-          setActiveTab(value as HomeworkStatus)
-        }
-        className="space-y-4"
+        onValueChange={(value) => setActiveTab(value as HomeworkStatus)}
+        className="space-y-3"
       >
-        <TabsList className="w-full justify-start overflow-x-auto rounded-full px-1 py-0.5">
-          {/* Default tab = Pending, mirroring Google Classroom "To-do" mental model */}
-          <TabsTrigger value="pending" className="gap-1 rounded-full px-3 py-1 text-xs md:text-sm">
+        <div className="flex items-center justify-between gap-3">
+          <p className="text-xs font-semibold tracking-wide text-foreground">
+            Status
+          </p>
+          <TabsList className="flex-1 justify-start overflow-x-auto gap-1 rounded-full bg-muted/80 px-1 py-1">
+            {/* Default tab = Pending, mirroring Google Classroom "To-do" mental model */}
+            <TabsTrigger
+              value="pending"
+              className="relative flex items-center gap-1 rounded-full px-3 py-1 text-xs md:text-sm font-medium text-muted-foreground transition-colors hover:bg-muted/50 data-[state=active]:bg-primary/10 data-[state=active]:text-primary data-[state=active]:shadow-sm"
+            >
             Pending
             <Badge variant="secondary" className="ml-1 h-5 rounded-full px-1.5 text-[10px]">
               {counts.pending}
             </Badge>
-          </TabsTrigger>
-          <TabsTrigger value="submitted" className="gap-1 rounded-full px-3 py-1 text-xs md:text-sm">
+            </TabsTrigger>
+            <TabsTrigger
+              value="submitted"
+              className="relative flex items-center gap-1 rounded-full px-3 py-1 text-xs md:text-sm font-medium text-muted-foreground transition-colors hover:bg-muted/50 data-[state=active]:bg-primary/10 data-[state=active]:text-primary data-[state=active]:shadow-sm"
+            >
             Submitted
             <Badge variant="secondary" className="ml-1 h-5 rounded-full px-1.5 text-[10px]">
               {counts.submitted}
             </Badge>
-          </TabsTrigger>
-          <TabsTrigger value="graded" className="gap-1 rounded-full px-3 py-1 text-xs md:text-sm">
+            </TabsTrigger>
+            <TabsTrigger
+              value="graded"
+              className="relative flex items-center gap-1 rounded-full px-3 py-1 text-xs md:text-sm font-medium text-muted-foreground transition-colors hover:bg-muted/50 data-[state=active]:bg-primary/10 data-[state=active]:text-primary data-[state=active]:shadow-sm"
+            >
             Graded
             <Badge variant="secondary" className="ml-1 h-5 rounded-full px-1.5 text-[10px]">
               {counts.graded}
             </Badge>
-          </TabsTrigger>
-          <TabsTrigger value="overdue" className="gap-1 rounded-full px-3 py-1 text-xs md:text-sm">
+            </TabsTrigger>
+            <TabsTrigger
+              value="overdue"
+              className="relative flex items-center gap-1 rounded-full px-3 py-1 text-xs md:text-sm font-medium text-muted-foreground transition-colors hover:bg-muted/50 data-[state=active]:bg-rose-50 data-[state=active]:text-rose-600 data-[state=active]:shadow-sm"
+            >
             Overdue
             <Badge variant="secondary" className="ml-1 h-5 rounded-full px-1.5 text-[10px]">
               {counts.overdue}
             </Badge>
-          </TabsTrigger>
-        </TabsList>
+            </TabsTrigger>
+          </TabsList>
+        </div>
 
         <TabsContent value={activeTab} className="space-y-3">
           {filteredItems.length === 0 ? (
