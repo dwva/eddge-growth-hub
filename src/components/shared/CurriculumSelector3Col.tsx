@@ -44,7 +44,7 @@ export function CurriculumSelector3Col({
         <CardContent className="p-6 flex flex-col flex-1 min-h-0">
           <div className="flex items-center gap-2 mb-4 shrink-0">
             <BookOpen className="w-4 h-4 text-primary" />
-            <h3 className="text-base font-semibold text-gray-900">Subjects</h3>
+            <h3 className="text-lg font-semibold text-gray-900">Subjects</h3>
           </div>
 
           <div className="space-y-2 flex-1 overflow-y-auto min-h-0">
@@ -67,14 +67,14 @@ export function CurriculumSelector3Col({
                     })
                   }
                   className={cn(
-                    'w-full p-4 rounded-xl border text-left transition-colors',
+                    'w-full p-4 rounded-lg border text-left transition-all',
                     isSelected
                       ? 'border-primary bg-primary/5'
                       : 'border-gray-200 bg-white hover:bg-gray-50'
                   )}
                 >
-                  <p className="font-semibold text-sm text-gray-900">{s.name}</p>
-                  <p className="text-xs text-gray-500">{subtitle}</p>
+                  <p className="font-medium text-gray-900">{s.name}</p>
+                  <p className="text-sm text-gray-500">{subtitle}</p>
                 </button>
               );
             })}
@@ -87,7 +87,7 @@ export function CurriculumSelector3Col({
         <CardContent className="p-6 flex flex-col flex-1 min-h-0">
           <div className="flex items-center gap-2 mb-4 shrink-0">
             <FileText className="w-4 h-4 text-primary" />
-            <h3 className="text-base font-semibold text-gray-900">Chapters</h3>
+            <h3 className="text-lg font-semibold text-gray-900">Chapters</h3>
           </div>
 
           <div className="space-y-2 flex-1 overflow-y-auto min-h-0 flex flex-col">
@@ -114,14 +114,14 @@ export function CurriculumSelector3Col({
                       })
                     }
                     className={cn(
-                      'w-full p-4 rounded-xl border text-left transition-colors',
+                      'w-full p-4 rounded-lg border text-left transition-all',
                       isSelected
                         ? 'border-primary bg-primary/5'
                         : 'border-gray-200 bg-white hover:bg-gray-50'
                     )}
                   >
-                    <p className="font-semibold text-sm text-gray-900">{c.name}</p>
-                    <p className="text-xs text-gray-500">
+                    <p className="font-medium text-gray-900">{c.name}</p>
+                    <p className="text-sm text-gray-500">
                       {topicCount} topic{topicCount !== 1 ? 's' : ''}
                     </p>
                   </button>
@@ -137,7 +137,7 @@ export function CurriculumSelector3Col({
         <CardContent className="p-6 flex flex-col flex-1 min-h-0">
           <div className="flex items-center gap-2 mb-4 shrink-0">
             <Target className="w-4 h-4 text-primary" />
-            <h3 className="text-base font-semibold text-gray-900">Topics</h3>
+            <h3 className="text-lg font-semibold text-gray-900">Topics</h3>
           </div>
 
           <div className="space-y-2 flex-1 overflow-y-auto min-h-0">
@@ -161,19 +161,19 @@ export function CurriculumSelector3Col({
                       onTopicSelected?.(t.id);
                     }}
                     className={cn(
-                      'w-full p-4 rounded-xl border text-left transition-colors',
+                      'w-full p-4 rounded-lg border text-left transition-all',
                       isSelected
                         ? 'border-primary bg-primary/5'
                         : 'border-gray-200 bg-white hover:bg-gray-50'
                     )}
                   >
                     <div className="flex items-center gap-2 flex-wrap">
-                      <p className="font-semibold text-sm text-gray-900">{t.name}</p>
+                      <p className="font-medium text-gray-900">{t.name}</p>
                       {t.difficulty && (
                         <Badge
                           variant="secondary"
                           className={cn(
-                            'text-[10px] px-2 py-0.5',
+                            'text-xs px-2 py-0.5',
                             t.difficulty === 'easy' && 'bg-green-100 text-green-700',
                             t.difficulty === 'medium' && 'bg-amber-100 text-amber-700',
                             t.difficulty === 'hard' && 'bg-red-100 text-red-700'
@@ -184,7 +184,7 @@ export function CurriculumSelector3Col({
                       )}
                     </div>
                     {t.description && (
-                      <p className="text-xs text-gray-500 mt-1 line-clamp-2">{t.description}</p>
+                      <p className="text-sm text-gray-500 mt-1 line-clamp-2">{t.description}</p>
                     )}
                   </button>
                 );
