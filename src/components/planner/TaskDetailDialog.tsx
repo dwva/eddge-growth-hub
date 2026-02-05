@@ -69,6 +69,7 @@ export const TaskDetailDialog = ({
             />
             <DialogTitle className="text-xl">{task.name}</DialogTitle>
           </div>
+          <span className="sr-only">Task details for {task.name}, {task.subject}, {task.duration}</span>
         </DialogHeader>
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 py-4">
           <div>
@@ -84,8 +85,8 @@ export const TaskDetailDialog = ({
           <div>
             <Label className="text-sm text-muted-foreground">Duration</Label>
             <p className="flex items-center gap-1 mt-0.5">
-              <Clock className="w-3 h-3" />
-              {task.duration}
+              <Clock className="w-3 h-3 shrink-0" />
+              {/\d+\s*min/i.test(task.duration) ? task.duration : `${task.duration} min`}
             </p>
           </div>
           <div>
@@ -169,10 +170,7 @@ export const TaskDetailDialog = ({
         </div>
         {task.aiInsight && (
           <div className="bg-indigo-50 p-4 rounded-xl border border-indigo-100 text-sm text-indigo-900 mb-4">
-            <p className="font-bold text-indigo-700 flex items-center gap-1 mb-1">
-              <AlertCircle className="w-4 h-4" />
-              AI Insight:
-            </p>
+            <p className="font-bold text-indigo-700 mb-1">AI Insight:</p>
             <p className="text-indigo-800">{task.aiInsight}</p>
           </div>
         )}
