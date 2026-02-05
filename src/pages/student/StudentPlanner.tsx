@@ -110,7 +110,6 @@ import { PlannerStats } from '@/components/planner/PlannerStats';
 import { TodaysSchedule } from '@/components/planner/TodaysSchedule';
 import { PlannerDeadlinesAndFocus } from '@/components/planner/PlannerDeadlinesAndFocus';
 import { PlannerCalendar } from '@/components/planner/PlannerCalendar';
-import { PlannerSidebar } from '@/components/planner/PlannerSidebar';
 import { TaskDetailDialog } from '@/components/planner/TaskDetailDialog';
 import { AddTaskDialog } from '@/components/planner/AddTaskDialog';
 
@@ -354,7 +353,7 @@ const StudentPlanner = () => {
                 </TabsTrigger>
               </TabsList>
 
-              <div className={`${activeTab === 'dashboard' ? 'grid gap-6 mt-3 grid-cols-1 lg:grid-cols-[1fr_320px]' : 'mt-2'}`}>
+              <div className={`${activeTab === 'dashboard' ? 'grid gap-6 mt-3 grid-cols-1 lg:grid-cols-1' : 'mt-2'}`}>
                 <div
                   className={`${activeTab === 'dashboard' ? 'flex flex-col min-w-0 min-h-0 max-h-[calc(100vh-6rem)] overflow-y-auto' : ''}`}
                 >
@@ -365,6 +364,7 @@ const StudentPlanner = () => {
                         tasksTodayCount={tasksToday.length}
                         pendingCount={tasks.filter((t) => t.status !== 'completed').length}
                         cognitiveLoad={plannerStubs.cognitiveLoad}
+                        onAutoGeneratePlan={handleAutoGeneratePlan}
                       />
                     </div>
                     <div className="shrink-0 min-h-[280px] max-h-[42vh] overflow-hidden mt-6">
@@ -398,15 +398,6 @@ const StudentPlanner = () => {
                     />
                   </TabsContent>
                 </div>
-
-                {activeTab === 'dashboard' && (
-                  <PlannerSidebar
-                    userName={user?.name?.split(' ')[0]}
-                    onAutoGenerate={handleAutoGeneratePlan}
-                    onAddSuggestion={addSuggestionAsTask}
-                    hasSuggestions={hasSuggestions}
-                  />
-                )}
               </div>
             </Tabs>
           </>

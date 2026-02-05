@@ -32,11 +32,17 @@ export const TodaysSchedule = ({ tasks, onViewCalendar, onAddTask, onStart, onCo
       </div>
       <div className="flex-1 min-h-0 overflow-y-auto -mx-1 px-1">
         {tasks.length === 0 ? (
-          <div className="py-10 text-center">
-            <p className="font-medium text-gray-700">No tasks scheduled for today.</p>
-            <button type="button" className="text-sm text-primary hover:underline mt-1" onClick={onAddTask}>
-              Add a task
-            </button>
+          <div className="h-full flex flex-col items-center justify-center text-center">
+            <div>
+              <p className="font-medium text-gray-700">No tasks scheduled for today.</p>
+              <button
+                type="button"
+                className="text-sm text-primary hover:underline mt-1"
+                onClick={onAddTask}
+              >
+                Add a task
+              </button>
+            </div>
           </div>
         ) : (
           <ul className="space-y-2">
