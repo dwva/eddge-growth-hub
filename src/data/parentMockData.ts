@@ -154,3 +154,191 @@ export const badges = [
   { id: 'b3', icon: 'sparkles', title: 'Reading Star', description: 'Read 10 library books', color: '#ec4899' },
   { id: 'b4', icon: 'zap', title: 'Consistent Learner', description: '30-day study streak', color: '#8b5cf6' },
 ];
+
+// Parent Action Center Alerts
+export interface ActionAlert {
+  id: string;
+  type: 'academic-risk' | 'attendance-concern' | 'homework-missed' | 'positive-growth';
+  severity: 'info' | 'attention' | 'urgent';
+  title: string;
+  description: string;
+  recommendedAction: string;
+  dismissed?: boolean;
+  snoozedUntil?: string;
+}
+
+export const actionAlerts: ActionAlert[] = [
+  {
+    id: 'alert1',
+    type: 'academic-risk',
+    severity: 'attention',
+    title: 'Geography Score Drop',
+    description: 'Geography scores have decreased by 5% in recent tests. This might need some attention.',
+    recommendedAction: 'Talk to child about Geography concepts',
+  },
+  {
+    id: 'alert2',
+    type: 'positive-growth',
+    severity: 'info',
+    title: 'Mathematics Improvement',
+    description: 'Great progress in Mathematics! Scores have improved by 8% this month.',
+    recommendedAction: 'Encourage continued practice',
+  },
+  {
+    id: 'alert3',
+    type: 'homework-missed',
+    severity: 'attention',
+    title: 'Pending Homework',
+    description: '2 homework assignments are due soon. Help your child stay on track.',
+    recommendedAction: 'Check homework queue together',
+  },
+];
+
+// Study Habits & Consistency
+export interface StudyHabit {
+  currentStreak: number;
+  longestStreak: number;
+  weeklyStudyTime: { subject: string; hours: number }[];
+  submissionConsistency: number; // percentage
+  studyDays: string[]; // dates
+}
+
+export const studyHabits: StudyHabit = {
+  currentStreak: 7,
+  longestStreak: 12,
+  weeklyStudyTime: [
+    { subject: 'Mathematics', hours: 5.5 },
+    { subject: 'Science', hours: 4.0 },
+    { subject: 'English', hours: 3.5 },
+    { subject: 'History', hours: 2.5 },
+  ],
+  submissionConsistency: 85,
+  studyDays: [
+    '2026-01-28', '2026-01-29', '2026-01-30', '2026-01-31',
+    '2026-02-01', '2026-02-02', '2026-02-03',
+  ],
+};
+
+// Exam Readiness
+export interface ExamReadiness {
+  subject: string;
+  readiness: 'low' | 'medium' | 'high';
+  score: number; // 0-100
+  explanation: string;
+}
+
+export const examReadiness: ExamReadiness[] = [
+  {
+    subject: 'Mathematics',
+    readiness: 'high',
+    score: 85,
+    explanation: 'Your child is well-prepared for the upcoming Mathematics exam.',
+  },
+  {
+    subject: 'Science',
+    readiness: 'medium',
+    score: 70,
+    explanation: 'Good preparation, but some topics may need review.',
+  },
+  {
+    subject: 'English',
+    readiness: 'high',
+    score: 90,
+    explanation: 'Excellent preparation! Your child is ready.',
+  },
+  {
+    subject: 'History',
+    readiness: 'low',
+    score: 55,
+    explanation: 'Your child may need support in History before the next exam.',
+  },
+  {
+    subject: 'Geography',
+    readiness: 'medium',
+    score: 65,
+    explanation: 'Some additional practice would be helpful.',
+  },
+];
+
+// Class Benchmark
+export interface ClassBenchmark {
+  subject: string;
+  childScore: number;
+  classAverage: number;
+  position: 'above' | 'at' | 'below';
+}
+
+export const classBenchmark: ClassBenchmark[] = [
+  { subject: 'Mathematics', childScore: 85, classAverage: 78, position: 'above' },
+  { subject: 'Science', childScore: 78, classAverage: 75, position: 'above' },
+  { subject: 'English', childScore: 92, classAverage: 80, position: 'above' },
+  { subject: 'History', childScore: 71, classAverage: 73, position: 'below' },
+  { subject: 'Geography', childScore: 68, classAverage: 70, position: 'below' },
+];
+
+// Wellbeing Signals
+export interface WellbeingSignal {
+  id: string;
+  type: 'performance-drop' | 'attendance-change' | 'behavior-note';
+  title: string;
+  description: string;
+  suggestion: string;
+  timestamp: string;
+}
+
+export const wellbeingSignals: WellbeingSignal[] = [
+  {
+    id: 'wb1',
+    type: 'performance-drop',
+    title: 'Recent Performance Change',
+    description: 'Geography scores have decreased slightly. This is normal and may indicate a need for support.',
+    suggestion: 'Consider talking to your child about how they\'re feeling about Geography.',
+    timestamp: '2026-02-01',
+  },
+  {
+    id: 'wb2',
+    type: 'behavior-note',
+    title: 'Positive Teacher Note',
+    description: 'Teacher noted increased participation in class discussions this week.',
+    suggestion: 'Great to see! Continue encouraging active participation.',
+    timestamp: '2026-01-30',
+  },
+];
+
+// Parent Feedback & Acknowledgement
+export interface FeedbackItem {
+  id: string;
+  type: 'announcement' | 'ptm-note' | 'teacher-remark';
+  title: string;
+  content: string;
+  date: string;
+  status: 'pending' | 'acknowledged' | 'clarification-requested' | 'follow-up-requested';
+  comment?: string;
+}
+
+export const feedbackItems: FeedbackItem[] = [
+  {
+    id: 'fb1',
+    type: 'announcement',
+    title: 'Parent-Teacher Meeting',
+    content: 'PTM scheduled for all classes. Please confirm your attendance.',
+    date: '2026-02-03',
+    status: 'pending',
+  },
+  {
+    id: 'fb2',
+    type: 'ptm-note',
+    title: 'Science Project Discussion',
+    content: 'Discussed science project progress. Alex is doing well.',
+    date: '2026-01-28',
+    status: 'acknowledged',
+  },
+  {
+    id: 'fb3',
+    type: 'teacher-remark',
+    title: 'Mathematics Improvement',
+    content: 'Great improvement in algebra! Keep up the good work.',
+    date: '2026-02-01',
+    status: 'pending',
+  },
+];

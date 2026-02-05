@@ -1,120 +1,179 @@
-import { ReactNode, useState } from 'react';
+import { ReactNode, useState, createContext, useContext } from 'react';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
-import { Input } from '@/components/ui/input';
-import { Menu, Search, Mail, Bell } from 'lucide-react';
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
+import { Avatar, AvatarFallback } from '@/components/ui/avatar';
+import { Menu, Bell, MessageSquare, Settings, LogOut, HelpCircle } from 'lucide-react';
 import ParentSidebar from './ParentSidebar';
 import { ChildProvider, useChild } from '@/contexts/ChildContext';
 import { LanguageProvider } from '@/contexts/LanguageContext';
 import { useAuth } from '@/contexts/AuthContext';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { useNavigate } from 'react-router-dom';
 
 interface ParentDashboardLayoutProps {
   children: ReactNode;
-  rightSidebar?: ReactNode;
   title?: string;
 }
 
-const ParentDashboardLayoutInner = ({ children, rightSidebar, title = "Parent Dashboard" }: ParentDashboardLayoutProps) => {
+// Context for sharing collapsed state
+const ParentLayoutContext = createContext<{
+  collapsed: boolean;
+  setCollapsed: (collapsed: boolean) => void;
+}>({
+  collapsed: false,
+  setCollapsed: () => {},
+});
+
+export const useParentLayout = () => useContext(ParentLayoutContext);
+
+const ParentDashboardLayoutInner = ({ children, title = "Parent Dashboard" }: ParentDashboardLayoutProps) => {
   const [mobileOpen, setMobileOpen] = useState(false);
-  const { user } = useAuth();
-  const { selectedChild } = useChild();
+  const [collapsed, setCollapsed] = useState(false);
+  const { user, logout } = useAuth();
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    logout();
+    navigate('/');
+  };
+
+  const firstName = user?.name?.split(' ')[0] || 'Parent';
 
   return (
-    <div className="h-screen bg-[#f8f9fc] flex overflow-hidden font-sans">
-      {/* Desktop Sidebar - Fixed */}
-      <aside className="hidden md:flex flex-col w-56 h-screen sticky top-0 flex-shrink-0 overflow-hidden bg-white border-r border-gray-100">
-        <ParentSidebar />
-      </aside>
+    <ParentLayoutContext.Provider value={{ collapsed, setCollapsed }}>
+      <div className="min-h-screen flex w-full bg-[#f8f9fc] font-sans">
+        {/* Desktop Sidebar */}
+        <aside className={cn(
+          "hidden md:flex flex-col h-screen sticky top-0 flex-shrink-0 transition-all duration-300 ease-in-out overflow-hidden",
+          collapsed ? "w-0" : "w-[260px]"
+        )}>
+          <ParentSidebar collapsed={collapsed} onCollapseChange={setCollapsed} />
+        </aside>
 
-      {/* Mobile Sidebar */}
-      <Sheet open={mobileOpen} onOpenChange={setMobileOpen}>
-        <SheetContent side="left" className="w-64 p-0">
-          <ParentSidebar isMobile onMobileClose={() => setMobileOpen(false)} />
-        </SheetContent>
-      </Sheet>
+        {/* Mobile Sidebar */}
+        <Sheet open={mobileOpen} onOpenChange={setMobileOpen}>
+          <SheetContent side="left" className="w-72 p-0 border-0">
+            <ParentSidebar isMobile onMobileClose={() => setMobileOpen(false)} />
+          </SheetContent>
+        </Sheet>
 
-      {/* Main Content Area */}
-      <div className="flex-1 flex flex-col h-screen overflow-hidden">
-        {/* Top Bar with Search */}
-        <header className="h-16 px-6 flex items-center justify-between sticky top-0 z-10 flex-shrink-0 bg-[#f8f9fc]">
-          <div className="flex items-center gap-4 flex-1">
-            <Sheet open={mobileOpen} onOpenChange={setMobileOpen}>
-              <SheetTrigger asChild className="md:hidden">
-                <Button variant="ghost" size="icon" className="h-9 w-9">
-                  <Menu className="w-5 h-5" />
-                </Button>
-              </SheetTrigger>
-            </Sheet>
-            
-            {/* Search Bar - Centered like in the design */}
-            <div className="flex-1 max-w-xl">
-              <div className="relative">
-                <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
-                <Input 
-                  placeholder="Search your child's progress..." 
-                  className="pl-11 h-11 bg-white border-gray-200 rounded-xl focus-visible:ring-1 focus-visible:ring-primary shadow-sm"
-                />
+        {/* Main Content Area */}
+        <div className="flex-1 flex flex-col min-w-0">
+          {/* Top Bar */}
+          <header className="h-20 bg-white px-6 md:px-8 flex items-center justify-between sticky top-0 z-10 flex-shrink-0 border-b border-gray-100">
+            {/* Left: Menu + Welcome */}
+            <div className="flex items-center gap-4">
+              <Sheet open={mobileOpen} onOpenChange={setMobileOpen}>
+                <SheetTrigger asChild className="md:hidden">
+                  <Button variant="ghost" size="icon" className="h-9 w-9">
+                    <Menu className="w-4 h-4" />
+                  </Button>
+                </SheetTrigger>
+              </Sheet>
+              <Button 
+                variant="ghost" 
+                size="icon" 
+                className="hidden md:flex h-9 w-9"
+                onClick={() => setCollapsed(!collapsed)}
+              >
+                <Menu className="w-4 h-4 text-gray-500" />
+              </Button>
+              <div className="hidden sm:block">
+                <h1 className="text-base font-semibold text-gray-900">Welcome to EDDGE.</h1>
+                <p className="text-[11px] text-gray-500">Hello {firstName}, welcome back!</p>
               </div>
             </div>
-          </div>
-          
-          {/* Right Side: Icons + Profile */}
-          <div className="flex items-center gap-2 ml-4">
-            <Button 
-              variant="ghost" 
-              size="icon" 
-              className="h-10 w-10 rounded-xl bg-white shadow-sm border border-gray-100 hover:bg-gray-50"
-            >
-              <Mail className="w-5 h-5 text-gray-500" />
-            </Button>
-            <Button 
-              variant="ghost" 
-              size="icon" 
-              className="relative h-10 w-10 rounded-xl bg-white shadow-sm border border-gray-100 hover:bg-gray-50"
-            >
-              <Bell className="w-5 h-5 text-gray-500" />
-              <span className="absolute -top-1 -right-1 w-5 h-5 bg-red-500 rounded-full text-[10px] text-white flex items-center justify-center font-medium">3</span>
-            </Button>
             
-            {/* Profile */}
-            <div className="flex items-center gap-3 ml-2 pl-4 border-l border-gray-200">
-              <Avatar className="w-10 h-10 border-2 border-primary/20">
-                <AvatarImage src="" />
-                <AvatarFallback className="bg-gradient-to-br from-primary to-purple-600 text-white text-sm font-medium">
-                  {user?.name?.charAt(0) || 'P'}
-                </AvatarFallback>
-              </Avatar>
-              <span className="text-sm font-semibold text-gray-800 hidden lg:block">{user?.name || 'Parent'}</span>
-            </div>
-          </div>
-        </header>
+            {/* Right: Icons + Avatar */}
+            <div className="flex items-center gap-2 flex-shrink-0">
+              {/* Messages */}
+              <Button 
+                variant="ghost" 
+                size="icon" 
+                className="h-9 w-9 hover:bg-gray-100 rounded-lg"
+              >
+                <MessageSquare className="w-4 h-4 text-gray-500" />
+              </Button>
 
-        {/* Content Area - Main + Right Sidebar */}
-        <div className="flex-1 flex overflow-hidden">
-          {/* Main Content - Scrollable */}
-          <main className="flex-1 p-6 overflow-y-auto">
+              {/* Notifications */}
+              <Button 
+                variant="ghost" 
+                size="icon" 
+                className="relative h-9 w-9 hover:bg-gray-100 rounded-lg"
+              >
+                <Bell className="w-4 h-4 text-gray-500" />
+                <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-red-500 rounded-full"></span>
+              </Button>
+
+              {/* Avatar with Popover */}
+              <Popover>
+                <PopoverTrigger asChild>
+                  <button className="ml-2">
+                    <Avatar className="w-9 h-9 border-2 border-primary/20 hover:border-primary/40 transition-colors cursor-pointer">
+                      <AvatarFallback className="bg-gradient-to-br from-primary to-purple-600 text-white font-semibold text-sm">
+                        {firstName.charAt(0)}
+                      </AvatarFallback>
+                    </Avatar>
+                  </button>
+                </PopoverTrigger>
+                <PopoverContent className="w-60 p-0 bg-white rounded-xl shadow-lg border-0" align="end">
+                  <div className="p-4 border-b border-gray-100">
+                    <div className="flex items-center gap-3">
+                      <Avatar className="w-11 h-11 border-2 border-primary/20">
+                        <AvatarFallback className="bg-gradient-to-br from-primary to-purple-600 text-white font-semibold">
+                          {firstName.charAt(0)}
+                        </AvatarFallback>
+                      </Avatar>
+                      <div className="flex-1 min-w-0">
+                        <p className="font-semibold text-gray-900 truncate">{user?.name || 'Parent'}</p>
+                        <p className="text-xs text-gray-500 truncate">{user?.email || 'parent@eddge.com'}</p>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="p-2">
+                    <button 
+                      onClick={() => navigate('/parent/settings')}
+                      className="w-full flex items-center gap-3 px-3 py-2.5 text-sm rounded-lg hover:bg-gray-50 transition-colors text-gray-700"
+                    >
+                      <Settings className="w-4 h-4" />
+                      Settings
+                    </button>
+                    <button 
+                      onClick={() => navigate('/parent/support')}
+                      className="w-full flex items-center gap-3 px-3 py-2.5 text-sm rounded-lg hover:bg-gray-50 transition-colors text-gray-700"
+                    >
+                      <HelpCircle className="w-4 h-4" />
+                      Support
+                    </button>
+                    <button 
+                      onClick={handleLogout}
+                      className="w-full flex items-center gap-3 px-3 py-2.5 text-sm rounded-lg hover:bg-red-50 transition-colors text-red-600"
+                    >
+                      <LogOut className="w-4 h-4" />
+                      Logout
+                    </button>
+                  </div>
+                </PopoverContent>
+              </Popover>
+            </div>
+          </header>
+
+          {/* Content Area - Full width when sidebar is hidden */}
+          <main className="flex-1 p-6 md:p-8 overflow-y-auto">
             {children}
           </main>
-
-          {/* Right Sidebar - Fixed on large screens */}
-          {rightSidebar && (
-            <aside className="hidden xl:block w-80 h-full overflow-y-auto border-l border-gray-100 bg-white p-5 flex-shrink-0">
-              {rightSidebar}
-            </aside>
-          )}
         </div>
       </div>
-    </div>
+    </ParentLayoutContext.Provider>
   );
 };
 
-const ParentDashboardLayout = ({ children, rightSidebar, title }: ParentDashboardLayoutProps) => {
+const ParentDashboardLayout = ({ children, title }: ParentDashboardLayoutProps) => {
   return (
     <LanguageProvider>
       <ChildProvider>
-        <ParentDashboardLayoutInner title={title} rightSidebar={rightSidebar}>
+        <ParentDashboardLayoutInner title={title}>
           {children}
         </ParentDashboardLayoutInner>
       </ChildProvider>
