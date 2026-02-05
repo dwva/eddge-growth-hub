@@ -136,7 +136,7 @@ All dashboard routes use `ProtectedRoute` with the appropriate `allowedRoles`. I
 | `/student`               | StudentHome             | Dashboard: Today’s Focus, My Stats, Overall Progress, My Learning (subjects), Weekly Performance, Upcoming Tasks, Recent Activity |
 | `/student/planner`       | StudentPlanner         | Daily plan, task timeline, exam mode, learning readiness, calendar |
 | `/student/learning`      | StudentLearning        | Subject/chapter selection, learning engine (Foundation, Concept, A.C.E, Exit) |
-| `/student/practice`      | StudentPractice        | Practice flow using practice questions |
+| `/student/practice`      | StudentPractice        | Practice: Subject → Chapter → Topic selection, then 5 types (MCQs, Short/Long/Case study/Very short), question UI with hints, formula sheet, glossary, Ask doubt (mock), rubric/framework; supports PYQ Smart Practice entry via state |
 | `/student/revision`      | StudentRevision        | Revision content |
 | `/student/tests`         | StudentTests            | Tests & exams (no sidebar link) |
 | `/student/performance`   | StudentPerformance      | Average score, XP, study time, weekly chart, strengths/weak areas |
@@ -153,7 +153,8 @@ All dashboard routes use `ProtectedRoute` with the appropriate `allowedRoles`. I
 
 ### Student data sources
 
-- **Shared:** `src/data/mockData.ts` — `subjects`, `chapters`, `practiceQuestions`, `upcomingTests`, `studentPerformance`, `attendance`, etc.
+- **Shared:** `src/data/mockData.ts` — `subjects`, `chapters`, `learningTopics`, `practiceQuestions`, `practiceQuestionsByTopic`, `getPracticeSetForTopic`, `formulaSheetByChapter`, `glossaryByChapter`, `upcomingTests`, `studentPerformance`, `attendance`, etc.
+- **Practice:** `src/components/practice/` — `PracticeSelectionView`, `PracticeTypeSelectionView`, `PracticeScreen` (MCQ, short/long, case study, very-short UIs; in-answer support: hints, Ask doubt, Check answer, formula sheet, glossary, rubric/framework).
 - **Doubt solver:** `src/components/doubt-solver/mockData.ts` — `mockConversations`, `mockResponses`
 - **Page-level:** Many pages (e.g. StudentHome, StudentPlanner, StudentHomework) also use inline mock data.
 

@@ -8,7 +8,7 @@ export const subjects = [
   { id: '5', name: 'Geography', icon: '🌍', color: 'bg-teal-500', progress: 55, chapters: 9, completedChapters: 5 },
 ];
 
-export const chapters = {
+export const chapters: Record<string, { id: string; name: string; completed: boolean; concepts: number }[]> = {
   '1': [ // Mathematics
     { id: 'c1', name: 'Algebra Basics', completed: true, concepts: 5 },
     { id: 'c2', name: 'Linear Equations', completed: true, concepts: 4 },
@@ -22,6 +22,9 @@ export const chapters = {
     { id: 'c3', name: 'Light and Sound', completed: false, concepts: 6 },
     { id: 'c4', name: 'Electricity', completed: false, concepts: 7 },
   ],
+  '3': [{ id: 'c1', name: 'Grammar', completed: false, concepts: 6 }],
+  '4': [{ id: 'c1', name: 'Ancient World', completed: false, concepts: 8 }],
+  '5': [{ id: 'c1', name: 'Maps', completed: false, concepts: 5 }],
 };
 
 // Learning Engine: topics per chapter (subject id -> chapter id -> topics)
@@ -62,6 +65,175 @@ export const learningTopics: Record<string, LearningTopic[]> = {
   ],
 };
 
+// Practice: question types per topic (keyed by topicId)
+export type PracticeDifficulty = 'easy' | 'medium' | 'hard';
+
+export interface PracticeQuestionMCQ {
+  id: string;
+  question: string;
+  options: string[];
+  correct: number;
+  difficulty?: PracticeDifficulty;
+  hint?: string;
+  explanation?: string;
+}
+
+export interface PracticeQuestionShortAnswer {
+  id: string;
+  question: string;
+  difficulty?: PracticeDifficulty;
+  hint?: string;
+  modelAnswer?: string;
+  rubric?: string;
+}
+
+export interface PracticeQuestionLongAnswer {
+  id: string;
+  question: string;
+  subParts?: { label: string; question: string }[];
+  difficulty?: PracticeDifficulty;
+  hint?: string;
+  modelAnswer?: string;
+  rubric?: string;
+  framework?: string;
+}
+
+export interface PracticeQuestionCaseStudy {
+  id: string;
+  caseText: string;
+  questions: (
+    | { type: 'mcq'; id: string; question: string; options: string[]; correct: number }
+    | { type: 'short'; id: string; question: string }
+    | { type: 'long'; id: string; question: string }
+  )[];
+  difficulty?: PracticeDifficulty;
+}
+
+export interface PracticeQuestionVeryShort {
+  id: string;
+  question: string;
+  correctAnswer: string;
+  difficulty?: PracticeDifficulty;
+  hint: string;
+}
+
+export interface PracticeTopicSet {
+  mcq: PracticeQuestionMCQ[];
+  shortAnswer: PracticeQuestionShortAnswer[];
+  longAnswer: PracticeQuestionLongAnswer[];
+  caseStudy: PracticeQuestionCaseStudy[];
+  veryShort: PracticeQuestionVeryShort[];
+}
+
+// Practice questions by topic (topicId -> set). Fallback to first topic's set when topic has no data.
+export const practiceQuestionsByTopic: Record<string, PracticeTopicSet> = {
+  t1: {
+    mcq: [
+      { id: 'mq1', question: 'Simplify: 3x + 2x', options: ['5x', '6x', '5', 'x'], correct: 0, difficulty: 'easy', hint: 'Add the coefficients of x.', explanation: '3x + 2x = (3+2)x = 5x' },
+      { id: 'mq2', question: 'What is the degree of 4x² + 3x + 1?', options: ['1', '2', '3', '0'], correct: 1, difficulty: 'easy', hint: 'Degree is the highest power of the variable.' },
+    ],
+    shortAnswer: [
+      { id: 'sq1', question: 'Explain what a linear expression in one variable is. Give one example.', difficulty: 'easy', hint: 'Think of expressions like ax + b.', modelAnswer: 'A linear expression has the form ax + b where a and b are constants and x is the variable. Example: 2x + 5.' },
+    ],
+    longAnswer: [
+      { id: 'lq1', question: 'Describe the steps to simplify an algebraic expression with like terms. Give a worked example.', framework: 'Introduction → Identify like terms → Combine → Conclusion', rubric: '2 marks: definition; 2 marks: steps; 2 marks: example.' },
+    ],
+    caseStudy: [
+      {
+        id: 'cs1',
+        caseText: 'A shop sells notebooks for ₹x each and pens for ₹y each. Riya buys 3 notebooks and 2 pens. The total cost is 3x + 2y.',
+        questions: [
+          { type: 'mcq', id: 'csm1', question: 'What does the term 3x represent?', options: ['Cost of 2 pens', 'Cost of 3 notebooks', 'Cost of 1 notebook', 'Total cost'], correct: 1 },
+          { type: 'short', id: 'css1', question: 'Write an expression for the cost of 5 notebooks and 4 pens.' },
+        ],
+      },
+    ],
+    veryShort: [
+      { id: 'vs1', question: 'What is the coefficient of x in 7x + 2?', correctAnswer: '7', difficulty: 'easy', hint: 'The number multiplied by x is the coefficient.' },
+    ],
+  },
+  t2: {
+    mcq: [
+      { id: 'mq3', question: 'Factorize: 6x + 12', options: ['6(x+2)', '3(2x+4)', '2(3x+6)', 'x(6+12)'], correct: 0, difficulty: 'medium', hint: 'Take the common factor out.' },
+    ],
+    shortAnswer: [{ id: 'sq2', question: 'What is the HCF of 6 and 12? Use it to factorize 6x + 12.', hint: 'HCF(6,12) = 6.' }],
+    longAnswer: [],
+    caseStudy: [],
+    veryShort: [
+      { id: 'vs2', question: 'Factorize 5a + 10 in one step. (Write the expression only)', correctAnswer: '5(a+2)', hint: 'Common factor is 5.' },
+    ],
+  },
+  t3: {
+    mcq: [
+      { id: 'mq4', question: 'Solve for x: 2x + 5 = 15', options: ['x = 5', 'x = 10', 'x = 7.5', 'x = 4'], correct: 0, difficulty: 'easy', hint: 'Subtract 5 from both sides first.', explanation: '2x = 10, so x = 5.' },
+    ],
+    shortAnswer: [],
+    longAnswer: [],
+    caseStudy: [],
+    veryShort: [
+      { id: 'vs3', question: 'If 3x = 12, what is x?', correctAnswer: '4', hint: 'Divide both sides by 3.' },
+    ],
+  },
+  t11: {
+    mcq: [
+      { id: 'mq5', question: "What is the SI unit of force?", options: ['Joule', 'Newton', 'Watt', 'Pascal'], correct: 1, difficulty: 'easy', hint: 'Named after a famous physicist.', explanation: 'Force is measured in newtons (N).' },
+    ],
+    shortAnswer: [
+      { id: 'sq3', question: "State Newton's first law of motion in one sentence.", hint: 'Think about a body at rest or in uniform motion.', modelAnswer: 'A body remains at rest or in uniform motion in a straight line unless acted upon by an external force.' },
+    ],
+    longAnswer: [],
+    caseStudy: [
+      {
+        id: 'cs2',
+        caseText: 'A book is lying on a table. The table exerts a normal force N on the book; the book exerts weight W downward. The book is at rest.',
+        questions: [
+          { type: 'mcq', id: 'csm2', question: 'For the book to be at rest, how do N and W compare?', options: ['N > W', 'N = W', 'N < W', 'N = 0'], correct: 1 },
+          { type: 'short', id: 'css2', question: 'Which law of Newton best explains why the book remains at rest?' },
+        ],
+      },
+    ],
+    veryShort: [
+      { id: 'vs4', question: 'What is the SI unit of force? (One word)', correctAnswer: 'Newton', hint: 'Named after Isaac Newton.' },
+    ],
+  },
+  t12: {
+    mcq: [
+      { id: 'mq6', question: 'Friction opposes _____.', options: ['weight', 'motion', 'gravity', 'mass'], correct: 1, difficulty: 'easy', hint: 'It acts between surfaces.' },
+    ],
+    shortAnswer: [],
+    longAnswer: [],
+    caseStudy: [],
+    veryShort: [
+      { id: 'vs5', question: 'Name the force that opposes relative motion between two surfaces.', correctAnswer: 'Friction', hint: 'It acts along the surface.' },
+    ],
+  },
+};
+
+// Default set when a topic has no practice data (reuse t1)
+const defaultPracticeSet = practiceQuestionsByTopic['t1'];
+
+export function getPracticeSetForTopic(topicId: string): PracticeTopicSet {
+  return practiceQuestionsByTopic[topicId] ?? defaultPracticeSet;
+}
+
+// Reference materials (mock) – scoped to subject/chapter/topic
+export const formulaSheetByChapter: Record<string, string[]> = {
+  '1-c1': ['Like terms: ax + bx = (a+b)x', 'Distributive: a(b+c) = ab + ac'],
+  '1-c2': ['ax + b = c ⇒ x = (c−b)/a', 'Linear equation in one variable'],
+  '2-c2': ['F = ma', 'v = u + at', 's = ut + ½at²', 'Newton\'s first law: F_net = 0 ⇒ constant velocity'],
+};
+
+export const glossaryByChapter: Record<string, { term: string; definition: string }[]> = {
+  '1-c1': [
+    { term: 'Coefficient', definition: 'The number multiplied by a variable in a term.' },
+    { term: 'Like terms', definition: 'Terms that have the same variable(s) and power.' },
+  ],
+  '2-c2': [
+    { term: 'Force', definition: 'A push or pull that can change the state of motion of a body.' },
+    { term: 'Inertia', definition: 'Tendency of a body to resist change in its state of motion.' },
+  ],
+};
+
 // O-D-P-E-T-W-X stages for Learning Pathway
 export const learningStages = [
   { id: 'foundation', letter: 'O', name: 'Foundation', description: 'Overview and why this topic matters.' },
@@ -77,6 +249,34 @@ export const recentlyStudiedChapters = [
   { chapterId: 'c1', chapterName: 'Algebra Basics', subjectName: 'Mathematics', progress: 60, topicsCompleted: 2, topicsTotal: 3, lastStudied: '2 weeks ago' },
   { chapterId: 'c2', chapterName: 'Force and Motion', subjectName: 'Science', progress: 40, topicsCompleted: 1, topicsTotal: 3, lastStudied: '3 days ago' },
   { chapterId: 'c1', chapterName: 'Matter and Energy', subjectName: 'Science', progress: 100, topicsCompleted: 4, topicsTotal: 4, lastStudied: '1 month ago' },
+];
+
+// Recently revised (topic-level with practice type) – for Practice page
+export type RecentRevisionPracticeType = 'MCQs' | 'Short answer' | 'Long answer' | 'Case study' | 'Very short answer' | 'Revision';
+export interface RecentlyRevisedItem {
+  subjectId: string;
+  chapterId: string;
+  topicId: string;
+  chapterName: string;
+  subjectName: string;
+  topicName: string;
+  practiceType: RecentRevisionPracticeType;
+  lastRevised: string;
+  progress: number;
+  topicsCompleted: number;
+  topicsTotal: number;
+}
+
+export const recentlyRevisedTopics: RecentlyRevisedItem[] = [
+  { subjectId: '1', chapterId: 'c3', topicId: 't5', chapterName: 'Quadratic Equations', subjectName: 'Mathematics', topicName: 'Factorization Method', practiceType: 'MCQs', lastRevised: '2 days ago', progress: 75, topicsCompleted: 3, topicsTotal: 4 },
+  { subjectId: '1', chapterId: 'c3', topicId: 't6', chapterName: 'Quadratic Equations', subjectName: 'Mathematics', topicName: 'Quadratic Formula', practiceType: 'Short answer', lastRevised: '2 days ago', progress: 75, topicsCompleted: 3, topicsTotal: 4 },
+  { subjectId: '1', chapterId: 'c2', topicId: 't4', chapterName: 'Linear Equations', subjectName: 'Mathematics', topicName: 'Word Problems', practiceType: 'MCQs', lastRevised: '1 week ago', progress: 100, topicsCompleted: 4, topicsTotal: 4 },
+  { subjectId: '1', chapterId: 'c2', topicId: 't3', chapterName: 'Linear Equations', subjectName: 'Mathematics', topicName: 'One Variable Equations', practiceType: 'Very short answer', lastRevised: '1 week ago', progress: 100, topicsCompleted: 4, topicsTotal: 4 },
+  { subjectId: '1', chapterId: 'c1', topicId: 't2', chapterName: 'Algebra Basics', subjectName: 'Mathematics', topicName: 'Factorization', practiceType: 'Revision', lastRevised: '2 weeks ago', progress: 60, topicsCompleted: 2, topicsTotal: 3 },
+  { subjectId: '1', chapterId: 'c1', topicId: 't1', chapterName: 'Algebra Basics', subjectName: 'Mathematics', topicName: 'Linear Expressions', practiceType: 'Short answer', lastRevised: '2 weeks ago', progress: 60, topicsCompleted: 2, topicsTotal: 3 },
+  { subjectId: '2', chapterId: 'c2', topicId: 't12', chapterName: 'Force and Motion', subjectName: 'Science', topicName: 'Friction and Motion', practiceType: 'MCQs', lastRevised: '3 days ago', progress: 40, topicsCompleted: 1, topicsTotal: 3 },
+  { subjectId: '2', chapterId: 'c1', topicId: 't10', chapterName: 'Matter and Energy', subjectName: 'Science', topicName: 'Energy Forms', practiceType: 'Long answer', lastRevised: '1 month ago', progress: 100, topicsCompleted: 4, topicsTotal: 4 },
+  { subjectId: '2', chapterId: 'c1', topicId: 't9', chapterName: 'Matter and Energy', subjectName: 'Science', topicName: 'Matter and States', practiceType: 'Case study', lastRevised: '1 month ago', progress: 100, topicsCompleted: 4, topicsTotal: 4 },
 ];
 
 export const practiceQuestions = [

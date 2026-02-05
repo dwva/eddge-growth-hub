@@ -4,20 +4,20 @@ import { useTeacherMode } from '@/contexts/TeacherModeContext';
 import StatCard from '@/components/shared/StatCard';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
+import { Progress } from '@/components/ui/progress';
+import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
-import { Progress } from '@/components/ui/progress';
 import { 
   Users, BarChart3, AlertTriangle, Calendar, MessageCircle, BookOpen, 
   TrendingUp, TrendingDown, Award, Sparkles, ClipboardList,
   ArrowRight, Crown, Clock, Bell, CheckCircle2, FileText, ChevronRight,
-  Target, Zap, Activity, GraduationCap
+  Target, Zap, Activity, GraduationCap, Plus
 } from 'lucide-react';
 import { 
   upcomingEvents, messagesOverview, behaviourNotes, classAnalyticsData, 
-  recentActivities, topPerformers, subjectClasses, chapters, assessments
+  recentActivities, topPerformers, subjectClasses, chapters, assessments, teacherTasks, parentEngagementData
 } from '@/data/teacherMockData';
-import { cn } from '@/lib/utils';
 
 const ClassTeacherModeView = () => {
   const navigate = useNavigate();
@@ -133,6 +133,135 @@ const ClassTeacherModeView = () => {
             </div>
           </button>
         ))}
+      </div>
+
+      {/* New Feature Widgets - Tasks & Parent Engagement */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        {/* Tasks Summary Widget */}
+        <Card className="rounded-xl border-0 shadow-sm bg-white">
+          <CardHeader className="py-3 px-5">
+            <div className="flex items-center justify-between">
+              <CardTitle className="text-sm font-bold text-gray-900">Tasks & Follow-ups</CardTitle>
+              <Button variant="ghost" size="sm" className="h-7 text-xs text-primary hover:bg-primary/5" onClick={() => navigate('/teacher/tasks')}>
+                View All <ChevronRight className="w-3.5 h-3.5 ml-0.5" />
+              </Button>
+            </div>
+          </CardHeader>
+          <CardContent className="pt-0 pb-4 px-5">
+            <div className="grid grid-cols-3 gap-3 mb-4">
+              {[
+                { 
+                  label: 'Pending', 
+                  count: teacherTasks.filter(t => t.status === 'pending').length, 
+                  color: 'text-gray-600', 
+                  bg: 'bg-gray-50' 
+                },
+                { 
+                  label: 'In Progress', 
+                  count: teacherTasks.filter(t => t.status === 'in-progress').length, 
+                  color: 'text-blue-600', 
+                  bg: 'bg-blue-50' 
+                },
+                { 
+                  label: 'Overdue', 
+                  count: teacherTasks.filter(t => {
+                    if (t.status === 'completed') return false;
+                    const dueDate = new Date(t.dueDate);
+                    const today = new Date();
+                    return dueDate < today;
+                  }).length, 
+                  color: 'text-red-600', 
+                  bg: 'bg-red-50' 
+                },
+              ].map((stat) => (
+                <div key={stat.label} className={cn("px-3 py-2 rounded-lg", stat.bg)}>
+                  <p className="text-[10px] text-gray-600 font-medium">{stat.label}</p>
+                  <p className={cn("text-xl font-bold", stat.color)}>{stat.count}</p>
+                </div>
+              ))}
+            </div>
+            
+            <div className="space-y-2">
+              {teacherTasks.filter(t => t.status === 'pending').slice(0, 2).map((task) => (
+                <div key={task.id} className="flex items-center justify-between p-2 bg-gray-50 rounded-lg">
+                  <div className="flex-1 min-w-0">
+                    <p className="text-xs font-medium text-gray-900 truncate">{task.type}</p>
+                    <p className="text-[10px] text-gray-600">{task.studentName}</p>
+                  </div>
+                  <Badge className={cn(
+                    "text-[9px] h-5 px-2",
+                    task.priority === 'high' ? 'bg-red-500' : task.priority === 'medium' ? 'bg-amber-500' : 'bg-blue-500'
+                  )}>
+                    {task.priority}
+                  </Badge>
+                </div>
+              ))}
+            </div>
+            
+            <Button size="sm" variant="outline" className="w-full mt-3 h-8 text-xs" onClick={() => navigate('/teacher/tasks')}>
+              <Plus className="w-3.5 h-3.5 mr-1.5" />
+              Create Task
+            </Button>
+          </CardContent>
+        </Card>
+
+        {/* Parent Engagement Widget */}
+        <Card className="rounded-xl border-0 shadow-sm bg-white">
+          <CardHeader className="py-3 px-5">
+            <div className="flex items-center justify-between">
+              <CardTitle className="text-sm font-bold text-gray-900">Parent Engagement</CardTitle>
+              <Button variant="ghost" size="sm" className="h-7 text-xs text-primary hover:bg-primary/5" onClick={() => navigate('/teacher/parent-engagement')}>
+                View All <ChevronRight className="w-3.5 h-3.5 ml-0.5" />
+              </Button>
+            </div>
+          </CardHeader>
+          <CardContent className="pt-0 pb-4 px-5">
+            <div className="grid grid-cols-2 gap-3 mb-4">
+              <div className="px-3 py-2 rounded-lg bg-emerald-50">
+                <p className="text-[10px] text-gray-600 font-medium">High Engagement</p>
+                <p className="text-xl font-bold text-emerald-600">
+                  {parentEngagementData.filter(p => p.engagementLevel === 'high').length}
+                </p>
+              </div>
+              <div className="px-3 py-2 rounded-lg bg-red-50">
+                <p className="text-[10px] text-gray-600 font-medium">Low Engagement</p>
+                <p className="text-xl font-bold text-red-600">
+                  {parentEngagementData.filter(p => p.engagementLevel === 'low').length}
+                </p>
+              </div>
+            </div>
+            
+            <div className="space-y-2 mb-3">
+              <div className="flex items-center justify-between">
+                <span className="text-xs text-gray-600">Avg Response Rate</span>
+                <span className="text-sm font-bold text-primary">
+                  {Math.round(parentEngagementData.reduce((acc, p) => acc + p.responseRate, 0) / parentEngagementData.length)}%
+                </span>
+              </div>
+              <Progress 
+                value={Math.round(parentEngagementData.reduce((acc, p) => acc + p.responseRate, 0) / parentEngagementData.length)} 
+                className="h-2"
+              />
+            </div>
+
+            {parentEngagementData.filter(p => p.engagementLevel === 'low').length > 0 && (
+              <div className="bg-red-50 border border-red-200 rounded-lg p-3">
+                <p className="text-xs font-semibold text-red-700 mb-1 flex items-center gap-1">
+                  <AlertTriangle className="w-3 h-3" />
+                  Non-Responsive Parents
+                </p>
+                <div className="space-y-1">
+                  {parentEngagementData.filter(p => p.engagementLevel === 'low').slice(0, 2).map((parent) => (
+                    <div key={parent.id} className="flex items-center justify-between">
+                      <p className="text-[10px] text-red-600">{parent.parentName}</p>
+                      <span className="text-[9px] text-red-500">{parent.responseRate}%</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+          </CardContent>
+        </Card>
       </div>
 
         {/* Main Dashboard Grid */}
@@ -251,88 +380,213 @@ const SubjectTeacherModeView = () => {
   const avgScore = Math.round(subjectClasses.reduce((acc, c) => acc + c.avgScore, 0) / subjectClasses.length);
   const avgCompletion = Math.round(subjectClasses.reduce((acc, c) => acc + c.completion, 0) / subjectClasses.length);
   const weakChapters = chapters.filter(ch => ch.mastery === 'low').length;
-  const today = new Date();
-  const dateStr = today.toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' });
 
   return (
-    <div className="space-y-6">
-      {/* Subject Header */}
-      <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6 bg-white p-8 rounded-[2.5rem] shadow-sm border border-gray-50 relative overflow-hidden">
-        <div className="relative z-10">
-          <Badge className="bg-emerald-50 text-emerald-600 border-0 mb-3 px-3">Subject Teacher</Badge>
-          <h1 className="text-3xl font-bold text-gray-900">Mathematics Dashboard</h1>
-          <p className="text-gray-500 mt-1 flex items-center gap-2 text-sm">
-            <Calendar className="w-4 h-4" />
-            {dateStr}
-          </p>
-          <div className="flex items-center gap-3 mt-6">
-            <Button size="sm" className="bg-primary hover:bg-primary/90 text-white rounded-xl h-10 px-5 font-semibold shadow-lg shadow-primary/20" onClick={() => navigate('/teacher/ai-tools/question-generator')}>
-              <Sparkles className="w-4 h-4 mr-2" />
-              Generate Questions
-            </Button>
-            <Button variant="outline" size="sm" className="border-gray-200 text-gray-700 hover:bg-gray-50 rounded-xl h-10 px-5" onClick={() => navigate('/teacher/subject-analytics/chapters')}>
-              <BarChart3 className="w-4 h-4 mr-2" />
-              Detailed Analytics
-            </Button>
-          </div>
-        </div>
-        
-        {/* Quick Stats Banner */}
-        <div className="relative z-10 grid grid-cols-2 gap-3 lg:gap-4">
-          <div className="p-4 rounded-3xl bg-blue-50/50 border border-blue-100/50 min-w-[140px]">
-            <p className="text-[10px] font-bold text-blue-500 uppercase tracking-widest">Students</p>
-            <p className="text-2xl font-black text-gray-900 mt-1">{totalStudents}</p>
-          </div>
-          <div className="p-4 rounded-3xl bg-emerald-50/50 border border-emerald-100/50 min-w-[140px]">
-            <p className="text-[10px] font-bold text-emerald-500 uppercase tracking-widest">Mastery</p>
-            <p className="text-2xl font-black text-gray-900 mt-1">{avgScore}%</p>
-          </div>
-        </div>
-
-        {/* Abstract shapes */}
-        <div className="absolute top-0 right-0 w-32 h-32 bg-primary/5 rounded-full -mr-16 -mt-16" />
-        <div className="absolute bottom-0 left-1/2 w-24 h-24 bg-blue-500/5 rounded-full -ml-12 -mb-12" />
+    <div className="space-y-4">
+      {/* Page Header */}
+      <div>
+        <h1 className="text-xl font-bold text-gray-900">Mathematics Teaching Hub</h1>
+        <p className="text-xs text-gray-500 mt-0.5">Manage your subject across all classes</p>
       </div>
 
-      <div className="grid grid-cols-1 xl:grid-cols-3 gap-6">
-        
-        {/* Classes Overview (2/3) */}
-        <div className="xl:col-span-2 space-y-6">
-          <Card className="rounded-[2.5rem] border-0 shadow-sm bg-white overflow-hidden">
-            <CardHeader className="flex flex-row items-center justify-between pb-4">
-              <CardTitle className="text-lg font-bold text-gray-900">Active Classes</CardTitle>
-              <Button variant="ghost" size="sm" className="text-primary hover:bg-primary/5 rounded-xl h-8" onClick={() => navigate('/teacher/my-subject/classes')}>
-                Manage <ArrowRight className="w-4 h-4 ml-1" />
+      {/* Hero Cards Row */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-3">
+        {/* Left Card - Light Blue */}
+        <Card className="bg-gradient-to-br from-blue-50 to-purple-50 border-0 shadow-sm rounded-2xl overflow-hidden relative">
+          <CardContent className="p-6 relative z-10">
+            <div className="absolute top-3 left-3">
+              <div className="w-8 h-8 rounded-lg bg-white/40 backdrop-blur-sm flex items-center justify-center">
+                <BookOpen className="w-4 h-4 text-purple-600" />
+              </div>
+            </div>
+            <div className="pt-12">
+              <h2 className="text-lg font-bold text-gray-900 mb-2">Explore AI Tools,<br/>Create & Engage!</h2>
+              <p className="text-xs text-gray-600 max-w-[280px]">Generate quizzes, create lesson plans, and analyze student performance with AI.</p>
+            </div>
+          </CardContent>
+          <div className="absolute bottom-0 right-0 w-24 h-24 bg-purple-200/30 rounded-full -mr-12 -mb-12" />
+        </Card>
+
+        {/* Right Card - Light Yellow/Beige */}
+        <Card className="bg-gradient-to-br from-amber-50 to-yellow-50 border-0 shadow-sm rounded-2xl overflow-hidden relative">
+          <CardContent className="p-6 relative z-10">
+            <div className="flex items-start justify-between mb-3">
+              <div className="flex-1">
+                <h2 className="text-lg font-bold text-gray-900 mb-1">Track Class Performance</h2>
+                <p className="text-xs text-gray-600 mb-4">Monitor chapter-wise mastery and identify struggling students early.</p>
+                <Button 
+                  size="sm" 
+                  className="bg-gray-900 hover:bg-gray-800 text-white rounded-xl h-9 px-4 text-xs"
+                  onClick={() => navigate('/teacher/subject-analytics/chapters')}
+                >
+                  View Analytics →
+                </Button>
+              </div>
+              <div className="flex flex-col gap-2">
+                <div className="w-12 h-12 rounded-full bg-yellow-200/50 backdrop-blur-sm flex items-center justify-center">
+                  <BarChart3 className="w-6 h-6 text-amber-600" />
+                </div>
+                <div className="w-10 h-10 rounded-full bg-yellow-300/40 backdrop-blur-sm flex items-center justify-center -mt-3 ml-6">
+                  <Activity className="w-5 h-5 text-amber-700" />
+                </div>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+
+      {/* Task Cards Section */}
+      <div className="flex items-center justify-between mb-2">
+        <h2 className="text-base font-bold text-gray-900">Quick Actions & Tasks</h2>
+        <div className="flex gap-1.5">
+          <Button size="sm" variant="ghost" className="h-7 px-3 text-xs rounded-lg bg-gray-900 text-white hover:bg-gray-800">
+            All
+          </Button>
+          <Button size="sm" variant="ghost" className="h-7 px-3 text-xs rounded-lg hover:bg-gray-100">
+            Ongoing
+          </Button>
+          <Button size="sm" variant="ghost" className="h-7 px-3 text-xs rounded-lg hover:bg-gray-100">
+            Past
+          </Button>
+        </div>
+      </div>
+
+      {/* Tasks Grid */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-3">
+        {/* Task Card 1 - Classes Overview */}
+        <Card className="border-0 shadow-sm rounded-2xl bg-white">
+          <CardContent className="p-5">
+            <div className="flex items-start justify-between mb-4">
+              <div className="flex items-center gap-2">
+                <div className="w-10 h-10 rounded-xl bg-blue-50 flex items-center justify-center">
+                  <Users className="w-5 h-5 text-blue-600" />
+                </div>
+                <div>
+                  <p className="text-xs text-gray-500">Task</p>
+                  <h3 className="text-sm font-bold text-gray-900">Classes & Students</h3>
+                </div>
+              </div>
+              <Badge className="bg-blue-50 text-blue-700 border-0 text-[10px] h-5 px-2">
+                {subjectClasses.length} classes
+              </Badge>
+            </div>
+            
+            <div className="space-y-2 mb-4">
+              <div className="flex items-center justify-between text-xs">
+                <span className="text-gray-600">Task:</span>
+                <span className="font-medium text-gray-900">Manage {totalStudents} students across classes</span>
+              </div>
+              <div className="flex items-center justify-between text-xs">
+                <span className="text-gray-600">Progress:</span>
+                <span className="font-bold text-gray-900">{avgCompletion}% completion</span>
+              </div>
+            </div>
+
+            <div className="flex items-center justify-between text-xs text-gray-500 mb-3">
+              <span>{avgCompletion}/{100} completed</span>
+            </div>
+            
+            <Button 
+              size="sm" 
+              className="w-full bg-gray-900 hover:bg-gray-800 text-white rounded-xl h-9"
+              onClick={() => navigate('/teacher/my-subject/classes')}
+            >
+              Manage Classes
+            </Button>
+          </CardContent>
+        </Card>
+
+        {/* Task Card 2 - Chapter Analytics */}
+        <Card className="border-0 shadow-sm rounded-2xl bg-white">
+          <CardContent className="p-5">
+            <div className="flex items-start justify-between mb-4">
+              <div className="flex items-center gap-2">
+                <div className="w-10 h-10 rounded-xl bg-purple-50 flex items-center justify-center">
+                  <BookOpen className="w-5 h-5 text-purple-600" />
+                </div>
+                <div>
+                  <p className="text-xs text-gray-500">Task</p>
+                  <h3 className="text-sm font-bold text-gray-900">Chapter Performance</h3>
+                </div>
+              </div>
+              <Badge className="bg-red-50 text-red-700 border-0 text-[10px] h-5 px-2">
+                {weakChapters} weak
+              </Badge>
+            </div>
+            
+            <div className="space-y-2 mb-4">
+              <div className="flex items-center justify-between text-xs">
+                <span className="text-gray-600">Task:</span>
+                <span className="font-medium text-gray-900">Review {weakChapters} struggling chapters</span>
+              </div>
+              <div className="flex items-center justify-between text-xs">
+                <span className="text-gray-600">Average:</span>
+                <span className="font-bold text-gray-900">{avgScore}% mastery</span>
+              </div>
+            </div>
+
+            <div className="flex items-center justify-between text-xs text-gray-500 mb-3">
+              <span>{chapters.length - weakChapters}/{chapters.length} chapters on track</span>
+            </div>
+            
+            <Button 
+              size="sm" 
+              className="w-full bg-gray-900 hover:bg-gray-800 text-white rounded-xl h-9"
+              onClick={() => navigate('/teacher/subject-analytics/chapters')}
+            >
+              View Analytics
+            </Button>
+          </CardContent>
+        </Card>
+      </div>
+
+      {/* Bottom Grid - Classes and Stats */}
+      <div className="grid grid-cols-1 xl:grid-cols-3 gap-3">
+        {/* Classes List */}
+        <div className="xl:col-span-2">
+          <Card className="border-0 shadow-sm rounded-2xl bg-white">
+            <CardHeader className="flex flex-row items-center justify-between pb-3">
+              <div>
+                <CardTitle className="text-base font-bold text-gray-900">Your Classes</CardTitle>
+                <p className="text-xs text-gray-500 mt-0.5">Teaching {subjectClasses.length} classes</p>
+              </div>
+              <Button 
+                variant="ghost" 
+                size="sm" 
+                className="text-primary hover:bg-primary/5 rounded-lg h-7 px-2 text-xs"
+                onClick={() => navigate('/teacher/my-subject/classes')}
+              >
+                View All <ChevronRight className="w-3 h-3 ml-0.5" />
               </Button>
             </CardHeader>
-            <CardContent>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <CardContent className="pt-0">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                 {subjectClasses.map((cls) => (
                   <div 
                     key={cls.id} 
-                    className="p-5 rounded-[2rem] bg-gray-50/50 border border-transparent hover:border-primary/20 hover:bg-white hover:shadow-xl transition-all group cursor-pointer"
+                    className="p-4 rounded-xl bg-gray-50 hover:bg-gray-100 transition-colors cursor-pointer group"
                     onClick={() => navigate(`/teacher/my-subject/students?class=${cls.id}`)}
                   >
-                    <div className="flex items-start justify-between mb-4">
+                    <div className="flex items-start justify-between mb-3">
                       <div>
-                        <h4 className="font-bold text-gray-900 text-base">{cls.name}</h4>
-                        <p className="text-xs text-gray-500 mt-0.5">{cls.students} Enrolled Students</p>
+                        <h4 className="font-bold text-gray-900 text-sm">{cls.name}</h4>
+                        <p className="text-xs text-gray-500 mt-0.5">{cls.students} students</p>
                       </div>
                       <div className={cn(
-                        "w-10 h-10 rounded-2xl flex items-center justify-center font-bold text-sm",
+                        "w-9 h-9 rounded-lg flex items-center justify-center font-bold text-xs",
                         cls.avgScore >= 75 ? "bg-emerald-100 text-emerald-700" : "bg-blue-100 text-blue-700"
                       )}>
                         {cls.avgScore}%
                       </div>
                     </div>
-                    <div className="space-y-3">
-                      <div className="flex items-center justify-between text-[11px] font-bold uppercase tracking-wider text-gray-400">
-                        <span>Course Completion</span>
+                    <div className="space-y-2">
+                      <div className="flex items-center justify-between text-xs font-medium text-gray-500">
+                        <span>Completion</span>
                         <span className="text-gray-900">{cls.completion}%</span>
                       </div>
-                      <div className="h-2 w-full bg-gray-100 rounded-full overflow-hidden">
+                      <div className="h-1.5 w-full bg-gray-200 rounded-full overflow-hidden">
                         <div 
-                          className="h-full bg-primary rounded-full transition-all duration-1000"
+                          className="h-full bg-primary rounded-full transition-all"
                           style={{ width: `${cls.completion}%` }}
                         />
                       </div>
@@ -342,77 +596,55 @@ const SubjectTeacherModeView = () => {
               </div>
             </CardContent>
           </Card>
-
-          {/* Quick AI Tools Bar */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            {[
-              { label: 'Quiz Gen', icon: Sparkles, color: 'text-violet-600', bg: 'bg-violet-50', path: '/teacher/ai-tools/question-generator' },
-              { label: 'Assessments', icon: ClipboardList, color: 'text-blue-600', bg: 'bg-blue-50', path: '/teacher/assessments' },
-              { label: 'Study Mats', icon: BookOpen, color: 'text-emerald-600', bg: 'bg-emerald-50', path: '/teacher/ai-tools/lesson-planner' },
-            ].map((tool) => (
-              <button 
-                key={tool.label}
-                onClick={() => navigate(tool.path)}
-                className="flex items-center gap-4 p-5 bg-white rounded-3xl shadow-sm hover:shadow-md transition-all group"
-              >
-                <div className={cn("w-12 h-12 rounded-2xl flex items-center justify-center group-hover:scale-110 transition-transform", tool.bg)}>
-                  <tool.icon className={cn("w-6 h-6", tool.color)} />
-                </div>
-                <span className="text-sm font-bold text-gray-900">{tool.label}</span>
-              </button>
-            ))}
-          </div>
         </div>
 
-        {/* Right Sidebar (1/3) */}
-        <div className="space-y-6">
-          <Card className="rounded-[2.5rem] border-0 shadow-sm bg-white overflow-hidden">
-            <CardHeader className="pb-4">
-              <CardTitle className="text-base font-bold text-gray-900 flex items-center gap-2">
-                <AlertTriangle className="w-4 h-4 text-red-500" />
-                Syllabus Health
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <div className="p-5 rounded-3xl bg-red-50/50 border border-red-100">
-                <p className="text-xs font-bold text-red-600 uppercase tracking-widest mb-3">Critical Mastery Issues</p>
-                <div className="space-y-3">
-                  {chapters.filter(ch => ch.mastery === 'low').map((ch) => (
-                    <div key={ch.id} className="flex items-center justify-between">
-                      <div className="min-w-0">
-                        <p className="text-sm font-bold text-gray-900 truncate">{ch.name}</p>
-                        <p className="text-[11px] text-red-600 font-medium">Avg Score: {ch.masteryPercent}%</p>
-                      </div>
-                      <Button size="sm" variant="outline" className="h-8 text-[10px] rounded-xl border-red-200 text-red-700 hover:bg-red-50">
-                        Fix Now
-                      </Button>
-                    </div>
-                  ))}
+        {/* Stats & Alerts Sidebar */}
+        <div className="space-y-3">
+          {/* Stats Card */}
+          <Card className="border-0 shadow-sm rounded-2xl bg-white">
+            <CardContent className="p-5">
+              <div className="flex items-center gap-2 mb-4">
+                <div className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center">
+                  <Target className="w-4 h-4 text-primary" />
                 </div>
+                <h3 className="text-sm font-bold text-gray-900">Overview</h3>
               </div>
-
-              <div className="p-5 rounded-3xl bg-blue-50/50 border border-blue-100">
-                <p className="text-xs font-bold text-blue-600 uppercase tracking-widest mb-1">Status</p>
-                <p className="text-sm font-bold text-gray-900">7 Chapters Completed</p>
-                <p className="text-xs text-gray-500 mt-1">3 more to cover by Mid-Term</p>
-                <Progress value={70} className="h-1.5 mt-3 bg-blue-100" />
+              <div className="space-y-3">
+                <div className="flex items-center justify-between">
+                  <span className="text-xs text-gray-600">Total Students</span>
+                  <span className="text-sm font-bold text-gray-900">{totalStudents}</span>
+                </div>
+                <div className="flex items-center justify-between">
+                  <span className="text-xs text-gray-600">Avg Performance</span>
+                  <span className="text-sm font-bold text-gray-900">{avgScore}%</span>
+                </div>
+                <div className="flex items-center justify-between">
+                  <span className="text-xs text-gray-600">Course Progress</span>
+                  <span className="text-sm font-bold text-gray-900">{avgCompletion}%</span>
+                </div>
               </div>
             </CardContent>
           </Card>
 
-          {/* Performance Trend */}
-          <Card className="rounded-[2.5rem] border-0 shadow-sm bg-[#1e293b] text-white">
-            <CardContent className="p-8">
-              <div className="flex items-center justify-between mb-6">
-                <div className="w-12 h-12 rounded-2xl bg-white/10 flex items-center justify-center">
-                  <TrendingUp className="w-6 h-6 text-emerald-400" />
+          {/* Alert Card */}
+          <Card className="border-0 shadow-sm rounded-2xl bg-gradient-to-br from-red-50 to-orange-50">
+            <CardContent className="p-5">
+              <div className="flex items-center gap-2 mb-3">
+                <div className="w-8 h-8 rounded-lg bg-red-500 flex items-center justify-center">
+                  <AlertTriangle className="w-4 h-4 text-white" />
                 </div>
-                <Badge className="bg-emerald-500/20 text-emerald-400 border-0 text-[10px]">+12.4%</Badge>
+                <h3 className="text-sm font-bold text-gray-900">Attention</h3>
               </div>
-              <h3 className="text-xl font-bold">Performance Up</h3>
-              <p className="text-sm text-slate-400 mt-2 leading-relaxed">Your class average improved significantly after the recent practice session.</p>
-              <Button variant="outline" className="w-full mt-6 border-slate-700 hover:bg-slate-800 text-slate-300 rounded-2xl h-11">
-                View Insight Report
+              <p className="text-xs text-gray-700 mb-3">
+                {weakChapters} chapters showing low mastery. Consider creating practice quizzes.
+              </p>
+              <Button 
+                size="sm" 
+                variant="outline" 
+                className="w-full border-red-200 text-red-700 hover:bg-red-50 rounded-xl h-8 text-xs"
+                onClick={() => navigate('/teacher/ai-tools/question-generator')}
+              >
+                Generate Quiz
               </Button>
             </CardContent>
           </Card>

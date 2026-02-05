@@ -1,19 +1,19 @@
 import { Card, CardContent } from '@/components/ui/card';
 import { Progress } from '@/components/ui/progress';
 import { Badge } from '@/components/ui/badge';
-import { Target, Zap, Brain } from 'lucide-react';
+import { Target, ListTodo, Brain } from 'lucide-react';
 
 type PlannerStatsProps = {
   completedToday: number;
   tasksTodayCount: number;
-  streakDays: number;
+  pendingCount: number;
   cognitiveLoad: string;
 };
 
 export const PlannerStats = ({
   completedToday,
   tasksTodayCount,
-  streakDays,
+  pendingCount,
   cognitiveLoad,
 }: PlannerStatsProps) => (
   <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
@@ -40,11 +40,11 @@ export const PlannerStats = ({
       <CardContent className="p-5">
         <div className="flex items-center gap-3">
           <div className="w-10 h-10 rounded-xl bg-purple-100 flex items-center justify-center">
-            <Zap className="w-5 h-5 text-purple-600" />
+            <ListTodo className="w-5 h-5 text-purple-600" />
           </div>
           <div>
-            <p className="text-2xl font-bold text-gray-900">{streakDays}</p>
-            <p className="text-xs text-gray-500">Days studied without breaking flow</p>
+            <p className="text-2xl font-bold text-gray-900">{pendingCount}</p>
+            <p className="text-xs text-gray-500">Pending tasks</p>
           </div>
         </div>
       </CardContent>

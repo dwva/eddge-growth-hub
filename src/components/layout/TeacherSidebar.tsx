@@ -19,6 +19,8 @@ import {
   AlertTriangle,
   Calendar,
   Settings,
+  CheckSquare,
+  UserCheck,
 } from 'lucide-react';
 import {
   Collapsible,
@@ -47,6 +49,8 @@ const classTeacherNavItems: NavItem[] = [
     ],
   },
   { id: 'class-analytics', label: 'Class Analytics', icon: <BarChart3 className="w-5 h-5" />, path: '/teacher/class-analytics' },
+  { id: 'tasks', label: 'Tasks & Follow-ups', icon: <CheckSquare className="w-5 h-5" />, path: '/teacher/tasks' },
+  { id: 'parent-engagement', label: 'Parent Engagement', icon: <UserCheck className="w-5 h-5" />, path: '/teacher/parent-engagement' },
   {
     id: 'communication',
     label: 'Communication',

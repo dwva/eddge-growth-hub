@@ -8,7 +8,6 @@ import {
   BookOpen,
   FileText,
   Target,
-  Zap,
   Play,
   ChevronLeft,
   CheckCircle,
@@ -40,12 +39,6 @@ const StudentLearning = () => {
   const selectedSubject = subjects.find((s) => s.id === selectedSubjectId);
   const selectedChapter = chapterList.find((c: { id: string }) => c.id === selectedChapterId);
   const selectedTopic = topicList.find((t) => t.id === selectedTopicId);
-
-  const handleStartLearning = () => {
-    setCompletedStages([]);
-    setOpenStageId(null);
-    setViewMode('pathway');
-  };
 
   const handleBackToCurriculum = () => {
     setViewMode('curriculum');
@@ -167,28 +160,28 @@ const StudentLearning = () => {
                 </CardContent>
               </Card>
 
-              {/* Column 3 – Topics + Action */}
-              <div className="space-y-4">
-                <Card className="rounded-2xl border border-gray-200 dark:border-border shadow-sm">
-                  <CardContent className="p-6">
-                    <h3 className="flex items-center gap-2 text-lg font-semibold text-gray-900 dark:text-foreground mb-4">
-                      <Target className="w-5 h-5 text-purple-600 dark:text-purple-400" />
-                      Topics
-                    </h3>
-                    {!selectedChapterId ? (
-                      <p className="py-6 text-center text-sm text-gray-500 dark:text-muted-foreground">
-                        Select a chapter first
-                      </p>
-                    ) : !selectedSubjectId ? (
-                      <p className="py-6 text-center text-sm text-gray-500 dark:text-muted-foreground">
-                        Select a subject first
-                      </p>
-                    ) : topicList.length === 0 ? (
-                      <p className="py-6 text-center text-sm text-gray-500 dark:text-muted-foreground">
-                        No topics available...
-                      </p>
-                    ) : (
-                      <div className="space-y-2">
+              {/* Column 3 – Topics (fills column; Start button inside when topic selected) */}
+              <Card className="rounded-2xl border border-gray-200 dark:border-border shadow-sm flex flex-col">
+                <CardContent className="p-6 flex flex-col flex-1 min-h-0">
+                  <h3 className="flex items-center gap-2 text-lg font-semibold text-gray-900 dark:text-foreground mb-4">
+                    <Target className="w-5 h-5 text-purple-600 dark:text-purple-400" />
+                    Topics
+                  </h3>
+                  {!selectedChapterId ? (
+                    <p className="py-6 text-center text-sm text-gray-500 dark:text-muted-foreground">
+                      Select a chapter first
+                    </p>
+                  ) : !selectedSubjectId ? (
+                    <p className="py-6 text-center text-sm text-gray-500 dark:text-muted-foreground">
+                      Select a subject first
+                    </p>
+                  ) : topicList.length === 0 ? (
+                    <p className="py-6 text-center text-sm text-gray-500 dark:text-muted-foreground">
+                      No topics available...
+                    </p>
+                  ) : (
+                    <>
+                      <div className="space-y-2 flex-1 overflow-y-auto min-h-0">
                         {topicList.map((topic) => {
                           const diffClass =
                             topic.difficulty === 'easy'
@@ -202,9 +195,12 @@ const StudentLearning = () => {
                             <button
                               key={topic.id}
                               type="button"
-                              onClick={() =>
-                                setSelectedTopicId(selectedTopicId === topic.id ? null : topic.id)
-                              }
+                              onClick={() => {
+                                setSelectedTopicId(topic.id);
+                                setCompletedStages([]);
+                                setOpenStageId(null);
+                                setViewMode('pathway');
+                              }}
                               className={`w-full p-4 rounded-lg border text-left transition-all ${
                                 selectedTopicId === topic.id
                                   ? 'border-purple-500 bg-purple-500/10 dark:bg-purple-500/20'
@@ -233,41 +229,10 @@ const StudentLearning = () => {
                           );
                         })}
                       </div>
-                    )}
-                  </CardContent>
-                </Card>
-
-                <Card className="rounded-2xl border border-gray-200 dark:border-border shadow-sm">
-                  <CardContent className="p-6">
-                    <h3 className="flex items-center gap-2 text-lg font-semibold text-gray-900 dark:text-foreground mb-4">
-                      <Zap className="w-5 h-5 text-purple-600 dark:text-purple-400" />
-                      Action
-                    </h3>
-                    {selectedSubject && selectedChapter && selectedTopic ? (
-                      <div className="space-y-4">
-                        <div className="p-4 bg-purple-500/5 dark:bg-purple-500/10 rounded-lg border border-purple-500/10">
-                          <p className="text-sm text-gray-700 dark:text-gray-300">
-                            <span className="font-medium">Selected Topic:</span>{' '}
-                            {selectedTopic.name} in {selectedChapter.name} from {selectedSubject.name}
-                          </p>
-                        </div>
-                        <Button
-                          className="w-full rounded-xl bg-gradient-to-r from-purple-500 to-indigo-600 hover:opacity-90"
-                          onClick={handleStartLearning}
-                        >
-                          <Play className="w-4 h-4 mr-2" />
-                          Start Learning Pathway
-                        </Button>
-                      </div>
-                    ) : (
-                      <div className="py-8 text-center text-gray-500 dark:text-muted-foreground">
-                        <Zap className="w-10 h-10 mx-auto mb-2 opacity-50" />
-                        <p className="text-sm">Select a topic to begin learning</p>
-                      </div>
-                    )}
-                  </CardContent>
-                </Card>
-              </div>
+                    </>
+                  )}
+                </CardContent>
+              </Card>
             </div>
 
             {/* Recently studied */}
