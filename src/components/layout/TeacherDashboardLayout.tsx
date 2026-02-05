@@ -34,26 +34,28 @@ const ModeToggle = () => {
       <button
         onClick={() => setCurrentMode('class_teacher')}
         className={cn(
-          "flex items-center gap-1.5 px-3 py-2 rounded-md text-xs font-medium transition-all duration-200",
+          "flex items-center gap-1 md:gap-1.5 px-2 md:px-3 py-1.5 md:py-2 rounded-md text-[10px] md:text-xs font-medium transition-all duration-200",
           currentMode === 'class_teacher'
             ? "bg-primary text-white shadow-sm"
             : "text-gray-600 hover:bg-gray-50"
         )}
       >
-        <Users className="w-3.5 h-3.5" />
-        <span>Class Teacher</span>
+        <Users className="w-3 h-3 md:w-3.5 md:h-3.5" />
+        <span className="hidden xs:inline md:inline">Class</span>
+        <span className="xs:hidden md:hidden">C</span>
       </button>
       <button
         onClick={() => setCurrentMode('subject_teacher')}
         className={cn(
-          "flex items-center gap-1.5 px-3 py-2 rounded-md text-xs font-medium transition-all duration-200",
+          "flex items-center gap-1 md:gap-1.5 px-2 md:px-3 py-1.5 md:py-2 rounded-md text-[10px] md:text-xs font-medium transition-all duration-200",
           currentMode === 'subject_teacher'
             ? "bg-primary text-white shadow-sm"
             : "text-gray-600 hover:bg-gray-50"
         )}
       >
-        <BookOpen className="w-3.5 h-3.5" />
-        <span>Subject Teacher</span>
+        <BookOpen className="w-3 h-3 md:w-3.5 md:h-3.5" />
+        <span className="hidden xs:inline md:inline">Subject</span>
+        <span className="xs:hidden md:hidden">S</span>
       </button>
     </div>
   );
@@ -91,10 +93,10 @@ const TeacherDashboardContent = ({ children }: TeacherDashboardLayoutProps) => {
 
       {/* Main Content */}
       <div className="flex-1 flex flex-col min-w-0">
-        {/* Top Bar - matching dashboard layout (Student/Planti style) */}
-        <header className="h-20 bg-white px-6 md:px-8 flex items-center justify-between sticky top-0 z-10 flex-shrink-0 border-b border-gray-100">
+        {/* Top Bar - Mobile Optimized */}
+        <header className="h-14 md:h-20 bg-white px-3 md:px-6 lg:px-8 flex items-center justify-between sticky top-0 z-10 flex-shrink-0 border-b border-gray-100">
           {/* Left: Menu + Welcome + Mode Toggle */}
-          <div className="flex items-center gap-4">
+          <div className="flex items-center gap-2 md:gap-4">
             <Sheet open={mobileOpen} onOpenChange={setMobileOpen}>
               <SheetTrigger asChild className="md:hidden">
                 <Button variant="ghost" size="icon" className="h-9 w-9">
@@ -110,14 +112,20 @@ const TeacherDashboardContent = ({ children }: TeacherDashboardLayoutProps) => {
             >
               <Menu className="w-4 h-4 text-gray-500" />
             </Button>
-            <div className="hidden sm:block">
+            <div className="hidden md:block">
               <h1 className="text-base font-semibold text-gray-900">Welcome to EDDGE.</h1>
               <p className="text-[11px] text-gray-500">Hello {firstName}, welcome back!</p>
             </div>
-            <ModeToggle />
+            {/* Mode Toggle - Mobile Compact */}
+            <div className="flex md:hidden">
+              <ModeToggle />
+            </div>
+            <div className="hidden md:flex">
+              <ModeToggle />
+            </div>
           </div>
 
-          {/* Center: Search Bar */}
+          {/* Center: Search Bar - Desktop Only */}
           <div className="hidden lg:flex items-center flex-1 justify-center max-w-md mx-8">
             <div className="relative w-full">
               <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
@@ -132,13 +140,13 @@ const TeacherDashboardContent = ({ children }: TeacherDashboardLayoutProps) => {
           </div>
           
           {/* Right: Icons + Avatar */}
-          <div className="flex items-center gap-2 flex-shrink-0">
-            {/* Support */}
+          <div className="flex items-center gap-1 md:gap-2 flex-shrink-0">
+            {/* Support - Desktop only */}
             <Button 
               variant="ghost" 
               size="sm"
               onClick={() => navigate('/teacher/support')}
-              className="hidden sm:flex items-center gap-1 h-8 px-2.5 text-xs hover:bg-gray-100 rounded-lg"
+              className="hidden md:flex items-center gap-1 h-8 px-2.5 text-xs hover:bg-gray-100 rounded-lg"
             >
               <HelpCircle className="w-3.5 h-3.5 text-gray-500" />
               <span className="text-xs text-gray-600">Support</span>
@@ -148,7 +156,7 @@ const TeacherDashboardContent = ({ children }: TeacherDashboardLayoutProps) => {
             <Button 
               variant="ghost" 
               size="icon" 
-              className="h-9 w-9 hover:bg-gray-100 rounded-lg"
+              className="h-8 w-8 md:h-9 md:w-9 hover:bg-gray-100 rounded-lg"
             >
               <MessageSquare className="w-4 h-4 text-gray-500" />
             </Button>
@@ -157,19 +165,19 @@ const TeacherDashboardContent = ({ children }: TeacherDashboardLayoutProps) => {
             <Button 
               variant="ghost" 
               size="icon" 
-              className="relative h-9 w-9 hover:bg-gray-100 rounded-lg"
+              className="relative h-8 w-8 md:h-9 md:w-9 hover:bg-gray-100 rounded-lg"
             >
               <Bell className="w-4 h-4 text-gray-500" />
-              <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-red-500 rounded-full"></span>
+              <span className="absolute top-1 right-1 md:top-1.5 md:right-1.5 w-2 h-2 bg-red-500 rounded-full"></span>
             </Button>
 
             {/* Avatar */}
             <Popover>
               <PopoverTrigger asChild>
-                <button className="ml-2">
-                  <Avatar className="w-9 h-9 border-2 border-primary/20 hover:border-primary/40 transition-colors cursor-pointer">
+                <button className="ml-1 md:ml-2">
+                  <Avatar className="w-8 h-8 md:w-9 md:h-9 border-2 border-primary/20 hover:border-primary/40 transition-colors cursor-pointer">
                     <AvatarImage src="" />
-                    <AvatarFallback className="bg-gradient-to-br from-primary to-purple-600 text-white font-semibold text-sm">
+                    <AvatarFallback className="bg-gradient-to-br from-primary to-purple-600 text-white font-semibold text-xs md:text-sm">
                       {firstName.charAt(0)}
                     </AvatarFallback>
                   </Avatar>

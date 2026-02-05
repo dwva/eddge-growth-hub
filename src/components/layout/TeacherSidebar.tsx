@@ -9,6 +9,7 @@ import {
   FolderOpen,
   BarChart3,
   ClipboardList,
+  ClipboardCheck,
   MessageCircle,
   FileText,
   LogOut,
@@ -92,6 +93,7 @@ const subjectTeacherNavItems: NavItem[] = [
       { id: 'question-gen', label: 'Question Generator', icon: <Sparkles className="w-4 h-4" />, path: '/teacher/ai-tools/question-generator' },
       { id: 'worksheet-gen', label: 'Worksheet Generator', icon: <FileText className="w-4 h-4" />, path: '/teacher/ai-tools/worksheet-generator' },
       { id: 'assessments', label: 'Assessments', icon: <ClipboardList className="w-4 h-4" />, path: '/teacher/assessments' },
+      { id: 'assigned-work', label: 'Assigned Work Tracker', icon: <ClipboardCheck className="w-4 h-4" />, path: '/teacher/assigned-work' },
     ],
   },
   {

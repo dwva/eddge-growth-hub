@@ -10,16 +10,11 @@ import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Progress } from '@/components/ui/progress';
 import { 
-  Search, Users, TrendingUp, TrendingDown, Minus, AlertCircle, 
-  Filter, ChevronLeft, ChevronRight, MoreHorizontal, Eye, MessageSquare, FileText
+  Search, Users, TrendingUp, TrendingDown, AlertCircle, 
+  Filter, ChevronLeft, ChevronRight, MoreHorizontal, Eye, MessageSquare, FileText,
+  Check, X
 } from 'lucide-react';
 import { classStudents } from '@/data/teacherMockData';
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
 
 const TeacherStudentsContent = () => {
   const navigate = useNavigate();
@@ -59,14 +54,14 @@ const TeacherStudentsContent = () => {
     switch (trend) {
       case 'up': return <TrendingUp className="w-4 h-4 text-emerald-500" />;
       case 'down': return <TrendingDown className="w-4 h-4 text-red-500" />;
-      default: return <Minus className="w-4 h-4 text-gray-400" />;
+      default: return <span className="text-gray-400">—</span>;
     }
   };
 
-  const getPerformanceColor = (score: number) => {
-    if (score >= 85) return 'bg-emerald-500';
-    if (score >= 70) return 'bg-amber-500';
-    return 'bg-red-500';
+  const getAttendanceColor = (score: number) => {
+    if (score >= 95) return 'bg-emerald-500';
+    if (score >= 85) return 'bg-violet-500';
+    return 'bg-amber-500';
   };
 
   const getBehaviourStyle = (behaviour: string) => {
@@ -127,61 +122,159 @@ const TeacherStudentsContent = () => {
         </h2>
         {paginatedStudents.length > 0 ? (
           <Card className="border-0 shadow-sm rounded-2xl overflow-hidden">
-          {/* Table Header */}
-          <div className="hidden md:grid grid-cols-12 gap-4 px-6 py-3 bg-gray-50 border-b border-gray-100 text-xs font-semibold text-gray-500 uppercase tracking-wide">
-            <div className="col-span-4">Student</div>
-            <div className="col-span-2 text-center">Score</div>
-            <div className="col-span-2 text-center">Attendance</div>
-            <div className="col-span-2 text-center">Behaviour</div>
-            <div className="col-span-2 text-right">Action</div>
+          {/* Table Header - Desktop */}
+          <div className="hidden lg:block overflow-x-auto">
+            <table className="w-full">
+              <thead>
+                <tr className="bg-gray-50 border-b border-gray-100">
+                  <th className="text-left py-4 px-6 text-xs font-semibold text-gray-500 uppercase tracking-wider w-[22%]">Student</th>
+                  <th className="text-left py-4 px-4 text-xs font-semibold text-gray-500 uppercase tracking-wider w-[18%]">Performance</th>
+                  <th className="text-left py-4 px-4 text-xs font-semibold text-gray-500 uppercase tracking-wider w-[15%]">Attendance</th>
+                  <th className="text-left py-4 px-4 text-xs font-semibold text-gray-500 uppercase tracking-wider w-[12%]">Status</th>
+                  <th className="text-left py-4 px-4 text-xs font-semibold text-gray-500 uppercase tracking-wider w-[18%]">Actions</th>
+                  <th className="text-left py-4 px-4 text-xs font-semibold text-gray-500 uppercase tracking-wider w-[15%]">Mark</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-gray-50">
+                {paginatedStudents.map((student) => (
+                  <tr key={student.id} className="hover:bg-gray-50/50 transition-colors">
+                    {/* Student Column */}
+                    <td className="py-4 px-6">
+                      <div className="flex items-center gap-3">
+                        <div className="relative flex-shrink-0">
+                          <Avatar className="w-10 h-10">
+                            <AvatarFallback className="bg-violet-100 text-violet-700 text-sm font-medium">
+                              {student.avatar}
+                            </AvatarFallback>
+                          </Avatar>
+                          <div className={`absolute -bottom-0.5 -right-0.5 w-3 h-3 rounded-full border-2 border-white ${student.trend === 'up' ? 'bg-emerald-500' : student.trend === 'down' ? 'bg-amber-500' : 'bg-emerald-500'}`} />
+                        </div>
+                        <div className="min-w-0">
+                          <p className="font-semibold text-gray-900">{student.name}</p>
+                          <p className="text-sm text-gray-500">Rank #{student.rank}</p>
+                          {student.weakAreas.length > 0 && (
+                            <p className="text-xs text-red-500 mt-0.5">Weak: {student.weakAreas[0]}</p>
+                          )}
+                        </div>
+                      </div>
+                    </td>
+
+                    {/* Performance Column */}
+                    <td className="py-4 px-4">
+                      <div>
+                        <div className="flex items-center gap-2 mb-0.5">
+                          <span className="text-xl font-bold text-gray-900">{student.overallScore}%</span>
+                          {getTrendIcon(student.trend)}
+                        </div>
+                        {student.trendValue !== 0 && (
+                          <p className={`text-sm ${student.trendValue > 0 ? 'text-emerald-600' : 'text-red-600'}`}>
+                            {student.trendValue > 0 ? '↑' : '↓'} {student.trendValue > 0 ? '+' : ''}{student.trendValue}% this month
+                          </p>
+                        )}
+                      </div>
+                    </td>
+
+                    {/* Attendance Column */}
+                    <td className="py-4 px-4">
+                      <div className="w-28">
+                        <div className="flex items-center justify-between mb-1.5">
+                          <span className="text-xs text-gray-600">Attendance</span>
+                          <span className="text-sm font-semibold text-gray-900">{Math.min(100, student.overallScore + 8)}%</span>
+                        </div>
+                        <Progress value={Math.min(100, student.overallScore + 8)} className={`h-2 ${getAttendanceColor(Math.min(100, student.overallScore + 8))}`} />
+                      </div>
+                    </td>
+
+                    {/* Status Column */}
+                    <td className="py-4 px-4">
+                      <Badge variant="outline" className={`text-xs font-medium ${getBehaviourStyle(student.behaviour)}`}>
+                        {student.behaviour}
+                      </Badge>
+                    </td>
+
+                    {/* Actions Column */}
+                    <td className="py-4 px-4">
+                      <div className="flex items-center gap-1.5">
+                        <Button 
+                          variant="ghost" 
+                          size="icon" 
+                          className="h-8 w-8 rounded-lg hover:bg-gray-100"
+                          onClick={() => navigate(`/teacher/student-profile/${student.id}`)}
+                        >
+                          <Eye className="w-4 h-4 text-gray-500" />
+                        </Button>
+                        <Button variant="ghost" size="icon" className="h-8 w-8 rounded-lg hover:bg-gray-100">
+                          <MessageSquare className="w-4 h-4 text-gray-500" />
+                        </Button>
+                        <Button variant="ghost" size="icon" className="h-8 w-8 rounded-lg hover:bg-gray-100">
+                          <MoreHorizontal className="w-4 h-4 text-gray-500" />
+                        </Button>
+                      </div>
+                    </td>
+
+                    {/* Mark Column */}
+                    <td className="py-4 px-4">
+                      <div className="flex items-center gap-2">
+                        <Button size="icon" className="h-9 w-9 rounded-full bg-emerald-500 hover:bg-emerald-600 text-white">
+                          <Check className="w-4 h-4" />
+                        </Button>
+                        <Button variant="ghost" size="icon" className="h-9 w-9 rounded-full text-gray-400 hover:bg-gray-100 hover:text-gray-600">
+                          <X className="w-4 h-4" />
+                        </Button>
+                      </div>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
           </div>
 
-          {/* Student Rows */}
-          <div className="divide-y divide-gray-50">
+          {/* Mobile Card View */}
+          <div className="lg:hidden divide-y divide-gray-100">
             {paginatedStudents.map((student) => (
-              <div 
-                key={student.id} 
-                className="grid grid-cols-1 md:grid-cols-12 gap-4 px-6 py-4 hover:bg-gray-50/50 transition-colors items-center"
-              >
+              <div key={student.id} className="p-4 hover:bg-gray-50/50 transition-colors">
                 {/* Student Info */}
-                <div className="col-span-4 flex items-center gap-4">
-                  <div className="relative">
-                    <Avatar className="w-12 h-12 border-2 border-white shadow-sm">
-                      <AvatarFallback className="bg-gradient-to-br from-primary/20 to-primary/10 text-primary font-semibold">
+                <div className="flex items-start gap-3 mb-3">
+                  <div className="relative flex-shrink-0">
+                    <Avatar className="w-12 h-12">
+                      <AvatarFallback className="bg-violet-100 text-violet-700 text-sm font-medium">
                         {student.avatar}
                       </AvatarFallback>
                     </Avatar>
-                    <div className={`absolute -bottom-0.5 -right-0.5 w-4 h-4 rounded-full border-2 border-white ${getPerformanceColor(student.overallScore)}`} />
+                    <div className={`absolute -bottom-0.5 -right-0.5 w-3 h-3 rounded-full border-2 border-white ${student.trend === 'up' ? 'bg-emerald-500' : 'bg-amber-500'}`} />
                   </div>
-                  <div className="min-w-0">
-                    <p className="font-semibold text-gray-900 truncate">{student.name}</p>
-                    <p className="text-xs text-gray-500">Rank #{student.rank}</p>
-                    {student.weakAreas.length > 0 && (
-                      <div className="flex items-center gap-1 mt-1">
-                        <span className="text-[10px] text-red-500 bg-red-50 px-1.5 py-0.5 rounded">
-                          Weak: {student.weakAreas.slice(0, 2).join(', ')}
-                        </span>
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-start justify-between">
+                      <div>
+                        <p className="font-semibold text-gray-900">{student.name}</p>
+                        <p className="text-sm text-gray-500">Rank #{student.rank}</p>
                       </div>
+                      <Badge variant="outline" className={`text-xs font-medium ${getBehaviourStyle(student.behaviour)}`}>
+                        {student.behaviour}
+                      </Badge>
+                    </div>
+                    {student.weakAreas.length > 0 && (
+                      <p className="text-xs text-red-500 mt-1">Weak: {student.weakAreas.join(', ')}</p>
                     )}
                   </div>
                 </div>
 
-                {/* Score */}
-                <div className="col-span-2 flex flex-col items-center">
-                  <div className="flex items-center gap-2">
-                    <span className="text-lg font-bold text-gray-900">{student.overallScore}%</span>
-                    {getTrendIcon(student.trend)}
+                {/* Stats Row */}
+                <div className="flex items-center gap-4 mb-3">
+                  {/* Score */}
+                  <div className="flex-1">
+                    <div className="flex items-center gap-1.5">
+                      <span className="text-lg font-bold text-gray-900">{student.overallScore}%</span>
+                      {getTrendIcon(student.trend)}
+                    </div>
+                    {student.trendValue !== 0 && (
+                      <p className={`text-xs ${student.trendValue > 0 ? 'text-emerald-600' : 'text-red-600'}`}>
+                        {student.trendValue > 0 ? '+' : ''}{student.trendValue}% this month
+                      </p>
+                    )}
                   </div>
-                  {student.trendValue !== 0 && (
-                    <span className={`text-xs font-medium ${student.trendValue > 0 ? 'text-emerald-600' : 'text-red-600'}`}>
-                      {student.trendValue > 0 ? '+' : ''}{student.trendValue}% this month
-                    </span>
-                  )}
-                </div>
-
-                {/* Attendance - using score as proxy */}
-                <div className="col-span-2 flex flex-col items-center">
-                  <div className="w-full max-w-[80px]">
+                  {/* Attendance */}
+                  <div className="flex-1">
                     <div className="flex items-center justify-between text-xs mb-1">
                       <span className="text-gray-500">Attendance</span>
                       <span className="font-medium">{Math.min(100, student.overallScore + 8)}%</span>
@@ -190,48 +283,31 @@ const TeacherStudentsContent = () => {
                   </div>
                 </div>
 
-                {/* Behaviour */}
-                <div className="col-span-2 flex justify-center">
-                  <Badge variant="outline" className={`text-xs font-medium ${getBehaviourStyle(student.behaviour)}`}>
-                    {student.behaviour}
-                  </Badge>
-                </div>
-
-                {/* Actions */}
-                <div className="col-span-2 flex items-center justify-end gap-2">
-                  <Button 
-                    variant="ghost" 
-                    size="icon" 
-                    className="h-8 w-8 rounded-lg"
-                    onClick={() => navigate(`/teacher/student-profile/${student.id}`)}
-                    title="View Profile"
-                  >
-                    <Eye className="w-4 h-4 text-gray-500" />
-                  </Button>
-                  <Button variant="ghost" size="icon" className="h-8 w-8 rounded-lg">
-                    <MessageSquare className="w-4 h-4 text-gray-500" />
-                  </Button>
-                  <DropdownMenu>
-                    <DropdownMenuTrigger asChild>
-                      <Button variant="ghost" size="icon" className="h-8 w-8 rounded-lg">
-                        <MoreHorizontal className="w-4 h-4 text-gray-500" />
-                      </Button>
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent align="end" className="w-48">
-                      <DropdownMenuItem onClick={() => navigate(`/teacher/student-profile/${student.id}`)}>
-                        <Eye className="w-4 h-4 mr-2" />
-                        View 360° Profile
-                      </DropdownMenuItem>
-                      <DropdownMenuItem onClick={() => navigate('/teacher/reports/class-summary')}>
-                        <FileText className="w-4 h-4 mr-2" />
-                        View Class Summary
-                      </DropdownMenuItem>
-                      <DropdownMenuItem onClick={() => navigate('/teacher/communication')}>
-                        <MessageSquare className="w-4 h-4 mr-2" />
-                        Contact Parent
-                      </DropdownMenuItem>
-                    </DropdownMenuContent>
-                  </DropdownMenu>
+                {/* Actions Row */}
+                <div className="flex items-center justify-between pt-2 border-t border-gray-100">
+                  <div className="flex items-center gap-1">
+                    <Button 
+                      variant="ghost" 
+                      size="sm" 
+                      className="h-8 gap-1.5 text-xs"
+                      onClick={() => navigate(`/teacher/student-profile/${student.id}`)}
+                    >
+                      <Eye className="w-3.5 h-3.5" />
+                      View
+                    </Button>
+                    <Button variant="ghost" size="sm" className="h-8 gap-1.5 text-xs">
+                      <MessageSquare className="w-3.5 h-3.5" />
+                      Message
+                    </Button>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <Button size="sm" className="h-8 w-8 p-0 rounded-full bg-emerald-500 hover:bg-emerald-600 text-white">
+                      <Check className="w-4 h-4" />
+                    </Button>
+                    <Button variant="ghost" size="sm" className="h-8 w-8 p-0 rounded-full text-gray-400 hover:bg-gray-100">
+                      <X className="w-4 h-4" />
+                    </Button>
+                  </div>
                 </div>
               </div>
             ))}

@@ -23,81 +23,83 @@ const ClassTeacherModeView = () => {
   const navigate = useNavigate();
   
   return (
-    <div className="space-y-4">
+    <div className="space-y-3 md:space-y-4">
       {/* Hero Section - Class Overview */}
-      <div className="relative overflow-hidden rounded-2xl gradient-primary p-6 text-white shadow-lg">
+      <div className="relative overflow-hidden rounded-xl md:rounded-2xl gradient-primary p-4 md:p-6 text-white shadow-lg">
         <div className="relative z-10">
           {/* Top Row: Header + KPIs */}
-          <div className="flex flex-col lg:flex-row lg:items-start justify-between gap-4 mb-5">
+          <div className="flex flex-col gap-3 md:gap-4 mb-4 md:mb-5">
             <div className="space-y-1">
-              <Badge variant="outline" className="bg-white/10 text-white border-white/20 px-2.5 py-0.5 text-[9px] uppercase tracking-wider font-semibold">
+              <Badge variant="outline" className="bg-white/10 text-white border-white/20 px-2 md:px-2.5 py-0.5 text-[8px] md:text-[9px] uppercase tracking-wider font-semibold">
                 Class Teacher • Grade 10-A
               </Badge>
-              <h1 className="text-2xl font-bold tracking-tight">Class Overview</h1>
-              <p className="text-white/60 text-xs max-w-sm">
+              <h1 className="text-lg md:text-2xl font-bold tracking-tight">Class Overview</h1>
+              <p className="text-white/60 text-[10px] md:text-xs max-w-sm">
                 {assessments.filter(a => a.status === 'draft').length} pending assessments • PTM tomorrow
               </p>
-              <div className="flex items-center gap-2 pt-2">
-                <Button 
-                  size="sm" 
-                  className="bg-white text-primary hover:bg-white/90 rounded-xl px-4 h-8 text-xs font-medium shadow-lg"
-                  onClick={() => navigate('/teacher/assessments')}
-                >
-                  <ClipboardList className="w-3.5 h-3.5 mr-1.5" />
-                  New Assessment
-                </Button>
-                <Button 
-                  variant="outline" 
-                  size="sm" 
-                  className="border-white/20 bg-white/5 hover:bg-white/10 text-white rounded-xl px-4 h-8 text-xs"
-                  onClick={() => navigate('/teacher/communication')}
-                >
-                  <MessageCircle className="w-3.5 h-3.5 mr-1.5" />
-                  Messages
-                  <Badge className="ml-1.5 bg-red-500 text-white border-0 h-4 px-1.5 min-w-[18px] text-[9px]">
-                    {messagesOverview.unreadMessages}
-                  </Badge>
-                </Button>
+            </div>
+
+            {/* KPIs - Below title on mobile */}
+            <div className="flex gap-2">
+              <div className="bg-white/10 backdrop-blur-md border border-white/10 px-2.5 md:px-3 py-1.5 md:py-2 rounded-lg md:rounded-xl flex items-center gap-1.5 md:gap-2">
+                <Users className="w-3.5 md:w-4 h-3.5 md:h-4 text-white/70" />
+                <div>
+                  <p className="text-[8px] md:text-[9px] text-white/50 uppercase tracking-wide">Students</p>
+                  <p className="text-xs md:text-sm font-bold">32</p>
+                </div>
+              </div>
+              <div className="bg-white/10 backdrop-blur-md border border-white/10 px-2.5 md:px-3 py-1.5 md:py-2 rounded-lg md:rounded-xl flex items-center gap-1.5 md:gap-2">
+                <Target className="w-3.5 md:w-4 h-3.5 md:h-4 text-white/70" />
+                <div>
+                  <p className="text-[8px] md:text-[9px] text-white/50 uppercase tracking-wide">Attendance</p>
+                  <p className="text-xs md:text-sm font-bold">94%</p>
+                </div>
               </div>
             </div>
 
-            {/* KPIs */}
-            <div className="flex gap-2">
-              <div className="bg-white/10 backdrop-blur-md border border-white/10 px-3 py-2 rounded-xl flex items-center gap-2">
-                <Users className="w-4 h-4 text-white/70" />
-                <div>
-                  <p className="text-[9px] text-white/50 uppercase tracking-wide">Students</p>
-                  <p className="text-sm font-bold">32</p>
-                </div>
-              </div>
-              <div className="bg-white/10 backdrop-blur-md border border-white/10 px-3 py-2 rounded-xl flex items-center gap-2">
-                <Target className="w-4 h-4 text-white/70" />
-                <div>
-                  <p className="text-[9px] text-white/50 uppercase tracking-wide">Attendance</p>
-                  <p className="text-sm font-bold">94%</p>
-                </div>
-              </div>
+            {/* Action Buttons */}
+            <div className="flex items-center gap-2">
+              <Button 
+                size="sm" 
+                className="bg-white text-primary hover:bg-white/90 rounded-lg md:rounded-xl px-3 md:px-4 h-7 md:h-8 text-[10px] md:text-xs font-medium shadow-lg"
+                onClick={() => navigate('/teacher/assessments')}
+              >
+                <ClipboardList className="w-3 md:w-3.5 h-3 md:h-3.5 mr-1 md:mr-1.5" />
+                Assessment
+              </Button>
+              <Button 
+                variant="outline" 
+                size="sm" 
+                className="border-white/20 bg-white/5 hover:bg-white/10 text-white rounded-lg md:rounded-xl px-3 md:px-4 h-7 md:h-8 text-[10px] md:text-xs"
+                onClick={() => navigate('/teacher/communication')}
+              >
+                <MessageCircle className="w-3 md:w-3.5 h-3 md:h-3.5 mr-1 md:mr-1.5" />
+                Messages
+                <Badge className="ml-1 md:ml-1.5 bg-red-500 text-white border-0 h-3.5 md:h-4 px-1 md:px-1.5 min-w-[14px] md:min-w-[18px] text-[8px] md:text-[9px]">
+                  {messagesOverview.unreadMessages}
+                </Badge>
+              </Button>
             </div>
           </div>
 
           {/* Next Events - Full Width */}
-          <div className="bg-white/10 backdrop-blur-md border border-white/10 p-3 rounded-xl">
+          <div className="bg-white/10 backdrop-blur-md border border-white/10 p-2.5 md:p-3 rounded-lg md:rounded-xl">
             <div className="flex items-center justify-between mb-2">
-              <h3 className="text-xs font-semibold flex items-center gap-1.5">
-                <Calendar className="w-3.5 h-3.5 text-violet-300" />
+              <h3 className="text-[10px] md:text-xs font-semibold flex items-center gap-1.5">
+                <Calendar className="w-3 md:w-3.5 h-3 md:h-3.5 text-violet-300" />
                 Next Events
               </h3>
-              <Button variant="ghost" size="sm" className="h-5 text-[9px] px-1.5 text-white/60 hover:text-white hover:bg-white/10" onClick={() => navigate('/teacher/announcements/events')}>
+              <Button variant="ghost" size="sm" className="h-5 text-[8px] md:text-[9px] px-1.5 text-white/60 hover:text-white hover:bg-white/10" onClick={() => navigate('/teacher/announcements/events')}>
                 Calendar
               </Button>
             </div>
-            <div className="flex gap-3">
+            <div className="flex gap-2 md:gap-3 overflow-x-auto pb-1 -mx-0.5 px-0.5 scrollbar-hide">
               {upcomingEvents.slice(0, 3).map((event) => (
-                <div key={event.id} className="bg-white/5 px-3 py-2 rounded-lg flex-1 min-w-0">
-                  <p className="text-[9px] text-white/50 uppercase tracking-wide">{event.date.split(' ')[0]} {event.date.split(' ')[1]}</p>
-                  <p className="text-[11px] font-medium mt-0.5 truncate">{event.title}</p>
-                  <p className="text-[9px] text-white/40 flex items-center gap-0.5 mt-0.5">
-                    <Clock className="w-2.5 h-2.5" />
+                <div key={event.id} className="bg-white/5 px-2.5 md:px-3 py-1.5 md:py-2 rounded-lg flex-shrink-0 min-w-[100px] md:min-w-0 md:flex-1">
+                  <p className="text-[8px] md:text-[9px] text-white/50 uppercase tracking-wide">{event.date.split(' ')[0]} {event.date.split(' ')[1]}</p>
+                  <p className="text-[10px] md:text-[11px] font-medium mt-0.5 truncate">{event.title}</p>
+                  <p className="text-[8px] md:text-[9px] text-white/40 flex items-center gap-0.5 mt-0.5">
+                    <Clock className="w-2 md:w-2.5 h-2 md:h-2.5" />
                     {event.time}
                   </p>
                 </div>
@@ -112,7 +114,7 @@ const ClassTeacherModeView = () => {
       </div>
 
       {/* Quick Actions - Horizontal Compact Row */}
-      <div className="grid grid-cols-4 gap-2">
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
         {[
           { label: 'Attendance', icon: CheckCircle2, path: '/teacher/my-class/attendance', desc: 'Daily records' },
           { label: 'Students', icon: Users, path: '/teacher/my-class/students', desc: 'Class roster' },
@@ -122,33 +124,33 @@ const ClassTeacherModeView = () => {
           <button
             key={action.label}
             onClick={() => navigate(action.path)}
-            className="flex items-center gap-2.5 p-3 bg-white rounded-xl shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all group"
+            className="flex items-center gap-2 md:gap-2.5 p-2.5 md:p-3 bg-white rounded-lg md:rounded-xl shadow-sm hover:shadow-md active:scale-[0.98] transition-all group"
           >
-            <div className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center group-hover:scale-110 transition-transform flex-shrink-0">
-              <action.icon className="w-4 h-4 text-primary" />
+            <div className="w-7 h-7 md:w-8 md:h-8 rounded-lg bg-primary/10 flex items-center justify-center group-hover:scale-110 transition-transform flex-shrink-0">
+              <action.icon className="w-3.5 h-3.5 md:w-4 md:h-4 text-primary" />
             </div>
             <div className="text-left min-w-0">
-              <span className="text-xs font-bold text-gray-900 block">{action.label}</span>
-              <span className="text-[9px] text-gray-500">{action.desc}</span>
+              <span className="text-[10px] md:text-xs font-bold text-gray-900 block">{action.label}</span>
+              <span className="text-[8px] md:text-[9px] text-gray-500 hidden sm:block">{action.desc}</span>
             </div>
           </button>
         ))}
       </div>
 
       {/* New Feature Widgets - Tasks & Parent Engagement */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-3 md:gap-4">
         {/* Tasks Summary Widget */}
-        <Card className="rounded-xl border-0 shadow-sm bg-white">
-          <CardHeader className="py-3 px-5">
+        <Card className="rounded-lg md:rounded-xl border-0 shadow-sm bg-white">
+          <CardHeader className="py-2.5 md:py-3 px-3 md:px-5">
             <div className="flex items-center justify-between">
-              <CardTitle className="text-sm font-bold text-gray-900">Tasks & Follow-ups</CardTitle>
-              <Button variant="ghost" size="sm" className="h-7 text-xs text-primary hover:bg-primary/5" onClick={() => navigate('/teacher/tasks')}>
-                View All <ChevronRight className="w-3.5 h-3.5 ml-0.5" />
+              <CardTitle className="text-xs md:text-sm font-bold text-gray-900">Tasks & Follow-ups</CardTitle>
+              <Button variant="ghost" size="sm" className="h-6 md:h-7 text-[10px] md:text-xs text-primary hover:bg-primary/5" onClick={() => navigate('/teacher/tasks')}>
+                View All <ChevronRight className="w-3 md:w-3.5 h-3 md:h-3.5 ml-0.5" />
               </Button>
             </div>
           </CardHeader>
-          <CardContent className="pt-0 pb-4 px-5">
-            <div className="grid grid-cols-3 gap-3 mb-4">
+          <CardContent className="pt-0 pb-3 md:pb-4 px-3 md:px-5">
+            <div className="grid grid-cols-3 gap-2 md:gap-3 mb-3 md:mb-4">
               {[
                 { 
                   label: 'Pending', 
@@ -174,22 +176,22 @@ const ClassTeacherModeView = () => {
                   bg: 'bg-red-50' 
                 },
               ].map((stat) => (
-                <div key={stat.label} className={cn("px-3 py-2 rounded-lg", stat.bg)}>
-                  <p className="text-[10px] text-gray-600 font-medium">{stat.label}</p>
-                  <p className={cn("text-xl font-bold", stat.color)}>{stat.count}</p>
+                <div key={stat.label} className={cn("px-2 md:px-3 py-1.5 md:py-2 rounded-lg", stat.bg)}>
+                  <p className="text-[8px] md:text-[10px] text-gray-600 font-medium">{stat.label}</p>
+                  <p className={cn("text-lg md:text-xl font-bold", stat.color)}>{stat.count}</p>
                 </div>
               ))}
             </div>
             
-            <div className="space-y-2">
+            <div className="space-y-1.5 md:space-y-2">
               {teacherTasks.filter(t => t.status === 'pending').slice(0, 2).map((task) => (
-                <div key={task.id} className="flex items-center justify-between p-2 bg-gray-50 rounded-lg">
+                <div key={task.id} className="flex items-center justify-between p-1.5 md:p-2 bg-gray-50 rounded-lg">
                   <div className="flex-1 min-w-0">
-                    <p className="text-xs font-medium text-gray-900 truncate">{task.type}</p>
-                    <p className="text-[10px] text-gray-600">{task.studentName}</p>
+                    <p className="text-[10px] md:text-xs font-medium text-gray-900 truncate">{task.type}</p>
+                    <p className="text-[9px] md:text-[10px] text-gray-600">{task.studentName}</p>
                   </div>
                   <Badge className={cn(
-                    "text-[9px] h-5 px-2",
+                    "text-[8px] md:text-[9px] h-4 md:h-5 px-1.5 md:px-2",
                     task.priority === 'high' ? 'bg-red-500' : task.priority === 'medium' ? 'bg-amber-500' : 'bg-blue-500'
                   )}>
                     {task.priority}
@@ -198,63 +200,63 @@ const ClassTeacherModeView = () => {
               ))}
             </div>
             
-            <Button size="sm" variant="outline" className="w-full mt-3 h-8 text-xs" onClick={() => navigate('/teacher/tasks')}>
-              <Plus className="w-3.5 h-3.5 mr-1.5" />
+            <Button size="sm" variant="outline" className="w-full mt-2.5 md:mt-3 h-7 md:h-8 text-[10px] md:text-xs" onClick={() => navigate('/teacher/tasks')}>
+              <Plus className="w-3 md:w-3.5 h-3 md:h-3.5 mr-1 md:mr-1.5" />
               Create Task
             </Button>
           </CardContent>
         </Card>
 
         {/* Parent Engagement Widget */}
-        <Card className="rounded-xl border-0 shadow-sm bg-white">
-          <CardHeader className="py-3 px-5">
+        <Card className="rounded-lg md:rounded-xl border-0 shadow-sm bg-white">
+          <CardHeader className="py-2.5 md:py-3 px-3 md:px-5">
             <div className="flex items-center justify-between">
-              <CardTitle className="text-sm font-bold text-gray-900">Parent Engagement</CardTitle>
-              <Button variant="ghost" size="sm" className="h-7 text-xs text-primary hover:bg-primary/5" onClick={() => navigate('/teacher/parent-engagement')}>
-                View All <ChevronRight className="w-3.5 h-3.5 ml-0.5" />
+              <CardTitle className="text-xs md:text-sm font-bold text-gray-900">Parent Engagement</CardTitle>
+              <Button variant="ghost" size="sm" className="h-6 md:h-7 text-[10px] md:text-xs text-primary hover:bg-primary/5" onClick={() => navigate('/teacher/parent-engagement')}>
+                View All <ChevronRight className="w-3 md:w-3.5 h-3 md:h-3.5 ml-0.5" />
               </Button>
             </div>
           </CardHeader>
-          <CardContent className="pt-0 pb-4 px-5">
-            <div className="grid grid-cols-2 gap-3 mb-4">
-              <div className="px-3 py-2 rounded-lg bg-emerald-50">
-                <p className="text-[10px] text-gray-600 font-medium">High Engagement</p>
-                <p className="text-xl font-bold text-emerald-600">
+          <CardContent className="pt-0 pb-3 md:pb-4 px-3 md:px-5">
+            <div className="grid grid-cols-2 gap-2 md:gap-3 mb-3 md:mb-4">
+              <div className="px-2 md:px-3 py-1.5 md:py-2 rounded-lg bg-emerald-50">
+                <p className="text-[8px] md:text-[10px] text-gray-600 font-medium">High Engagement</p>
+                <p className="text-lg md:text-xl font-bold text-emerald-600">
                   {parentEngagementData.filter(p => p.engagementLevel === 'high').length}
                 </p>
               </div>
-              <div className="px-3 py-2 rounded-lg bg-red-50">
-                <p className="text-[10px] text-gray-600 font-medium">Low Engagement</p>
-                <p className="text-xl font-bold text-red-600">
+              <div className="px-2 md:px-3 py-1.5 md:py-2 rounded-lg bg-red-50">
+                <p className="text-[8px] md:text-[10px] text-gray-600 font-medium">Low Engagement</p>
+                <p className="text-lg md:text-xl font-bold text-red-600">
                   {parentEngagementData.filter(p => p.engagementLevel === 'low').length}
                 </p>
               </div>
             </div>
             
-            <div className="space-y-2 mb-3">
+            <div className="space-y-1.5 md:space-y-2 mb-2 md:mb-3">
               <div className="flex items-center justify-between">
-                <span className="text-xs text-gray-600">Avg Response Rate</span>
-                <span className="text-sm font-bold text-primary">
+                <span className="text-[10px] md:text-xs text-gray-600">Avg Response Rate</span>
+                <span className="text-xs md:text-sm font-bold text-primary">
                   {Math.round(parentEngagementData.reduce((acc, p) => acc + p.responseRate, 0) / parentEngagementData.length)}%
                 </span>
               </div>
               <Progress 
                 value={Math.round(parentEngagementData.reduce((acc, p) => acc + p.responseRate, 0) / parentEngagementData.length)} 
-                className="h-2"
+                className="h-1.5 md:h-2"
               />
             </div>
 
             {parentEngagementData.filter(p => p.engagementLevel === 'low').length > 0 && (
-              <div className="bg-red-50 border border-red-200 rounded-lg p-3">
-                <p className="text-xs font-semibold text-red-700 mb-1 flex items-center gap-1">
-                  <AlertTriangle className="w-3 h-3" />
+              <div className="bg-red-50 border border-red-200 rounded-lg p-2 md:p-3">
+                <p className="text-[10px] md:text-xs font-semibold text-red-700 mb-1 flex items-center gap-1">
+                  <AlertTriangle className="w-2.5 md:w-3 h-2.5 md:h-3" />
                   Non-Responsive Parents
                 </p>
-                <div className="space-y-1">
+                <div className="space-y-0.5 md:space-y-1">
                   {parentEngagementData.filter(p => p.engagementLevel === 'low').slice(0, 2).map((parent) => (
                     <div key={parent.id} className="flex items-center justify-between">
-                      <p className="text-[10px] text-red-600">{parent.parentName}</p>
-                      <span className="text-[9px] text-red-500">{parent.responseRate}%</span>
+                      <p className="text-[9px] md:text-[10px] text-red-600">{parent.parentName}</p>
+                      <span className="text-[8px] md:text-[9px] text-red-500">{parent.responseRate}%</span>
                     </div>
                   ))}
                 </div>
@@ -265,50 +267,50 @@ const ClassTeacherModeView = () => {
       </div>
 
         {/* Main Dashboard Grid */}
-        <div className="grid grid-cols-1 xl:grid-cols-3 gap-4 items-stretch">
+        <div className="grid grid-cols-1 xl:grid-cols-3 gap-3 md:gap-4 items-stretch">
           
           {/* Left Column: Primary Content (2/3) */}
           <div className="xl:col-span-2">
             
             {/* Performance Overview */}
-            <Card className="rounded-xl border-0 shadow-sm overflow-hidden bg-white h-full">
-              <CardHeader className="flex flex-row items-center justify-between py-3 px-5">
+            <Card className="rounded-lg md:rounded-xl border-0 shadow-sm overflow-hidden bg-white h-full">
+              <CardHeader className="flex flex-row items-center justify-between py-2.5 md:py-3 px-3 md:px-5">
                 <div>
-                  <CardTitle className="text-sm font-bold text-gray-900">Academic Performance</CardTitle>
-                  <p className="text-[10px] text-gray-500 mt-0.5">Class progress overview</p>
+                  <CardTitle className="text-xs md:text-sm font-bold text-gray-900">Academic Performance</CardTitle>
+                  <p className="text-[9px] md:text-[10px] text-gray-500 mt-0.5">Class progress overview</p>
                 </div>
-                <Button variant="ghost" size="sm" className="text-primary hover:bg-primary/5 rounded-lg h-7 px-2 text-xs" onClick={() => navigate('/teacher/class-analytics')}>
-                  Details <ChevronRight className="w-3.5 h-3.5 ml-0.5" />
+                <Button variant="ghost" size="sm" className="text-primary hover:bg-primary/5 rounded-lg h-6 md:h-7 px-2 text-[10px] md:text-xs" onClick={() => navigate('/teacher/class-analytics')}>
+                  Details <ChevronRight className="w-3 md:w-3.5 h-3 md:h-3.5 ml-0.5" />
                 </Button>
               </CardHeader>
-              <CardContent className="pt-0 pb-4 px-5">
+              <CardContent className="pt-0 pb-3 md:pb-4 px-3 md:px-5">
                 {/* Distribution Cards */}
-                <div className="flex gap-2 mb-4">
+                <div className="flex gap-1.5 md:gap-2 mb-3 md:mb-4 overflow-x-auto pb-1">
                   {[
                     { label: 'High Achievers', value: classAnalyticsData.distribution.high, color: 'text-emerald-600', bg: 'bg-emerald-50', sub: '≥80%' },
                     { label: 'Average', value: classAnalyticsData.distribution.medium, color: 'text-amber-600', bg: 'bg-amber-50', sub: '60-79%' },
                     { label: 'Needs Attention', value: classAnalyticsData.distribution.low, color: 'text-red-600', bg: 'bg-red-50', sub: '<60%' },
                   ].map((item) => (
-                    <div key={item.label} className={cn("flex-1 px-3 py-2 rounded-lg flex items-center justify-between", item.bg)}>
+                    <div key={item.label} className={cn("flex-1 min-w-[90px] px-2 md:px-3 py-1.5 md:py-2 rounded-lg flex items-center justify-between", item.bg)}>
                       <div>
-                        <span className="text-[10px] text-gray-700 font-medium block">{item.label}</span>
-                        <span className="text-[9px] text-gray-500">{item.sub}</span>
+                        <span className="text-[8px] md:text-[10px] text-gray-700 font-medium block">{item.label}</span>
+                        <span className="text-[7px] md:text-[9px] text-gray-500">{item.sub}</span>
                       </div>
-                      <span className={cn("text-xl font-bold", item.color)}>{item.value}</span>
+                      <span className={cn("text-lg md:text-xl font-bold", item.color)}>{item.value}</span>
                     </div>
                   ))}
                 </div>
 
                 {/* Subject Progress */}
-                <div className="space-y-3">
+                <div className="space-y-2 md:space-y-3">
                   <div className="flex items-center justify-between">
-                    <h4 className="text-xs font-bold text-gray-600 uppercase tracking-wide">Subject Average</h4>
-                    <Badge variant="secondary" className="bg-primary/10 text-primary border-0 text-[10px] h-5 px-2">Avg: {classAnalyticsData.classAverage}%</Badge>
+                    <h4 className="text-[10px] md:text-xs font-bold text-gray-600 uppercase tracking-wide">Subject Average</h4>
+                    <Badge variant="secondary" className="bg-primary/10 text-primary border-0 text-[8px] md:text-[10px] h-4 md:h-5 px-1.5 md:px-2">Avg: {classAnalyticsData.classAverage}%</Badge>
                   </div>
                   {classAnalyticsData.subjectPerformance.slice(0, 4).map((subject) => (
-                    <div key={subject.subject} className="flex items-center gap-4">
-                      <span className="text-sm font-medium text-gray-700 w-24 truncate">{subject.subject}</span>
-                      <div className="relative flex-1 h-2 bg-gray-100 rounded-full overflow-hidden">
+                    <div key={subject.subject} className="flex items-center gap-2 md:gap-4">
+                      <span className="text-[10px] md:text-sm font-medium text-gray-700 w-16 md:w-24 truncate">{subject.subject}</span>
+                      <div className="relative flex-1 h-1.5 md:h-2 bg-gray-100 rounded-full overflow-hidden">
                         <div 
                           className={cn(
                             "absolute top-0 left-0 h-full rounded-full",
@@ -317,7 +319,7 @@ const ClassTeacherModeView = () => {
                           style={{ width: `${subject.avgScore}%` }}
                         />
                       </div>
-                      <span className="text-sm font-bold text-gray-900 w-12 text-right">{subject.avgScore}%</span>
+                      <span className="text-[10px] md:text-sm font-bold text-gray-900 w-8 md:w-12 text-right">{subject.avgScore}%</span>
                     </div>
                   ))}
                 </div>
@@ -328,42 +330,42 @@ const ClassTeacherModeView = () => {
           {/* Right Column: Sidebar Content (1/3) */}
           <div>
             {/* Alerts & Tasks Section */}
-            <Card className="rounded-xl border-0 shadow-sm bg-white overflow-hidden h-full">
-              <CardHeader className="py-3 px-5 flex flex-row items-center justify-between">
-                <CardTitle className="text-sm font-bold text-gray-900 flex items-center gap-2">
-                  <Bell className="w-4 h-4 text-red-500" />
+            <Card className="rounded-lg md:rounded-xl border-0 shadow-sm bg-white overflow-hidden h-full">
+              <CardHeader className="py-2.5 md:py-3 px-3 md:px-5 flex flex-row items-center justify-between">
+                <CardTitle className="text-xs md:text-sm font-bold text-gray-900 flex items-center gap-1.5 md:gap-2">
+                  <Bell className="w-3.5 md:w-4 h-3.5 md:h-4 text-red-500" />
                   Action Required
                 </CardTitle>
-                <Badge className="bg-red-50 text-red-600 border-0 text-[9px] h-5 px-2">3 New</Badge>
+                <Badge className="bg-red-50 text-red-600 border-0 text-[8px] md:text-[9px] h-4 md:h-5 px-1.5 md:px-2">3 New</Badge>
               </CardHeader>
-              <CardContent className="pt-0 pb-4 px-5 space-y-2.5">
-                <div className="p-3 rounded-xl bg-red-50/70 border border-red-100 flex gap-3">
-                  <div className="w-9 h-9 rounded-lg bg-red-500 flex items-center justify-center flex-shrink-0">
-                    <AlertTriangle className="w-4 h-4 text-white" />
+              <CardContent className="pt-0 pb-3 md:pb-4 px-3 md:px-5 space-y-2 md:space-y-2.5">
+                <div className="p-2 md:p-3 rounded-lg md:rounded-xl bg-red-50/70 border border-red-100 flex gap-2 md:gap-3">
+                  <div className="w-7 h-7 md:w-9 md:h-9 rounded-lg bg-red-500 flex items-center justify-center flex-shrink-0">
+                    <AlertTriangle className="w-3.5 md:w-4 h-3.5 md:h-4 text-white" />
                   </div>
                   <div className="flex-1 min-w-0">
-                    <p className="text-sm font-bold text-red-900">Critical Performance</p>
-                    <p className="text-[11px] text-red-700 mt-0.5">2 students below 40% in math test.</p>
+                    <p className="text-xs md:text-sm font-bold text-red-900">Critical Performance</p>
+                    <p className="text-[9px] md:text-[11px] text-red-700 mt-0.5">2 students below 40% in math test.</p>
                   </div>
                 </div>
                 
-                <div className="p-3 rounded-xl bg-amber-50/70 border border-amber-100 flex gap-3">
-                  <div className="w-9 h-9 rounded-lg bg-amber-500 flex items-center justify-center flex-shrink-0 text-white">
-                    <Calendar className="w-4 h-4" />
+                <div className="p-2 md:p-3 rounded-lg md:rounded-xl bg-amber-50/70 border border-amber-100 flex gap-2 md:gap-3">
+                  <div className="w-7 h-7 md:w-9 md:h-9 rounded-lg bg-amber-500 flex items-center justify-center flex-shrink-0 text-white">
+                    <Calendar className="w-3.5 md:w-4 h-3.5 md:h-4" />
                   </div>
                   <div className="flex-1 min-w-0">
-                    <p className="text-sm font-bold text-amber-900">PTM Tomorrow</p>
-                    <p className="text-[11px] text-amber-700 mt-0.5">3 parents requested feedback.</p>
+                    <p className="text-xs md:text-sm font-bold text-amber-900">PTM Tomorrow</p>
+                    <p className="text-[9px] md:text-[11px] text-amber-700 mt-0.5">3 parents requested feedback.</p>
                   </div>
                 </div>
 
-                <div className="p-3 rounded-xl bg-blue-50/70 border border-blue-100 flex gap-3">
-                  <div className="w-9 h-9 rounded-lg bg-blue-500 flex items-center justify-center flex-shrink-0 text-white">
-                    <FileText className="w-4 h-4" />
+                <div className="p-2 md:p-3 rounded-lg md:rounded-xl bg-blue-50/70 border border-blue-100 flex gap-2 md:gap-3">
+                  <div className="w-7 h-7 md:w-9 md:h-9 rounded-lg bg-blue-500 flex items-center justify-center flex-shrink-0 text-white">
+                    <FileText className="w-3.5 md:w-4 h-3.5 md:h-4" />
                   </div>
                   <div className="flex-1 min-w-0">
-                    <p className="text-sm font-bold text-blue-900">Reports Due Friday</p>
-                    <p className="text-[11px] text-blue-700 mt-0.5">Submit quarterly report cards.</p>
+                    <p className="text-xs md:text-sm font-bold text-blue-900">Reports Due Friday</p>
+                    <p className="text-[9px] md:text-[11px] text-blue-700 mt-0.5">Submit quarterly report cards.</p>
                   </div>
                 </div>
               </CardContent>
@@ -385,46 +387,46 @@ const SubjectTeacherModeView = () => {
     <div className="space-y-3">
       {/* Page Header */}
       <div>
-        <h1 className="text-xl font-bold text-gray-900">Mathematics Teaching Hub</h1>
-        <p className="text-xs text-gray-500 mt-0.5">Manage your subject across all classes</p>
+        <h1 className="text-lg md:text-xl font-bold text-gray-900">Mathematics Teaching Hub</h1>
+        <p className="text-[10px] md:text-xs text-gray-500 mt-0.5">Manage your subject across all classes</p>
       </div>
 
       {/* Hero Cards Row */}
       <div className="grid grid-cols-1 gap-3">
         {/* AI Tools Card - Full Width */}
-        <Card className="bg-gradient-to-br from-blue-50 to-purple-50 border-0 shadow-sm rounded-2xl overflow-hidden relative">
-          <CardContent className="p-6 relative z-10">
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <Card className="bg-gradient-to-br from-blue-50 to-purple-50 border-0 shadow-sm rounded-xl md:rounded-2xl overflow-hidden relative">
+          <CardContent className="p-4 md:p-6 relative z-10">
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 md:gap-6">
               {/* Left: Main Content */}
               <div className="lg:col-span-2">
-                <div className="mb-4">
-                  <div className="w-10 h-10 rounded-lg bg-white/40 backdrop-blur-sm flex items-center justify-center mb-3">
-                    <BookOpen className="w-5 h-5 text-purple-600" />
+                <div className="mb-3 md:mb-4">
+                  <div className="w-8 h-8 md:w-10 md:h-10 rounded-lg bg-white/40 backdrop-blur-sm flex items-center justify-center mb-2 md:mb-3">
+                    <BookOpen className="w-4 h-4 md:w-5 md:h-5 text-purple-600" />
                   </div>
                 </div>
                 <div>
-                  <h2 className="text-xl font-bold text-gray-900 mb-2">Explore AI Tools,<br/>Create & Engage!</h2>
-                  <p className="text-sm text-gray-600 max-w-[480px] mb-4">
+                  <h2 className="text-lg md:text-xl font-bold text-gray-900 mb-1.5 md:mb-2">Explore AI Tools,<br/>Create & Engage!</h2>
+                  <p className="text-xs md:text-sm text-gray-600 max-w-[480px] mb-3 md:mb-4">
                     Generate quizzes, create lesson plans, and analyze student performance with AI. 
                     Use our intelligent tools to create targeted practice questions and worksheets.
                   </p>
                   <div className="flex flex-wrap gap-2">
                     <Button 
                       size="sm" 
-                      className="bg-purple-600 hover:bg-purple-700 text-white rounded-xl h-9 px-4 text-xs"
+                      className="bg-purple-600 hover:bg-purple-700 text-white rounded-lg md:rounded-xl h-8 md:h-9 px-3 md:px-4 text-[10px] md:text-xs"
                       onClick={() => navigate('/teacher/ai-tools/question-generator')}
                     >
-                      <Sparkles className="w-3.5 h-3.5 mr-1.5" />
+                      <Sparkles className="w-3 md:w-3.5 h-3 md:h-3.5 mr-1 md:mr-1.5" />
                       Question Generator
                     </Button>
                     <Button 
                       size="sm" 
                       variant="outline"
-                      className="border-purple-200 text-purple-700 hover:bg-purple-50 rounded-xl h-9 px-4 text-xs"
+                      className="border-purple-200 text-purple-700 hover:bg-purple-50 rounded-lg md:rounded-xl h-8 md:h-9 px-3 md:px-4 text-[10px] md:text-xs"
                       onClick={() => navigate('/teacher/ai-tools/worksheet-generator')}
                     >
-                      <FileText className="w-3.5 h-3.5 mr-1.5" />
-                      Worksheet Generator
+                      <FileText className="w-3 md:w-3.5 h-3 md:h-3.5 mr-1 md:mr-1.5" />
+                      Worksheet
                     </Button>
                   </div>
                 </div>
@@ -433,20 +435,20 @@ const SubjectTeacherModeView = () => {
               {/* Right: Attention Alert */}
               <div className="lg:col-span-1">
                 <Card className="border-0 shadow-sm bg-gradient-to-br from-red-50 to-orange-50 h-full">
-                  <CardContent className="p-5">
-                    <div className="flex items-center gap-2 mb-3">
-                      <div className="w-8 h-8 rounded-lg bg-red-500 flex items-center justify-center">
-                        <AlertTriangle className="w-4 h-4 text-white" />
+                  <CardContent className="p-4 md:p-5">
+                    <div className="flex items-center gap-2 mb-2 md:mb-3">
+                      <div className="w-7 h-7 md:w-8 md:h-8 rounded-lg bg-red-500 flex items-center justify-center">
+                        <AlertTriangle className="w-3.5 md:w-4 h-3.5 md:h-4 text-white" />
                       </div>
-                      <h3 className="text-sm font-bold text-gray-900">Attention</h3>
+                      <h3 className="text-xs md:text-sm font-bold text-gray-900">Attention</h3>
                     </div>
-                    <p className="text-xs text-gray-700 mb-3">
+                    <p className="text-[10px] md:text-xs text-gray-700 mb-2 md:mb-3">
                       {weakChapters} chapters showing low mastery. Consider creating practice quizzes.
                     </p>
                     <Button 
                       size="sm" 
                       variant="outline" 
-                      className="w-full border-red-200 text-red-700 hover:bg-red-50 rounded-xl h-8 text-xs"
+                      className="w-full border-red-200 text-red-700 hover:bg-red-50 rounded-lg md:rounded-xl h-7 md:h-8 text-[10px] md:text-xs"
                       onClick={() => navigate('/teacher/ai-tools/question-generator')}
                     >
                       Generate Quiz
@@ -462,15 +464,15 @@ const SubjectTeacherModeView = () => {
 
       {/* Task Cards Section */}
       <div className="flex items-center justify-between mb-2">
-        <h2 className="text-base font-bold text-gray-900">Quick Actions & Tasks</h2>
-        <div className="flex gap-1.5">
-          <Button size="sm" variant="ghost" className="h-7 px-3 text-xs rounded-lg bg-gray-900 text-white hover:bg-gray-800">
+        <h2 className="text-sm md:text-base font-bold text-gray-900">Quick Actions & Tasks</h2>
+        <div className="flex gap-1 md:gap-1.5">
+          <Button size="sm" variant="ghost" className="h-6 md:h-7 px-2 md:px-3 text-[10px] md:text-xs rounded-lg bg-gray-900 text-white hover:bg-gray-800">
             All
           </Button>
-          <Button size="sm" variant="ghost" className="h-7 px-3 text-xs rounded-lg hover:bg-gray-100">
+          <Button size="sm" variant="ghost" className="h-6 md:h-7 px-2 md:px-3 text-[10px] md:text-xs rounded-lg hover:bg-gray-100">
             Ongoing
           </Button>
-          <Button size="sm" variant="ghost" className="h-7 px-3 text-xs rounded-lg hover:bg-gray-100">
+          <Button size="sm" variant="ghost" className="h-6 md:h-7 px-2 md:px-3 text-[10px] md:text-xs rounded-lg hover:bg-gray-100">
             Past
           </Button>
         </div>
@@ -479,41 +481,41 @@ const SubjectTeacherModeView = () => {
       {/* Tasks Grid */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-3">
         {/* Task Card 1 - Classes Overview */}
-        <Card className="border-0 shadow-sm rounded-2xl bg-white">
-          <CardContent className="p-5">
-            <div className="flex items-start justify-between mb-4">
+        <Card className="border-0 shadow-sm rounded-xl md:rounded-2xl bg-white">
+          <CardContent className="p-4 md:p-5">
+            <div className="flex items-start justify-between mb-3 md:mb-4">
               <div className="flex items-center gap-2">
-                <div className="w-10 h-10 rounded-xl bg-blue-50 flex items-center justify-center">
-                  <Users className="w-5 h-5 text-blue-600" />
+                <div className="w-8 h-8 md:w-10 md:h-10 rounded-lg md:rounded-xl bg-blue-50 flex items-center justify-center">
+                  <Users className="w-4 h-4 md:w-5 md:h-5 text-blue-600" />
                 </div>
                 <div>
-                  <p className="text-xs text-gray-500">Task</p>
-                  <h3 className="text-sm font-bold text-gray-900">Classes & Students</h3>
+                  <p className="text-[10px] md:text-xs text-gray-500">Task</p>
+                  <h3 className="text-xs md:text-sm font-bold text-gray-900">Classes & Students</h3>
                 </div>
               </div>
-              <Badge className="bg-blue-50 text-blue-700 border-0 text-[10px] h-5 px-2">
+              <Badge className="bg-blue-50 text-blue-700 border-0 text-[9px] md:text-[10px] h-4 md:h-5 px-1.5 md:px-2">
                 {subjectClasses.length} classes
               </Badge>
             </div>
             
-            <div className="space-y-2 mb-4">
-              <div className="flex items-center justify-between text-xs">
+            <div className="space-y-1.5 md:space-y-2 mb-3 md:mb-4">
+              <div className="flex items-center justify-between text-[10px] md:text-xs">
                 <span className="text-gray-600">Task:</span>
-                <span className="font-medium text-gray-900">Manage {totalStudents} students across classes</span>
+                <span className="font-medium text-gray-900">Manage {totalStudents} students</span>
               </div>
-              <div className="flex items-center justify-between text-xs">
+              <div className="flex items-center justify-between text-[10px] md:text-xs">
                 <span className="text-gray-600">Progress:</span>
                 <span className="font-bold text-gray-900">{avgCompletion}% completion</span>
               </div>
             </div>
 
-            <div className="flex items-center justify-between text-xs text-gray-500 mb-3">
+            <div className="flex items-center justify-between text-[10px] md:text-xs text-gray-500 mb-2 md:mb-3">
               <span>{avgCompletion}/{100} completed</span>
             </div>
             
             <Button 
               size="sm" 
-              className="w-full bg-gray-900 hover:bg-gray-800 text-white rounded-xl h-9"
+              className="w-full bg-gray-900 hover:bg-gray-800 text-white rounded-lg md:rounded-xl h-8 md:h-9 text-[10px] md:text-xs"
               onClick={() => navigate('/teacher/my-subject/classes')}
             >
               Manage Classes
@@ -522,41 +524,41 @@ const SubjectTeacherModeView = () => {
         </Card>
 
         {/* Task Card 2 - Chapter Analytics */}
-        <Card className="border-0 shadow-sm rounded-2xl bg-white">
-          <CardContent className="p-5">
-            <div className="flex items-start justify-between mb-4">
+        <Card className="border-0 shadow-sm rounded-xl md:rounded-2xl bg-white">
+          <CardContent className="p-4 md:p-5">
+            <div className="flex items-start justify-between mb-3 md:mb-4">
               <div className="flex items-center gap-2">
-                <div className="w-10 h-10 rounded-xl bg-purple-50 flex items-center justify-center">
-                  <BookOpen className="w-5 h-5 text-purple-600" />
+                <div className="w-8 h-8 md:w-10 md:h-10 rounded-lg md:rounded-xl bg-purple-50 flex items-center justify-center">
+                  <BookOpen className="w-4 h-4 md:w-5 md:h-5 text-purple-600" />
                 </div>
                 <div>
-                  <p className="text-xs text-gray-500">Task</p>
-                  <h3 className="text-sm font-bold text-gray-900">Chapter Performance</h3>
+                  <p className="text-[10px] md:text-xs text-gray-500">Task</p>
+                  <h3 className="text-xs md:text-sm font-bold text-gray-900">Chapter Performance</h3>
                 </div>
               </div>
-              <Badge className="bg-red-50 text-red-700 border-0 text-[10px] h-5 px-2">
+              <Badge className="bg-red-50 text-red-700 border-0 text-[9px] md:text-[10px] h-4 md:h-5 px-1.5 md:px-2">
                 {weakChapters} weak
               </Badge>
             </div>
             
-            <div className="space-y-2 mb-4">
-              <div className="flex items-center justify-between text-xs">
+            <div className="space-y-1.5 md:space-y-2 mb-3 md:mb-4">
+              <div className="flex items-center justify-between text-[10px] md:text-xs">
                 <span className="text-gray-600">Task:</span>
                 <span className="font-medium text-gray-900">Review {weakChapters} struggling chapters</span>
               </div>
-              <div className="flex items-center justify-between text-xs">
+              <div className="flex items-center justify-between text-[10px] md:text-xs">
                 <span className="text-gray-600">Average:</span>
                 <span className="font-bold text-gray-900">{avgScore}% mastery</span>
               </div>
             </div>
 
-            <div className="flex items-center justify-between text-xs text-gray-500 mb-3">
+            <div className="flex items-center justify-between text-[10px] md:text-xs text-gray-500 mb-2 md:mb-3">
               <span>{chapters.length - weakChapters}/{chapters.length} chapters on track</span>
             </div>
             
             <Button 
               size="sm" 
-              className="w-full bg-gray-900 hover:bg-gray-800 text-white rounded-xl h-9"
+              className="w-full bg-gray-900 hover:bg-gray-800 text-white rounded-lg md:rounded-xl h-8 md:h-9 text-[10px] md:text-xs"
               onClick={() => navigate('/teacher/subject-analytics/chapters')}
             >
               View Analytics
@@ -569,48 +571,48 @@ const SubjectTeacherModeView = () => {
       <div className="grid grid-cols-1 xl:grid-cols-3 gap-3">
         {/* Classes List */}
         <div className="xl:col-span-2">
-          <Card className="border-0 shadow-sm rounded-2xl bg-white">
-            <CardHeader className="flex flex-row items-center justify-between pb-3">
+          <Card className="border-0 shadow-sm rounded-xl md:rounded-2xl bg-white">
+            <CardHeader className="flex flex-row items-center justify-between pb-2 md:pb-3">
               <div className="flex items-center gap-1.5">
-                <CardTitle className="text-sm font-bold text-gray-900">Your Classes</CardTitle>
-                <span className="text-xs text-gray-400">·</span>
-                <p className="text-xs text-gray-500">Teaching {subjectClasses.length} classes</p>
+                <CardTitle className="text-xs md:text-sm font-bold text-gray-900">Your Classes</CardTitle>
+                <span className="text-[10px] md:text-xs text-gray-400 hidden sm:inline">·</span>
+                <p className="text-[10px] md:text-xs text-gray-500 hidden sm:block">Teaching {subjectClasses.length} classes</p>
               </div>
               <Button 
                 variant="ghost" 
                 size="sm" 
-                className="text-primary hover:bg-primary/5 rounded-lg h-7 px-2 text-xs"
+                className="text-primary hover:bg-primary/5 rounded-lg h-6 md:h-7 px-2 text-[10px] md:text-xs"
                 onClick={() => navigate('/teacher/my-subject/classes')}
               >
-                View All <ChevronRight className="w-3 h-3 ml-0.5" />
+                View All <ChevronRight className="w-2.5 md:w-3 h-2.5 md:h-3 ml-0.5" />
               </Button>
             </CardHeader>
             <CardContent className="pt-0">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-2 md:gap-3">
                 {subjectClasses.map((cls) => (
                   <div 
                     key={cls.id} 
-                    className="p-4 rounded-xl bg-gray-50 hover:bg-gray-100 transition-colors cursor-pointer group"
+                    className="p-3 md:p-4 rounded-lg md:rounded-xl bg-gray-50 hover:bg-gray-100 active:scale-[0.98] transition-all cursor-pointer group"
                     onClick={() => navigate(`/teacher/my-subject/students?class=${cls.id}`)}
                   >
-                    <div className="flex items-start justify-between mb-3">
+                    <div className="flex items-start justify-between mb-2 md:mb-3">
                       <div>
-                        <h4 className="font-bold text-gray-900 text-sm">{cls.name}</h4>
-                        <p className="text-xs text-gray-500 mt-0.5">{cls.students} students</p>
+                        <h4 className="font-bold text-gray-900 text-xs md:text-sm">{cls.name}</h4>
+                        <p className="text-[10px] md:text-xs text-gray-500 mt-0.5">{cls.students} students</p>
                       </div>
                       <div className={cn(
-                        "w-9 h-9 rounded-lg flex items-center justify-center font-bold text-xs",
+                        "w-8 h-8 md:w-9 md:h-9 rounded-lg flex items-center justify-center font-bold text-[10px] md:text-xs",
                         cls.avgScore >= 75 ? "bg-emerald-100 text-emerald-700" : "bg-blue-100 text-blue-700"
                       )}>
                         {cls.avgScore}%
                       </div>
                     </div>
-                    <div className="space-y-2">
-                      <div className="flex items-center justify-between text-xs font-medium text-gray-500">
+                    <div className="space-y-1.5 md:space-y-2">
+                      <div className="flex items-center justify-between text-[10px] md:text-xs font-medium text-gray-500">
                         <span>Completion</span>
                         <span className="text-gray-900">{cls.completion}%</span>
                       </div>
-                      <div className="h-1.5 w-full bg-gray-200 rounded-full overflow-hidden">
+                      <div className="h-1 md:h-1.5 w-full bg-gray-200 rounded-full overflow-hidden">
                         <div 
                           className="h-full bg-primary rounded-full transition-all"
                           style={{ width: `${cls.completion}%` }}
@@ -627,39 +629,39 @@ const SubjectTeacherModeView = () => {
         {/* Stats & Alerts Sidebar */}
         <div className="space-y-3">
           {/* Stats Card */}
-          <Card className="border-0 shadow-sm rounded-2xl bg-white">
-            <CardContent className="p-5">
-              <div className="flex items-center gap-2 mb-4">
-                <div className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center">
-                  <Target className="w-4 h-4 text-primary" />
+          <Card className="border-0 shadow-sm rounded-xl md:rounded-2xl bg-white">
+            <CardContent className="p-4 md:p-5">
+              <div className="flex items-center gap-2 mb-3 md:mb-4">
+                <div className="w-7 h-7 md:w-8 md:h-8 rounded-lg bg-primary/10 flex items-center justify-center">
+                  <Target className="w-3.5 md:w-4 h-3.5 md:h-4 text-primary" />
                 </div>
-                <h3 className="text-sm font-bold text-gray-900">Overview</h3>
+                <h3 className="text-xs md:text-sm font-bold text-gray-900">Overview</h3>
               </div>
-              <div className="space-y-3">
+              <div className="space-y-2 md:space-y-3">
                 <div className="flex items-center justify-between">
-                  <span className="text-xs text-gray-600">Total Students</span>
-                  <span className="text-sm font-bold text-gray-900">{totalStudents}</span>
+                  <span className="text-[10px] md:text-xs text-gray-600">Total Students</span>
+                  <span className="text-xs md:text-sm font-bold text-gray-900">{totalStudents}</span>
                 </div>
                 <div className="flex items-center justify-between">
-                  <span className="text-xs text-gray-600">Avg Performance</span>
-                  <span className="text-sm font-bold text-gray-900">{avgScore}%</span>
+                  <span className="text-[10px] md:text-xs text-gray-600">Avg Performance</span>
+                  <span className="text-xs md:text-sm font-bold text-gray-900">{avgScore}%</span>
                 </div>
                 <div className="flex items-center justify-between">
-                  <span className="text-xs text-gray-600">Course Progress</span>
-                  <span className="text-sm font-bold text-gray-900">{avgCompletion}%</span>
+                  <span className="text-[10px] md:text-xs text-gray-600">Course Progress</span>
+                  <span className="text-xs md:text-sm font-bold text-gray-900">{avgCompletion}%</span>
                 </div>
-                <div className="border-t border-gray-100 pt-3 mt-3">
-                  <div className="flex items-center justify-between mb-2">
-                    <span className="text-xs text-gray-600">Active Chapters</span>
-                    <span className="text-sm font-bold text-gray-900">{chapters.length}</span>
+                <div className="border-t border-gray-100 pt-2 md:pt-3 mt-2 md:mt-3">
+                  <div className="flex items-center justify-between mb-1.5 md:mb-2">
+                    <span className="text-[10px] md:text-xs text-gray-600">Active Chapters</span>
+                    <span className="text-xs md:text-sm font-bold text-gray-900">{chapters.length}</span>
                   </div>
-                  <div className="flex items-center justify-between mb-2">
-                    <span className="text-xs text-gray-600">Weak Chapters</span>
-                    <span className="text-sm font-bold text-red-600">{weakChapters}</span>
+                  <div className="flex items-center justify-between mb-1.5 md:mb-2">
+                    <span className="text-[10px] md:text-xs text-gray-600">Weak Chapters</span>
+                    <span className="text-xs md:text-sm font-bold text-red-600">{weakChapters}</span>
                   </div>
                   <div className="flex items-center justify-between">
-                    <span className="text-xs text-gray-600">Strong Performance</span>
-                    <span className="text-sm font-bold text-green-600">{chapters.length - weakChapters}</span>
+                    <span className="text-[10px] md:text-xs text-gray-600">Strong Performance</span>
+                    <span className="text-xs md:text-sm font-bold text-green-600">{chapters.length - weakChapters}</span>
                   </div>
                 </div>
               </div>

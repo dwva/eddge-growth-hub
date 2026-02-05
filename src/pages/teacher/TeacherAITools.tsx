@@ -1,7 +1,8 @@
-import { useState } from 'react';
-import { useNavigate, useSearchParams } from 'react-router-dom';
+import { useState, useEffect } from 'react';
+import { useNavigate, useSearchParams, useLocation } from 'react-router-dom';
 import TeacherDashboardLayout from '@/components/layout/TeacherDashboardLayout';
 import { useTeacherMode } from '@/contexts/TeacherModeContext';
+import { useAssessmentIntegration } from '@/utils/assessmentIntegration';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
@@ -16,7 +17,7 @@ import { Switch } from '@/components/ui/switch';
 import { 
   ArrowLeft, Sparkles, Brain, FileText, Loader2, CheckCircle, Save, Users, AlertCircle, Download,
   Library, BookmarkPlus, Search, Filter, Star, Check, X, AlertTriangle, Info, Eye, Trash2, Edit,
-  ThumbsUp, ThumbsDown, Shield, Target, TrendingUp
+  ThumbsUp, ThumbsDown, Shield, Target, TrendingUp, Upload, FileUp, Plus
 } from 'lucide-react';
 import { chapters, questionLibrary } from '@/data/teacherMockData';
 import { toast } from 'sonner';
@@ -41,8 +42,10 @@ interface GeneratedQuestion {
 
 const TeacherAIToolsContent = () => {
   const navigate = useNavigate();
+  const location = useLocation();
   const [searchParams] = useSearchParams();
   const { currentMode } = useTeacherMode();
+  const { saveGeneratedAsAssessment } = useAssessmentIntegration();
   const defaultTab = searchParams.get('tab') === 'worksheet' ? 'worksheet' : searchParams.get('tab') === 'library' ? 'library' : 'questions';
   const [activeTab, setActiveTab] = useState(defaultTab);
   const [isGenerating, setIsGenerating] = useState(false);
@@ -52,7 +55,15 @@ const TeacherAIToolsContent = () => {
   const [blueprintMode, setBlueprintMode] = useState(false);
   const [savedQuestions, setSavedQuestions] = useState(questionLibrary);
   const [librarySearch, setLibrarySearch] = useState('');
-  const [libraryFilters, setLibraryFilters] = useState({ difficulty: 'all', chapter: 'all', type: 'all' });
+
+  // Handle return from Assessments to add more questions
+  useEffect(() => {
+    if (location.state?.returnTo === 'assessments' && location.state?.existingQuestions) {
+      setGeneratedQuestions(location.state.existingQuestions);
+      toast.info('Continue adding questions for your assessment');
+    }
+  }, [location.state]);
+  const [libraryFilters, setLibraryFilters] = useState({ difficulty: 'all', chapter: 'all', type: 'all', class: 'all' });
 
   const [formData, setFormData] = useState({
     class: '',
@@ -77,6 +88,13 @@ const TeacherAIToolsContent = () => {
     duration: '60',
     dueDate: '',
   });
+
+  // PDF Upload State
+  const [uploadedFile, setUploadedFile] = useState<File | null>(null);
+  const [extractedQuestions, setExtractedQuestions] = useState<GeneratedQuestion[]>([]);
+  const [isExtracting, setIsExtracting] = useState(false);
+  const [editingQuestionId, setEditingQuestionId] = useState<string | null>(null);
+  const [editedQuestion, setEditedQuestion] = useState<Partial<GeneratedQuestion>>({});
 
   // Mode restriction
   if (currentMode !== 'subject_teacher') {
@@ -167,6 +185,7 @@ const TeacherAIToolsContent = () => {
     const newQuestion = {
       ...question,
       id: `ql${savedQuestions.length + 1}`,
+      class: formData.class || 'Not specified',
       chapter: formData.chapter || 'General',
       topic: formData.topic || 'General',
       subject: formData.subject,
@@ -193,7 +212,8 @@ const TeacherAIToolsContent = () => {
     const matchesDifficulty = libraryFilters.difficulty === 'all' || q.difficulty === libraryFilters.difficulty;
     const matchesChapter = libraryFilters.chapter === 'all' || q.chapter === libraryFilters.chapter;
     const matchesType = libraryFilters.type === 'all' || q.type === libraryFilters.type;
-    return matchesSearch && matchesDifficulty && matchesChapter && matchesType;
+    const matchesClass = libraryFilters.class === 'all' || q.class === libraryFilters.class;
+    return matchesSearch && matchesDifficulty && matchesChapter && matchesType && matchesClass;
   });
 
   const handleSave = () => {
@@ -208,6 +228,150 @@ const TeacherAIToolsContent = () => {
   const handleAssign = () => {
     toast.success('Assessment assigned to class!');
     setIsAssignDialogOpen(false);
+  };
+
+  // PDF Upload Handlers
+  const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (file && file.type === 'application/pdf') {
+      setUploadedFile(file);
+      toast.success(`File "${file.name}" uploaded successfully`);
+    } else {
+      toast.error('Please upload a PDF file');
+    }
+  };
+
+  const handleExtractQuestions = async () => {
+    if (!uploadedFile) {
+      toast.error('Please upload a PDF file first');
+      return;
+    }
+
+    setIsExtracting(true);
+    
+    // Simulate extraction delay
+    await new Promise(resolve => setTimeout(resolve, 2000));
+
+    // Mock extracted questions
+    const mockExtracted: GeneratedQuestion[] = [
+      {
+        id: `ext-${Date.now()}-1`,
+        type: 'mcq',
+        question: 'What is the value of x in the equation 2x + 5 = 15?',
+        options: ['x = 5', 'x = 10', 'x = 7.5', 'x = 20'],
+        correctAnswer: 'x = 5',
+        explanation: 'Solving: 2x = 15 - 5 = 10, therefore x = 5',
+        marks: 1,
+        difficulty: 'easy',
+        cbseAligned: true,
+        bloomsLevel: 'Apply',
+        aiConfidence: 92,
+        issues: [],
+        approved: false
+      },
+      {
+        id: `ext-${Date.now()}-2`,
+        type: 'short',
+        question: 'Solve the quadratic equation: x² - 5x + 6 = 0',
+        correctAnswer: 'x = 2 or x = 3',
+        explanation: 'Factoring: (x - 2)(x - 3) = 0, so x = 2 or x = 3',
+        marks: 3,
+        difficulty: 'medium',
+        cbseAligned: true,
+        bloomsLevel: 'Apply',
+        aiConfidence: 88,
+        issues: [],
+        approved: false
+      },
+      {
+        id: `ext-${Date.now()}-3`,
+        type: 'mcq',
+        question: 'Which of the following is a rational number?',
+        options: ['√2', 'π', '22/7', 'e'],
+        correctAnswer: '22/7',
+        explanation: '22/7 is a fraction and therefore a rational number',
+        marks: 1,
+        difficulty: 'easy',
+        cbseAligned: true,
+        bloomsLevel: 'Remember',
+        aiConfidence: 95,
+        issues: [],
+        approved: false
+      },
+      {
+        id: `ext-${Date.now()}-4`,
+        type: 'long',
+        question: 'Prove that the sum of angles in a triangle is 180 degrees.',
+        correctAnswer: 'Proof using parallel lines and alternate angles',
+        explanation: 'Draw a line parallel to one side through the opposite vertex. Use alternate and corresponding angles to show the sum equals 180°.',
+        marks: 5,
+        difficulty: 'hard',
+        cbseAligned: true,
+        bloomsLevel: 'Analyze',
+        aiConfidence: 85,
+        issues: ['Requires geometric diagram'],
+        approved: false
+      }
+    ];
+
+    setExtractedQuestions(mockExtracted);
+    setIsExtracting(false);
+    toast.success(`${mockExtracted.length} questions extracted from PDF`);
+  };
+
+  const handleEditQuestion = (questionId: string) => {
+    const question = extractedQuestions.find(q => q.id === questionId);
+    if (question) {
+      setEditingQuestionId(questionId);
+      setEditedQuestion(question);
+    }
+  };
+
+  const handleSaveEdit = () => {
+    if (!editingQuestionId) return;
+    
+    setExtractedQuestions(prev =>
+      prev.map(q => q.id === editingQuestionId ? { ...q, ...editedQuestion } as GeneratedQuestion : q)
+    );
+    setEditingQuestionId(null);
+    setEditedQuestion({});
+    toast.success('Question updated successfully');
+  };
+
+  const handleDeleteExtracted = (questionId: string) => {
+    setExtractedQuestions(prev => prev.filter(q => q.id !== questionId));
+    toast.success('Question deleted');
+  };
+
+  const handleCombineQuestions = () => {
+    if (extractedQuestions.length === 0) {
+      toast.error('No extracted questions to combine');
+      return;
+    }
+    
+    const combined = [...generatedQuestions, ...extractedQuestions];
+    setGeneratedQuestions(combined);
+    toast.success(`Combined ${extractedQuestions.length} PDF questions with ${generatedQuestions.length} AI-generated questions`);
+    
+    // Clear extracted questions after combining
+    setExtractedQuestions([]);
+    setUploadedFile(null);
+    
+    // Switch to questions tab to show combined results
+    setActiveTab('questions');
+  };
+
+  const handleAddExtractedToGenerated = () => {
+    if (extractedQuestions.length === 0) {
+      toast.error('No extracted questions available');
+      return;
+    }
+    
+    setGeneratedQuestions(prev => [...prev, ...extractedQuestions]);
+    toast.success(`Added ${extractedQuestions.length} questions to generated list`);
+    setExtractedQuestions([]);
+    setUploadedFile(null);
+    setActiveTab('questions');
   };
 
   const selectedChapter = chapters.find(ch => ch.id === formData.chapter);
@@ -231,6 +395,10 @@ const TeacherAIToolsContent = () => {
           <TabsTrigger value="questions" className="gap-2 text-xs px-3 py-1.5 h-7 data-[state=active]:bg-white data-[state=active]:shadow-sm rounded-md">
             <Sparkles className="w-3.5 h-3.5" />
             Question Generator
+          </TabsTrigger>
+          <TabsTrigger value="pdf-upload" className="gap-2 text-xs px-3 py-1.5 h-7 data-[state=active]:bg-white data-[state=active]:shadow-sm rounded-md">
+            <Upload className="w-3.5 h-3.5" />
+            PDF Upload
           </TabsTrigger>
           <TabsTrigger value="library" className="gap-2 text-xs px-3 py-1.5 h-7 data-[state=active]:bg-white data-[state=active]:shadow-sm rounded-md">
             <Library className="w-3.5 h-3.5" />
@@ -535,6 +703,16 @@ const TeacherAIToolsContent = () => {
                           <Save className="w-4 h-4 mr-1" />
                           Save
                         </Button>
+                        <Button variant="outline" size="sm" onClick={() => {
+                          saveGeneratedAsAssessment(generatedQuestions, {
+                            subject: formData.subject,
+                            chapter: formData.chapter,
+                            topic: formData.topic,
+                          });
+                        }}>
+                          <FileText className="w-4 h-4 mr-1" />
+                          Create Assessment
+                        </Button>
                         <Button size="sm" onClick={() => setIsAssignDialogOpen(true)}>
                           <Users className="w-4 h-4 mr-1" />
                           Assign
@@ -665,6 +843,268 @@ const TeacherAIToolsContent = () => {
           </div>
         </TabsContent>
 
+        {/* PDF Upload Tab */}
+        <TabsContent value="pdf-upload" className="space-y-6">
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <FileUp className="w-5 h-5" />
+                PDF Question Extraction
+              </CardTitle>
+              <CardDescription>
+                Upload existing question papers or study materials to extract questions automatically
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-6">
+              {/* File Upload Section */}
+              <div className="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center hover:border-primary transition-colors">
+                <div className="space-y-4">
+                  <div className="mx-auto w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center">
+                    <Upload className="w-8 h-8 text-primary" />
+                  </div>
+                  <div>
+                    <h3 className="font-medium text-lg mb-1">
+                      {uploadedFile ? uploadedFile.name : 'Upload PDF Document'}
+                    </h3>
+                    <p className="text-sm text-muted-foreground mb-4">
+                      {uploadedFile 
+                        ? `File size: ${(uploadedFile.size / 1024).toFixed(2)} KB`
+                        : 'Click to browse or drag and drop your PDF file here'
+                      }
+                    </p>
+                  </div>
+                  <div className="flex gap-3 justify-center">
+                    <Input
+                      type="file"
+                      accept=".pdf"
+                      onChange={handleFileUpload}
+                      className="hidden"
+                      id="pdf-upload"
+                    />
+                    <label htmlFor="pdf-upload">
+                      <Button variant="outline" asChild>
+                        <span>
+                          <FileUp className="w-4 h-4 mr-2" />
+                          {uploadedFile ? 'Change File' : 'Choose File'}
+                        </span>
+                      </Button>
+                    </label>
+                    {uploadedFile && (
+                      <Button onClick={handleExtractQuestions} disabled={isExtracting}>
+                        {isExtracting ? (
+                          <>
+                            <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                            Extracting...
+                          </>
+                        ) : (
+                          <>
+                            <Sparkles className="w-4 h-4 mr-2" />
+                            Extract Questions
+                          </>
+                        )}
+                      </Button>
+                    )}
+                  </div>
+                </div>
+              </div>
+
+              {/* Extracted Questions */}
+              {extractedQuestions.length > 0 && (
+                <div className="space-y-4">
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-2">
+                      <h3 className="font-semibold">Extracted Questions</h3>
+                      <Badge variant="secondary">{extractedQuestions.length} questions</Badge>
+                    </div>
+                    <div className="flex gap-2">
+                      <Button onClick={handleAddExtractedToGenerated} size="sm">
+                        <Plus className="w-4 h-4 mr-2" />
+                        Add to Generated
+                      </Button>
+                      <Button onClick={handleCombineQuestions} size="sm" variant="default">
+                        <CheckCircle className="w-4 h-4 mr-2" />
+                        Combine with AI Questions
+                      </Button>
+                    </div>
+                  </div>
+
+                  <div className="space-y-3">
+                    {extractedQuestions.map((question, index) => (
+                      <Card key={question.id} className="border-l-4 border-l-blue-500">
+                        <CardContent className="p-4">
+                          {editingQuestionId === question.id ? (
+                            // Edit Mode
+                            <div className="space-y-3">
+                              <div className="space-y-2">
+                                <Label>Question</Label>
+                                <Textarea
+                                  value={editedQuestion.question || question.question}
+                                  onChange={(e) => setEditedQuestion(prev => ({ ...prev, question: e.target.value }))}
+                                  rows={3}
+                                />
+                              </div>
+                              {question.type === 'mcq' && (
+                                <div className="space-y-2">
+                                  <Label>Options</Label>
+                                  {question.options?.map((opt, i) => (
+                                    <Input
+                                      key={i}
+                                      value={editedQuestion.options?.[i] || opt}
+                                      onChange={(e) => {
+                                        const newOptions = [...(editedQuestion.options || question.options || [])];
+                                        newOptions[i] = e.target.value;
+                                        setEditedQuestion(prev => ({ ...prev, options: newOptions }));
+                                      }}
+                                    />
+                                  ))}
+                                </div>
+                              )}
+                              <div className="grid grid-cols-2 gap-3">
+                                <div className="space-y-2">
+                                  <Label>Correct Answer</Label>
+                                  <Input
+                                    value={editedQuestion.correctAnswer || question.correctAnswer}
+                                    onChange={(e) => setEditedQuestion(prev => ({ ...prev, correctAnswer: e.target.value }))}
+                                  />
+                                </div>
+                                <div className="space-y-2">
+                                  <Label>Marks</Label>
+                                  <Input
+                                    type="number"
+                                    value={editedQuestion.marks || question.marks}
+                                    onChange={(e) => setEditedQuestion(prev => ({ ...prev, marks: parseInt(e.target.value) }))}
+                                  />
+                                </div>
+                              </div>
+                              <div className="space-y-2">
+                                <Label>Explanation</Label>
+                                <Textarea
+                                  value={editedQuestion.explanation || question.explanation}
+                                  onChange={(e) => setEditedQuestion(prev => ({ ...prev, explanation: e.target.value }))}
+                                  rows={2}
+                                />
+                              </div>
+                              <div className="flex gap-2 justify-end">
+                                <Button size="sm" variant="outline" onClick={() => setEditingQuestionId(null)}>
+                                  Cancel
+                                </Button>
+                                <Button size="sm" onClick={handleSaveEdit}>
+                                  <Save className="w-4 h-4 mr-2" />
+                                  Save Changes
+                                </Button>
+                              </div>
+                            </div>
+                          ) : (
+                            // View Mode
+                            <div className="space-y-3">
+                              <div className="flex items-start justify-between gap-4">
+                                <div className="flex-1">
+                                  <div className="flex items-center gap-2 mb-2">
+                                    <Badge variant="outline" className="text-xs">Q{index + 1}</Badge>
+                                    <Badge variant="secondary" className="text-xs">{question.type.toUpperCase()}</Badge>
+                                    <Badge variant="secondary" className="text-xs">{question.marks} marks</Badge>
+                                    <Badge className={cn(
+                                      "text-xs",
+                                      question.difficulty === 'easy' && "bg-green-500",
+                                      question.difficulty === 'medium' && "bg-yellow-500",
+                                      question.difficulty === 'hard' && "bg-red-500"
+                                    )}>
+                                      {question.difficulty}
+                                    </Badge>
+                                  </div>
+                                  <p className="font-medium mb-2">{question.question}</p>
+                                  {question.options && (
+                                    <div className="space-y-1 ml-4 mb-2">
+                                      {question.options.map((opt, i) => (
+                                        <div key={i} className="flex items-center gap-2">
+                                          <span className={cn(
+                                            "text-sm",
+                                            opt === question.correctAnswer && "text-green-600 font-medium"
+                                          )}>
+                                            {String.fromCharCode(65 + i)}. {opt}
+                                            {opt === question.correctAnswer && " ✓"}
+                                          </span>
+                                        </div>
+                                      ))}
+                                    </div>
+                                  )}
+                                  <div className="text-sm text-muted-foreground">
+                                    <span className="font-medium">Answer:</span> {question.correctAnswer}
+                                  </div>
+                                  {question.explanation && (
+                                    <div className="text-sm text-muted-foreground mt-1">
+                                      <span className="font-medium">Explanation:</span> {question.explanation}
+                                    </div>
+                                  )}
+                                  
+                                  {/* Quality Indicators */}
+                                  <div className="flex gap-2 mt-3">
+                                    {question.cbseAligned && (
+                                      <Badge variant="outline" className="text-xs gap-1">
+                                        <Shield className="w-3 h-3" />
+                                        CBSE Aligned
+                                      </Badge>
+                                    )}
+                                    <Badge variant="outline" className="text-xs gap-1">
+                                      <Brain className="w-3 h-3" />
+                                      {question.bloomsLevel}
+                                    </Badge>
+                                    <Badge variant="outline" className="text-xs gap-1">
+                                      <TrendingUp className="w-3 h-3" />
+                                      {question.aiConfidence}% Confidence
+                                    </Badge>
+                                  </div>
+
+                                  {question.issues.length > 0 && (
+                                    <div className="mt-2 p-2 bg-yellow-50 border border-yellow-200 rounded text-xs text-yellow-800">
+                                      <div className="flex items-center gap-1">
+                                        <AlertTriangle className="w-3 h-3" />
+                                        <span className="font-medium">Issues:</span>
+                                      </div>
+                                      <ul className="ml-4 mt-1">
+                                        {question.issues.map((issue, i) => (
+                                          <li key={i}>• {issue}</li>
+                                        ))}
+                                      </ul>
+                                    </div>
+                                  )}
+                                </div>
+                                <div className="flex gap-1">
+                                  <Button size="sm" variant="ghost" onClick={() => handleEditQuestion(question.id)}>
+                                    <Edit className="w-4 h-4" />
+                                  </Button>
+                                  <Button size="sm" variant="ghost" onClick={() => handleDeleteExtracted(question.id)}>
+                                    <Trash2 className="w-4 h-4 text-red-500" />
+                                  </Button>
+                                </div>
+                              </div>
+                            </div>
+                          )}
+                        </CardContent>
+                      </Card>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {/* Help Text */}
+              {extractedQuestions.length === 0 && !uploadedFile && (
+                <div className="text-center py-8">
+                  <Info className="w-12 h-12 text-muted-foreground mx-auto mb-3" />
+                  <h3 className="font-medium mb-2">How PDF Extraction Works</h3>
+                  <div className="text-sm text-muted-foreground max-w-2xl mx-auto space-y-2">
+                    <p>1. Upload a PDF containing questions (question papers, worksheets, practice sets)</p>
+                    <p>2. AI will automatically extract questions, answers, and explanations</p>
+                    <p>3. Review and edit extracted questions as needed</p>
+                    <p>4. Combine with AI-generated questions or use independently</p>
+                    <p>5. Save to library or assign directly to students</p>
+                  </div>
+                </div>
+              )}
+            </CardContent>
+          </Card>
+        </TabsContent>
+
         {/* Question Library Tab */}
         <TabsContent value="library" className="space-y-6">
           <Card>
@@ -693,6 +1133,19 @@ const TeacherAIToolsContent = () => {
                     className="pl-10"
                   />
                 </div>
+                <Select value={libraryFilters.class} onValueChange={(v) => setLibraryFilters(prev => ({ ...prev, class: v }))}>
+                  <SelectTrigger className="w-full sm:w-[150px]">
+                    <SelectValue placeholder="Class" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="all">All Classes</SelectItem>
+                    <SelectItem value="8">Class 8</SelectItem>
+                    <SelectItem value="9">Class 9</SelectItem>
+                    <SelectItem value="10">Class 10</SelectItem>
+                    <SelectItem value="11">Class 11</SelectItem>
+                    <SelectItem value="12">Class 12</SelectItem>
+                  </SelectContent>
+                </Select>
                 <Select value={libraryFilters.difficulty} onValueChange={(v) => setLibraryFilters(prev => ({ ...prev, difficulty: v }))}>
                   <SelectTrigger className="w-full sm:w-[150px]">
                     <SelectValue placeholder="Difficulty" />
@@ -724,6 +1177,7 @@ const TeacherAIToolsContent = () => {
                     <TableRow>
                       <TableHead className="w-12"></TableHead>
                       <TableHead>Question</TableHead>
+                      <TableHead>Class</TableHead>
                       <TableHead>Chapter</TableHead>
                       <TableHead>Type</TableHead>
                       <TableHead>Difficulty</TableHead>
@@ -766,6 +1220,11 @@ const TeacherAIToolsContent = () => {
                                 </div>
                               </div>
                             </div>
+                          </TableCell>
+                          <TableCell>
+                            <Badge variant="secondary" className="text-xs">
+                              {q.class || 'Not specified'}
+                            </Badge>
                           </TableCell>
                           <TableCell>
                             <div className="text-sm">
