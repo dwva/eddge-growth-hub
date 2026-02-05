@@ -357,8 +357,8 @@ const StudentPlanner = () => {
               </TabsList>
 
               <div className="grid grid-cols-1 lg:grid-cols-[1fr_320px] gap-6 mt-6">
-                <div className="flex flex-col min-w-0 min-h-[calc(100vh-12rem)]">
-                  <TabsContent value="dashboard" className="mt-0 flex flex-col flex-1 min-h-0">
+                <div className="flex flex-col min-w-0 min-h-[calc(100vh-12rem)] max-h-[calc(100vh-6rem)]">
+                  <TabsContent value="dashboard" className="mt-0 flex flex-col flex-1 min-h-0 overflow-hidden">
                     <div className="shrink-0 space-y-6">
                       <PlannerStats
                         completedToday={completedToday}
@@ -367,7 +367,7 @@ const StudentPlanner = () => {
                         cognitiveLoad={plannerStubs.cognitiveLoad}
                       />
                     </div>
-                    <div className="flex-1 min-h-0 mt-6">
+                    <div className="flex-1 min-h-0 max-h-[42vh] mt-6 overflow-hidden">
                       <TodaysSchedule
                         tasks={tasksToday}
                         onViewCalendar={() => setActiveTab('calendar')}

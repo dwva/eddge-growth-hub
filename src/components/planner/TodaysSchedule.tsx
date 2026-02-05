@@ -12,7 +12,7 @@ type TodaysScheduleProps = {
 };
 
 export const TodaysSchedule = ({ tasks, onViewCalendar, onAddTask, onStart }: TodaysScheduleProps) => (
-  <Card className="border border-gray-200 shadow-sm rounded-2xl overflow-hidden flex flex-col min-h-0 sticky top-4">
+  <Card className="border border-gray-200 shadow-sm rounded-2xl overflow-hidden flex flex-col min-h-0 h-full sticky top-4">
     <CardContent className="p-6 flex flex-col flex-1 min-h-0">
       <div className="flex items-center justify-between mb-4 shrink-0">
         <div className="flex items-center gap-2">
