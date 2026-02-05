@@ -1,4 +1,5 @@
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
+import { useNavigate } from 'react-router-dom';
 import AdminDashboardLayout from '@/components/layout/AdminDashboardLayout';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -38,26 +39,153 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-
-const teachersData = [
-  { id: 1, name: 'Dr. Sarah Johnson', email: 'sarah.j@school.edu', phone: '+91 98765 43210', subject: 'Mathematics', classes: ['10-A', '10-B', '9-A'], status: 'active', joinDate: '2022-06-15' },
-  { id: 2, name: 'Mr. Rajesh Kumar', email: 'rajesh.k@school.edu', phone: '+91 98765 43211', subject: 'Science', classes: ['9-A', '9-B'], status: 'active', joinDate: '2021-04-20' },
-  { id: 3, name: 'Ms. Priya Sharma', email: 'priya.s@school.edu', phone: '+91 98765 43212', subject: 'English', classes: ['10-A', '11-A'], status: 'active', joinDate: '2023-01-10' },
-  { id: 4, name: 'Mr. David Wilson', email: 'david.w@school.edu', phone: '+91 98765 43213', subject: 'History', classes: ['9-B', '10-B'], status: 'on_leave', joinDate: '2020-08-05' },
-  { id: 5, name: 'Ms. Anita Patel', email: 'anita.p@school.edu', phone: '+91 98765 43214', subject: 'Geography', classes: ['11-A', '11-B'], status: 'active', joinDate: '2022-11-01' },
-];
+import { useAdminData } from '@/contexts/AdminDataContext';
+import { toast } from '@/hooks/use-toast';
 
 const AdminTeachers = () => {
+  const navigate = useNavigate();
+  const { state, dispatch } = useAdminData();
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedSubject, setSelectedSubject] = useState('all');
   const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
-
-  const filteredTeachers = teachersData.filter(teacher => {
-    const matchesSearch = teacher.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                         teacher.email.toLowerCase().includes(searchQuery.toLowerCase());
-    const matchesSubject = selectedSubject === 'all' || teacher.subject === selectedSubject;
-    return matchesSearch && matchesSubject;
+  const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
+  const [editingTeacher, setEditingTeacher] = useState<number | null>(null);
+  const [formData, setFormData] = useState({
+    name: '',
+    email: '',
+    phone: '',
+    subjects: [] as string[],
+    status: 'Active' as 'Active' | 'OnLeave',
   });
+
+  // Get unique subjects from all teachers
+  const allSubjects = useMemo(() => {
+    const subjects = new Set<string>();
+    state.teachers.forEach(t => t.subjects.forEach(s => subjects.add(s)));
+    return Array.from(subjects).sort();
+  }, [state.teachers]);
+
+  // Compute stats
+  const stats = useMemo(() => {
+    const total = state.teachers.length;
+    const active = state.teachers.filter(t => t.status === 'Active').length;
+    const onLeave = state.teachers.filter(t => t.status === 'OnLeave').length;
+    const thisMonth = new Date();
+    const newThisMonth = state.teachers.filter(t => {
+      const joinDate = new Date(t.joinDate);
+      return joinDate.getMonth() === thisMonth.getMonth() && 
+             joinDate.getFullYear() === thisMonth.getFullYear();
+    }).length;
+    return { total, active, onLeave, newThisMonth };
+  }, [state.teachers]);
+
+  const filteredTeachers = useMemo(() => {
+    return state.teachers.filter(teacher => {
+      const matchesSearch = teacher.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                           teacher.email.toLowerCase().includes(searchQuery.toLowerCase());
+      const matchesSubject = selectedSubject === 'all' || 
+                            teacher.subjects.some(s => s === selectedSubject);
+      return matchesSearch && matchesSubject;
+    });
+  }, [state.teachers, searchQuery, selectedSubject]);
+
+  // Get classes taught by a teacher (derived from classes where they are class teacher)
+  const getTeacherClasses = (teacherId: number) => {
+    return state.classes
+      .filter(c => c.classTeacherId === teacherId)
+      .map(c => `${c.grade}-${c.section}`);
+  };
+
+  const handleAddTeacher = () => {
+    if (!formData.name || !formData.email || formData.subjects.length === 0) {
+      toast({
+        title: 'Validation Error',
+        description: 'Please fill in all required fields.',
+        variant: 'destructive',
+      });
+      return;
+    }
+
+    const newTeacher = {
+      id: `${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
+      name: formData.name,
+      email: formData.email,
+      phone: formData.phone,
+      subjects: formData.subjects,
+      status: formData.status,
+      joinDate: new Date().toISOString().split('T')[0],
+    };
+
+    dispatch({ type: 'ADD_TEACHER', payload: newTeacher });
+    toast({
+      title: 'Success',
+      description: 'Teacher added successfully.',
+    });
+    setIsAddDialogOpen(false);
+    setFormData({ name: '', email: '', phone: '', subjects: [], status: 'Active' });
+  };
+
+  const handleEditTeacher = (teacherId: number) => {
+    const teacher = state.teachers.find(t => t.id === teacherId);
+    if (!teacher) return;
+    setEditingTeacher(teacherId);
+    setFormData({
+      name: teacher.name,
+      email: teacher.email,
+      phone: teacher.phone,
+      subjects: teacher.subjects,
+      status: teacher.status,
+    });
+    setIsEditDialogOpen(true);
+  };
+
+  const handleUpdateTeacher = () => {
+    if (!editingTeacher || !formData.name || !formData.email || formData.subjects.length === 0) {
+      toast({
+        title: 'Validation Error',
+        description: 'Please fill in all required fields.',
+        variant: 'destructive',
+      });
+      return;
+    }
+
+    const updatedTeacher = {
+      ...state.teachers.find(t => t.id === editingTeacher)!,
+      name: formData.name,
+      email: formData.email,
+      phone: formData.phone,
+      subjects: formData.subjects,
+      status: formData.status,
+    };
+
+    dispatch({ type: 'UPDATE_TEACHER', payload: updatedTeacher });
+    toast({
+      title: 'Success',
+      description: 'Teacher updated successfully.',
+    });
+    setIsEditDialogOpen(false);
+    setEditingTeacher(null);
+    setFormData({ name: '', email: '', phone: '', subjects: [], status: 'Active' });
+  };
+
+  const handleDeleteTeacher = (teacherId: number) => {
+    if (confirm('Are you sure you want to delete this teacher?')) {
+      dispatch({ type: 'DELETE_TEACHER', payload: { id: teacherId } });
+      toast({
+        title: 'Success',
+        description: 'Teacher deleted successfully.',
+      });
+    }
+  };
+
+  const toggleSubject = (subject: string) => {
+    setFormData(prev => ({
+      ...prev,
+      subjects: prev.subjects.includes(subject)
+        ? prev.subjects.filter(s => s !== subject)
+        : [...prev.subjects, subject],
+    }));
+  };
 
   return (
     <AdminDashboardLayout 
@@ -69,25 +197,25 @@ const AdminTeachers = () => {
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
           <Card className="bg-primary/5 border-primary/20">
             <CardContent className="p-4">
-              <div className="text-2xl font-bold text-primary">48</div>
+              <div className="text-2xl font-bold text-primary">{stats.total}</div>
               <div className="text-sm text-muted-foreground">Total Teachers</div>
             </CardContent>
           </Card>
           <Card>
             <CardContent className="p-4">
-              <div className="text-2xl font-bold text-green-600">42</div>
+              <div className="text-2xl font-bold text-green-600">{stats.active}</div>
               <div className="text-sm text-muted-foreground">Active</div>
             </CardContent>
           </Card>
           <Card>
             <CardContent className="p-4">
-              <div className="text-2xl font-bold text-amber-600">4</div>
+              <div className="text-2xl font-bold text-amber-600">{stats.onLeave}</div>
               <div className="text-sm text-muted-foreground">On Leave</div>
             </CardContent>
           </Card>
           <Card>
             <CardContent className="p-4">
-              <div className="text-2xl font-bold text-blue-600">2</div>
+              <div className="text-2xl font-bold text-blue-600">{stats.newThisMonth}</div>
               <div className="text-sm text-muted-foreground">New This Month</div>
             </CardContent>
           </Card>
@@ -113,11 +241,9 @@ const AdminTeachers = () => {
                   </SelectTrigger>
                   <SelectContent>
                     <SelectItem value="all">All Subjects</SelectItem>
-                    <SelectItem value="Mathematics">Mathematics</SelectItem>
-                    <SelectItem value="Science">Science</SelectItem>
-                    <SelectItem value="English">English</SelectItem>
-                    <SelectItem value="History">History</SelectItem>
-                    <SelectItem value="Geography">Geography</SelectItem>
+                    {allSubjects.map(subject => (
+                      <SelectItem key={subject} value={subject}>{subject}</SelectItem>
+                    ))}
                   </SelectContent>
                 </Select>
                 <Button variant="outline" className="gap-2">
@@ -141,37 +267,163 @@ const AdminTeachers = () => {
                     <div className="space-y-4 py-4">
                       <div className="space-y-2">
                         <Label>Full Name</Label>
-                        <Input placeholder="Enter teacher's name" />
+                        <Input 
+                          placeholder="Enter teacher's name" 
+                          value={formData.name}
+                          onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                        />
                       </div>
                       <div className="grid grid-cols-2 gap-4">
                         <div className="space-y-2">
                           <Label>Email</Label>
-                          <Input placeholder="email@school.edu" />
+                          <Input 
+                            placeholder="email@school.edu" 
+                            type="email"
+                            value={formData.email}
+                            onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                          />
                         </div>
                         <div className="space-y-2">
                           <Label>Phone</Label>
-                          <Input placeholder="+91 98765 43210" />
+                          <Input 
+                            placeholder="+91 98765 43210" 
+                            value={formData.phone}
+                            onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
+                          />
                         </div>
                       </div>
                       <div className="space-y-2">
-                        <Label>Subject</Label>
-                        <Select>
+                        <Label>Subjects</Label>
+                        <div className="flex flex-wrap gap-2 p-3 border rounded-md min-h-[60px]">
+                          {formData.subjects.length === 0 ? (
+                            <span className="text-sm text-muted-foreground">No subjects selected</span>
+                          ) : (
+                            formData.subjects.map(subject => (
+                              <Badge key={subject} variant="secondary" className="cursor-pointer" onClick={() => toggleSubject(subject)}>
+                                {subject} ×
+                              </Badge>
+                            ))
+                          )}
+                        </div>
+                        <div className="flex flex-wrap gap-2 mt-2">
+                          {['Mathematics', 'Science', 'English', 'History', 'Geography', 'Physics', 'Chemistry', 'Biology'].map(subject => (
+                            <Button
+                              key={subject}
+                              type="button"
+                              variant={formData.subjects.includes(subject) ? 'default' : 'outline'}
+                              size="sm"
+                              onClick={() => toggleSubject(subject)}
+                            >
+                              {subject}
+                            </Button>
+                          ))}
+                        </div>
+                      </div>
+                      <div className="space-y-2">
+                        <Label>Status</Label>
+                        <Select value={formData.status} onValueChange={(value: 'Active' | 'OnLeave') => setFormData({ ...formData, status: value })}>
                           <SelectTrigger>
-                            <SelectValue placeholder="Select subject" />
+                            <SelectValue />
                           </SelectTrigger>
                           <SelectContent>
-                            <SelectItem value="Mathematics">Mathematics</SelectItem>
-                            <SelectItem value="Science">Science</SelectItem>
-                            <SelectItem value="English">English</SelectItem>
-                            <SelectItem value="History">History</SelectItem>
-                            <SelectItem value="Geography">Geography</SelectItem>
+                            <SelectItem value="Active">Active</SelectItem>
+                            <SelectItem value="OnLeave">On Leave</SelectItem>
                           </SelectContent>
                         </Select>
                       </div>
                     </div>
                     <DialogFooter>
-                      <Button variant="outline" onClick={() => setIsAddDialogOpen(false)}>Cancel</Button>
-                      <Button className="bg-primary hover:bg-primary/90" onClick={() => setIsAddDialogOpen(false)}>Add Teacher</Button>
+                      <Button variant="outline" onClick={() => {
+                        setIsAddDialogOpen(false);
+                        setFormData({ name: '', email: '', phone: '', subjects: [], status: 'Active' });
+                      }}>Cancel</Button>
+                      <Button className="bg-primary hover:bg-primary/90" onClick={handleAddTeacher}>Add Teacher</Button>
+                    </DialogFooter>
+                  </DialogContent>
+                </Dialog>
+                <Dialog open={isEditDialogOpen} onOpenChange={setIsEditDialogOpen}>
+                  <DialogContent className="sm:max-w-md">
+                    <DialogHeader>
+                      <DialogTitle>Edit Teacher</DialogTitle>
+                      <DialogDescription>
+                        Update the teacher's details.
+                      </DialogDescription>
+                    </DialogHeader>
+                    <div className="space-y-4 py-4">
+                      <div className="space-y-2">
+                        <Label>Full Name</Label>
+                        <Input 
+                          placeholder="Enter teacher's name" 
+                          value={formData.name}
+                          onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                        />
+                      </div>
+                      <div className="grid grid-cols-2 gap-4">
+                        <div className="space-y-2">
+                          <Label>Email</Label>
+                          <Input 
+                            placeholder="email@school.edu" 
+                            type="email"
+                            value={formData.email}
+                            onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                          />
+                        </div>
+                        <div className="space-y-2">
+                          <Label>Phone</Label>
+                          <Input 
+                            placeholder="+91 98765 43210" 
+                            value={formData.phone}
+                            onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
+                          />
+                        </div>
+                      </div>
+                      <div className="space-y-2">
+                        <Label>Subjects</Label>
+                        <div className="flex flex-wrap gap-2 p-3 border rounded-md min-h-[60px]">
+                          {formData.subjects.length === 0 ? (
+                            <span className="text-sm text-muted-foreground">No subjects selected</span>
+                          ) : (
+                            formData.subjects.map(subject => (
+                              <Badge key={subject} variant="secondary" className="cursor-pointer" onClick={() => toggleSubject(subject)}>
+                                {subject} ×
+                              </Badge>
+                            ))
+                          )}
+                        </div>
+                        <div className="flex flex-wrap gap-2 mt-2">
+                          {['Mathematics', 'Science', 'English', 'History', 'Geography', 'Physics', 'Chemistry', 'Biology'].map(subject => (
+                            <Button
+                              key={subject}
+                              type="button"
+                              variant={formData.subjects.includes(subject) ? 'default' : 'outline'}
+                              size="sm"
+                              onClick={() => toggleSubject(subject)}
+                            >
+                              {subject}
+                            </Button>
+                          ))}
+                        </div>
+                      </div>
+                      <div className="space-y-2">
+                        <Label>Status</Label>
+                        <Select value={formData.status} onValueChange={(value: 'Active' | 'OnLeave') => setFormData({ ...formData, status: value })}>
+                          <SelectTrigger>
+                            <SelectValue />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="Active">Active</SelectItem>
+                            <SelectItem value="OnLeave">On Leave</SelectItem>
+                          </SelectContent>
+                        </Select>
+                      </div>
+                    </div>
+                    <DialogFooter>
+                      <Button variant="outline" onClick={() => {
+                        setIsEditDialogOpen(false);
+                        setEditingTeacher(null);
+                        setFormData({ name: '', email: '', phone: '', subjects: [], status: 'Active' });
+                      }}>Cancel</Button>
+                      <Button className="bg-primary hover:bg-primary/90" onClick={handleUpdateTeacher}>Update Teacher</Button>
                     </DialogFooter>
                   </DialogContent>
                 </Dialog>
@@ -222,23 +474,30 @@ const AdminTeachers = () => {
                         </div>
                       </td>
                       <td className="px-6 py-4">
-                        <Badge variant="secondary">{teacher.subject}</Badge>
-                      </td>
-                      <td className="px-6 py-4">
                         <div className="flex flex-wrap gap-1">
-                          {teacher.classes.map((cls) => (
-                            <Badge key={cls} variant="outline" className="text-xs">{cls}</Badge>
+                          {teacher.subjects.map((subject) => (
+                            <Badge key={subject} variant="secondary" className="text-xs">{subject}</Badge>
                           ))}
                         </div>
                       </td>
                       <td className="px-6 py-4">
+                        <div className="flex flex-wrap gap-1">
+                          {getTeacherClasses(teacher.id).map((cls) => (
+                            <Badge key={cls} variant="outline" className="text-xs">{cls}</Badge>
+                          ))}
+                          {getTeacherClasses(teacher.id).length === 0 && (
+                            <span className="text-sm text-muted-foreground">No classes assigned</span>
+                          )}
+                        </div>
+                      </td>
+                      <td className="px-6 py-4">
                         <Badge 
-                          className={teacher.status === 'active' 
+                          className={teacher.status === 'Active' 
                             ? 'bg-green-100 text-green-700 hover:bg-green-100' 
                             : 'bg-amber-100 text-amber-700 hover:bg-amber-100'
                           }
                         >
-                          {teacher.status === 'active' ? 'Active' : 'On Leave'}
+                          {teacher.status === 'Active' ? 'Active' : 'On Leave'}
                         </Badge>
                       </td>
                       <td className="px-6 py-4">
@@ -249,13 +508,13 @@ const AdminTeachers = () => {
                             </Button>
                           </DropdownMenuTrigger>
                           <DropdownMenuContent align="end">
-                            <DropdownMenuItem className="gap-2">
+                            <DropdownMenuItem className="gap-2" onClick={() => navigate(`/admin/teachers/${teacher.id}`)}>
                               <Eye className="w-4 h-4" /> View Profile
                             </DropdownMenuItem>
-                            <DropdownMenuItem className="gap-2">
+                            <DropdownMenuItem className="gap-2" onClick={() => handleEditTeacher(teacher.id)}>
                               <Edit className="w-4 h-4" /> Edit
                             </DropdownMenuItem>
-                            <DropdownMenuItem className="gap-2 text-destructive">
+                            <DropdownMenuItem className="gap-2 text-destructive" onClick={() => handleDeleteTeacher(teacher.id)}>
                               <Trash2 className="w-4 h-4" /> Delete
                             </DropdownMenuItem>
                           </DropdownMenuContent>

@@ -4,6 +4,7 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { AuthProvider } from "@/contexts/AuthContext";
+import { AdminDataProvider } from "@/contexts/AdminDataContext";
 import ProtectedRoute from "@/components/auth/ProtectedRoute";
 import SuperAdminProtectedRoute from "@/components/auth/SuperAdminProtectedRoute";
 
@@ -73,6 +74,9 @@ import AdminAttendance from "./pages/admin/AdminAttendance";
 import AdminReports from "./pages/admin/AdminReports";
 import AdminAnnouncements from "./pages/admin/AdminAnnouncements";
 import AdminSettings from "./pages/admin/AdminSettings";
+import StudentProfile from "./pages/admin/StudentProfile";
+import TeacherProfile from "./pages/admin/TeacherProfile";
+import ClassDetail from "./pages/admin/ClassDetail";
 
 // SuperAdmin Dashboard Pages
 import SuperAdminHome from "./pages/superadmin-dashboard/SuperAdminHome";
@@ -105,6 +109,7 @@ const App = () => (
           <Toaster />
           <Sonner />
           <BrowserRouter>
+          <AdminDataProvider>
           <Routes>
             {/* Public Routes */}
             <Route path="/" element={<Landing />} />
@@ -303,9 +308,24 @@ const App = () => (
                 <AdminStudents />
               </ProtectedRoute>
             } />
+            <Route path="/admin/students/:id" element={
+              <ProtectedRoute allowedRoles={['admin']}>
+                <StudentProfile />
+              </ProtectedRoute>
+            } />
+            <Route path="/admin/teachers/:id" element={
+              <ProtectedRoute allowedRoles={['admin']}>
+                <TeacherProfile />
+              </ProtectedRoute>
+            } />
             <Route path="/admin/classes" element={
               <ProtectedRoute allowedRoles={['admin']}>
                 <AdminClasses />
+              </ProtectedRoute>
+            } />
+            <Route path="/admin/classes/:id" element={
+              <ProtectedRoute allowedRoles={['admin']}>
+                <ClassDetail />
               </ProtectedRoute>
             } />
             <Route path="/admin/class-analysis" element={
@@ -466,6 +486,7 @@ const App = () => (
             {/* Catch-all */}
             <Route path="*" element={<NotFound />} />
           </Routes>
+          </AdminDataProvider>
         </BrowserRouter>
       </TooltipProvider>
     </AuthProvider>

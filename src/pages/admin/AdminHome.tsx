@@ -1,4 +1,5 @@
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
+import { useNavigate } from 'react-router-dom';
 import AdminDashboardLayout from '@/components/layout/AdminDashboardLayout';
 import AdminStatCard from '@/components/admin/AdminStatCard';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -24,10 +25,22 @@ import {
   CheckCircle,
   Plus,
   ArrowUpRight,
-  MoreHorizontal
+  MoreHorizontal,
+  X
 } from 'lucide-react';
-import { schoolStats, recentAnnouncements } from '@/data/mockData';
 import { useAuth } from '@/contexts/AuthContext';
+import { useAdminData } from '@/contexts/AdminDataContext';
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from '@/components/ui/dialog';
+import { Label } from '@/components/ui/label';
+import { Textarea } from '@/components/ui/textarea';
+import { toast } from '@/hooks/use-toast';
 import { 
   LineChart, 
   Line, 
@@ -41,20 +54,113 @@ import {
   BarChart,
   Bar
 } from 'recharts';
-// Chart data
-const performanceData = [
-  { name: 'Jan', score: 75 },
-  { name: 'Feb', score: 78 },
-  { name: 'Mar', score: 82 },
-  { name: 'Apr', score: 79 },
-  { name: 'May', score: 85 },
-  { name: 'Jun', score: 88 },
-  { name: 'Jul', score: 84 },
-];
 
 const AdminHome = () => {
+  const navigate = useNavigate();
   const { user } = useAuth();
+  const { state, dispatch } = useAdminData();
   const [chartPeriod, setChartPeriod] = useState('monthly');
+  const [noteDialogOpen, setNoteDialogOpen] = useState(false);
+  const [selectedEntity, setSelectedEntity] = useState<{ type: 'student' | 'class'; id: string } | null>(null);
+  const [noteText, setNoteText] = useState('');
+
+  const handleResolveAlert = (alertId: string) => {
+    dispatch({ type: 'RESOLVE_RISK_ALERT', payload: { id: alertId } });
+    toast({
+      title: 'Alert Resolved',
+      description: 'The alert has been marked as resolved.',
+    });
+  };
+
+  const handleAddNote = (entityType: 'student' | 'class', entityId: string) => {
+    setSelectedEntity({ type: entityType, id: entityId });
+    setNoteDialogOpen(true);
+  };
+
+  const handleSaveNote = () => {
+    if (!noteText.trim() || !selectedEntity) return;
+    // For now, just show a toast - can be enhanced to store notes
+    toast({
+      title: 'Note Added',
+      description: `Note added for ${selectedEntity.type === 'student' ? 'student' : 'class'}.`,
+    });
+    setNoteText('');
+    setNoteDialogOpen(false);
+    setSelectedEntity(null);
+  };
+
+  // Compute school stats from store
+  const schoolStats = useMemo(() => {
+    const totalStudents = state.students.length;
+    const totalTeachers = state.teachers.length;
+    const totalClasses = state.classes.length;
+    
+    // Compute average attendance from students
+    const avgAttendance = totalStudents > 0
+      ? state.students.reduce((sum, s) => sum + s.attendancePercentage, 0) / totalStudents
+      : 0;
+    
+    // Compute average performance from students
+    const avgPerformance = totalStudents > 0
+      ? state.students.reduce((sum, s) => sum + s.performanceScore, 0) / totalStudents
+      : 0;
+    
+    return {
+      totalStudents,
+      totalTeachers,
+      totalClasses,
+      averageAttendance: Math.round(avgAttendance * 10) / 10,
+      averagePerformance: Math.round(avgPerformance * 10) / 10,
+    };
+  }, [state.students, state.teachers, state.classes]);
+
+  // Compute performance trend data (last 7 months)
+  const performanceData = useMemo(() => {
+    const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul'];
+    // For now, use average performance with some variation
+    // In a real app, this would come from historical data
+    const baseScore = schoolStats.averagePerformance;
+    return months.map((name, index) => ({
+      name,
+      score: Math.max(60, Math.min(100, baseScore + (Math.random() * 10 - 5))),
+    }));
+  }, [schoolStats.averagePerformance]);
+
+  // Get recent risk alerts (unresolved, sorted by date)
+  const recentAlerts = useMemo(() => {
+    return state.riskAlerts
+      .filter(alert => !alert.resolvedAt)
+      .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
+      .slice(0, 3);
+  }, [state.riskAlerts]);
+
+  // Simple announcements (can be enhanced later)
+  const recentAnnouncements = useMemo(() => {
+    // For now, return empty or create from risk alerts
+    return recentAlerts.map((alert, idx) => ({
+      id: `alert-${alert.id}`,
+      title: alert.type === 'LowAttendance' ? 'Low Attendance Alert' : 'Low Performance Alert',
+      date: alert.createdAt,
+      type: alert.type === 'LowAttendance' ? 'academic' : 'academic' as const,
+    }));
+  }, [recentAlerts]);
+
+  // Compute class distribution by grade
+  const classDistribution = useMemo(() => {
+    const distribution: Record<string, number> = {};
+    state.classes.forEach(cls => {
+      const grade = `Class ${cls.grade}`;
+      if (!distribution[grade]) {
+        distribution[grade] = 0;
+      }
+      distribution[grade] += state.students.filter(s => s.classId === cls.id).length;
+    });
+    return Object.entries(distribution).map(([name, count]) => ({
+      name,
+      count,
+      color: name === 'Class 9' ? 'blue' : name === 'Class 10' ? 'purple' : name === 'Class 11' ? 'emerald' : 'amber',
+    }));
+  }, [state.classes, state.students]);
 
   return (
     <AdminDashboardLayout 
@@ -82,11 +188,18 @@ const AdminHome = () => {
             </p>
             
             <div className="flex flex-wrap gap-3 mt-6">
-              <Button className="bg-white text-primary hover:bg-white/90 rounded-xl font-semibold shadow-lg">
+              <Button 
+                className="bg-white text-primary hover:bg-white/90 rounded-xl font-semibold shadow-lg"
+                onClick={() => navigate('/admin/students')}
+              >
                 <ClipboardList className="w-4 h-4 mr-2" />
-                View Approvals
+                View Students
               </Button>
-              <Button variant="outline" className="border-white/30 text-white hover:bg-white/10 rounded-xl">
+              <Button 
+                variant="outline" 
+                className="border-white/30 text-white hover:bg-white/10 rounded-xl"
+                onClick={() => navigate('/admin/announcements')}
+              >
                 <Bell className="w-4 h-4 mr-2" />
                 Announcements
               </Button>
@@ -96,34 +209,54 @@ const AdminHome = () => {
 
         {/* Stats Row */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-          <AdminStatCard 
-            title="Total Students" 
-            value={schoolStats.totalStudents.toLocaleString()} 
-            icon={<GraduationCap className="w-full h-full" />}
-            trend={{ value: 5.2, isPositive: true }}
-            gradient="blue"
-          />
-          <AdminStatCard 
-            title="Total Teachers" 
-            value={schoolStats.totalTeachers} 
-            icon={<Users className="w-full h-full" />}
-            trend={{ value: 2.1, isPositive: true }}
-            gradient="purple"
-          />
-          <AdminStatCard 
-            title="Avg. Attendance" 
-            value={`${schoolStats.averageAttendance}%`} 
-            icon={<Calendar className="w-full h-full" />}
-            trend={{ value: 1.5, isPositive: false }}
-            gradient="green"
-          />
-          <AdminStatCard 
-            title="Avg. Performance" 
-            value={`${schoolStats.averagePerformance}%`} 
-            icon={<TrendingUp className="w-full h-full" />}
-            trend={{ value: 8.3, isPositive: true }}
-            gradient="amber"
-          />
+          <div 
+            className="cursor-pointer"
+            onClick={() => navigate('/admin/students')}
+          >
+            <AdminStatCard 
+              title="Total Students" 
+              value={schoolStats.totalStudents.toLocaleString()} 
+              icon={<GraduationCap className="w-full h-full" />}
+              trend={{ value: 5.2, isPositive: true }}
+              gradient="blue"
+            />
+          </div>
+          <div 
+            className="cursor-pointer"
+            onClick={() => navigate('/admin/teachers')}
+          >
+            <AdminStatCard 
+              title="Total Teachers" 
+              value={schoolStats.totalTeachers} 
+              icon={<Users className="w-full h-full" />}
+              trend={{ value: 2.1, isPositive: true }}
+              gradient="purple"
+            />
+          </div>
+          <div 
+            className="cursor-pointer"
+            onClick={() => navigate('/admin/attendance')}
+          >
+            <AdminStatCard 
+              title="Avg. Attendance" 
+              value={`${schoolStats.averageAttendance}%`} 
+              icon={<Calendar className="w-full h-full" />}
+              trend={{ value: 1.5, isPositive: false }}
+              gradient="green"
+            />
+          </div>
+          <div 
+            className="cursor-pointer"
+            onClick={() => navigate('/admin/reports')}
+          >
+            <AdminStatCard 
+              title="Avg. Performance" 
+              value={`${schoolStats.averagePerformance}%`} 
+              icon={<TrendingUp className="w-full h-full" />}
+              trend={{ value: 8.3, isPositive: true }}
+              gradient="amber"
+            />
+          </div>
         </div>
 
         {/* Charts Row */}
@@ -207,33 +340,71 @@ const AdminHome = () => {
           <div className="space-y-4">
             <h3 className="text-lg font-semibold text-gray-900">Recent Alerts</h3>
             
-            {/* Warning Alert */}
-            <div className="flex items-start gap-4 p-4 rounded-xl bg-gradient-to-r from-amber-50 to-orange-50 border border-amber-200">
-              <div className="w-10 h-10 rounded-full bg-amber-100 flex items-center justify-center flex-shrink-0">
-                <AlertTriangle className="w-5 h-5 text-amber-600" />
+            {recentAlerts.length === 0 ? (
+              <div className="text-center py-8 text-muted-foreground">
+                No active alerts
               </div>
-              <div className="flex-1">
-                <h4 className="font-semibold text-amber-800">Low Attendance Alert</h4>
-                <p className="text-sm text-amber-700 mt-1">Class 9B attendance dropped below 80% this week</p>
-              </div>
-              <Button size="sm" variant="ghost" className="text-amber-700 hover:bg-amber-100">
-                View
-              </Button>
-            </div>
-
-            {/* Success Alert */}
-            <div className="flex items-start gap-4 p-4 rounded-xl bg-gradient-to-r from-emerald-50 to-green-50 border border-emerald-200">
-              <div className="w-10 h-10 rounded-full bg-emerald-100 flex items-center justify-center flex-shrink-0">
-                <CheckCircle className="w-5 h-5 text-emerald-600" />
-              </div>
-              <div className="flex-1">
-                <h4 className="font-semibold text-emerald-800">Report Generated</h4>
-                <p className="text-sm text-emerald-700 mt-1">Monthly performance report is ready for download</p>
-              </div>
-              <Button size="sm" variant="ghost" className="text-emerald-700 hover:bg-emerald-100">
-                Download
-              </Button>
-            </div>
+            ) : (
+              recentAlerts.map((alert) => {
+                const entity = alert.entityType === 'student' 
+                  ? state.students.find(s => s.id === alert.entityId)
+                  : state.classes.find(c => c.id === alert.entityId);
+                const entityName = alert.entityType === 'student'
+                  ? entity?.name || 'Unknown Student'
+                  : entity ? `Class ${entity.grade}-${entity.section}` : 'Unknown Class';
+                
+                return (
+                  <div 
+                    key={alert.id}
+                    className="flex items-start gap-4 p-4 rounded-xl bg-gradient-to-r from-amber-50 to-orange-50 border border-amber-200"
+                  >
+                    <div className="w-10 h-10 rounded-full bg-amber-100 flex items-center justify-center flex-shrink-0">
+                      <AlertTriangle className="w-5 h-5 text-amber-600" />
+                    </div>
+                    <div className="flex-1">
+                      <h4 className="font-semibold text-amber-800">
+                        {alert.type === 'LowAttendance' ? 'Low Attendance Alert' : 'Low Performance Alert'}
+                      </h4>
+                      <p className="text-sm text-amber-700 mt-1">
+                        {entityName}: {alert.reason}
+                      </p>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <Button 
+                        size="sm" 
+                        variant="ghost" 
+                        className="text-amber-700 hover:bg-amber-100"
+                        onClick={() => handleAddNote(alert.entityType, alert.entityId)}
+                      >
+                        Add Note
+                      </Button>
+                      <Button 
+                        size="sm" 
+                        variant="ghost" 
+                        className="text-amber-700 hover:bg-amber-100"
+                        onClick={() => {
+                          if (alert.entityType === 'student') {
+                            navigate(`/admin/students/${alert.entityId}`);
+                          } else {
+                            navigate(`/admin/classes/${alert.entityId}`);
+                          }
+                        }}
+                      >
+                        View
+                      </Button>
+                      <Button 
+                        size="sm" 
+                        variant="ghost" 
+                        className="text-amber-700 hover:bg-amber-100"
+                        onClick={() => handleResolveAlert(alert.id)}
+                      >
+                        <X className="w-4 h-4" />
+                      </Button>
+                    </div>
+                  </div>
+                );
+              })
+            )}
           </div>
 
           {/* Recent Announcements */}
@@ -290,37 +461,73 @@ const AdminHome = () => {
           </CardHeader>
           <CardContent className="p-6">
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-              {[
-                { name: 'Class 9', count: 320, color: 'blue' },
-                { name: 'Class 10', count: 310, color: 'purple' },
-                { name: 'Class 11', count: 315, color: 'emerald' },
-                { name: 'Class 12', count: 305, color: 'amber' },
-              ].map((cls) => (
-                <div 
-                  key={cls.name} 
-                  className={`p-6 rounded-xl text-center transition-all duration-200 hover:-translate-y-1 cursor-pointer ${
-                    cls.color === 'blue' ? 'bg-gradient-to-br from-blue-50 to-indigo-50 hover:shadow-lg hover:shadow-blue-100' :
-                    cls.color === 'purple' ? 'bg-gradient-to-br from-purple-50 to-violet-50 hover:shadow-lg hover:shadow-purple-100' :
-                    cls.color === 'emerald' ? 'bg-gradient-to-br from-emerald-50 to-green-50 hover:shadow-lg hover:shadow-emerald-100' :
-                    'bg-gradient-to-br from-amber-50 to-orange-50 hover:shadow-lg hover:shadow-amber-100'
-                  }`}
-                >
-                  <p className={`text-3xl font-bold ${
-                    cls.color === 'blue' ? 'text-blue-600' :
-                    cls.color === 'purple' ? 'text-purple-600' :
-                    cls.color === 'emerald' ? 'text-emerald-600' :
-                    'text-amber-600'
-                  }`}>
-                    {cls.count}
-                  </p>
-                  <p className="text-sm text-gray-600 mt-1 font-medium">{cls.name}</p>
-                  <p className="text-xs text-gray-400 mt-0.5">students</p>
+              {classDistribution.length === 0 ? (
+                <div className="col-span-4 text-center py-8 text-muted-foreground">
+                  No classes yet
                 </div>
-              ))}
+              ) : (
+                classDistribution.map((cls) => (
+                  <div 
+                    key={cls.name} 
+                    className={`p-6 rounded-xl text-center transition-all duration-200 hover:-translate-y-1 cursor-pointer ${
+                      cls.color === 'blue' ? 'bg-gradient-to-br from-blue-50 to-indigo-50 hover:shadow-lg hover:shadow-blue-100' :
+                      cls.color === 'purple' ? 'bg-gradient-to-br from-purple-50 to-violet-50 hover:shadow-lg hover:shadow-purple-100' :
+                      cls.color === 'emerald' ? 'bg-gradient-to-br from-emerald-50 to-green-50 hover:shadow-lg hover:shadow-emerald-100' :
+                      'bg-gradient-to-br from-amber-50 to-orange-50 hover:shadow-lg hover:shadow-amber-100'
+                    }`}
+                    onClick={() => {
+                      const grade = cls.name.split(' ')[1];
+                      navigate(`/admin/classes?grade=${grade}`);
+                    }}
+                  >
+                    <p className={`text-3xl font-bold ${
+                      cls.color === 'blue' ? 'text-blue-600' :
+                      cls.color === 'purple' ? 'text-purple-600' :
+                      cls.color === 'emerald' ? 'text-emerald-600' :
+                      'text-amber-600'
+                    }`}>
+                      {cls.count}
+                    </p>
+                    <p className="text-sm text-gray-600 mt-1 font-medium">{cls.name}</p>
+                    <p className="text-xs text-gray-400 mt-0.5">students</p>
+                  </div>
+                ))
+              )}
             </div>
           </CardContent>
         </Card>
       </div>
+
+      {/* Add Note Dialog */}
+      <Dialog open={noteDialogOpen} onOpenChange={setNoteDialogOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Add Admin Note</DialogTitle>
+            <DialogDescription>
+              Add a note about this {selectedEntity?.type === 'student' ? 'student' : 'class'}.
+            </DialogDescription>
+          </DialogHeader>
+          <div className="space-y-4 py-4">
+            <div className="space-y-2">
+              <Label>Note</Label>
+              <Textarea 
+                placeholder="Enter your note here..."
+                value={noteText}
+                onChange={(e) => setNoteText(e.target.value)}
+                rows={4}
+              />
+            </div>
+          </div>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => {
+              setNoteDialogOpen(false);
+              setNoteText('');
+              setSelectedEntity(null);
+            }}>Cancel</Button>
+            <Button onClick={handleSaveNote}>Save Note</Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </AdminDashboardLayout>
   );
 };
