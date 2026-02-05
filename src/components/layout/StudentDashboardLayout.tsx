@@ -166,7 +166,7 @@ const StudentDashboardLayout = ({ children }: StudentDashboardLayoutProps) => {
         </header>
 
         {/* Page Content - scrolls within viewport height */}
-        <main className="flex-1 min-h-0 p-6 md:p-8 overflow-y-auto">
+        <main className="flex-1 min-h-0 p-4 sm:p-6 md:p-8 overflow-y-auto">
           {children}
         </main>
       </div>

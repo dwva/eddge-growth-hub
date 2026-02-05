@@ -271,12 +271,6 @@ export const recentlyRevisedTopics: RecentlyRevisedItem[] = [
   { subjectId: '1', chapterId: 'c3', topicId: 't5', chapterName: 'Quadratic Equations', subjectName: 'Mathematics', topicName: 'Factorization Method', practiceType: 'MCQs', lastRevised: '2 days ago', progress: 75, topicsCompleted: 3, topicsTotal: 4 },
   { subjectId: '1', chapterId: 'c3', topicId: 't6', chapterName: 'Quadratic Equations', subjectName: 'Mathematics', topicName: 'Quadratic Formula', practiceType: 'Short answer', lastRevised: '2 days ago', progress: 75, topicsCompleted: 3, topicsTotal: 4 },
   { subjectId: '1', chapterId: 'c2', topicId: 't4', chapterName: 'Linear Equations', subjectName: 'Mathematics', topicName: 'Word Problems', practiceType: 'MCQs', lastRevised: '1 week ago', progress: 100, topicsCompleted: 4, topicsTotal: 4 },
-  { subjectId: '1', chapterId: 'c2', topicId: 't3', chapterName: 'Linear Equations', subjectName: 'Mathematics', topicName: 'One Variable Equations', practiceType: 'Very short answer', lastRevised: '1 week ago', progress: 100, topicsCompleted: 4, topicsTotal: 4 },
-  { subjectId: '1', chapterId: 'c1', topicId: 't2', chapterName: 'Algebra Basics', subjectName: 'Mathematics', topicName: 'Factorization', practiceType: 'Revision', lastRevised: '2 weeks ago', progress: 60, topicsCompleted: 2, topicsTotal: 3 },
-  { subjectId: '1', chapterId: 'c1', topicId: 't1', chapterName: 'Algebra Basics', subjectName: 'Mathematics', topicName: 'Linear Expressions', practiceType: 'Short answer', lastRevised: '2 weeks ago', progress: 60, topicsCompleted: 2, topicsTotal: 3 },
-  { subjectId: '2', chapterId: 'c2', topicId: 't12', chapterName: 'Force and Motion', subjectName: 'Science', topicName: 'Friction and Motion', practiceType: 'MCQs', lastRevised: '3 days ago', progress: 40, topicsCompleted: 1, topicsTotal: 3 },
-  { subjectId: '2', chapterId: 'c1', topicId: 't10', chapterName: 'Matter and Energy', subjectName: 'Science', topicName: 'Energy Forms', practiceType: 'Long answer', lastRevised: '1 month ago', progress: 100, topicsCompleted: 4, topicsTotal: 4 },
-  { subjectId: '2', chapterId: 'c1', topicId: 't9', chapterName: 'Matter and Energy', subjectName: 'Science', topicName: 'Matter and States', practiceType: 'Case study', lastRevised: '1 month ago', progress: 100, topicsCompleted: 4, topicsTotal: 4 },
 ];
 
 export const practiceQuestions = [

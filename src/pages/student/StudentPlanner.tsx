@@ -380,8 +380,7 @@ const StudentPlanner = () => {
                     <div className="shrink-0 mt-6">
                       <PlannerDeadlinesAndFocus
                         deadlines={plannerStubs.deadlines}
-                        weakAreas={plannerStubs.weakAreas}
-                        onGeneratePracticeSet={handleGeneratePracticeSet}
+                        cognitiveLoad={plannerStubs.cognitiveLoad}
                       />
                     </div>
                   </TabsContent>
