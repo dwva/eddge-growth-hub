@@ -91,89 +91,85 @@ const TeacherSubjectStudentsContent = () => {
         </Select>
       </div>
 
-      {/* Students Table */}
+      {/* Students Grid */}
       <div>
         <h2 className="text-sm font-semibold text-gray-400 uppercase tracking-wide mb-5">
           {filteredStudents.length} Students
         </h2>
-        <Card className="border-0 shadow-sm rounded-2xl overflow-hidden">
-          <CardContent className="p-0">
-            {filteredStudents.length > 0 ? (
-              <div className="rounded-md border overflow-x-auto">
-                <Table>
-                  <TableHeader>
-                    <TableRow>
-                      <TableHead>Student</TableHead>
-                      <TableHead>Score</TableHead>
-                      <TableHead>Accuracy</TableHead>
-                      <TableHead>Weak Topics</TableHead>
-                      <TableHead>Strong Topics</TableHead>
-                      <TableHead>Trend</TableHead>
-                    </TableRow>
-                  </TableHeader>
-                  <TableBody>
-                    {filteredStudents.map((student) => (
-                      <TableRow key={student.id}>
-                        <TableCell>
-                          <div className="flex items-center gap-3">
-                            <Avatar className="w-9 h-9">
-                              <AvatarFallback className="bg-primary/10 text-primary text-sm">
-                                {student.name.split(' ').map(n => n[0]).join('')}
-                              </AvatarFallback>
-                            </Avatar>
-                            <div>
-                              <p className="font-medium">{student.name}</p>
-                              <p className="text-xs text-muted-foreground">{student.class}</p>
-                            </div>
-                          </div>
-                        </TableCell>
-                        <TableCell>
-                          <Badge variant={student.score >= 80 ? 'default' : student.score >= 60 ? 'secondary' : 'destructive'}>
-                            {student.score}%
-                          </Badge>
-                        </TableCell>
-                        <TableCell>{student.accuracy}%</TableCell>
-                        <TableCell>
-                          {student.weakTopics.length > 0 ? (
-                            <div className="flex flex-wrap gap-1">
-                              {student.weakTopics.map(topic => (
-                                <Badge key={topic} variant="outline" className="text-xs text-red-600 border-red-200">
-                                  {topic}
-                                </Badge>
-                              ))}
-                            </div>
-                          ) : (
-                            <span className="text-muted-foreground text-sm">None</span>
-                          )}
-                        </TableCell>
-                        <TableCell>
-                          {student.strongTopics.length > 0 ? (
-                            <div className="flex flex-wrap gap-1">
-                              {student.strongTopics.map(topic => (
-                                <Badge key={topic} variant="outline" className="text-xs text-green-600 border-green-200">
-                                  {topic}
-                                </Badge>
-                              ))}
-                            </div>
-                          ) : (
-                            <span className="text-muted-foreground text-sm">None</span>
-                          )}
-                        </TableCell>
-                        <TableCell>{getTrendIcon(student.trend)}</TableCell>
-                      </TableRow>
-                    ))}
-                  </TableBody>
-                </Table>
-              </div>
-            ) : (
-              <div className="text-center py-12">
-                <Users className="w-12 h-12 text-muted-foreground mx-auto mb-4" />
-                <h3 className="text-lg font-medium mb-2">No students found</h3>
-                <p className="text-muted-foreground">Try adjusting your filters</p>
-              </div>
-            )}
-          </CardContent>
-        </Card>
+        {filteredStudents.length > 0 ? (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            {filteredStudents.map((student) => (
+              <Card key={student.id}>
+                <CardContent className="p-4">
+                  <div className="flex items-start justify-between mb-3">
+                    <div className="flex items-center gap-3 flex-1 min-w-0">
+                      <Avatar className="w-10 h-10">
+                        <AvatarFallback className="bg-primary/10 text-primary text-sm">
+                          {student.name.split(' ').map(n => n[0]).join('')}
+                        </AvatarFallback>
+                      </Avatar>
+                      <div className="min-w-0">
+                        <p className="font-semibold text-sm truncate">{student.name}</p>
+                        <p className="text-xs text-gray-500">{student.class}</p>
+                      </div>
+                    </div>
+                    <Badge variant={student.score >= 80 ? 'default' : student.score >= 60 ? 'secondary' : 'destructive'} className="ml-2">
+                      {student.score}%
+                    </Badge>
+                  </div>
+
+                  <div className="space-y-2.5">
+                    <div className="flex items-center justify-between text-xs">
+                      <span className="text-gray-600">Accuracy</span>
+                      <span className="font-medium text-gray-900">{student.accuracy}%</span>
+                    </div>
+
+                    <div className="flex items-center justify-between text-xs">
+                      <span className="text-gray-600">Trend</span>
+                      <span>{getTrendIcon(student.trend)}</span>
+                    </div>
+
+                    <div>
+                      <p className="text-xs text-gray-600 mb-1.5">Weak Topics</p>
+                      {student.weakTopics.length > 0 ? (
+                        <div className="flex flex-wrap gap-1">
+                          {student.weakTopics.map(topic => (
+                            <Badge key={topic} variant="outline" className="text-[10px] text-red-600 border-red-200 h-5 px-1.5">
+                              {topic}
+                            </Badge>
+                          ))}
+                        </div>
+                      ) : (
+                        <span className="text-xs text-gray-400">None</span>
+                      )}
+                    </div>
+
+                    <div>
+                      <p className="text-xs text-gray-600 mb-1.5">Strong Topics</p>
+                      {student.strongTopics.length > 0 ? (
+                        <div className="flex flex-wrap gap-1">
+                          {student.strongTopics.map(topic => (
+                            <Badge key={topic} variant="outline" className="text-[10px] text-green-600 border-green-200 h-5 px-1.5">
+                              {topic}
+                            </Badge>
+                          ))}
+                        </div>
+                      ) : (
+                        <span className="text-xs text-gray-400">None</span>
+                      )}
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+        ) : (
+          <div className="text-center py-12">
+            <Users className="w-12 h-12 text-muted-foreground mx-auto mb-4" />
+            <h3 className="text-lg font-medium mb-2">No students found</h3>
+            <p className="text-muted-foreground">Try adjusting your filters</p>
+          </div>
+        )}
       </div>
     </div>
   );

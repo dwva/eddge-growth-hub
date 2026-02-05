@@ -382,7 +382,7 @@ const SubjectTeacherModeView = () => {
   const weakChapters = chapters.filter(ch => ch.mastery === 'low').length;
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-3">
       {/* Page Header */}
       <div>
         <h1 className="text-xl font-bold text-gray-900">Mathematics Teaching Hub</h1>
@@ -390,48 +390,73 @@ const SubjectTeacherModeView = () => {
       </div>
 
       {/* Hero Cards Row */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-3">
-        {/* Left Card - Light Blue */}
+      <div className="grid grid-cols-1 gap-3">
+        {/* AI Tools Card - Full Width */}
         <Card className="bg-gradient-to-br from-blue-50 to-purple-50 border-0 shadow-sm rounded-2xl overflow-hidden relative">
           <CardContent className="p-6 relative z-10">
-            <div className="absolute top-3 left-3">
-              <div className="w-8 h-8 rounded-lg bg-white/40 backdrop-blur-sm flex items-center justify-center">
-                <BookOpen className="w-4 h-4 text-purple-600" />
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+              {/* Left: Main Content */}
+              <div className="lg:col-span-2">
+                <div className="mb-4">
+                  <div className="w-10 h-10 rounded-lg bg-white/40 backdrop-blur-sm flex items-center justify-center mb-3">
+                    <BookOpen className="w-5 h-5 text-purple-600" />
+                  </div>
+                </div>
+                <div>
+                  <h2 className="text-xl font-bold text-gray-900 mb-2">Explore AI Tools,<br/>Create & Engage!</h2>
+                  <p className="text-sm text-gray-600 max-w-[480px] mb-4">
+                    Generate quizzes, create lesson plans, and analyze student performance with AI. 
+                    Use our intelligent tools to create targeted practice questions and worksheets.
+                  </p>
+                  <div className="flex flex-wrap gap-2">
+                    <Button 
+                      size="sm" 
+                      className="bg-purple-600 hover:bg-purple-700 text-white rounded-xl h-9 px-4 text-xs"
+                      onClick={() => navigate('/teacher/ai-tools/question-generator')}
+                    >
+                      <Sparkles className="w-3.5 h-3.5 mr-1.5" />
+                      Question Generator
+                    </Button>
+                    <Button 
+                      size="sm" 
+                      variant="outline"
+                      className="border-purple-200 text-purple-700 hover:bg-purple-50 rounded-xl h-9 px-4 text-xs"
+                      onClick={() => navigate('/teacher/ai-tools/worksheet-generator')}
+                    >
+                      <FileText className="w-3.5 h-3.5 mr-1.5" />
+                      Worksheet Generator
+                    </Button>
+                  </div>
+                </div>
               </div>
-            </div>
-            <div className="pt-12">
-              <h2 className="text-lg font-bold text-gray-900 mb-2">Explore AI Tools,<br/>Create & Engage!</h2>
-              <p className="text-xs text-gray-600 max-w-[280px]">Generate quizzes, create lesson plans, and analyze student performance with AI.</p>
-            </div>
-          </CardContent>
-          <div className="absolute bottom-0 right-0 w-24 h-24 bg-purple-200/30 rounded-full -mr-12 -mb-12" />
-        </Card>
 
-        {/* Right Card - Light Yellow/Beige */}
-        <Card className="bg-gradient-to-br from-amber-50 to-yellow-50 border-0 shadow-sm rounded-2xl overflow-hidden relative">
-          <CardContent className="p-6 relative z-10">
-            <div className="flex items-start justify-between mb-3">
-              <div className="flex-1">
-                <h2 className="text-lg font-bold text-gray-900 mb-1">Track Class Performance</h2>
-                <p className="text-xs text-gray-600 mb-4">Monitor chapter-wise mastery and identify struggling students early.</p>
-                <Button 
-                  size="sm" 
-                  className="bg-gray-900 hover:bg-gray-800 text-white rounded-xl h-9 px-4 text-xs"
-                  onClick={() => navigate('/teacher/subject-analytics/chapters')}
-                >
-                  View Analytics →
-                </Button>
-              </div>
-              <div className="flex flex-col gap-2">
-                <div className="w-12 h-12 rounded-full bg-yellow-200/50 backdrop-blur-sm flex items-center justify-center">
-                  <BarChart3 className="w-6 h-6 text-amber-600" />
-                </div>
-                <div className="w-10 h-10 rounded-full bg-yellow-300/40 backdrop-blur-sm flex items-center justify-center -mt-3 ml-6">
-                  <Activity className="w-5 h-5 text-amber-700" />
-                </div>
+              {/* Right: Attention Alert */}
+              <div className="lg:col-span-1">
+                <Card className="border-0 shadow-sm bg-gradient-to-br from-red-50 to-orange-50 h-full">
+                  <CardContent className="p-5">
+                    <div className="flex items-center gap-2 mb-3">
+                      <div className="w-8 h-8 rounded-lg bg-red-500 flex items-center justify-center">
+                        <AlertTriangle className="w-4 h-4 text-white" />
+                      </div>
+                      <h3 className="text-sm font-bold text-gray-900">Attention</h3>
+                    </div>
+                    <p className="text-xs text-gray-700 mb-3">
+                      {weakChapters} chapters showing low mastery. Consider creating practice quizzes.
+                    </p>
+                    <Button 
+                      size="sm" 
+                      variant="outline" 
+                      className="w-full border-red-200 text-red-700 hover:bg-red-50 rounded-xl h-8 text-xs"
+                      onClick={() => navigate('/teacher/ai-tools/question-generator')}
+                    >
+                      Generate Quiz
+                    </Button>
+                  </CardContent>
+                </Card>
               </div>
             </div>
           </CardContent>
+          <div className="absolute bottom-0 right-0 w-32 h-32 bg-purple-200/30 rounded-full -mr-16 -mb-16" />
         </Card>
       </div>
 
@@ -546,9 +571,10 @@ const SubjectTeacherModeView = () => {
         <div className="xl:col-span-2">
           <Card className="border-0 shadow-sm rounded-2xl bg-white">
             <CardHeader className="flex flex-row items-center justify-between pb-3">
-              <div>
-                <CardTitle className="text-base font-bold text-gray-900">Your Classes</CardTitle>
-                <p className="text-xs text-gray-500 mt-0.5">Teaching {subjectClasses.length} classes</p>
+              <div className="flex items-center gap-1.5">
+                <CardTitle className="text-sm font-bold text-gray-900">Your Classes</CardTitle>
+                <span className="text-xs text-gray-400">·</span>
+                <p className="text-xs text-gray-500">Teaching {subjectClasses.length} classes</p>
               </div>
               <Button 
                 variant="ghost" 
@@ -622,30 +648,21 @@ const SubjectTeacherModeView = () => {
                   <span className="text-xs text-gray-600">Course Progress</span>
                   <span className="text-sm font-bold text-gray-900">{avgCompletion}%</span>
                 </div>
-              </div>
-            </CardContent>
-          </Card>
-
-          {/* Alert Card */}
-          <Card className="border-0 shadow-sm rounded-2xl bg-gradient-to-br from-red-50 to-orange-50">
-            <CardContent className="p-5">
-              <div className="flex items-center gap-2 mb-3">
-                <div className="w-8 h-8 rounded-lg bg-red-500 flex items-center justify-center">
-                  <AlertTriangle className="w-4 h-4 text-white" />
+                <div className="border-t border-gray-100 pt-3 mt-3">
+                  <div className="flex items-center justify-between mb-2">
+                    <span className="text-xs text-gray-600">Active Chapters</span>
+                    <span className="text-sm font-bold text-gray-900">{chapters.length}</span>
+                  </div>
+                  <div className="flex items-center justify-between mb-2">
+                    <span className="text-xs text-gray-600">Weak Chapters</span>
+                    <span className="text-sm font-bold text-red-600">{weakChapters}</span>
+                  </div>
+                  <div className="flex items-center justify-between">
+                    <span className="text-xs text-gray-600">Strong Performance</span>
+                    <span className="text-sm font-bold text-green-600">{chapters.length - weakChapters}</span>
+                  </div>
                 </div>
-                <h3 className="text-sm font-bold text-gray-900">Attention</h3>
               </div>
-              <p className="text-xs text-gray-700 mb-3">
-                {weakChapters} chapters showing low mastery. Consider creating practice quizzes.
-              </p>
-              <Button 
-                size="sm" 
-                variant="outline" 
-                className="w-full border-red-200 text-red-700 hover:bg-red-50 rounded-xl h-8 text-xs"
-                onClick={() => navigate('/teacher/ai-tools/question-generator')}
-              >
-                Generate Quiz
-              </Button>
             </CardContent>
           </Card>
         </div>

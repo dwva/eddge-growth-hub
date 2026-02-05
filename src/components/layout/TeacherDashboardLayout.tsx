@@ -220,7 +220,7 @@ const TeacherDashboardContent = ({ children }: TeacherDashboardLayoutProps) => {
         </header>
 
         {/* Page Content */}
-        <main className="flex-1 p-6 md:p-8 overflow-y-auto">
+        <main className="flex-1 p-4 md:p-6 overflow-y-auto">
           {children}
         </main>
       </div>

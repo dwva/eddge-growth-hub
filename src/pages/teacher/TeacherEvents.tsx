@@ -180,7 +180,7 @@ const TeacherEventsContent = () => {
       {/* Events Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         {events.map((event) => (
-          <Card key={event.id} className="shadow-sm hover:shadow-md transition-shadow">
+          <Card key={event.id}>
             <CardContent className="p-4">
               <div className="flex items-start justify-between mb-3">
                 <div className="flex-1 min-w-0">
