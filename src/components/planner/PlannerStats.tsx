@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Progress } from '@/components/ui/progress';
 import { Badge } from '@/components/ui/badge';
@@ -22,19 +23,20 @@ export const PlannerStats = ({
   const completionPercent = tasksTodayCount ? Math.round((completedToday / tasksTodayCount) * 100) : 0;
   const activeTasks = pendingCount;
 
-  const loadLabel =
-    cognitiveLoad === 'high' ? 'Overloaded' : cognitiveLoad === 'low' ? 'Too light' : 'On track';
+  const [mood, setMood] = useState<'low' | 'ok' | 'high' | null>(null);
 
-  const loadDescription =
-    cognitiveLoad === 'high'
-      ? 'Too many blocks today · consider moving a few to tomorrow.'
-      : cognitiveLoad === 'low'
-        ? 'You can safely add 1–2 more focus blocks.'
-        : 'Good balance of work and rest for today.';
+  const moodTip =
+    mood === 'low'
+      ? 'Do 1 small 15‑min block only. Keep it light and celebrate finishing it.'
+      : mood === 'high'
+        ? 'You’re in the zone – try an extra challenge block or tackle a harder topic.'
+        : mood === 'ok'
+          ? 'Aim to complete the blocks already planned for today.'
+          : 'Tell us how you feel so we can gently shape today’s plan.';
 
   return (
     <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-      {/* Today’s focus blocks */}
+      {/* 1. Today’s focus blocks */}
       <Card className="border border-blue-100 bg-gradient-to-br from-blue-50 to-indigo-50 rounded-2xl overflow-hidden">
         <CardContent className="p-5">
           <div className="flex items-start justify-between">
@@ -60,7 +62,68 @@ export const PlannerStats = ({
         </CardContent>
       </Card>
 
-      {/* AI auto-generate today’s plan */}
+      {/* 2. How are you feeling today? */}
+      <Card className="border border-purple-100 bg-purple-50/60 rounded-2xl overflow-hidden">
+        <CardContent className="p-5">
+          <div className="flex items-start justify-between mb-3">
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 rounded-xl bg-purple-100 flex items-center justify-center">
+                <Brain className="w-5 h-5 text-purple-700" />
+              </div>
+              <div>
+                <p className="text-sm font-semibold text-purple-900">How are you feeling today?</p>
+                <p className="text-xs text-purple-800/80">
+                  We’ll nudge your plan based on your energy level.
+                </p>
+              </div>
+            </div>
+          </div>
+          <div className="flex flex-wrap gap-2 mb-2">
+            <Button
+              type="button"
+              variant={mood === 'low' ? 'default' : 'outline'}
+              size="sm"
+              className={`rounded-full px-3 py-1 text-xs ${
+                mood === 'low'
+                  ? 'bg-purple-700 text-white hover:bg-purple-800'
+                  : 'border-purple-200 text-purple-800 hover:bg-purple-50'
+              }`}
+              onClick={() => setMood('low')}
+            >
+              Low energy
+            </Button>
+            <Button
+              type="button"
+              variant={mood === 'ok' ? 'default' : 'outline'}
+              size="sm"
+              className={`rounded-full px-3 py-1 text-xs ${
+                mood === 'ok'
+                  ? 'bg-purple-700 text-white hover:bg-purple-800'
+                  : 'border-purple-200 text-purple-800 hover:bg-purple-50'
+              }`}
+              onClick={() => setMood('ok')}
+            >
+              Okay
+            </Button>
+            <Button
+              type="button"
+              variant={mood === 'high' ? 'default' : 'outline'}
+              size="sm"
+              className={`rounded-full px-3 py-1 text-xs ${
+                mood === 'high'
+                  ? 'bg-purple-700 text-white hover:bg-purple-800'
+                  : 'border-purple-200 text-purple-800 hover:bg-purple-50'
+              }`}
+              onClick={() => setMood('high')}
+            >
+              Super focused
+            </Button>
+          </div>
+          <p className="text-[11px] text-purple-900/90">{moodTip}</p>
+        </CardContent>
+      </Card>
+
+      {/* 3. Today’s AI plan */}
       <Card className="border border-transparent bg-gradient-to-br from-purple-500 to-indigo-500 rounded-2xl overflow-hidden shadow-md">
         <CardContent className="p-5 text-white">
           <div className="flex items-start justify-between mb-3">
@@ -93,20 +156,6 @@ export const PlannerStats = ({
         </CardContent>
       </Card>
 
-      {/* Study health / cognitive load */}
-      <Card className="border border-green-100 bg-gradient-to-br from-green-50 to-emerald-50 rounded-2xl overflow-hidden">
-        <CardContent className="p-5">
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-green-100 flex items-center justify-center">
-              <Brain className="w-5 h-5 text-green-600" />
-            </div>
-            <div>
-              <p className="text-lg font-bold text-gray-900">Study health: {loadLabel}</p>
-              <p className="text-xs text-gray-500">{loadDescription}</p>
-            </div>
-          </div>
-        </CardContent>
-      </Card>
     </div>
   );
 };
