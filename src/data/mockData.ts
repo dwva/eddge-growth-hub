@@ -269,8 +269,10 @@ export interface RecentlyRevisedItem {
 
 export const recentlyRevisedTopics: RecentlyRevisedItem[] = [
   { subjectId: '1', chapterId: 'c3', topicId: 't5', chapterName: 'Quadratic Equations', subjectName: 'Mathematics', topicName: 'Factorization Method', practiceType: 'MCQs', lastRevised: '2 days ago', progress: 75, topicsCompleted: 3, topicsTotal: 4 },
-  { subjectId: '1', chapterId: 'c3', topicId: 't6', chapterName: 'Quadratic Equations', subjectName: 'Mathematics', topicName: 'Quadratic Formula', practiceType: 'Short answer', lastRevised: '2 days ago', progress: 75, topicsCompleted: 3, topicsTotal: 4 },
   { subjectId: '1', chapterId: 'c2', topicId: 't4', chapterName: 'Linear Equations', subjectName: 'Mathematics', topicName: 'Word Problems', practiceType: 'MCQs', lastRevised: '1 week ago', progress: 100, topicsCompleted: 4, topicsTotal: 4 },
+  { subjectId: '1', chapterId: 'c1', topicId: 't1', chapterName: 'Algebra Basics', subjectName: 'Mathematics', topicName: 'Linear Expressions', practiceType: 'Revision', lastRevised: '2 weeks ago', progress: 66, topicsCompleted: 2, topicsTotal: 3 },
+  { subjectId: '2', chapterId: 'c2', topicId: 't11', chapterName: 'Force and Motion', subjectName: 'Science', topicName: "Newton's Laws", practiceType: 'MCQs', lastRevised: '3 days ago', progress: 33, topicsCompleted: 1, topicsTotal: 3 },
+  { subjectId: '2', chapterId: 'c1', topicId: 't9', chapterName: 'Matter and Energy', subjectName: 'Science', topicName: 'Matter and States', practiceType: 'Short answer', lastRevised: '1 month ago', progress: 100, topicsCompleted: 4, topicsTotal: 4 },
 ];
 
 export const practiceQuestions = [

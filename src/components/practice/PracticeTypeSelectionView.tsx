@@ -6,6 +6,7 @@ import {
   CaseSensitive,
   MessageSquareQuote,
   Lightbulb,
+  ClipboardList,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
@@ -14,7 +15,8 @@ export type PracticeType =
   | 'short'
   | 'long'
   | 'case-study'
-  | 'very-short';
+  | 'very-short'
+  | 'full-exam';
 
 const PRACTICE_TYPES: {
   id: PracticeType;
@@ -51,6 +53,12 @@ const PRACTICE_TYPES: {
     label: 'Very short answer (with hint)',
     description: 'One-word or one-line answers. Hints available.',
     icon: <MessageSquareQuote className="w-5 h-5" />,
+  },
+  {
+    id: 'full-exam',
+    label: 'Full exam',
+    description: 'Complete topic test — all question types.',
+    icon: <ClipboardList className="w-5 h-5" />,
   },
 ];
 

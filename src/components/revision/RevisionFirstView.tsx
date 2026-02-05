@@ -1,6 +1,5 @@
 /**
- * EDDGE Revision — Context bar + single primary action.
- * No multi-column panels; compact selection then Start revision.
+ * EDDGE Revision — Context bar + Start revision + Recently Revised + Recently Studied Chapters.
  */
 
 import { Card, CardContent } from '@/components/ui/card';
@@ -30,12 +29,12 @@ export function RevisionFirstView({
   const hasTopicSelected = Boolean(subjectId && chapterId && topicId);
 
   return (
-    <div className="w-full flex flex-col gap-6 min-h-[calc(100vh-8rem)]">
+    <div className="w-full flex flex-col gap-8 min-h-[calc(100vh-8rem)]">
       <ContextSelectionBar selection={selection} onSelectionChange={onSelectionChange} />
 
       {/* Primary action — Start revision */}
       <Card className="rounded-2xl border border-gray-200 bg-white shadow-sm overflow-hidden">
-        <CardContent className="p-8 flex flex-col sm:flex-row items-center justify-between gap-6">
+        <CardContent className="p-6 sm:p-8 flex flex-col sm:flex-row items-center justify-between gap-6">
           <div className="flex items-center gap-4">
             <div className="w-14 h-14 rounded-xl bg-primary/10 flex items-center justify-center text-primary">
               <BookOpen className="w-7 h-7" />
@@ -60,7 +59,9 @@ export function RevisionFirstView({
         </CardContent>
       </Card>
 
+      {/* Recently Studied Chapters */}
       <RecentlyRevisedList
+        title="Recently Studied Chapters"
         onPickTopic={(sId, cId, tId) => onSelectionChange({ subjectId: sId, chapterId: cId, topicId: tId })}
       />
     </div>
