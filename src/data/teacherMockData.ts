@@ -95,10 +95,12 @@ export const subjectClasses = [
 ];
 
 export const subjectStudents = [
-  { id: 'ss1', name: 'John Smith', class: 'Class 10-A', score: 92, accuracy: 88, weakTopics: [], strongTopics: ['Algebra', 'Equations'], trend: 'up' },
-  { id: 'ss2', name: 'Emma Wilson', class: 'Class 10-A', score: 85, accuracy: 82, weakTopics: ['Geometry'], strongTopics: ['Polynomials'], trend: 'up' },
-  { id: 'ss3', name: 'Michael Lee', class: 'Class 9-A', score: 78, accuracy: 75, weakTopics: ['Trigonometry'], strongTopics: ['Linear Equations'], trend: 'stable' },
-  { id: 'ss4', name: 'Sarah Johnson', class: 'Class 9-B', score: 72, accuracy: 68, weakTopics: ['Quadratic Equations'], strongTopics: [], trend: 'down' },
+  { id: 'ss1', name: 'John Smith', class: 'Class 10-A', score: 92, accuracy: 88, weakTopics: [], strongTopics: ['Algebra', 'Equations'], trend: 'up', rank: 1, attendance: 100, behavior: 'Excellent', trendPercent: 5, online: true },
+  { id: 'ss2', name: 'Emma Wilson', class: 'Class 10-A', score: 88, accuracy: 82, weakTopics: ['Geometry'], strongTopics: ['Polynomials'], trend: 'up', rank: 2, attendance: 96, behavior: 'Good', trendPercent: 3, online: true },
+  { id: 'ss3', name: 'David Brown', class: 'Class 10-A', score: 85, accuracy: 80, weakTopics: [], strongTopics: ['Algebra'], trend: 'stable', rank: 3, attendance: 93, behavior: 'Good', trendPercent: 0, online: true },
+  { id: 'ss4', name: 'Sarah Johnson', class: 'Class 9-B', score: 82, accuracy: 68, weakTopics: ['Trigonometry'], strongTopics: [], trend: 'down', rank: 4, attendance: 90, behavior: 'Needs Attention', trendPercent: -2, online: false },
+  { id: 'ss5', name: 'Michael Lee', class: 'Class 9-A', score: 79, accuracy: 75, weakTopics: ['Quadratic Equations'], strongTopics: ['Linear Equations'], trend: 'up', rank: 5, attendance: 87, behavior: 'Good', trendPercent: 4, online: true },
+  { id: 'ss6', name: 'Lisa Chen', class: 'Class 9-A', score: 76, accuracy: 72, weakTopics: ['Geometry', 'Circles'], strongTopics: ['Algebra'], trend: 'stable', rank: 6, attendance: 85, behavior: 'Good', trendPercent: 0, online: false },
 ];
 
 export const chapters = [
@@ -508,3 +510,360 @@ export const assessmentInsights = {
     overallInsight: 'Class performed well in Algebra basics but struggled with advanced problem-solving. Recommend targeted practice on multi-step problems.',
   },
 };
+
+// Student Subject Detail Data
+export const subjectStudentDetails = {
+  'ss1': {
+    id: 'ss1',
+    name: 'John Smith',
+    class: 'Class 10-A',
+    subject: 'Mathematics',
+    overallScore: 92,
+    accuracy: 88,
+    trend: 'up',
+    trendValue: 5,
+    avatar: 'JS',
+    weakTopics: [],
+    strongTopics: ['Algebra', 'Equations'],
+    performanceHistory: [
+      { month: 'Sep', score: 85 },
+      { month: 'Oct', score: 87 },
+      { month: 'Nov', score: 89 },
+      { month: 'Dec', score: 90 },
+      { month: 'Jan', score: 92 },
+    ],
+    chapterMastery: [
+      { id: 'ch1', name: 'Algebra Basics', mastery: 95, status: 'Mastered', color: 'green' },
+      { id: 'ch2', name: 'Linear Equations', mastery: 92, status: 'Mastered', color: 'green' },
+      { id: 'ch3', name: 'Quadratic Equations', mastery: 88, status: 'Good', color: 'blue' },
+      { id: 'ch4', name: 'Polynomials', mastery: 90, status: 'Good', color: 'blue' },
+      { id: 'ch5', name: 'Geometry', mastery: 85, status: 'Good', color: 'blue' },
+      { id: 'ch6', name: 'Trigonometry', mastery: 80, status: 'Fair', color: 'amber' },
+    ],
+    assignedAssessments: [
+      { id: 'a1', name: 'Mid-Term Test', type: 'Test', status: 'Completed', score: 95, date: '2026-01-28', maxScore: 100 },
+      { id: 'a2', name: 'Algebra Practice', type: 'Assignment', status: 'Completed', score: 92, date: '2026-02-01', maxScore: 100 },
+      { id: 'a3', name: 'Quadratic Equations Worksheet', type: 'Homework', status: 'Completed', score: 88, date: '2026-02-03', maxScore: 100 },
+      { id: 'a4', name: 'Geometry Quiz', type: 'Test', status: 'Pending', score: null, date: '2026-02-08', maxScore: 50 },
+      { id: 'a5', name: 'Trigonometry Practice', type: 'Assignment', status: 'Pending', score: null, date: '2026-02-10', maxScore: 100 },
+    ],
+    recentActivity: [
+      { date: '2026-02-04', activity: 'Completed Quadratic Equations Worksheet', score: 88 },
+      { date: '2026-02-02', activity: 'Submitted Algebra Practice Assignment', score: 92 },
+      { date: '2026-01-30', activity: 'Participated in class discussion', score: null },
+    ],
+  },
+  'ss2': {
+    id: 'ss2',
+    name: 'Emma Wilson',
+    class: 'Class 10-A',
+    subject: 'Mathematics',
+    overallScore: 85,
+    accuracy: 82,
+    trend: 'up',
+    trendValue: 3,
+    avatar: 'EW',
+    weakTopics: ['Geometry'],
+    strongTopics: ['Algebra', 'Linear Equations'],
+    performanceHistory: [
+      { month: 'Sep', score: 78 },
+      { month: 'Oct', score: 80 },
+      { month: 'Nov', score: 82 },
+      { month: 'Dec', score: 84 },
+      { month: 'Jan', score: 85 },
+    ],
+    chapterMastery: [
+      { id: 'ch1', name: 'Algebra Basics', mastery: 88, status: 'Good', color: 'blue' },
+      { id: 'ch2', name: 'Linear Equations', mastery: 90, status: 'Good', color: 'blue' },
+      { id: 'ch3', name: 'Quadratic Equations', mastery: 82, status: 'Fair', color: 'amber' },
+      { id: 'ch4', name: 'Polynomials', mastery: 85, status: 'Good', color: 'blue' },
+      { id: 'ch5', name: 'Geometry', mastery: 68, status: 'Needs Work', color: 'red' },
+      { id: 'ch6', name: 'Trigonometry', mastery: 75, status: 'Fair', color: 'amber' },
+    ],
+    assignedAssessments: [
+      { id: 'a1', name: 'Mid-Term Test', type: 'Test', status: 'Completed', score: 88, date: '2026-01-28', maxScore: 100 },
+      { id: 'a2', name: 'Algebra Practice', type: 'Assignment', status: 'Completed', score: 90, date: '2026-02-01', maxScore: 100 },
+      { id: 'a3', name: 'Quadratic Equations Worksheet', type: 'Homework', status: 'Completed', score: 82, date: '2026-02-03', maxScore: 100 },
+      { id: 'a4', name: 'Geometry Quiz', type: 'Test', status: 'Pending', score: null, date: '2026-02-08', maxScore: 50 },
+      { id: 'a5', name: 'Trigonometry Practice', type: 'Assignment', status: 'Pending', score: null, date: '2026-02-10', maxScore: 100 },
+    ],
+    recentActivity: [
+      { date: '2026-02-04', activity: 'Completed Quadratic Equations Worksheet', score: 82 },
+      { date: '2026-02-02', activity: 'Submitted Algebra Practice Assignment', score: 90 },
+      { date: '2026-01-31', activity: 'Asked question about Geometry', score: null },
+    ],
+  },
+  'ss3': {
+    id: 'ss3',
+    name: 'Michael Lee',
+    class: 'Class 9-A',
+    subject: 'Mathematics',
+    overallScore: 78,
+    accuracy: 75,
+    trend: 'stable',
+    trendValue: 0,
+    avatar: 'ML',
+    weakTopics: ['Trigonometry'],
+    strongTopics: ['Linear Equations'],
+    performanceHistory: [
+      { month: 'Sep', score: 76 },
+      { month: 'Oct', score: 78 },
+      { month: 'Nov', score: 77 },
+      { month: 'Dec', score: 79 },
+      { month: 'Jan', score: 78 },
+    ],
+    chapterMastery: [
+      { id: 'ch1', name: 'Algebra Basics', mastery: 80, status: 'Fair', color: 'amber' },
+      { id: 'ch2', name: 'Linear Equations', mastery: 85, status: 'Good', color: 'blue' },
+      { id: 'ch3', name: 'Quadratic Equations', mastery: 75, status: 'Fair', color: 'amber' },
+      { id: 'ch4', name: 'Polynomials', mastery: 78, status: 'Fair', color: 'amber' },
+      { id: 'ch5', name: 'Geometry', mastery: 72, status: 'Fair', color: 'amber' },
+      { id: 'ch6', name: 'Trigonometry', mastery: 62, status: 'Needs Work', color: 'red' },
+    ],
+    assignedAssessments: [
+      { id: 'a1', name: 'Mid-Term Test', type: 'Test', status: 'Completed', score: 78, date: '2026-01-28', maxScore: 100 },
+      { id: 'a2', name: 'Algebra Practice', type: 'Assignment', status: 'Completed', score: 80, date: '2026-02-01', maxScore: 100 },
+      { id: 'a3', name: 'Quadratic Equations Worksheet', type: 'Homework', status: 'Completed', score: 75, date: '2026-02-03', maxScore: 100 },
+      { id: 'a4', name: 'Geometry Quiz', type: 'Test', status: 'Pending', score: null, date: '2026-02-08', maxScore: 50 },
+      { id: 'a5', name: 'Trigonometry Practice', type: 'Assignment', status: 'Pending', score: null, date: '2026-02-10', maxScore: 100 },
+    ],
+    recentActivity: [
+      { date: '2026-02-04', activity: 'Completed Quadratic Equations Worksheet', score: 75 },
+      { date: '2026-02-02', activity: 'Submitted Algebra Practice Assignment', score: 80 },
+      { date: '2026-01-30', activity: 'Attended extra help session', score: null },
+    ],
+  },
+  'ss4': {
+    id: 'ss4',
+    name: 'Sarah Johnson',
+    class: 'Class 9-B',
+    subject: 'Mathematics',
+    overallScore: 72,
+    accuracy: 68,
+    trend: 'down',
+    trendValue: -2,
+    avatar: 'SJ',
+    weakTopics: ['Quadratic Equations'],
+    strongTopics: [],
+    performanceHistory: [
+      { month: 'Sep', score: 76 },
+      { month: 'Oct', score: 75 },
+      { month: 'Nov', score: 74 },
+      { month: 'Dec', score: 73 },
+      { month: 'Jan', score: 72 },
+    ],
+    chapterMastery: [
+      { id: 'ch1', name: 'Algebra Basics', mastery: 75, status: 'Fair', color: 'amber' },
+      { id: 'ch2', name: 'Linear Equations', mastery: 78, status: 'Fair', color: 'amber' },
+      { id: 'ch3', name: 'Quadratic Equations', mastery: 58, status: 'Needs Work', color: 'red' },
+      { id: 'ch4', name: 'Polynomials', mastery: 70, status: 'Fair', color: 'amber' },
+      { id: 'ch5', name: 'Geometry', mastery: 72, status: 'Fair', color: 'amber' },
+      { id: 'ch6', name: 'Trigonometry', mastery: 68, status: 'Needs Work', color: 'red' },
+    ],
+    assignedAssessments: [
+      { id: 'a1', name: 'Mid-Term Test', type: 'Test', status: 'Completed', score: 70, date: '2026-01-28', maxScore: 100 },
+      { id: 'a2', name: 'Algebra Practice', type: 'Assignment', status: 'Completed', score: 75, date: '2026-02-01', maxScore: 100 },
+      { id: 'a3', name: 'Quadratic Equations Worksheet', type: 'Homework', status: 'Completed', score: 58, date: '2026-02-03', maxScore: 100 },
+      { id: 'a4', name: 'Geometry Quiz', type: 'Test', status: 'Pending', score: null, date: '2026-02-08', maxScore: 50 },
+      { id: 'a5', name: 'Trigonometry Practice', type: 'Assignment', status: 'Pending', score: null, date: '2026-02-10', maxScore: 100 },
+    ],
+    recentActivity: [
+      { date: '2026-02-04', activity: 'Completed Quadratic Equations Worksheet', score: 58 },
+      { date: '2026-02-02', activity: 'Submitted Algebra Practice Assignment', score: 75 },
+      { date: '2026-02-01', activity: 'Missed class due to illness', score: null },
+    ],
+  },
+  'ss5': {
+    id: 'ss5',
+    name: 'Michael Lee',
+    class: 'Class 9-A',
+    subject: 'Mathematics',
+    overallScore: 79,
+    accuracy: 75,
+    trend: 'up',
+    trendValue: 4,
+    avatar: 'ML',
+    weakTopics: ['Quadratic Equations'],
+    strongTopics: ['Linear Equations'],
+    performanceHistory: [
+      { month: 'Sep', score: 73 },
+      { month: 'Oct', score: 75 },
+      { month: 'Nov', score: 76 },
+      { month: 'Dec', score: 78 },
+      { month: 'Jan', score: 79 },
+    ],
+    chapterMastery: [
+      { id: 'ch1', name: 'Algebra Basics', mastery: 82, status: 'Good', color: 'blue' },
+      { id: 'ch2', name: 'Linear Equations', mastery: 85, status: 'Good', color: 'blue' },
+      { id: 'ch3', name: 'Quadratic Equations', mastery: 68, status: 'Needs Work', color: 'red' },
+      { id: 'ch4', name: 'Polynomials', mastery: 78, status: 'Fair', color: 'amber' },
+      { id: 'ch5', name: 'Geometry', mastery: 80, status: 'Fair', color: 'amber' },
+      { id: 'ch6', name: 'Trigonometry', mastery: 75, status: 'Fair', color: 'amber' },
+    ],
+    assignedAssessments: [
+      { id: 'a1', name: 'Mid-Term Test', type: 'Test', status: 'Completed', score: 80, date: '2026-01-28', maxScore: 100 },
+      { id: 'a2', name: 'Algebra Practice', type: 'Assignment', status: 'Completed', score: 82, date: '2026-02-01', maxScore: 100 },
+      { id: 'a3', name: 'Quadratic Equations Worksheet', type: 'Homework', status: 'Completed', score: 68, date: '2026-02-03', maxScore: 100 },
+      { id: 'a4', name: 'Geometry Quiz', type: 'Test', status: 'Pending', score: null, date: '2026-02-08', maxScore: 50 },
+    ],
+    recentActivity: [
+      { date: '2026-02-04', activity: 'Completed Quadratic Equations Worksheet', score: 68 },
+      { date: '2026-02-02', activity: 'Submitted Algebra Practice Assignment', score: 82 },
+      { date: '2026-01-30', activity: 'Participated actively in class', score: null },
+    ],
+  },
+  'ss6': {
+    id: 'ss6',
+    name: 'Lisa Chen',
+    class: 'Class 9-A',
+    subject: 'Mathematics',
+    overallScore: 76,
+    accuracy: 72,
+    trend: 'stable',
+    trendValue: 0,
+    avatar: 'LC',
+    weakTopics: ['Geometry', 'Circles'],
+    strongTopics: ['Algebra'],
+    performanceHistory: [
+      { month: 'Sep', score: 75 },
+      { month: 'Oct', score: 76 },
+      { month: 'Nov', score: 76 },
+      { month: 'Dec', score: 77 },
+      { month: 'Jan', score: 76 },
+    ],
+    chapterMastery: [
+      { id: 'ch1', name: 'Algebra Basics', mastery: 85, status: 'Good', color: 'blue' },
+      { id: 'ch2', name: 'Linear Equations', mastery: 80, status: 'Fair', color: 'amber' },
+      { id: 'ch3', name: 'Quadratic Equations', mastery: 72, status: 'Fair', color: 'amber' },
+      { id: 'ch4', name: 'Polynomials', mastery: 78, status: 'Fair', color: 'amber' },
+      { id: 'ch5', name: 'Geometry', mastery: 65, status: 'Needs Work', color: 'red' },
+      { id: 'ch6', name: 'Trigonometry', mastery: 70, status: 'Fair', color: 'amber' },
+    ],
+    assignedAssessments: [
+      { id: 'a1', name: 'Mid-Term Test', type: 'Test', status: 'Completed', score: 76, date: '2026-01-28', maxScore: 100 },
+      { id: 'a2', name: 'Algebra Practice', type: 'Assignment', status: 'Completed', score: 85, date: '2026-02-01', maxScore: 100 },
+      { id: 'a3', name: 'Quadratic Equations Worksheet', type: 'Homework', status: 'Pending', score: null, date: '2026-02-03', maxScore: 100 },
+      { id: 'a4', name: 'Geometry Quiz', type: 'Test', status: 'Pending', score: null, date: '2026-02-08', maxScore: 50 },
+    ],
+    recentActivity: [
+      { date: '2026-02-03', activity: 'Started Quadratic Equations Worksheet', score: null },
+      { date: '2026-02-02', activity: 'Submitted Algebra Practice Assignment', score: 85 },
+      { date: '2026-01-29', activity: 'Asked questions about Geometry', score: null },
+    ],
+  },
+};
+
+export const getSubjectStudentDetail = (studentId: string) => {
+  return subjectStudentDetails[studentId as keyof typeof subjectStudentDetails] || null;
+};
+
+// Assigned Work Tracker Data
+export const assignedWork = [
+  {
+    id: 'work1',
+    title: 'Quadratic Equations Practice',
+    type: 'Homework',
+    subject: 'Mathematics',
+    classes: ['Class 10-A', 'Class 10-B'],
+    assignedDate: '2026-02-01',
+    dueDate: '2026-02-08',
+    totalMarks: 20,
+    totalQuestions: 10,
+    questionTypes: { mcq: 6, shortAnswer: 4, longAnswer: 0 },
+    createdBy: 'AI Generated',
+    status: 'Active',
+    submissions: [
+      { studentId: 's1', studentName: 'John Smith', class: 'Class 10-A', status: 'Evaluated', submittedAt: '2026-02-05 10:30 AM', score: 18, autoScore: 12, manualScore: 6 },
+      { studentId: 's2', studentName: 'Emma Wilson', class: 'Class 10-A', status: 'Evaluated', submittedAt: '2026-02-06 09:15 AM', score: 16, autoScore: 10, manualScore: 6 },
+      { studentId: 's3', studentName: 'David Brown', class: 'Class 10-A', status: 'Submitted', submittedAt: '2026-02-07 11:00 AM', score: null, autoScore: 11, manualScore: null },
+      { studentId: 's4', studentName: 'Sarah Johnson', class: 'Class 10-A', status: 'Submitted', submittedAt: '2026-02-07 02:30 PM', score: null, autoScore: 9, manualScore: null },
+      { studentId: 's5', studentName: 'Michael Lee', class: 'Class 10-A', status: 'Not Started', submittedAt: null, score: null, autoScore: null, manualScore: null },
+      { studentId: 's6', studentName: 'Lisa Chen', class: 'Class 10-A', status: 'Not Started', submittedAt: null, score: null, autoScore: null, manualScore: null },
+    ],
+  },
+  {
+    id: 'work2',
+    title: 'Mid-Term Assessment',
+    type: 'Assessment',
+    subject: 'Mathematics',
+    classes: ['Class 10-A'],
+    assignedDate: '2026-01-25',
+    dueDate: '2026-02-05',
+    totalMarks: 50,
+    totalQuestions: 20,
+    questionTypes: { mcq: 10, shortAnswer: 6, longAnswer: 4 },
+    createdBy: 'PDF Upload',
+    status: 'Completed',
+    submissions: [
+      { studentId: 's1', studentName: 'John Smith', class: 'Class 10-A', status: 'Evaluated', submittedAt: '2026-02-05 09:00 AM', score: 47, autoScore: 19, manualScore: 28 },
+      { studentId: 's2', studentName: 'Emma Wilson', class: 'Class 10-A', status: 'Evaluated', submittedAt: '2026-02-05 09:05 AM', score: 43, autoScore: 18, manualScore: 25 },
+      { studentId: 's3', studentName: 'David Brown', class: 'Class 10-A', status: 'Evaluated', submittedAt: '2026-02-05 09:10 AM', score: 40, autoScore: 17, manualScore: 23 },
+      { studentId: 's4', studentName: 'Sarah Johnson', class: 'Class 10-A', status: 'Evaluated', submittedAt: '2026-02-05 09:15 AM', score: 38, autoScore: 16, manualScore: 22 },
+    ],
+  },
+  {
+    id: 'work3',
+    title: 'Algebra Basics Assignment',
+    type: 'Assignment',
+    subject: 'Mathematics',
+    classes: ['Class 9-A'],
+    assignedDate: '2026-02-03',
+    dueDate: '2026-02-10',
+    totalMarks: 30,
+    totalQuestions: 15,
+    questionTypes: { mcq: 8, shortAnswer: 5, longAnswer: 2 },
+    createdBy: 'Manual Entry',
+    status: 'Active',
+    submissions: [
+      { studentId: 'ss3', studentName: 'Michael Lee', class: 'Class 9-A', status: 'Submitted', submittedAt: '2026-02-08 03:00 PM', score: null, autoScore: 15, manualScore: null },
+      { studentId: 'ss5', studentName: 'Alex Turner', class: 'Class 9-A', status: 'Not Started', submittedAt: null, score: null, autoScore: null, manualScore: null },
+    ],
+  },
+  {
+    id: 'work4',
+    title: 'Geometry Practice Test',
+    type: 'Test',
+    subject: 'Mathematics',
+    classes: ['Class 10-B'],
+    assignedDate: '2026-02-04',
+    dueDate: '2026-02-11',
+    totalMarks: 40,
+    totalQuestions: 16,
+    questionTypes: { mcq: 12, shortAnswer: 4, longAnswer: 0 },
+    createdBy: 'AI Generated',
+    status: 'Draft',
+    submissions: [],
+  },
+];
+
+export const getAssignedWorkById = (workId: string) => {
+  return assignedWork.find(w => w.id === workId) || null;
+};
+
+export const getAssignedWorkStats = () => {
+  const active = assignedWork.filter(w => w.status === 'Active').length;
+  const draft = assignedWork.filter(w => w.status === 'Draft').length;
+  const completed = assignedWork.filter(w => w.status === 'Completed').length;
+  
+  let totalSubmissions = 0;
+  let evaluatedSubmissions = 0;
+  let pendingEvaluation = 0;
+  
+  assignedWork.forEach(work => {
+    work.submissions.forEach(sub => {
+      totalSubmissions++;
+      if (sub.status === 'Evaluated') evaluatedSubmissions++;
+      if (sub.status === 'Submitted') pendingEvaluation++;
+    });
+  });
+  
+  return {
+    active,
+    draft,
+    completed,
+    totalSubmissions,
+    evaluatedSubmissions,
+    pendingEvaluation,
+  };
+};
+

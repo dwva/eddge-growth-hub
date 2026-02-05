@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useCallback } from 'react';
 import StudentDashboardLayout from '@/components/layout/StudentDashboardLayout';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -8,20 +8,29 @@ import {
   BookOpen,
   FileText,
   Target,
-  Play,
   ChevronLeft,
-  CheckCircle,
-  Lock,
 } from 'lucide-react';
 import {
   subjects,
   chapters,
   learningTopics,
-  learningStages,
   recentlyStudiedChapters,
 } from '@/data/mockData';
+import {
+  LearningPath,
+  LearnEngine,
+  type LearningPathData,
+  type LearningNodeData,
+  type LearnEngineSession,
+} from '@/components/learn-engine';
+import {
+  getLearningPathForTopic,
+  updateNodeStatus,
+  learningPaths,
+  type NodeOutcome,
+} from '@/data/learningNodes';
 
-type ViewMode = 'curriculum' | 'pathway' | 'stage';
+type ViewMode = 'curriculum' | 'pathway' | 'engine';
 
 const StudentLearning = () => {
   const [viewMode, setViewMode] = useState<ViewMode>('curriculum');
@@ -30,8 +39,13 @@ const StudentLearning = () => {
   const [selectedChapterId, setSelectedChapterId] = useState<string | null>(null);
   const [selectedTopicId, setSelectedTopicId] = useState<string | null>(null);
 
-  const [completedStages, setCompletedStages] = useState<string[]>([]);
-  const [openStageId, setOpenStageId] = useState<string | null>(null);
+  // Learning path state
+  const [currentPath, setCurrentPath] = useState<LearningPathData | null>(null);
+  const [activeNode, setActiveNode] = useState<LearningNodeData | null>(null);
+  const [lastNodeFeedback, setLastNodeFeedback] = useState<{
+    message: string;
+    tone: 'safe' | 'nudge' | 'strong';
+  } | null>(null);
 
   const chapterList = selectedSubjectId ? (chapters[selectedSubjectId as keyof typeof chapters] ?? []) : [];
   const topicKey = selectedSubjectId && selectedChapterId ? `${selectedSubjectId}-${selectedChapterId}` : '';
@@ -40,36 +54,90 @@ const StudentLearning = () => {
   const selectedChapter = chapterList.find((c: { id: string }) => c.id === selectedChapterId);
   const selectedTopic = topicList.find((t) => t.id === selectedTopicId);
 
-  const handleBackToCurriculum = () => {
+  // Handle topic selection - load learning path
+  const handleTopicSelect = useCallback((topicId: string) => {
+    setSelectedTopicId(topicId);
+    const path = getLearningPathForTopic(topicId);
+    if (path) {
+      setCurrentPath(path);
+      setViewMode('pathway');
+    }
+  }, []);
+
+  // Handle node click on the path
+  const handleNodeClick = useCallback((node: LearningNodeData) => {
+    if (node.status === 'locked') return;
+    
+    setActiveNode(node);
+    setViewMode('engine');
+  }, []);
+
+  // Handle engine completion – derive mastery and support signals
+  const handleEngineComplete = useCallback(
+    (session: LearnEngineSession) => {
+      if (!currentPath || !activeNode) return;
+
+      const totalAttempts =
+        session.totalCorrect + session.totalIncorrect || 1;
+      const accuracy = session.totalCorrect / totalAttempts;
+      const confidenceScore = Math.round(accuracy * 100);
+
+      const partial = accuracy < 0.8;
+
+      const outcome: NodeOutcome = {
+        completed: true,
+        partial,
+        needsSupport: session.needsSupport,
+        confidenceScore,
+      };
+
+      // Generate a calm confidence message for the student
+      let feedback: { message: string; tone: 'safe' | 'nudge' | 'strong' };
+      if (session.needsSupport) {
+        feedback = {
+          tone: 'safe',
+          message: 'One small thing to fix here. A quick helper step has been unlocked for you.',
+        };
+      } else if (accuracy >= 0.85) {
+        feedback = {
+          tone: 'strong',
+          message: "You’re exam-ready on this skill. Great work.",
+        };
+      } else if (accuracy >= 0.5) {
+        feedback = {
+          tone: 'nudge',
+          message: "You’re getting this. One more short practice step will lock it in.",
+        };
+      } else {
+        feedback = {
+          tone: 'safe',
+          message: "Let’s try a gentler angle on this skill before we move ahead.",
+        };
+      }
+
+      const updatedPath = updateNodeStatus(currentPath, activeNode.id, outcome);
+      setCurrentPath(updatedPath);
+      setLastNodeFeedback(feedback);
+
+      // Return to pathway view
+      setActiveNode(null);
+      setViewMode('pathway');
+    },
+    [currentPath, activeNode]
+  );
+
+  // Back navigation
+  const handleBackToCurriculum = useCallback(() => {
     setViewMode('curriculum');
-    setOpenStageId(null);
-  };
+    setCurrentPath(null);
+    setActiveNode(null);
+    setLastNodeFeedback(null);
+  }, []);
 
-  const handleBackToStages = () => {
-    setOpenStageId(null);
-  };
-
-  const getStageStatus = (stageId: string, index: number) => {
-    if (completedStages.includes(stageId)) return 'completed';
-    if (openStageId === stageId) return 'current';
-    if (index === 0) return 'available';
-    if (completedStages.includes(learningStages[index - 1].id)) return 'available';
-    return 'locked';
-  };
-
-  const completeStage = (stageId: string) => {
-    setCompletedStages((prev) => (prev.includes(stageId) ? prev : [...prev, stageId]));
-    setOpenStageId(null);
-  };
-
-  const markTopicComplete = () => {
-    setViewMode('curriculum');
-    setSelectedTopicId(null);
-    setOpenStageId(null);
-    setCompletedStages([]);
-  };
-
-  const allStagesCompleted = learningStages.every((s) => completedStages.includes(s.id));
+  const handleBackToPath = useCallback(() => {
+    setViewMode('pathway');
+    setActiveNode(null);
+  }, []);
 
   return (
     <StudentDashboardLayout title="Learn">
@@ -160,7 +228,7 @@ const StudentLearning = () => {
                 </CardContent>
               </Card>
 
-              {/* Column 3 – Topics (fills column; Start button inside when topic selected) */}
+              {/* Column 3 – Topics */}
               <Card className="rounded-2xl border border-gray-200 dark:border-border shadow-sm flex flex-col">
                 <CardContent className="p-6 flex flex-col flex-1 min-h-0">
                   <h3 className="flex items-center gap-2 text-lg font-semibold text-gray-900 dark:text-foreground mb-4">
@@ -191,16 +259,15 @@ const StudentLearning = () => {
                                 : topic.difficulty === 'hard'
                                   ? 'bg-red-100 text-red-800 dark:bg-red-950 dark:text-red-300'
                                   : '';
+                          
+                          // Check if this topic has a learning path
+                          const hasPath = !!learningPaths[topic.id];
+                          
                           return (
                             <button
                               key={topic.id}
                               type="button"
-                              onClick={() => {
-                                setSelectedTopicId(topic.id);
-                                setCompletedStages([]);
-                                setOpenStageId(null);
-                                setViewMode('pathway');
-                              }}
+                              onClick={() => handleTopicSelect(topic.id)}
                               className={`w-full p-4 rounded-lg border text-left transition-all ${
                                 selectedTopicId === topic.id
                                   ? 'border-purple-500 bg-purple-500/10 dark:bg-purple-500/20'
@@ -217,6 +284,11 @@ const StudentLearning = () => {
                                     className={`text-xs ${diffClass}`}
                                   >
                                     {topic.difficulty}
+                                  </Badge>
+                                )}
+                                {hasPath && (
+                                  <Badge variant="outline" className="text-xs text-purple-600 border-purple-300">
+                                    5 skills
                                   </Badge>
                                 )}
                               </div>
@@ -266,10 +338,10 @@ const StudentLearning = () => {
           </>
         )}
 
-        {/* Learning pathway – stage overview */}
-        {viewMode === 'pathway' && !openStageId && selectedTopic && selectedChapter && selectedSubject && (
-          <>
-            <div className="flex flex-wrap items-center justify-between gap-4">
+        {/* Learning Path View – full-size widget */}
+        {viewMode === 'pathway' && currentPath && selectedTopic && selectedChapter && selectedSubject && (
+          <div className="flex flex-col min-h-[calc(100vh-11rem)] gap-4">
+            <div className="flex flex-wrap items-center justify-between gap-4 flex-shrink-0">
               <Button
                 variant="outline"
                 onClick={handleBackToCurriculum}
@@ -280,248 +352,36 @@ const StudentLearning = () => {
                 <span className="sm:hidden">Back</span>
               </Button>
             </div>
-            <div className="text-center sm:text-left">
-              <h2 className="font-display text-2xl font-bold text-gray-900 dark:text-foreground">
-                {selectedTopic.name}
-              </h2>
-              <p className="text-gray-500 dark:text-muted-foreground mt-1">
-                {selectedChapter.name} · {selectedSubject.name}
-              </p>
-              <p className="text-sm text-gray-500 dark:text-muted-foreground mt-1">
-                You are learning this topic step by step
-              </p>
-            </div>
 
-            <div className="space-y-6">
-              {learningStages.map((stage, index) => {
-                const status = getStageStatus(stage.id, index);
-                const isLocked = status === 'locked';
-                const isCompleted = status === 'completed';
-                const isAvailable = status === 'available' || status === 'current';
-
-                return (
-                  <Card
-                    key={stage.id}
-                    className={`rounded-2xl border-l-4 transition-all ${
-                      isLocked
-                        ? 'border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-900/50 opacity-60'
-                        : isCompleted
-                          ? 'border-green-500 bg-green-50/30 dark:bg-green-950/20'
-                          : 'border-purple-500 bg-card'
-                    }`}
-                  >
-                    <CardContent className="p-6">
-                      <div className="flex flex-col md:flex-row md:items-center gap-4">
-                        <div
-                          className={`w-16 h-16 rounded-full flex items-center justify-center flex-shrink-0 ${
-                            isLocked
-                              ? 'bg-gray-400 dark:bg-gray-600'
-                              : isCompleted
-                                ? 'bg-green-500'
-                                : 'bg-blue-500'
-                          }`}
-                        >
-                          {isLocked ? (
-                            <Lock className="w-8 h-8 text-white" />
-                          ) : isCompleted ? (
-                            <CheckCircle className="w-8 h-8 text-white" />
-                          ) : (
-                            <BookOpen className="w-8 h-8 text-white" />
-                          )}
-                        </div>
-                        <div className="flex-1 min-w-0">
-                          <div className="flex flex-wrap items-center gap-2">
-                            <Badge
-                              variant="secondary"
-                              className={
-                                isLocked
-                                  ? 'bg-gray-200 text-gray-700 dark:bg-gray-700 dark:text-gray-300'
-                                  : isCompleted
-                                    ? 'bg-green-100 text-green-700 dark:bg-green-900 dark:text-green-300'
-                                    : 'bg-purple-500/10 text-purple-600 dark:text-purple-400'
-                              }
-                            >
-                              Stage {index + 1}
-                            </Badge>
-                            {isCompleted && (
-                              <Badge className="bg-green-100 text-green-700 dark:bg-green-900 dark:text-green-300">
-                                Completed
-                              </Badge>
-                            )}
-                          </div>
-                          <h3 className="text-lg font-semibold text-gray-900 dark:text-foreground mt-1">
-                            {stage.letter}. {stage.name}
-                          </h3>
-                          <p className="text-sm text-gray-600 dark:text-gray-400 mt-0.5">
-                            {stage.description}
-                          </p>
-                          {isLocked && (
-                            <p className="text-sm text-gray-500 dark:text-muted-foreground mt-2">
-                              Complete Stage {index} to unlock…
-                            </p>
-                          )}
-                          <div className="mt-3">
-                            {isLocked && (
-                              <Button disabled className="rounded-xl" variant="secondary">
-                                Locked
-                              </Button>
-                            )}
-                            {isAvailable && (
-                              <Button
-                                className="rounded-xl bg-purple-600 hover:bg-purple-700"
-                                onClick={() => setOpenStageId(stage.id)}
-                              >
-                                <Play className="w-4 h-4 mr-2" />
-                                {index === 0 ? 'Start Foundation' : `Start ${stage.name}`}
-                              </Button>
-                            )}
-                            {isCompleted && (
-                              <Button
-                                variant="outline"
-                                className="rounded-xl border-green-500 text-green-600 hover:bg-green-50 dark:hover:bg-green-950/30"
-                                onClick={() => setOpenStageId(stage.id)}
-                              >
-                                Review
-                              </Button>
-                            )}
-                          </div>
-                        </div>
-                      </div>
-                    </CardContent>
-                  </Card>
-                );
-              })}
-            </div>
-
-            {allStagesCompleted && (
-              <div className="flex justify-center pt-4">
-                <Button
-                  className="rounded-xl bg-green-600 hover:bg-green-700"
-                  onClick={markTopicComplete}
-                >
-                  <CheckCircle className="w-4 h-4 mr-2" />
-                  Mark Topic as Complete
-                </Button>
-              </div>
+            {lastNodeFeedback && (
+              <Card className="rounded-2xl border border-purple-100 dark:border-purple-900/40 bg-purple-50/60 dark:bg-purple-950/20 flex-shrink-0">
+                <CardContent className="py-3 px-4 text-sm text-purple-900 dark:text-purple-100">
+                  {lastNodeFeedback.message}
+                </CardContent>
+              </Card>
             )}
-          </>
+
+            <div className="flex-1 min-h-0 flex flex-col">
+              <LearningPath 
+                path={currentPath}
+                onNodeClick={handleNodeClick}
+                emotionalMessage={lastNodeFeedback?.message}
+              />
+            </div>
+          </div>
         )}
 
-        {/* Stage content view */}
-        {viewMode === 'pathway' && openStageId && selectedTopic && selectedChapter && selectedSubject && (
-          <StageContentView
-            stageId={openStageId}
-            stage={learningStages.find((s) => s.id === openStageId)!}
-            topicName={selectedTopic.name}
-            chapterName={selectedChapter.name}
-            subjectName={selectedSubject.name}
-            onBack={handleBackToStages}
-            onComplete={() => completeStage(openStageId)}
+        {/* Learn Engine View - Inside Node */}
+        {viewMode === 'engine' && activeNode && currentPath && (
+          <LearnEngine
+            node={activeNode}
+            onComplete={handleEngineComplete}
+            onBack={handleBackToPath}
           />
         )}
       </div>
     </StudentDashboardLayout>
   );
 };
-
-function StageContentView({
-  stageId,
-  stage,
-  topicName,
-  chapterName,
-  subjectName,
-  onBack,
-  onComplete,
-}: {
-  stageId: string;
-  stage: { id: string; letter: string; name: string; description: string };
-  topicName: string;
-  chapterName: string;
-  subjectName: string;
-  onBack: () => void;
-  onComplete: () => void;
-}) {
-  return (
-    <div className="space-y-6">
-      <div className="flex items-center gap-4">
-        <Button variant="outline" onClick={onBack} className="rounded-xl">
-          <ChevronLeft className="w-4 h-4 mr-1" />
-          Back
-        </Button>
-        <div>
-          <h2 className="font-display text-2xl font-bold text-gray-900 dark:text-foreground">
-            {stage.letter}. {stage.name}
-          </h2>
-          <p className="text-sm text-gray-500 dark:text-muted-foreground">
-            {topicName} · {chapterName} · {subjectName}
-          </p>
-        </div>
-      </div>
-
-      <Card className="rounded-2xl border border-gray-200 dark:border-border">
-        <CardContent className="p-6">
-          {stageId === 'foundation' && (
-            <div className="space-y-4">
-              <h3 className="text-lg font-semibold text-gray-900 dark:text-foreground">
-                Why this topic matters
-              </h3>
-              <p className="text-gray-700 dark:text-gray-300">
-                This topic forms the foundation for understanding more advanced concepts. Mastering it will help you in exams and real-world applications.
-              </p>
-              <p className="text-sm text-gray-500 dark:text-muted-foreground">
-                Take your time to read through the overview. Click Continue when you are ready to move to the next stage.
-              </p>
-            </div>
-          )}
-          {stageId === 'deep' && (
-            <div className="space-y-4">
-              <h3 className="text-lg font-semibold text-gray-900 dark:text-foreground">
-                Core concepts
-              </h3>
-              <p className="text-gray-700 dark:text-gray-300">
-                Here you will learn the main ideas step by step. Read each section carefully and use the examples to reinforce your understanding.
-              </p>
-              <div className="rounded-xl bg-gray-50 dark:bg-muted/50 p-4 text-sm">
-                <p className="font-medium text-gray-800 dark:text-foreground mb-2">Key points</p>
-                <ul className="list-disc list-inside space-y-1 text-gray-600 dark:text-gray-400">
-                  <li>Definition and key terms</li>
-                  <li>Formulas and methods</li>
-                  <li>Worked examples</li>
-                </ul>
-              </div>
-            </div>
-          )}
-          {stageId === 'concept' && (
-            <div className="space-y-4">
-              <h3 className="text-lg font-semibold text-gray-900 dark:text-foreground">
-                Concept anchoring
-              </h3>
-              <p className="text-gray-700 dark:text-gray-300">
-                Practice applying what you have learned. Short exercises will help anchor the concepts.
-              </p>
-            </div>
-          )}
-          {stageId === 'micro' && (
-            <div className="space-y-4">
-              <h3 className="text-lg font-semibold text-gray-900 dark:text-foreground">
-                Micro check
-              </h3>
-              <p className="text-gray-700 dark:text-gray-300">
-                Quick checkpoints to validate your learning. Answer the following to confirm understanding.
-              </p>
-            </div>
-          )}
-
-          <div className="mt-6 pt-4 border-t border-gray-200 dark:border-border">
-            <Button onClick={onComplete} className="rounded-xl bg-purple-600 hover:bg-purple-700">
-              <CheckCircle className="w-4 h-4 mr-2" />
-              Mark stage complete and continue
-            </Button>
-          </div>
-        </CardContent>
-      </Card>
-    </div>
-  );
-}
 
 export default StudentLearning;

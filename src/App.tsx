@@ -46,8 +46,10 @@ import TeacherSettings from "./pages/teacher/TeacherSettings";
 import TeacherSupport from "./pages/teacher/TeacherSupport";
 import TeacherSubjectClasses from "./pages/teacher/TeacherSubjectClasses";
 import TeacherSubjectStudents from "./pages/teacher/TeacherSubjectStudents";
+import TeacherSubjectStudentProfile from "./pages/teacher/TeacherSubjectStudentProfile";
 import TeacherSubjectAnalytics from "./pages/teacher/TeacherSubjectAnalytics";
 import TeacherAITools from "./pages/teacher/TeacherAITools";
+import TeacherAssignedWork from "./pages/teacher/TeacherAssignedWork";
 import TeacherStudentProfile from "./pages/teacher/TeacherStudentProfile";
 import TeacherTasks from "./pages/teacher/TeacherTasks";
 import TeacherParentEngagement from "./pages/teacher/TeacherParentEngagement";
@@ -228,11 +230,13 @@ const App = () => (
             <Route path="/teacher/support" element={<ProtectedRoute allowedRoles={['teacher']}><TeacherSupport /></ProtectedRoute>} />
             <Route path="/teacher/my-subject/classes" element={<ProtectedRoute allowedRoles={['teacher']}><TeacherSubjectClasses /></ProtectedRoute>} />
             <Route path="/teacher/my-subject/students" element={<ProtectedRoute allowedRoles={['teacher']}><TeacherSubjectStudents /></ProtectedRoute>} />
+            <Route path="/teacher/my-subject/students/:studentId" element={<ProtectedRoute allowedRoles={['teacher']}><TeacherSubjectStudentProfile /></ProtectedRoute>} />
             <Route path="/teacher/subject-analytics" element={<ProtectedRoute allowedRoles={['teacher']}><TeacherSubjectAnalytics /></ProtectedRoute>} />
             <Route path="/teacher/subject-analytics/chapters" element={<ProtectedRoute allowedRoles={['teacher']}><TeacherSubjectAnalytics /></ProtectedRoute>} />
             <Route path="/teacher/subject-analytics/topics" element={<ProtectedRoute allowedRoles={['teacher']}><TeacherSubjectAnalytics /></ProtectedRoute>} />
             <Route path="/teacher/subject-analytics/mistakes" element={<ProtectedRoute allowedRoles={['teacher']}><TeacherSubjectAnalytics /></ProtectedRoute>} />
             <Route path="/teacher/ai-tools/*" element={<ProtectedRoute allowedRoles={['teacher']}><TeacherAITools /></ProtectedRoute>} />
+            <Route path="/teacher/assigned-work" element={<ProtectedRoute allowedRoles={['teacher']}><TeacherAssignedWork /></ProtectedRoute>} />
             <Route path="/teacher/*" element={<ProtectedRoute allowedRoles={['teacher']}><TeacherHome /></ProtectedRoute>} />
 
             {/* Parent Routes */}

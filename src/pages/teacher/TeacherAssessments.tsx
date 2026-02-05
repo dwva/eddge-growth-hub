@@ -1,7 +1,10 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { useLocation } from 'react-router-dom';
 import TeacherDashboardLayout from '@/components/layout/TeacherDashboardLayout';
 import StatCard from '@/components/shared/StatCard';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { AssessmentWizard } from '@/components/teacher/AssessmentWizard';
+import { AssessmentSubmissionCard } from '@/components/teacher/AssessmentSubmissionCard';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -28,7 +31,16 @@ const TeacherAssessmentsContent = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [assessments, setAssessments] = useState(mockAssessments);
   const [isCreateOpen, setIsCreateOpen] = useState(false);
+  const [wizardOpen, setWizardOpen] = useState(false);
   const [statusFilter, setStatusFilter] = useState('all');
+  const location = useLocation();
+
+  // Open wizard when coming from AI Tools with questions
+  useEffect(() => {
+    if (location.state?.fromAITools && location.state?.questions) {
+      setWizardOpen(true);
+    }
+  }, [location.state]);
   const [formData, setFormData] = useState({
     title: '',
     subject: '',
@@ -91,6 +103,10 @@ const TeacherAssessmentsContent = () => {
   const publishedCount = assessments.filter(a => a.status === 'published').length;
   const avgScore = Math.round(assessmentResults.reduce((acc, r) => acc + r.avgScore, 0) / assessmentResults.length);
 
+  const handlePublishResults = (assessmentId: string) => {
+    toast.success('Results published successfully');
+  };
+
   return (
     <div className="space-y-10 max-w-[1600px]">
       {/* Page Header - Clean */}
@@ -99,13 +115,34 @@ const TeacherAssessmentsContent = () => {
           <h1 className="text-3xl font-bold text-gray-900">Assessments</h1>
           <p className="text-sm text-gray-500 mt-2">Create and manage assessments for your classes</p>
         </div>
+        <Button size="sm" className="gap-2 h-10 rounded-xl" onClick={() => setWizardOpen(true)}>
+          <Plus className="w-4 h-4" />
+          Create Assessment
+        </Button>
+
+        {/* Assessment Wizard */}
+        <AssessmentWizard
+          open={wizardOpen}
+          onClose={() => setWizardOpen(false)}
+          onSave={(assessment) => {
+            setAssessments(prev => [...prev, {
+              id: assessment.id || `a${Date.now()}`,
+              title: assessment.title,
+              subject: assessment.subject || 'Mathematics',
+              class: assessment.class,
+              type: assessment.type,
+              marks: assessment.totalMarks || 50,
+              scheduledDate: assessment.dueDate || new Date().toISOString().split('T')[0],
+              status: assessment.status || 'draft',
+            }]);
+            setWizardOpen(false);
+            toast.success(assessment.status === 'published' ? 'Assessment assigned!' : 'Assessment saved as draft');
+          }}
+          initialData={location.state}
+        />
+
+        {/* Keep old dialog for quick create */}
         <Dialog open={isCreateOpen} onOpenChange={setIsCreateOpen}>
-          <DialogTrigger asChild>
-            <Button size="sm" className="gap-2 h-10 rounded-xl">
-              <Plus className="w-4 h-4" />
-              Create Assessment
-            </Button>
-          </DialogTrigger>
           <DialogContent className="sm:max-w-lg">
             <DialogHeader>
               <DialogTitle>Create New Assessment</DialogTitle>
@@ -332,6 +369,14 @@ const TeacherAssessmentsContent = () => {
                         {assessment.type}
                       </div>
                     </div>
+
+                    {/* Submission Tracking for Published */}
+                    {assessment.status === 'published' && (
+                      <AssessmentSubmissionCard
+                        assessment={assessment}
+                        onPublishResults={handlePublishResults}
+                      />
+                    )}
                   </CardContent>
                 </Card>
               ))}

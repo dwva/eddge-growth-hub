@@ -6,11 +6,9 @@ import { useTeacherMode } from '@/contexts/TeacherModeContext';
 import { Card, CardContent } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
-import { Search, Users, TrendingUp, TrendingDown, Minus, AlertCircle } from 'lucide-react';
+import { Search, Users, AlertCircle } from 'lucide-react';
 import { subjectStudents } from '@/data/teacherMockData';
 
 const TeacherSubjectStudentsContent = () => {
@@ -37,14 +35,6 @@ const TeacherSubjectStudentsContent = () => {
     const matchesClass = classFilter === 'all' || student.class === classFilter;
     return matchesSearch && matchesClass;
   });
-
-  const getTrendIcon = (trend: string) => {
-    switch (trend) {
-      case 'up': return <TrendingUp className="w-4 h-4 text-green-500" />;
-      case 'down': return <TrendingDown className="w-4 h-4 text-red-500" />;
-      default: return <Minus className="w-4 h-4 text-muted-foreground" />;
-    }
-  };
 
   return (
     <div className="space-y-5 max-w-[1600px]">
@@ -92,89 +82,61 @@ const TeacherSubjectStudentsContent = () => {
       </div>
 
       {/* Students Table */}
-      <div>
-        <h2 className="text-sm font-semibold text-gray-400 uppercase tracking-wide mb-5">
-          {filteredStudents.length} Students
-        </h2>
-        <Card className="border-0 shadow-sm rounded-2xl overflow-hidden">
-          <CardContent className="p-0">
-            {filteredStudents.length > 0 ? (
-              <div className="rounded-md border overflow-x-auto">
-                <Table>
-                  <TableHeader>
-                    <TableRow>
-                      <TableHead>Student</TableHead>
-                      <TableHead>Score</TableHead>
-                      <TableHead>Accuracy</TableHead>
-                      <TableHead>Weak Topics</TableHead>
-                      <TableHead>Strong Topics</TableHead>
-                      <TableHead>Trend</TableHead>
-                    </TableRow>
-                  </TableHeader>
-                  <TableBody>
-                    {filteredStudents.map((student) => (
-                      <TableRow key={student.id}>
-                        <TableCell>
-                          <div className="flex items-center gap-3">
-                            <Avatar className="w-9 h-9">
-                              <AvatarFallback className="bg-primary/10 text-primary text-sm">
+      <Card className="border-0 shadow-sm rounded-2xl">
+        <CardContent className="p-0">
+          {filteredStudents.length > 0 ? (
+            <div className="overflow-x-auto">
+              <table className="w-full">
+                <thead>
+                  <tr className="border-b border-gray-100">
+                    <th className="text-left py-4 px-6 text-xs font-semibold text-gray-500 uppercase tracking-wider">Student</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {filteredStudents.map((student, index) => (
+                    <tr 
+                      key={student.id} 
+                      className="border-b border-gray-50 hover:bg-gray-50/50 transition-colors cursor-pointer"
+                      onClick={() => navigate(`/teacher/my-subject/students/${student.id}`)}
+                    >
+                      {/* Student Column */}
+                      <td className="py-4 px-6">
+                        <div className="flex items-center gap-3">
+                          <div className="relative">
+                            <Avatar className="w-10 h-10">
+                              <AvatarFallback className="bg-violet-100 text-violet-700 text-sm font-medium">
                                 {student.name.split(' ').map(n => n[0]).join('')}
                               </AvatarFallback>
                             </Avatar>
-                            <div>
-                              <p className="font-medium">{student.name}</p>
-                              <p className="text-xs text-muted-foreground">{student.class}</p>
+                            {student.online && (
+                              <div className="absolute bottom-0 right-0 w-3 h-3 bg-emerald-500 border-2 border-white rounded-full"></div>
+                            )}
+                          </div>
+                          <div>
+                            <p className="font-semibold text-gray-900">{student.name}</p>
+                            <div className="flex items-center gap-2 mt-0.5">
+                              <p className="text-sm text-gray-500">Rank #{student.rank}</p>
+                              {student.weakTopics.length > 0 && (
+                                <p className="text-xs text-red-500">Weak: {student.weakTopics[0]}</p>
+                              )}
                             </div>
                           </div>
-                        </TableCell>
-                        <TableCell>
-                          <Badge variant={student.score >= 80 ? 'default' : student.score >= 60 ? 'secondary' : 'destructive'}>
-                            {student.score}%
-                          </Badge>
-                        </TableCell>
-                        <TableCell>{student.accuracy}%</TableCell>
-                        <TableCell>
-                          {student.weakTopics.length > 0 ? (
-                            <div className="flex flex-wrap gap-1">
-                              {student.weakTopics.map(topic => (
-                                <Badge key={topic} variant="outline" className="text-xs text-red-600 border-red-200">
-                                  {topic}
-                                </Badge>
-                              ))}
-                            </div>
-                          ) : (
-                            <span className="text-muted-foreground text-sm">None</span>
-                          )}
-                        </TableCell>
-                        <TableCell>
-                          {student.strongTopics.length > 0 ? (
-                            <div className="flex flex-wrap gap-1">
-                              {student.strongTopics.map(topic => (
-                                <Badge key={topic} variant="outline" className="text-xs text-green-600 border-green-200">
-                                  {topic}
-                                </Badge>
-                              ))}
-                            </div>
-                          ) : (
-                            <span className="text-muted-foreground text-sm">None</span>
-                          )}
-                        </TableCell>
-                        <TableCell>{getTrendIcon(student.trend)}</TableCell>
-                      </TableRow>
-                    ))}
-                  </TableBody>
-                </Table>
-              </div>
-            ) : (
-              <div className="text-center py-12">
-                <Users className="w-12 h-12 text-muted-foreground mx-auto mb-4" />
-                <h3 className="text-lg font-medium mb-2">No students found</h3>
-                <p className="text-muted-foreground">Try adjusting your filters</p>
-              </div>
-            )}
-          </CardContent>
-        </Card>
-      </div>
+                        </div>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          ) : (
+            <div className="text-center py-16">
+              <Users className="w-12 h-12 text-gray-400 mx-auto mb-4" />
+              <h3 className="text-lg font-semibold text-gray-900 mb-2">No students found</h3>
+              <p className="text-gray-500">Try adjusting your filters</p>
+            </div>
+          )}
+        </CardContent>
+      </Card>
     </div>
   );
 };
