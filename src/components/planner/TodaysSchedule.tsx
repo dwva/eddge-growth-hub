@@ -1,7 +1,7 @@
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { CalendarDays } from 'lucide-react';
+import { CalendarDays, Trash2 } from 'lucide-react';
 import { intentConfig, priorityBarColors, type Task } from '@/pages/student/StudentPlanner';
 
 type TodaysScheduleProps = {
@@ -9,9 +9,10 @@ type TodaysScheduleProps = {
   onViewCalendar: () => void;
   onAddTask: () => void;
   onStart: (taskId: string) => void;
+  onRemove?: (taskId: string) => void;
 };
 
-export const TodaysSchedule = ({ tasks, onViewCalendar, onAddTask, onStart }: TodaysScheduleProps) => (
+export const TodaysSchedule = ({ tasks, onViewCalendar, onAddTask, onStart, onRemove }: TodaysScheduleProps) => (
   <Card className="border border-gray-200 shadow-sm rounded-2xl overflow-hidden flex flex-col min-h-0 h-full sticky top-4">
     <CardContent className="p-6 flex flex-col flex-1 min-h-0">
       <div className="flex items-center justify-between mb-4 shrink-0">
@@ -50,21 +51,29 @@ export const TodaysSchedule = ({ tasks, onViewCalendar, onAddTask, onStart }: To
                     <p className="text-xs text-muted-foreground mt-0.5">Why: {task.reason}</p>
                     <p className="text-xs text-gray-500">{task.subject} · {task.duration}</p>
                   </div>
-                  <div className="flex items-center gap-2">
+                  <div className="flex items-center gap-2 shrink-0">
                     {isDone ? (
                       <Badge className="bg-green-100 text-green-700 border-0">Completed</Badge>
                     ) : (
-                      <>
-                        <span className="text-xs text-gray-500">{task.duration}</span>
-                        <Button
-                          variant="ghost"
-                          size="sm"
-                          className="opacity-0 group-hover:opacity-100 transition-opacity"
-                          onClick={() => onStart(task.id)}
-                        >
-                          {task.status === 'in_progress' ? 'Continue' : 'Start'}
-                        </Button>
-                      </>
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        className="rounded-lg"
+                        onClick={() => onStart(task.id)}
+                      >
+                        {task.status === 'in_progress' ? 'Continue' : 'Start'}
+                      </Button>
+                    )}
+                    {onRemove && (
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        className="h-8 w-8 text-muted-foreground hover:text-destructive shrink-0"
+                        onClick={() => onRemove(task.id)}
+                        aria-label="Delete task"
+                      >
+                        <Trash2 className="h-4 w-4" />
+                      </Button>
                     )}
                   </div>
                 </li>
