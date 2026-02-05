@@ -3,7 +3,7 @@ import StudentDashboardLayout from '@/components/layout/StudentDashboardLayout';
 import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Skeleton } from '@/components/ui/skeleton';
-import { LayoutDashboard, Calendar as CalendarIcon, ListTodo, AlertCircle, Brain, Swords, RotateCcw, FlaskConical, Wrench } from 'lucide-react';
+import { LayoutDashboard, Calendar as CalendarIcon, AlertCircle, Brain, Swords, RotateCcw, FlaskConical, Wrench } from 'lucide-react';
 import { format, isSameDay } from 'date-fns';
 import { useAuth } from '@/contexts/AuthContext';
 import { plannerStubs } from '@/data/planner.stubs';
@@ -107,11 +107,9 @@ export const subjectAccent: Record<string, string> = {
 
 // ----- Page component -----
 import { PlannerStats } from '@/components/planner/PlannerStats';
-import { NextBestActionCard } from '@/components/planner/NextBestActionCard';
 import { TodaysSchedule } from '@/components/planner/TodaysSchedule';
 import { PlannerDeadlinesAndFocus } from '@/components/planner/PlannerDeadlinesAndFocus';
 import { PlannerCalendar } from '@/components/planner/PlannerCalendar';
-import { PlannerTasks } from '@/components/planner/PlannerTasks';
 import { PlannerSidebar } from '@/components/planner/PlannerSidebar';
 import { TaskDetailDialog } from '@/components/planner/TaskDetailDialog';
 import { AddTaskDialog } from '@/components/planner/AddTaskDialog';
@@ -121,18 +119,15 @@ const StudentPlanner = () => {
   const [loading, setLoading] = useState(false);
   const [loadError, setLoadError] = useState<string | null>(null);
   const [tasks, setTasks] = useState<Task[]>(plannerStubs.initialTasks);
-  const [taskFilter, setTaskFilter] = useState<'all' | 'pending' | 'completed'>('all');
   const [activeTab, setActiveTab] = useState<string>('dashboard');
-  const [calendarDate, setCalendarDate] = useState<Date>(() => new Date(2026, 1, 1));
+  const [calendarDate, setCalendarDate] = useState<Date>(() => new Date());
   const [selectedTaskId, setSelectedTaskId] = useState<string | null>(null);
   const [addTaskOpen, setAddTaskOpen] = useState(false);
   const [allocateDate, setAllocateDate] = useState('');
   const [allocateStart, setAllocateStart] = useState('');
   const [allocateEnd, setAllocateEnd] = useState('');
   const [newTask, setNewTask] = useState<NewTaskForm>(defaultNewTask);
-  const [examState, setExamState] = useState<'loading' | 'error' | 'success' | 'none'>('success');
   const [hasSuggestions, setHasSuggestions] = useState(true);
-  const [streakDays] = useState(7);
 
   const getTaskDate = useCallback((t: Task) => t.allocatedDate ?? t.dueDate, []);
   const today = useMemo(() => {
@@ -152,10 +147,6 @@ const StudentPlanner = () => {
     () => tasksToday.filter((t) => t.status === 'completed').length,
     [tasksToday]
   );
-  const nextBestTask = useMemo(
-    () => tasksToday.find((t) => t.status !== 'completed') ?? tasks.find((t) => t.status !== 'completed'),
-    [tasksToday, tasks]
-  );
   const selectedTask = useMemo(
     () => (selectedTaskId ? tasks.find((t) => t.id === selectedTaskId) : null),
     [selectedTaskId, tasks]
@@ -169,13 +160,6 @@ const StudentPlanner = () => {
     [tasks, getTaskDate]
   );
   const calendarHasEvents = useMemo(() => tasks.some((t) => getTaskDate(t)), [tasks, getTaskDate]);
-  const filteredTasks = useMemo(
-    () =>
-      tasks.filter((t) =>
-        taskFilter === 'all' ? true : taskFilter === 'completed' ? t.status === 'completed' : t.status !== 'completed'
-      ),
-    [tasks, taskFilter]
-  );
 
   const updateTask = useCallback((id: string, updates: Partial<Task>) => {
     setTasks((prev) => prev.map((t) => (t.id === id ? { ...t, ...updates } : t)));
@@ -207,6 +191,17 @@ const StudentPlanner = () => {
     const d = new Date(allocateDate);
     updateTask(selectedTaskId, { allocatedDate: d, startTime: allocateStart, endTime: allocateEnd || undefined });
   }, [selectedTaskId, allocateDate, allocateStart, allocateEnd, updateTask]);
+
+  const handleTaskMove = useCallback(
+    (taskId: string, newDate: Date) => {
+      const task = tasks.find((t) => t.id === taskId);
+      if (!task) return;
+      const d = new Date(newDate);
+      d.setHours(0, 0, 0, 0);
+      updateTask(taskId, { allocatedDate: d, dueDate: d });
+    },
+    [tasks, updateTask]
+  );
 
   const handleSetDetailStatus = useCallback(
     (status: TaskStatus) => {
@@ -348,79 +343,68 @@ const StudentPlanner = () => {
         ) : (
           <>
             <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-              <TabsList className="max-w-[400px] w-full bg-white dark:bg-card border border-gray-200 dark:border-border shadow-sm rounded-xl p-1 h-auto">
-                <TabsTrigger value="dashboard" className="gap-2 data-[state=active]:bg-purple-500 data-[state=active]:text-white data-[state=active]:shadow-sm rounded-lg px-4 py-2">
-                  <LayoutDashboard className="w-4 h-4" />
+              <TabsList className="max-w-[280px] w-full bg-white dark:bg-card border border-gray-200 dark:border-border shadow-sm rounded-lg p-0.5 h-auto">
+                <TabsTrigger value="dashboard" className="gap-1.5 data-[state=active]:bg-slate-700 data-[state=active]:text-white data-[state=active]:shadow-sm rounded-md px-3 py-1.5 text-sm">
+                  <LayoutDashboard className="w-3.5 h-3.5" />
                   Dashboard
                 </TabsTrigger>
-                <TabsTrigger value="calendar" className="gap-2 data-[state=active]:bg-purple-500 data-[state=active]:text-white data-[state=active]:shadow-sm rounded-lg px-4 py-2">
-                  <CalendarIcon className="w-4 h-4" />
+                <TabsTrigger value="calendar" className="gap-1.5 data-[state=active]:bg-slate-700 data-[state=active]:text-white data-[state=active]:shadow-sm rounded-md px-3 py-1.5 text-sm">
+                  <CalendarIcon className="w-3.5 h-3.5" />
                   Calendar
-                </TabsTrigger>
-                <TabsTrigger value="tasks" className="gap-2 data-[state=active]:bg-purple-500 data-[state=active]:text-white data-[state=active]:shadow-sm rounded-lg px-4 py-2">
-                  <ListTodo className="w-4 h-4" />
-                  Tasks
                 </TabsTrigger>
               </TabsList>
 
-              <div className="grid grid-cols-1 lg:grid-cols-[1fr_320px] gap-6 mt-6">
-                <div className="space-y-6 min-w-0">
-                  <TabsContent value="dashboard" className="mt-0 space-y-6">
-                    <PlannerStats
-                      completedToday={completedToday}
-                      tasksTodayCount={tasksToday.length}
-                      streakDays={streakDays}
-                      cognitiveLoad={plannerStubs.cognitiveLoad}
-                    />
-                    {nextBestTask && (
-                      <NextBestActionCard
-                        task={nextBestTask}
-                        onStart={(id) => setTaskStatus(id, 'in_progress')}
+              <div className={`grid gap-6 mt-6 ${activeTab === 'dashboard' ? 'grid-cols-1 lg:grid-cols-[1fr_320px]' : 'grid-cols-1'}`}>
+                <div
+                  className={`flex flex-col min-w-0 ${activeTab === 'dashboard' ? 'min-h-0 max-h-[calc(100vh-6rem)] overflow-y-auto' : 'min-h-[calc(100vh-12rem)]'}`}
+                >
+                  <TabsContent value="dashboard" className="mt-0 flex flex-col flex-1 min-h-0 min-w-0">
+                    <div className="shrink-0 space-y-6">
+                      <PlannerStats
+                        completedToday={completedToday}
+                        tasksTodayCount={tasksToday.length}
+                        pendingCount={tasks.filter((t) => t.status !== 'completed').length}
+                        cognitiveLoad={plannerStubs.cognitiveLoad}
                       />
-                    )}
-                    <TodaysSchedule
-                      tasks={tasksToday}
-                      onViewCalendar={() => setActiveTab('calendar')}
-                      onAddTask={() => setAddTaskOpen(true)}
-                      onStart={(id) => setTaskStatus(id, 'in_progress')}
-                    />
-                    <PlannerDeadlinesAndFocus
-                      deadlines={plannerStubs.deadlines}
-                      weakAreas={plannerStubs.weakAreas}
-                      onGeneratePracticeSet={handleGeneratePracticeSet}
-                    />
+                    </div>
+                    <div className="shrink-0 min-h-[280px] max-h-[42vh] overflow-hidden mt-6">
+                      <TodaysSchedule
+                        tasks={tasksToday}
+                        onViewCalendar={() => setActiveTab('calendar')}
+                        onAddTask={() => setAddTaskOpen(true)}
+                        onStart={(id) => setTaskStatus(id, 'in_progress')}
+                        onRemove={removeTask}
+                      />
+                    </div>
+                    <div className="shrink-0 mt-6">
+                      <PlannerDeadlinesAndFocus
+                        deadlines={plannerStubs.deadlines}
+                        weakAreas={plannerStubs.weakAreas}
+                        onGeneratePracticeSet={handleGeneratePracticeSet}
+                      />
+                    </div>
                   </TabsContent>
 
-                  <TabsContent value="calendar" className="mt-0">
+                  <TabsContent value="calendar" className="mt-0 flex flex-col flex-1 min-h-[calc(100vh-12rem)]">
                     <PlannerCalendar
                       calendarDate={calendarDate}
                       onCalendarDateChange={setCalendarDate}
                       getEventsForDay={getEventsForDay}
                       onTaskClick={openTaskDetail}
+                      onTaskMove={handleTaskMove}
                       hasEvents={calendarHasEvents}
-                    />
-                  </TabsContent>
-
-                  <TabsContent value="tasks" className="mt-0">
-                    <PlannerTasks
-                      tasks={filteredTasks}
-                      filter={taskFilter}
-                      onFilterChange={setTaskFilter}
-                      onAddTask={() => setAddTaskOpen(true)}
-                      onTaskClick={openTaskDetail}
-                      onToggleStatus={advanceTaskStatus}
-                      onRemove={removeTask}
                     />
                   </TabsContent>
                 </div>
 
-                <PlannerSidebar
-                  userName={user?.name?.split(' ')[0]}
-                  onAutoGenerate={handleAutoGeneratePlan}
-                  onAddSuggestion={addSuggestionAsTask}
-                  hasSuggestions={hasSuggestions}
-                  examState={examState}
-                />
+                {activeTab === 'dashboard' && (
+                  <PlannerSidebar
+                    userName={user?.name?.split(' ')[0]}
+                    onAutoGenerate={handleAutoGeneratePlan}
+                    onAddSuggestion={addSuggestionAsTask}
+                    hasSuggestions={hasSuggestions}
+                  />
+                )}
               </div>
             </Tabs>
           </>
