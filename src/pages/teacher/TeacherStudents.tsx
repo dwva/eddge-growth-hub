@@ -199,7 +199,13 @@ const TeacherStudentsContent = () => {
 
                 {/* Actions */}
                 <div className="col-span-2 flex items-center justify-end gap-2">
-                  <Button variant="ghost" size="icon" className="h-8 w-8 rounded-lg">
+                  <Button 
+                    variant="ghost" 
+                    size="icon" 
+                    className="h-8 w-8 rounded-lg"
+                    onClick={() => navigate(`/teacher/student-profile/${student.id}`)}
+                    title="View Profile"
+                  >
                     <Eye className="w-4 h-4 text-gray-500" />
                   </Button>
                   <Button variant="ghost" size="icon" className="h-8 w-8 rounded-lg">
@@ -212,6 +218,10 @@ const TeacherStudentsContent = () => {
                       </Button>
                     </DropdownMenuTrigger>
                     <DropdownMenuContent align="end" className="w-48">
+                      <DropdownMenuItem onClick={() => navigate(`/teacher/student-profile/${student.id}`)}>
+                        <Eye className="w-4 h-4 mr-2" />
+                        View 360° Profile
+                      </DropdownMenuItem>
                       <DropdownMenuItem onClick={() => navigate('/teacher/reports/class-summary')}>
                         <FileText className="w-4 h-4 mr-2" />
                         View Class Summary
