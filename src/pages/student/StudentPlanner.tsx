@@ -354,9 +354,9 @@ const StudentPlanner = () => {
                 </TabsTrigger>
               </TabsList>
 
-              <div className={`grid gap-6 mt-6 ${activeTab === 'dashboard' ? 'grid-cols-1 lg:grid-cols-[1fr_320px]' : 'grid-cols-1'}`}>
+              <div className={`${activeTab === 'dashboard' ? 'grid gap-6 mt-3 grid-cols-1 lg:grid-cols-[1fr_320px]' : 'mt-2'}`}>
                 <div
-                  className={`flex flex-col min-w-0 ${activeTab === 'dashboard' ? 'min-h-0 max-h-[calc(100vh-6rem)] overflow-y-auto' : 'min-h-[calc(100vh-12rem)]'}`}
+                  className={`${activeTab === 'dashboard' ? 'flex flex-col min-w-0 min-h-0 max-h-[calc(100vh-6rem)] overflow-y-auto' : ''}`}
                 >
                   <TabsContent value="dashboard" className="mt-0 flex flex-col flex-1 min-h-0 min-w-0">
                     <div className="shrink-0 space-y-6">
@@ -373,6 +373,7 @@ const StudentPlanner = () => {
                         onViewCalendar={() => setActiveTab('calendar')}
                         onAddTask={() => setAddTaskOpen(true)}
                         onStart={(id) => setTaskStatus(id, 'in_progress')}
+                        onComplete={(id) => setTaskStatus(id, 'completed')}
                         onRemove={removeTask}
                       />
                     </div>
@@ -385,13 +386,14 @@ const StudentPlanner = () => {
                     </div>
                   </TabsContent>
 
-                  <TabsContent value="calendar" className="mt-0 flex flex-col flex-1 min-h-[calc(100vh-12rem)]">
+                  <TabsContent value="calendar" className="mt-0 focus-visible:ring-0 focus-visible:ring-offset-0">
                     <PlannerCalendar
                       calendarDate={calendarDate}
                       onCalendarDateChange={setCalendarDate}
                       getEventsForDay={getEventsForDay}
                       onTaskClick={openTaskDetail}
                       onTaskMove={handleTaskMove}
+                      onRemove={removeTask}
                       hasEvents={calendarHasEvents}
                     />
                   </TabsContent>
