@@ -32,35 +32,35 @@ const ParentAchievementsContent = () => {
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div>
-        <h1 className="text-2xl font-bold">{selectedChild?.name}'s Achievements</h1>
-        <p className="text-muted-foreground">Celebrating progress and success</p>
+      <div className="px-1">
+        <h1 className="text-xl lg:text-2xl font-bold">{selectedChild?.name}'s Achievements</h1>
+        <p className="text-sm lg:text-base text-muted-foreground">Celebrating progress and success</p>
       </div>
 
       {/* Recent Achievements & Badges - Side by Side */}
-      <div className="grid grid-cols-1 lg:grid-cols-10 gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-10 gap-4 lg:gap-6">
         {/* Recent Achievements - 70% width */}
         <div className="lg:col-span-7">
-          <Card className="border-0 shadow-sm h-full">
-            <CardHeader className="pb-2">
-              <CardTitle className="text-base font-semibold text-gray-900">Recent Achievements</CardTitle>
+          <Card className="border-0 shadow-sm lg:h-full">
+            <CardHeader className="pb-2 px-4 lg:px-6">
+              <CardTitle className="text-sm lg:text-base font-semibold text-gray-900">Recent Achievements</CardTitle>
             </CardHeader>
-            <CardContent className="pb-3 pt-0">
+            <CardContent className="pb-3 pt-0 px-4 lg:px-6">
               {recentAchievements.length > 0 ? (
                 <div className="relative max-h-[280px] overflow-y-auto pr-2">
-                  <div className="absolute left-3 top-0 bottom-0 w-0.5 bg-gray-200" />
-                  <div className="space-y-6">
+                  <div className="absolute left-2.5 lg:left-3 top-0 bottom-0 w-0.5 bg-gray-200" />
+                  <div className="space-y-4 lg:space-y-6">
                     {recentAchievements.slice(0, 3).map((achievement, index) => (
-                      <div key={achievement.id} className="relative pl-7">
-                        <div className="absolute left-0 top-0.5 w-4 h-4 rounded-full bg-primary flex items-center justify-center">
+                      <div key={achievement.id} className="relative pl-6 lg:pl-7">
+                        <div className="absolute left-[10px] lg:left-[13px] top-1/2 w-3.5 h-3.5 lg:w-4 lg:h-4 rounded-full bg-primary flex items-center justify-center -translate-x-1/2 -translate-y-1/2">
                           <div className="w-1.5 h-1.5 rounded-full bg-white" />
                         </div>
-                        <div className="p-2 rounded-lg bg-muted/50 border border-gray-200 shadow-sm">
-                          <div className="flex items-center justify-between gap-2">
-                            <h4 className="font-semibold text-xs text-gray-900 truncate">{achievement.title}</h4>
+                        <div className="p-2.5 lg:p-2 rounded-lg bg-muted/50 border border-gray-200 shadow-sm">
+                          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-1 sm:gap-2">
+                            <h4 className="font-semibold text-xs text-gray-900">{achievement.title}</h4>
                             <span className="text-[10px] text-muted-foreground whitespace-nowrap">{achievement.date}</span>
                           </div>
-                          <p className="text-[11px] text-muted-foreground mt-0.5 line-clamp-1">{achievement.description}</p>
+                          <p className="text-[11px] text-muted-foreground mt-1 lg:mt-0.5 line-clamp-2 lg:line-clamp-1">{achievement.description}</p>
                         </div>
                       </div>
                     ))}
@@ -78,22 +78,22 @@ const ParentAchievementsContent = () => {
 
         {/* Badges & Recognitions - 30% width */}
         <div className="lg:col-span-3">
-          <Card className="border-0 shadow-sm h-full">
-            <CardHeader className="pb-2">
-              <CardTitle className="text-base font-semibold text-gray-900">Badges & Recognitions</CardTitle>
+          <Card className="border-0 shadow-sm lg:h-full">
+            <CardHeader className="pb-2 px-4 lg:px-6">
+              <CardTitle className="text-sm lg:text-base font-semibold text-gray-900">Badges & Recognitions</CardTitle>
             </CardHeader>
-            <CardContent className="pb-3 pt-0">
+            <CardContent className="pb-3 pt-0 px-4 lg:px-6">
               <div className="space-y-2 max-h-[280px] overflow-y-auto">
                 {badges.map((badge) => (
                   <Card key={badge.id} className="border-0 shadow-sm hover:shadow-md transition-shadow">
-                    <CardContent className="p-2">
-                      <div className="flex items-center gap-2">
+                    <CardContent className="p-2.5 lg:p-2">
+                      <div className="flex items-center gap-2.5 lg:gap-2">
                         <div
-                          className="w-9 h-9 rounded-full flex items-center justify-center flex-shrink-0"
+                          className="w-10 h-10 lg:w-9 lg:h-9 rounded-full flex items-center justify-center flex-shrink-0"
                           style={{ backgroundColor: `${badge.color}15` }}
                         >
                           <div style={{ color: badge.color }}>
-                            {iconMap[badge.icon] || <Star className="w-3.5 h-3.5" />}
+                            {iconMap[badge.icon] || <Star className="w-4 h-4 lg:w-3.5 lg:h-3.5" />}
                           </div>
                         </div>
                         <div className="flex-1 min-w-0">
@@ -111,33 +111,10 @@ const ParentAchievementsContent = () => {
         </div>
       </div>
 
-      {/* Milestones Section */}
-      <div>
-        <h2 className="text-lg font-semibold mb-3">Milestones</h2>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          {milestones.map((milestone) => (
-            <Card key={milestone.id} className="hover:shadow-md transition-shadow">
-              <CardContent className="p-4">
-                <div className="flex items-start gap-3">
-                  <div className="p-2 rounded-lg bg-primary/10">
-                    {iconMap[milestone.icon] || <Trophy className="w-6 h-6 text-primary" />}
-                  </div>
-                  <div className="flex-1">
-                    <h4 className="font-semibold">{milestone.title}</h4>
-                    <p className="text-sm text-muted-foreground">{milestone.description}</p>
-                    <p className="text-xs text-muted-foreground mt-2">{milestone.date}</p>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-          ))}
-        </div>
-      </div>
-
       {/* Improvement Highlights */}
       <div>
-        <h2 className="text-lg font-semibold mb-3">Improvement Highlights</h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <h2 className="text-base lg:text-lg font-semibold mb-3 px-1">Improvement Highlights</h2>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-3 lg:gap-4">
           <Card className="bg-gradient-to-r from-green-50 to-blue-50 border-green-200">
             <CardContent className="p-4">
               <div className="flex items-center gap-3">
@@ -164,6 +141,29 @@ const ParentAchievementsContent = () => {
               </div>
             </CardContent>
           </Card>
+        </div>
+      </div>
+
+      {/* Milestones Section */}
+      <div>
+        <h2 className="text-base lg:text-lg font-semibold mb-3 px-1">Milestones</h2>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 lg:gap-4">
+          {milestones.map((milestone) => (
+            <Card key={milestone.id} className="hover:shadow-md transition-shadow">
+              <CardContent className="p-4">
+                <div className="flex items-start gap-3">
+                  <div className="p-2 rounded-lg bg-primary/10">
+                    {iconMap[milestone.icon] || <Trophy className="w-6 h-6 text-primary" />}
+                  </div>
+                  <div className="flex-1">
+                    <h4 className="font-semibold">{milestone.title}</h4>
+                    <p className="text-sm text-muted-foreground">{milestone.description}</p>
+                    <p className="text-xs text-muted-foreground mt-2">{milestone.date}</p>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          ))}
         </div>
       </div>
 
