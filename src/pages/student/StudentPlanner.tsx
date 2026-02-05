@@ -107,7 +107,6 @@ export const subjectAccent: Record<string, string> = {
 
 // ----- Page component -----
 import { PlannerStats } from '@/components/planner/PlannerStats';
-import { NextBestActionCard } from '@/components/planner/NextBestActionCard';
 import { TodaysSchedule } from '@/components/planner/TodaysSchedule';
 import { PlannerDeadlinesAndFocus } from '@/components/planner/PlannerDeadlinesAndFocus';
 import { PlannerCalendar } from '@/components/planner/PlannerCalendar';
@@ -130,9 +129,7 @@ const StudentPlanner = () => {
   const [allocateStart, setAllocateStart] = useState('');
   const [allocateEnd, setAllocateEnd] = useState('');
   const [newTask, setNewTask] = useState<NewTaskForm>(defaultNewTask);
-  const [examState, setExamState] = useState<'loading' | 'error' | 'success' | 'none'>('success');
   const [hasSuggestions, setHasSuggestions] = useState(true);
-  const [streakDays] = useState(7);
 
   const getTaskDate = useCallback((t: Task) => t.allocatedDate ?? t.dueDate, []);
   const today = useMemo(() => {
@@ -151,10 +148,6 @@ const StudentPlanner = () => {
   const completedToday = useMemo(
     () => tasksToday.filter((t) => t.status === 'completed').length,
     [tasksToday]
-  );
-  const nextBestTask = useMemo(
-    () => tasksToday.find((t) => t.status !== 'completed') ?? tasks.find((t) => t.status !== 'completed'),
-    [tasksToday, tasks]
   );
   const selectedTask = useMemo(
     () => (selectedTaskId ? tasks.find((t) => t.id === selectedTaskId) : null),
@@ -364,31 +357,31 @@ const StudentPlanner = () => {
               </TabsList>
 
               <div className="grid grid-cols-1 lg:grid-cols-[1fr_320px] gap-6 mt-6">
-                <div className="space-y-6 min-w-0">
-                  <TabsContent value="dashboard" className="mt-0 space-y-6">
-                    <PlannerStats
-                      completedToday={completedToday}
-                      tasksTodayCount={tasksToday.length}
-                      streakDays={streakDays}
-                      cognitiveLoad={plannerStubs.cognitiveLoad}
-                    />
-                    {nextBestTask && (
-                      <NextBestActionCard
-                        task={nextBestTask}
+                <div className="flex flex-col min-w-0 min-h-[calc(100vh-12rem)]">
+                  <TabsContent value="dashboard" className="mt-0 flex flex-col flex-1 min-h-0">
+                    <div className="shrink-0 space-y-6">
+                      <PlannerStats
+                        completedToday={completedToday}
+                        tasksTodayCount={tasksToday.length}
+                        pendingCount={tasks.filter((t) => t.status !== 'completed').length}
+                        cognitiveLoad={plannerStubs.cognitiveLoad}
+                      />
+                    </div>
+                    <div className="flex-1 min-h-0 mt-6">
+                      <TodaysSchedule
+                        tasks={tasksToday}
+                        onViewCalendar={() => setActiveTab('calendar')}
+                        onAddTask={() => setAddTaskOpen(true)}
                         onStart={(id) => setTaskStatus(id, 'in_progress')}
                       />
-                    )}
-                    <TodaysSchedule
-                      tasks={tasksToday}
-                      onViewCalendar={() => setActiveTab('calendar')}
-                      onAddTask={() => setAddTaskOpen(true)}
-                      onStart={(id) => setTaskStatus(id, 'in_progress')}
-                    />
-                    <PlannerDeadlinesAndFocus
-                      deadlines={plannerStubs.deadlines}
-                      weakAreas={plannerStubs.weakAreas}
-                      onGeneratePracticeSet={handleGeneratePracticeSet}
-                    />
+                    </div>
+                    <div className="shrink-0 mt-6">
+                      <PlannerDeadlinesAndFocus
+                        deadlines={plannerStubs.deadlines}
+                        weakAreas={plannerStubs.weakAreas}
+                        onGeneratePracticeSet={handleGeneratePracticeSet}
+                      />
+                    </div>
                   </TabsContent>
 
                   <TabsContent value="calendar" className="mt-0">
@@ -419,7 +412,6 @@ const StudentPlanner = () => {
                   onAutoGenerate={handleAutoGeneratePlan}
                   onAddSuggestion={addSuggestionAsTask}
                   hasSuggestions={hasSuggestions}
-                  examState={examState}
                 />
               </div>
             </Tabs>

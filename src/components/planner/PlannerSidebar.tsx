@@ -2,7 +2,6 @@ import { useState } from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { Skeleton } from '@/components/ui/skeleton';
 import { Brain, Sparkles, ChevronDown, ChevronUp } from 'lucide-react';
 import { plannerStubs } from '@/data/planner.stubs';
 import type { SuggestionStub } from '@/pages/student/StudentPlanner';
@@ -12,7 +11,6 @@ type PlannerSidebarProps = {
   onAutoGenerate: () => void;
   onAddSuggestion: (s: SuggestionStub) => void;
   hasSuggestions: boolean;
-  examState: 'loading' | 'error' | 'success' | 'none';
 };
 
 export const PlannerSidebar = ({
@@ -20,10 +18,9 @@ export const PlannerSidebar = ({
   onAutoGenerate,
   onAddSuggestion,
   hasSuggestions,
-  examState,
 }: PlannerSidebarProps) => {
   const [suggestionsExpanded, setSuggestionsExpanded] = useState(false);
-  const { weakAreas, exam, suggestions } = plannerStubs;
+  const { weakAreas, suggestions } = plannerStubs;
 
   return (
     <div className="space-y-4 lg:max-w-[320px]">
@@ -83,44 +80,6 @@ export const PlannerSidebar = ({
           </div>
         </CardContent>
       </Card>
-
-      {/* Exam countdown */}
-      {examState === 'loading' && (
-        <Card className="border border-gray-200 rounded-2xl overflow-hidden">
-          <CardContent className="p-5">
-            <Skeleton className="h-5 w-32 mb-2" />
-            <Skeleton className="h-8 w-20 mb-2" />
-            <Skeleton className="h-4 w-full" />
-          </CardContent>
-        </Card>
-      )}
-      {examState === 'error' && (
-        <Card className="border border-amber-200 bg-amber-50 rounded-2xl overflow-hidden">
-          <CardContent className="p-5">
-            <h3 className="text-sm font-semibold text-gray-900">Exam Countdown</h3>
-            <p className="text-sm text-amber-800 mt-2">Failed to load exam date.</p>
-            <Button variant="outline" size="sm" className="mt-3">Retry</Button>
-          </CardContent>
-        </Card>
-      )}
-      {examState === 'success' && (
-        <Card className="border border-purple-100 bg-gradient-to-br from-purple-50 to-indigo-50 rounded-2xl overflow-hidden">
-          <CardContent className="p-5">
-            <h3 className="text-sm font-semibold text-gray-900">Exam Countdown</h3>
-            <p className="text-2xl font-bold text-purple-600 mt-2">{exam.daysLeft} days</p>
-            <p className="text-sm font-medium text-gray-800 mt-1">{exam.name}</p>
-            <p className="text-xs text-gray-500 mt-0.5">{exam.date}</p>
-          </CardContent>
-        </Card>
-      )}
-      {examState === 'none' && (
-        <Card className="border border-gray-200 bg-gray-50 rounded-2xl overflow-hidden">
-          <CardContent className="p-5">
-            <h3 className="text-sm font-semibold text-gray-900">Exam Countdown</h3>
-            <p className="text-sm text-gray-500 mt-2">No exam date set. Add one in settings.</p>
-          </CardContent>
-        </Card>
-      )}
     </div>
   );
 };
