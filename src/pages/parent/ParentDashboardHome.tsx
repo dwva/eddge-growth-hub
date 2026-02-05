@@ -6,6 +6,7 @@ import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { useChild } from '@/contexts/ChildContext';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { useNavigate } from 'react-router-dom';
+import { useEffect, useState } from 'react';
 import { 
   Loader2,
   Calculator,
@@ -19,20 +20,9 @@ import {
   MessageSquare,
   Clock,
   Circle,
-  AlertCircle,
-  CheckCircle2,
-  X,
-  Bell,
-  Flame,
-  Target,
-  TrendingDown,
-  Heart,
-  Info
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
-import { homeworkList, actionAlerts, studyHabits, examReadiness, classBenchmark, wellbeingSignals, feedbackItems } from '@/data/parentMockData';
-import { useState } from 'react';
+import { homeworkList, announcements } from '@/data/parentMockData';
 
 // Subject icon mapping
 const subjectIcons: { [key: string]: any } = {
@@ -56,14 +46,31 @@ const ParentDashboardHomeContent = () => {
   const { selectedChild, isLoading } = useChild();
   const { t } = useLanguage();
   const navigate = useNavigate();
-  const [dismissedAlerts, setDismissedAlerts] = useState<Set<string>>(new Set());
+  const [animatedValues, setAnimatedValues] = useState<Record<number, number>>({});
 
-  // Mock data for line chart - using subject scores over time
-  const dailyActivityData = selectedChild?.subjects?.map((subject, index) => ({
-    name: subject.name.substring(0, 3),
-    score: subject.score,
-    fullName: subject.name
-  })) || [];
+  // Animate progress bars on mount
+  useEffect(() => {
+    if (selectedChild?.subjects) {
+      const timer = setTimeout(() => {
+        const values: Record<number, number> = {};
+        selectedChild.subjects?.forEach((_, index) => {
+          values[index] = 0;
+        });
+        setAnimatedValues(values);
+
+        // Animate each progress bar
+        selectedChild.subjects?.forEach((subject, index) => {
+          setTimeout(() => {
+            setAnimatedValues((prev) => ({
+              ...prev,
+              [index]: subject.score,
+            }));
+          }, index * 150); // Stagger animation
+        });
+      }, 100);
+      return () => clearTimeout(timer);
+    }
+  }, [selectedChild]);
 
   // Mock upcoming events
   const upcomingEvents = [
@@ -74,38 +81,6 @@ const ParentDashboardHomeContent = () => {
 
   // Get homework queue (pending items)
   const homeworkQueue = homeworkList.filter(hw => hw.status === 'pending').slice(0, 5);
-
-  // Filter active alerts
-  const activeAlerts = actionAlerts.filter(alert => !dismissedAlerts.has(alert.id));
-  
-  const handleDismissAlert = (alertId: string) => {
-    setDismissedAlerts(prev => new Set(prev).add(alertId));
-  };
-
-  // Helper functions for new features
-  const getSeverityColor = (severity: string) => {
-    switch (severity) {
-      case 'urgent': return 'bg-red-50 border-red-200 text-red-800';
-      case 'attention': return 'bg-amber-50 border-amber-200 text-amber-800';
-      default: return 'bg-blue-50 border-blue-200 text-blue-800';
-    }
-  };
-
-  const getReadinessColor = (readiness: string) => {
-    switch (readiness) {
-      case 'high': return 'text-green-600 bg-green-50';
-      case 'medium': return 'text-amber-600 bg-amber-50';
-      default: return 'text-red-600 bg-red-50';
-    }
-  };
-
-  const getBenchmarkColor = (position: string) => {
-    switch (position) {
-      case 'above': return 'bg-green-100';
-      case 'at': return 'bg-blue-100';
-      default: return 'bg-amber-100';
-    }
-  };
 
   if (isLoading) {
     return (
@@ -137,180 +112,193 @@ const ParentDashboardHomeContent = () => {
     selectedChild.subjects?.reduce((sum, s) => sum + s.score, 0) / (selectedChild.subjects?.length || 1)
   );
 
+  // Important announcements for hero section (top 2, important only)
+  const heroAnnouncements = announcements
+    .filter((a) => a.important)
+    .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
+    .slice(0, 2);
+
   return (
-    <div className="w-full space-y-8">
+    <div className="w-full space-y-4">
       {/* Hero Section - Full Width Gradient Card */}
-      <div className="relative bg-gradient-to-r from-indigo-600 via-purple-600 to-indigo-700 rounded-xl p-6 md:p-8 overflow-hidden">
+      <div className="relative bg-gradient-to-r from-indigo-600 via-purple-600 to-indigo-700 rounded-xl p-3 md:p-4 overflow-hidden z-0">
         {/* Decorative elements */}
-        <div className="absolute top-0 right-0 w-64 h-64 bg-white/5 rounded-full -translate-y-1/2 translate-x-1/2" />
-        <div className="absolute bottom-0 left-1/2 w-32 h-32 bg-white/5 rounded-full translate-y-1/2" />
+        <div className="absolute top-0 right-0 w-64 h-64 bg-white/5 rounded-full -translate-y-1/2 translate-x-1/2 z-0" />
+        <div className="absolute bottom-0 left-1/2 w-32 h-32 bg-white/5 rounded-full translate-y-1/2 z-0" />
         
-        <div className="relative z-10 grid grid-cols-1 lg:grid-cols-3 gap-6">
-          {/* Left: Parent Overview */}
+        <div className="relative z-10 grid grid-cols-1 lg:grid-cols-3 gap-3 md:gap-4">
+          {/* Left: Parent Overview + Hero Announcements */}
           <div className="lg:col-span-2">
-            <p className="text-purple-200 text-xs font-medium tracking-wider uppercase mb-2">Parent Portal</p>
-            <h1 className="text-2xl md:text-3xl font-bold text-white mb-2">
+            <p className="text-purple-200 text-[11px] font-medium tracking-wider uppercase mb-1.5">Parent Portal</p>
+            <h1 className="text-xl md:text-2xl font-bold text-white mb-2">
               Track {selectedChild.name}'s Progress
             </h1>
-            <p className="text-purple-200 text-sm mb-4 max-w-md">
-              Monitor {selectedChild.name}'s academic journey, achievements, and growth all in one place.
-            </p>
-            <div className="flex items-center gap-2 text-purple-200 text-sm">
+            <div className="flex items-center gap-2 text-purple-200 text-xs md:text-sm mb-3">
               <span>{selectedChild?.class || 'Grade 10-A'}</span>
               <span>•</span>
               <span>{subjectsCompleted} Subjects</span>
             </div>
+
+            {heroAnnouncements.length > 0 && (
+              <div className="space-y-1.5 max-w-lg">
+                {heroAnnouncements.map((ann) => (
+                  <button
+                    key={ann.id}
+                    type="button"
+                    onClick={() => navigate('/parent/announcements')}
+                    className="w-full inline-flex items-center gap-2.5 rounded-full bg-white/10 hover:bg-white/15 border border-white/20 px-3 py-1.5 transition-colors"
+                  >
+                    <span className="inline-flex items-center justify-center w-6 h-6 rounded-full bg-white/90 text-[11px] font-semibold text-purple-600">
+                      !
+                    </span>
+                    <div className="flex-1 min-w-0 text-left">
+                      <p className="text-[11px] font-semibold text-white truncate">
+                        {ann.title}
+                      </p>
+                      <p className="text-[10px] text-purple-100/90 truncate">
+                        {new Date(ann.date).toLocaleDateString('en-US', {
+                          month: 'short',
+                          day: 'numeric',
+                        })}{' '}
+                        · {ann.description}
+                      </p>
+                    </div>
+                  </button>
+                ))}
+                <p className="text-[10px] text-purple-100/80 pt-0.5">
+                  Tap an announcement to see full details and earlier updates.
+                </p>
+              </div>
+            )}
           </div>
 
           {/* Right: Compact Stat Cards */}
-          <div className="grid grid-cols-3 lg:grid-cols-1 gap-3">
-            <div className="bg-white/10 backdrop-blur-sm rounded-lg p-4 border border-white/20">
-              <p className="text-purple-200 text-xs mb-1">Attendance</p>
-              <p className="text-2xl font-bold text-white">{attendanceRate}%</p>
+          <div className="grid grid-cols-3 lg:grid-cols-1 gap-2">
+            <div className="bg-white/10 backdrop-blur-sm rounded-lg p-2.5 border border-white/20">
+              <p className="text-purple-200 text-[10px] mb-0.5">Attendance</p>
+              <p className="text-lg font-bold text-white">{attendanceRate}%</p>
             </div>
-            <div className="bg-white/10 backdrop-blur-sm rounded-lg p-4 border border-white/20">
-              <p className="text-purple-200 text-xs mb-1">Subjects</p>
-              <p className="text-2xl font-bold text-white">{subjectsCompleted}</p>
+            <div className="bg-white/10 backdrop-blur-sm rounded-lg p-2.5 border border-white/20">
+              <p className="text-purple-200 text-[10px] mb-0.5">Subjects</p>
+              <p className="text-lg font-bold text-white">{subjectsCompleted}</p>
             </div>
-            <div className="bg-white/10 backdrop-blur-sm rounded-lg p-4 border border-white/20">
-              <p className="text-purple-200 text-xs mb-1">Performance</p>
-              <p className="text-2xl font-bold text-white">{overallPerformance}%</p>
+            <div className="bg-white/10 backdrop-blur-sm rounded-lg p-2.5 border border-white/20">
+              <p className="text-purple-200 text-[10px] mb-0.5">Performance</p>
+              <p className="text-lg font-bold text-white">{overallPerformance}%</p>
             </div>
           </div>
         </div>
       </div>
 
-      {/* Quick Actions - 4 Cards Grid */}
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-        <Card 
-          className="border-0 shadow-sm hover:shadow-md transition-all cursor-pointer"
-          onClick={() => navigate('/parent/attendance')}
+      {/* Quick Actions - Compact Small Style */}
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
+        <button
+          onClick={() => navigate(`/parent/child-progress/${selectedChild.id}`)}
+          className="group p-3 rounded-lg bg-blue-50/50 hover:bg-blue-100/50 border border-blue-200/30 hover:border-blue-300/50 transition-all duration-200"
         >
-          <CardContent className="p-6 flex flex-col items-center text-center">
-            <div className="w-12 h-12 rounded-xl bg-blue-50 flex items-center justify-center mb-3">
-              <Calendar className="w-6 h-6 text-blue-600" />
+          <div className="flex items-center gap-2.5">
+            <div className="w-8 h-8 rounded-lg bg-blue-100 group-hover:bg-blue-200 flex items-center justify-center flex-shrink-0 transition-colors">
+              <Calendar className="w-4 h-4 text-blue-600" />
             </div>
-            <h3 className="font-semibold text-sm text-gray-800">Attendance</h3>
-            <p className="text-xs text-gray-500 mt-1">View records</p>
-          </CardContent>
-        </Card>
+            <div className="flex-1 min-w-0 text-left">
+              <h3 className="font-semibold text-xs text-gray-800 leading-tight">Attendance</h3>
+              <p className="text-[10px] text-gray-500 mt-0.5 truncate">View records</p>
+            </div>
+          </div>
+        </button>
 
-        <Card 
-          className="border-0 shadow-sm hover:shadow-md transition-all cursor-pointer"
-          onClick={() => navigate('/parent/progress/recent-tests')}
+        <button
+          onClick={() => navigate(`/parent/child-progress/${selectedChild.id}`)}
+          className="group p-3 rounded-lg bg-purple-50/50 hover:bg-purple-100/50 border border-purple-200/30 hover:border-purple-300/50 transition-all duration-200"
         >
-          <CardContent className="p-6 flex flex-col items-center text-center">
-            <div className="w-12 h-12 rounded-xl bg-purple-50 flex items-center justify-center mb-3">
-              <TrendingUp className="w-6 h-6 text-purple-600" />
+          <div className="flex items-center gap-2.5">
+            <div className="w-8 h-8 rounded-lg bg-purple-100 group-hover:bg-purple-200 flex items-center justify-center flex-shrink-0 transition-colors">
+              <TrendingUp className="w-4 h-4 text-purple-600" />
             </div>
-            <h3 className="font-semibold text-sm text-gray-800">Tests</h3>
-            <p className="text-xs text-gray-500 mt-1">Recent tests</p>
-          </CardContent>
-        </Card>
+            <div className="flex-1 min-w-0 text-left">
+              <h3 className="font-semibold text-xs text-gray-800 leading-tight">Tests</h3>
+              <p className="text-[10px] text-gray-500 mt-0.5 truncate">Recent tests</p>
+            </div>
+          </div>
+        </button>
 
-        <Card 
-          className="border-0 shadow-sm hover:shadow-md transition-all cursor-pointer"
+        <button
           onClick={() => navigate('/parent/homework')}
+          className="group p-3 rounded-lg bg-pink-50/50 hover:bg-pink-100/50 border border-pink-200/30 hover:border-pink-300/50 transition-all duration-200"
         >
-          <CardContent className="p-6 flex flex-col items-center text-center">
-            <div className="w-12 h-12 rounded-xl bg-pink-50 flex items-center justify-center mb-3">
-              <FileText className="w-6 h-6 text-pink-600" />
+          <div className="flex items-center gap-2.5">
+            <div className="w-8 h-8 rounded-lg bg-pink-100 group-hover:bg-pink-200 flex items-center justify-center flex-shrink-0 transition-colors">
+              <FileText className="w-4 h-4 text-pink-600" />
             </div>
-            <h3 className="font-semibold text-sm text-gray-800">Homework</h3>
-            <p className="text-xs text-gray-500 mt-1">View assignments</p>
-          </CardContent>
-        </Card>
+            <div className="flex-1 min-w-0 text-left">
+              <h3 className="font-semibold text-xs text-gray-800 leading-tight">Homework</h3>
+              <p className="text-[10px] text-gray-500 mt-0.5 truncate">View assignments</p>
+            </div>
+          </div>
+        </button>
 
-        <Card 
-          className="border-0 shadow-sm hover:shadow-md transition-all cursor-pointer"
+        <button
           onClick={() => navigate('/parent/communications')}
+          className="group p-3 rounded-lg bg-teal-50/50 hover:bg-teal-100/50 border border-teal-200/30 hover:border-teal-300/50 transition-all duration-200"
         >
-          <CardContent className="p-6 flex flex-col items-center text-center">
-            <div className="w-12 h-12 rounded-xl bg-teal-50 flex items-center justify-center mb-3">
-              <MessageSquare className="w-6 h-6 text-teal-600" />
+          <div className="flex items-center gap-2.5">
+            <div className="w-8 h-8 rounded-lg bg-teal-100 group-hover:bg-teal-200 flex items-center justify-center flex-shrink-0 transition-colors">
+              <MessageSquare className="w-4 h-4 text-teal-600" />
             </div>
-            <h3 className="font-semibold text-sm text-gray-800">Messages</h3>
-            <p className="text-xs text-gray-500 mt-1">Communicate</p>
-          </CardContent>
-        </Card>
+            <div className="flex-1 min-w-0 text-left">
+              <h3 className="font-semibold text-xs text-gray-800 leading-tight">Messages</h3>
+              <p className="text-[10px] text-gray-500 mt-0.5 truncate">Communicate</p>
+            </div>
+          </div>
+        </button>
       </div>
 
       {/* Main Content Section - 12 Column Grid */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-3 md:gap-4">
         {/* Left: Academic Performance (col-span-8) */}
-        <Card className="lg:col-span-8 border-0 shadow-sm">
-          <CardHeader>
-            <CardTitle className="text-lg font-semibold text-gray-800">Academic Performance</CardTitle>
+        <Card className="lg:col-span-8 border-0 shadow-sm hover:shadow-md transition-shadow duration-300">
+          <CardHeader className="pb-2">
+            <CardTitle className="text-sm md:text-base font-semibold text-gray-800">Academic Performance</CardTitle>
           </CardHeader>
-          <CardContent className="space-y-6">
-            {/* Subject Progress Bars */}
-            <div className="space-y-4">
+          <CardContent className="space-y-1.5 md:space-y-2">
+            {/* Subject Progress Bars - Dynamic Grid Layout */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-1 gap-1.5 md:gap-2">
               {selectedChild.subjects?.map((subject, index) => {
                 const Icon = subjectIcons[subject.name] || BookOpen;
                 const colors = subjectColors[subject.name] || { bg: 'bg-gray-50', icon: 'text-gray-600' };
                 
                 return (
-                  <div key={index} className="space-y-2">
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center gap-3">
-                        <div className={`w-10 h-10 rounded-lg ${colors.bg} flex items-center justify-center`}>
-                          <Icon className={`w-5 h-5 ${colors.icon}`} />
+                  <div 
+                    key={index} 
+                    className="group p-2 md:p-2.5 rounded-lg border border-gray-100 hover:border-gray-200 hover:bg-gray-50/50 transition-all duration-200 cursor-pointer"
+                    onClick={() => navigate(`/parent/child-progress/${selectedChild.id}`)}
+                  >
+                    <div className="space-y-1.5">
+                      <div className="flex items-center justify-between gap-2">
+                        <div className="flex items-center gap-2 min-w-0 flex-1">
+                          <div className={`w-7 h-7 md:w-8 md:h-8 rounded-lg ${colors.bg} group-hover:scale-110 flex items-center justify-center flex-shrink-0 transition-transform duration-200`}>
+                            <Icon className={`w-3.5 h-3.5 md:w-4 md:h-4 ${colors.icon}`} />
+                          </div>
+                          <div className="min-w-0 flex-1">
+                            <p className="text-xs font-semibold text-gray-800 truncate group-hover:text-gray-900 transition-colors">{subject.name}</p>
+                            <p className="text-[10px] text-gray-500 truncate">{subject.score}% completed</p>
+                          </div>
                         </div>
-                        <div>
-                          <p className="text-sm font-semibold text-gray-800">{subject.name}</p>
-                          <p className="text-xs text-gray-500">{subject.score}% completed</p>
-                        </div>
+                        <span className="text-xs md:text-sm font-bold text-gray-800 flex-shrink-0 group-hover:text-primary transition-colors">{subject.score}%</span>
                       </div>
-                      <span className="text-sm font-semibold text-gray-800">{subject.score}%</span>
+                      <div className="relative overflow-hidden rounded-full">
+                        <Progress 
+                          value={animatedValues[index] ?? 0} 
+                          className="h-1 md:h-1.5 transition-all duration-[3000ms] ease-out group-hover:h-1.5 md:group-hover:h-2"
+                          style={{
+                            transition: 'width 3s ease-out',
+                          }}
+                        />
+                      </div>
                     </div>
-                    <Progress value={subject.score} className="h-2" />
                   </div>
                 );
               })}
-            </div>
-
-            {/* Performance Trend Line Chart */}
-            <div className="mt-6 pt-6 border-t border-gray-100">
-              <h4 className="text-sm font-semibold text-gray-800 mb-4">Performance Trend</h4>
-              <div className="h-64">
-                <ResponsiveContainer width="100%" height="100%">
-                  <LineChart data={dailyActivityData}>
-                    <CartesianGrid strokeDasharray="3 3" stroke="#f1f5f9" />
-                    <XAxis 
-                      dataKey="name" 
-                      tick={{ fontSize: 12, fill: '#64748b' }}
-                      axisLine={false}
-                      tickLine={false}
-                    />
-                    <YAxis 
-                      domain={[0, 100]}
-                      tick={{ fontSize: 12, fill: '#64748b' }}
-                      axisLine={false}
-                      tickLine={false}
-                    />
-                    <Tooltip 
-                      contentStyle={{ 
-                        backgroundColor: 'white', 
-                        border: 'none', 
-                        borderRadius: '8px', 
-                        boxShadow: '0 4px 12px rgba(0,0,0,0.1)' 
-                      }}
-                      formatter={(value: any, name: any, props: any) => [
-                        `${value}% - ${props.payload.fullName}`,
-                        'Score'
-                      ]}
-                    />
-                    <Line 
-                      type="monotone" 
-                      dataKey="score" 
-                      stroke="#3b82f6" 
-                      strokeWidth={3}
-                      dot={{ fill: '#3b82f6', strokeWidth: 2, r: 5 }}
-                      activeDot={{ r: 7 }}
-                    />
-                  </LineChart>
-                </ResponsiveContainer>
-              </div>
             </div>
           </CardContent>
         </Card>
@@ -356,323 +344,6 @@ const ParentDashboardHomeContent = () => {
                 <div className="text-center py-8 text-gray-500 text-sm">
                   <FileText className="w-12 h-12 mx-auto mb-2 text-gray-300" />
                   <p>No pending homework</p>
-                </div>
-              )}
-            </div>
-          </CardContent>
-        </Card>
-      </div>
-
-      {/* New Features Section */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
-        {/* Parent Action Center */}
-        <Card className="lg:col-span-6 border-0 shadow-sm">
-          <CardHeader>
-            <CardTitle className="text-lg font-semibold text-gray-800 flex items-center gap-2">
-              <Bell className="w-5 h-5 text-primary" />
-              Parent Action Center
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            {activeAlerts.length > 0 ? (
-              <div className="space-y-3">
-                {activeAlerts.map((alert) => (
-                  <div
-                    key={alert.id}
-                    className={`p-4 rounded-lg border ${getSeverityColor(alert.severity)}`}
-                  >
-                    <div className="flex items-start justify-between gap-2">
-                      <div className="flex-1">
-                        <div className="flex items-center gap-2 mb-1">
-                          <Badge className={`text-xs ${getSeverityColor(alert.severity)} border-0`}>
-                            {alert.severity === 'urgent' ? 'Urgent' : alert.severity === 'attention' ? 'Attention' : 'Info'}
-                          </Badge>
-                          <h4 className="text-sm font-semibold">{alert.title}</h4>
-                        </div>
-                        <p className="text-xs mt-1 opacity-90">{alert.description}</p>
-                        <p className="text-xs mt-2 font-medium">💡 {alert.recommendedAction}</p>
-                        <div className="flex gap-2 mt-3">
-                          <Button
-                            size="sm"
-                            variant="outline"
-                            className="text-xs h-7"
-                            onClick={() => navigate('/parent/communications')}
-                          >
-                            Message Teacher
-                          </Button>
-                          <Button
-                            size="sm"
-                            variant="ghost"
-                            className="text-xs h-7"
-                            onClick={() => navigate('/parent/child-progress/1')}
-                          >
-                            View Details
-                          </Button>
-                        </div>
-                      </div>
-                      <button
-                        onClick={() => handleDismissAlert(alert.id)}
-                        className="text-gray-400 hover:text-gray-600 transition-colors"
-                      >
-                        <X className="w-4 h-4" />
-                      </button>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            ) : (
-              <div className="text-center py-8">
-                <CheckCircle2 className="w-12 h-12 mx-auto mb-2 text-green-500" />
-                <p className="text-sm text-gray-600 font-medium">All good! No action needed.</p>
-                <p className="text-xs text-gray-500 mt-1">Your child is doing well.</p>
-              </div>
-            )}
-          </CardContent>
-        </Card>
-
-        {/* Study Habits & Consistency */}
-        <Card className="lg:col-span-6 border-0 shadow-sm">
-          <CardHeader>
-            <CardTitle className="text-lg font-semibold text-gray-800 flex items-center gap-2">
-              <Flame className="w-5 h-5 text-orange-500" />
-              Study Habits & Consistency
-            </CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            <div className="grid grid-cols-2 gap-4">
-              <div className="p-4 rounded-lg bg-orange-50 border border-orange-100">
-                <div className="flex items-center gap-2 mb-1">
-                  <Flame className="w-4 h-4 text-orange-600" />
-                  <span className="text-xs text-gray-600">Current Streak</span>
-                </div>
-                <p className="text-2xl font-bold text-orange-600">{studyHabits.currentStreak} days</p>
-              </div>
-              <div className="p-4 rounded-lg bg-blue-50 border border-blue-100">
-                <div className="flex items-center gap-2 mb-1">
-                  <Target className="w-4 h-4 text-blue-600" />
-                  <span className="text-xs text-gray-600">Best Streak</span>
-                </div>
-                <p className="text-2xl font-bold text-blue-600">{studyHabits.longestStreak} days</p>
-              </div>
-            </div>
-            <div className="p-4 rounded-lg bg-gray-50 border border-gray-100">
-              <div className="flex items-center justify-between mb-2">
-                <span className="text-xs text-gray-600">Homework Submission</span>
-                <span className="text-sm font-semibold text-gray-800">{studyHabits.submissionConsistency}%</span>
-              </div>
-              <Progress value={studyHabits.submissionConsistency} className="h-2" />
-            </div>
-            <div>
-              <p className="text-xs text-gray-600 mb-2">Weekly Study Time</p>
-              <div className="space-y-2">
-                {studyHabits.weeklyStudyTime.map((item, idx) => (
-                  <div key={idx} className="flex items-center justify-between text-xs">
-                    <span className="text-gray-700">{item.subject}</span>
-                    <span className="font-medium text-gray-800">{item.hours}h</span>
-                  </div>
-                ))}
-              </div>
-            </div>
-            <div>
-              <p className="text-xs text-gray-600 mb-2">Study Calendar (Last 7 Days)</p>
-              <div className="flex gap-1">
-                {Array.from({ length: 7 }, (_, i) => {
-                  const date = new Date();
-                  date.setDate(date.getDate() - (6 - i));
-                  const dateStr = date.toISOString().split('T')[0];
-                  const studied = studyHabits.studyDays.includes(dateStr);
-                  return (
-                    <div
-                      key={i}
-                      className={`flex-1 h-8 rounded border transition-colors ${
-                        studied
-                          ? 'bg-green-500 border-green-600'
-                          : 'bg-gray-100 border-gray-200'
-                      }`}
-                      title={date.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' })}
-                    />
-                  );
-                })}
-              </div>
-              <div className="flex items-center gap-4 mt-2 text-xs text-gray-500">
-                <div className="flex items-center gap-1">
-                  <div className="w-3 h-3 rounded bg-green-500 border border-green-600" />
-                  <span>Studied</span>
-                </div>
-                <div className="flex items-center gap-1">
-                  <div className="w-3 h-3 rounded bg-gray-100 border border-gray-200" />
-                  <span>No study</span>
-                </div>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-      </div>
-
-      {/* Exam Readiness & Class Benchmark */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
-        {/* Exam Readiness Indicator */}
-        <Card className="lg:col-span-6 border-0 shadow-sm">
-          <CardHeader>
-            <CardTitle className="text-lg font-semibold text-gray-800 flex items-center gap-2">
-              <Target className="w-5 h-5 text-primary" />
-              Exam Readiness Indicator
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-3">
-              {examReadiness.map((item, idx) => (
-                <div key={idx} className="p-3 rounded-lg border border-gray-100">
-                  <div className="flex items-center justify-between mb-2">
-                    <span className="text-sm font-semibold text-gray-800">{item.subject}</span>
-                    <Badge className={`text-xs ${getReadinessColor(item.readiness)} border-0`}>
-                      {item.readiness === 'high' ? 'High' : item.readiness === 'medium' ? 'Medium' : 'Low'}
-                    </Badge>
-                  </div>
-                  <div className="flex items-center gap-2 mb-2">
-                    <Progress value={item.score} className="h-1.5 flex-1" />
-                    <span className="text-xs text-gray-600">{item.score}%</span>
-                  </div>
-                  <p className="text-xs text-gray-600">{item.explanation}</p>
-                  {item.readiness === 'low' && (
-                    <Button
-                      size="sm"
-                      variant="outline"
-                      className="text-xs h-7 mt-2"
-                      onClick={() => navigate('/parent/communications')}
-                    >
-                      Message Teacher
-                    </Button>
-                  )}
-                </div>
-              ))}
-            </div>
-          </CardContent>
-        </Card>
-
-        {/* Anonymous Class Benchmark */}
-        <Card className="lg:col-span-6 border-0 shadow-sm">
-          <CardHeader>
-            <CardTitle className="text-lg font-semibold text-gray-800 flex items-center gap-2">
-              <TrendingUp className="w-5 h-5 text-primary" />
-              Class Benchmark
-            </CardTitle>
-            <p className="text-xs text-gray-500 mt-1">Anonymous comparison with class average</p>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-3">
-              {classBenchmark.map((item, idx) => (
-                <div key={idx} className="space-y-2">
-                  <div className="flex items-center justify-between">
-                    <span className="text-sm font-semibold text-gray-800">{item.subject}</span>
-                    <Badge className={`text-xs ${getBenchmarkColor(item.position)} border-0 text-gray-700`}>
-                      {item.position === 'above' ? 'Above Average' : item.position === 'at' ? 'At Average' : 'Below Average'}
-                    </Badge>
-                  </div>
-                  <div className="flex items-center gap-3">
-                    <div className="flex-1">
-                      <div className="h-2 bg-gray-200 rounded-full overflow-hidden">
-                        <div
-                          className={`h-full ${getBenchmarkColor(item.position)}`}
-                          style={{ width: `${item.childScore}%` }}
-                        />
-                      </div>
-                    </div>
-                    <div className="text-xs text-gray-600 min-w-[80px] text-right">
-                      {item.childScore}% vs {item.classAverage}%
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
-            <div className="mt-4 p-3 rounded-lg bg-blue-50 border border-blue-100">
-              <div className="flex items-start gap-2">
-                <Info className="w-4 h-4 text-blue-600 mt-0.5 flex-shrink-0" />
-                <p className="text-xs text-blue-700">
-                  This comparison helps you understand your child's performance context without creating unhealthy competition.
-                </p>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-      </div>
-
-      {/* Wellbeing Signals & Feedback */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
-        {/* Wellbeing Signals */}
-        <Card className="lg:col-span-8 border-0 shadow-sm">
-          <CardHeader>
-            <CardTitle className="text-lg font-semibold text-gray-800 flex items-center gap-2">
-              <Heart className="w-5 h-5 text-pink-500" />
-              Wellbeing Signals
-            </CardTitle>
-            <p className="text-xs text-gray-500 mt-1">Non-diagnostic indicators for emotional awareness</p>
-          </CardHeader>
-          <CardContent>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              {wellbeingSignals.map((signal) => (
-                <div key={signal.id} className="p-4 rounded-lg border border-gray-100 bg-gray-50/50">
-                  <div className="flex items-start gap-3">
-                    <div className="p-2 rounded-lg bg-pink-100">
-                      <Heart className="w-4 h-4 text-pink-600" />
-                    </div>
-                    <div className="flex-1">
-                      <h4 className="text-sm font-semibold text-gray-800 mb-1">{signal.title}</h4>
-                      <p className="text-xs text-gray-600 mb-2">{signal.description}</p>
-                      <div className="p-2 rounded bg-white border border-gray-100">
-                        <p className="text-xs text-gray-700">
-                          <span className="font-medium">Suggestion:</span> {signal.suggestion}
-                        </p>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </CardContent>
-        </Card>
-
-        {/* Parent Feedback & Acknowledgement */}
-        <Card className="lg:col-span-4 border-0 shadow-sm">
-          <CardHeader>
-            <CardTitle className="text-lg font-semibold text-gray-800 flex items-center gap-2">
-              <CheckCircle2 className="w-5 h-5 text-green-500" />
-              Feedback & Acknowledgement
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-3">
-              {feedbackItems.filter(item => item.status === 'pending').slice(0, 3).map((item) => (
-                <div key={item.id} className="p-3 rounded-lg border border-gray-100">
-                  <h4 className="text-xs font-semibold text-gray-800 mb-1">{item.title}</h4>
-                  <p className="text-xs text-gray-600 mb-2 line-clamp-2">{item.content}</p>
-                  <div className="flex gap-1">
-                    <Button
-                      size="sm"
-                      variant="outline"
-                      className="text-xs h-6 flex-1"
-                      onClick={() => {
-                        // In real app, this would update the status
-                        console.log('Acknowledged:', item.id);
-                      }}
-                    >
-                      ✓ Acknowledge
-                    </Button>
-                    <Button
-                      size="sm"
-                      variant="ghost"
-                      className="text-xs h-6"
-                      onClick={() => navigate('/parent/communications')}
-                    >
-                      ?
-                    </Button>
-                  </div>
-                </div>
-              ))}
-              {feedbackItems.filter(item => item.status === 'pending').length === 0 && (
-                <div className="text-center py-6">
-                  <CheckCircle2 className="w-8 h-8 mx-auto mb-2 text-green-500" />
-                  <p className="text-xs text-gray-600">All items acknowledged</p>
                 </div>
               )}
             </div>

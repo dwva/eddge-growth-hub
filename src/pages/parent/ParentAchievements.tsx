@@ -37,24 +37,79 @@ const ParentAchievementsContent = () => {
         <p className="text-muted-foreground">Celebrating progress and success</p>
       </div>
 
-      {/* Positive Reinforcement Banner */}
-      <Card className="bg-gradient-to-r from-yellow-100 to-orange-100 border-yellow-200">
-        <CardContent className="p-5">
-          <div className="flex items-center gap-4">
-            <div className="p-3 rounded-full bg-yellow-200">
-              <Sparkles className="w-8 h-8 text-yellow-600" />
-            </div>
-            <div>
-              <h3 className="text-lg font-semibold text-yellow-800">
-                Great Job, {selectedChild?.name}! 🎉
-              </h3>
-              <p className="text-yellow-700">
-                Keep up the amazing work! Every achievement is a step towards excellence.
-              </p>
-            </div>
-          </div>
-        </CardContent>
-      </Card>
+      {/* Recent Achievements & Badges - Side by Side */}
+      <div className="grid grid-cols-1 lg:grid-cols-10 gap-6">
+        {/* Recent Achievements - 70% width */}
+        <div className="lg:col-span-7">
+          <Card className="border-0 shadow-sm h-full">
+            <CardHeader className="pb-2">
+              <CardTitle className="text-base font-semibold text-gray-900">Recent Achievements</CardTitle>
+            </CardHeader>
+            <CardContent className="pb-3 pt-0">
+              {recentAchievements.length > 0 ? (
+                <div className="relative max-h-[280px] overflow-y-auto pr-2">
+                  <div className="absolute left-3 top-0 bottom-0 w-0.5 bg-gray-200" />
+                  <div className="space-y-6">
+                    {recentAchievements.slice(0, 3).map((achievement, index) => (
+                      <div key={achievement.id} className="relative pl-7">
+                        <div className="absolute left-0 top-0.5 w-4 h-4 rounded-full bg-primary flex items-center justify-center">
+                          <div className="w-1.5 h-1.5 rounded-full bg-white" />
+                        </div>
+                        <div className="p-2 rounded-lg bg-muted/50 border border-gray-200 shadow-sm">
+                          <div className="flex items-center justify-between gap-2">
+                            <h4 className="font-semibold text-xs text-gray-900 truncate">{achievement.title}</h4>
+                            <span className="text-[10px] text-muted-foreground whitespace-nowrap">{achievement.date}</span>
+                          </div>
+                          <p className="text-[11px] text-muted-foreground mt-0.5 line-clamp-1">{achievement.description}</p>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              ) : (
+                <div className="text-center py-6">
+                  <Trophy className="w-10 h-10 mx-auto text-muted-foreground" />
+                  <p className="mt-2 text-muted-foreground text-xs">No recent achievements yet</p>
+                </div>
+              )}
+            </CardContent>
+          </Card>
+        </div>
+
+        {/* Badges & Recognitions - 30% width */}
+        <div className="lg:col-span-3">
+          <Card className="border-0 shadow-sm h-full">
+            <CardHeader className="pb-2">
+              <CardTitle className="text-base font-semibold text-gray-900">Badges & Recognitions</CardTitle>
+            </CardHeader>
+            <CardContent className="pb-3 pt-0">
+              <div className="space-y-2 max-h-[280px] overflow-y-auto">
+                {badges.map((badge) => (
+                  <Card key={badge.id} className="border-0 shadow-sm hover:shadow-md transition-shadow">
+                    <CardContent className="p-2">
+                      <div className="flex items-center gap-2">
+                        <div
+                          className="w-9 h-9 rounded-full flex items-center justify-center flex-shrink-0"
+                          style={{ backgroundColor: `${badge.color}15` }}
+                        >
+                          <div style={{ color: badge.color }}>
+                            {iconMap[badge.icon] || <Star className="w-3.5 h-3.5" />}
+                          </div>
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <h4 className="font-semibold text-xs text-gray-900 truncate">{badge.title}</h4>
+                          <p className="text-[10px] text-gray-500 mt-0.5 line-clamp-1">{badge.description}</p>
+                          <Badge className="mt-1 bg-green-50 text-green-700 border-0 text-[9px] px-1.5 py-0">Earned</Badge>
+                        </div>
+                      </div>
+                    </CardContent>
+                  </Card>
+                ))}
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+      </div>
 
       {/* Milestones Section */}
       <div>
@@ -73,30 +128,6 @@ const ParentAchievementsContent = () => {
                     <p className="text-xs text-muted-foreground mt-2">{milestone.date}</p>
                   </div>
                 </div>
-              </CardContent>
-            </Card>
-          ))}
-        </div>
-      </div>
-
-      {/* Badges & Recognitions */}
-      <div>
-        <h2 className="text-lg font-semibold mb-3">Badges & Recognitions</h2>
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-          {badges.map((badge) => (
-            <Card key={badge.id} className="text-center hover:shadow-md transition-shadow">
-              <CardContent className="p-4">
-                <div
-                  className="w-14 h-14 mx-auto rounded-full flex items-center justify-center mb-3"
-                  style={{ backgroundColor: `${badge.color}20` }}
-                >
-                  <div style={{ color: badge.color }}>
-                    {iconMap[badge.icon] || <Star className="w-6 h-6" />}
-                  </div>
-                </div>
-                <h4 className="font-semibold text-sm">{badge.title}</h4>
-                <p className="text-xs text-muted-foreground mt-1">{badge.description}</p>
-                <Badge className="mt-2 bg-green-100 text-green-700 text-[10px]">Earned</Badge>
               </CardContent>
             </Card>
           ))}
@@ -136,40 +167,6 @@ const ParentAchievementsContent = () => {
         </div>
       </div>
 
-      {/* Recent Achievements Timeline */}
-      <Card>
-        <CardHeader>
-          <CardTitle className="text-lg">Recent Achievements</CardTitle>
-        </CardHeader>
-        <CardContent>
-          {recentAchievements.length > 0 ? (
-            <div className="relative">
-              <div className="absolute left-3 top-0 bottom-0 w-0.5 bg-muted" />
-              <div className="space-y-4">
-                {recentAchievements.map((achievement) => (
-                  <div key={achievement.id} className="relative pl-8">
-                    <div className="absolute left-0 top-1 w-6 h-6 rounded-full bg-primary flex items-center justify-center">
-                      <div className="w-2 h-2 rounded-full bg-white" />
-                    </div>
-                    <div className="p-3 rounded-lg bg-muted/50">
-                      <div className="flex items-center justify-between">
-                        <h4 className="font-semibold text-sm">{achievement.title}</h4>
-                        <span className="text-xs text-muted-foreground">{achievement.date}</span>
-                      </div>
-                      <p className="text-sm text-muted-foreground mt-1">{achievement.description}</p>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-          ) : (
-            <div className="text-center py-8">
-              <Trophy className="w-12 h-12 mx-auto text-muted-foreground" />
-              <p className="mt-2 text-muted-foreground">No recent achievements yet</p>
-            </div>
-          )}
-        </CardContent>
-      </Card>
     </div>
   );
 };
