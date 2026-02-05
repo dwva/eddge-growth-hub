@@ -217,14 +217,14 @@ function generateFramesForNode(
   return frames;
 }
 
-// Create nodes for a topic – includes a support node that can be unlocked dynamically
+// Create nodes for a topic: 1–3 teaching, 4 applying, 5 exam. Mistakes in 4/5 are rectified in-session by A.C.E Support Lock (no separate rescue node).
 function createNodesForTopic(
   topicId: string,
   topicName: string
 ): LearningNode[] {
   const nodes: LearningNode[] = [];
 
-  // Node 1: Foundation concept (Core)
+  // Node 1: Teaching – foundation (Core)
   nodes.push({
     id: `${topicId}-n1`,
     topicId,
@@ -237,7 +237,7 @@ function createNodesForTopic(
     frames: generateFramesForNode(`${topicId}-n1`, `${topicName} basics`, 'core'),
   });
 
-  // Node 2: Deep concept (Concept-heavy)
+  // Node 2: Teaching – formulas & concept (Concept-heavy)
   nodes.push({
     id: `${topicId}-n2`,
     topicId,
@@ -251,22 +251,21 @@ function createNodesForTopic(
     frames: generateFramesForNode(`${topicId}-n2`, `${topicName} formulas`, 'concept'),
   });
 
-  // Node 3: Support / Rescue node (initially locked, unlocked on struggle)
+  // Node 3: Teaching – deeper into topic (Concept)
   nodes.push({
-    id: `${topicId}-n3-support`,
+    id: `${topicId}-n3`,
     topicId,
-    skillGoal: `Quick rescue for ${topicName}`,
-    type: 'support',
+    skillGoal: `Key ideas in ${topicName}`,
+    type: 'concept',
     status: 'locked',
     order: 2,
-    totalFrames: 8,
+    totalFrames: 16,
     completedFrames: 0,
-    // Can be triggered after either core or concept node if the student struggles
-    prerequisiteNodeIds: [`${topicId}-n1`, `${topicId}-n2`],
-    frames: generateFramesForNode(`${topicId}-n3-support`, `${topicName} helper`, 'concept'),
+    prerequisiteNodeIds: [`${topicId}-n2`],
+    frames: generateFramesForNode(`${topicId}-n3`, `${topicName} key ideas`, 'concept'),
   });
 
-  // Node 4: Practice (Practice-focused)
+  // Node 4: Applying – practice (mistakes rectified in-session by AI / Support Lock)
   nodes.push({
     id: `${topicId}-n4`,
     topicId,
@@ -276,11 +275,11 @@ function createNodesForTopic(
     order: 3,
     totalFrames: 8,
     completedFrames: 0,
-    prerequisiteNodeIds: [`${topicId}-n2`, `${topicId}-n3-support`],
+    prerequisiteNodeIds: [`${topicId}-n3`],
     frames: generateFramesForNode(`${topicId}-n4`, `${topicName} problems`, 'practice'),
   });
 
-  // Node 5: Mastery check (Mastery)
+  // Node 5: Exam level (mistakes rectified in-session by AI / Support Lock)
   nodes.push({
     id: `${topicId}-n5`,
     topicId,
@@ -292,29 +291,6 @@ function createNodesForTopic(
     completedFrames: 0,
     prerequisiteNodeIds: [`${topicId}-n4`],
     frames: generateFramesForNode(`${topicId}-n5`, `${topicName} mastery`, 'mastery'),
-  });
-
-  // Node 6: Reward gate – only unlocks after strong mastery
-  nodes.push({
-    id: `${topicId}-n6`,
-    topicId,
-    skillGoal: 'Unlock Next Topic',
-    type: 'reward',
-    status: 'locked',
-    order: 5,
-    totalFrames: 1,
-    completedFrames: 0,
-    prerequisiteNodeIds: [`${topicId}-n5`],
-    frames: [{
-      id: `${topicId}-n6-r1`,
-      type: 'takeaway',
-      stage: 'exit',
-      order: 0,
-      content: {
-        title: 'Congratulations!',
-        body: `You've mastered ${topicName}! You can now move on to the next topic.`,
-      },
-    }],
   });
 
   return nodes;
@@ -334,7 +310,7 @@ export const learningPaths: Record<string, LearningPath> = {
     nodes: createNodesForTopic('t1', 'Linear Expressions'),
     currentNodeId: 't1-n1',
     completedNodeCount: 0,
-    totalNodeCount: 6,
+    totalNodeCount: 5,
     masteryScore: 0,
   },
   
@@ -350,7 +326,7 @@ export const learningPaths: Record<string, LearningPath> = {
     nodes: createNodesForTopic('t2', 'Factorization'),
     currentNodeId: 't2-n1',
     completedNodeCount: 0,
-    totalNodeCount: 6,
+    totalNodeCount: 5,
     masteryScore: 0,
   },
 
@@ -366,7 +342,7 @@ export const learningPaths: Record<string, LearningPath> = {
     nodes: createNodesForTopic('t3', 'One Variable Equations'),
     currentNodeId: 't3-n1',
     completedNodeCount: 0,
-    totalNodeCount: 6,
+    totalNodeCount: 5,
     masteryScore: 0,
   },
 
@@ -382,7 +358,7 @@ export const learningPaths: Record<string, LearningPath> = {
     nodes: createNodesForTopic('t4', 'Word Problems'),
     currentNodeId: 't4-n1',
     completedNodeCount: 0,
-    totalNodeCount: 6,
+    totalNodeCount: 5,
     masteryScore: 0,
   },
 
@@ -398,7 +374,7 @@ export const learningPaths: Record<string, LearningPath> = {
     nodes: createNodesForTopic('t11', "Newton's Laws"),
     currentNodeId: 't11-n1',
     completedNodeCount: 0,
-    totalNodeCount: 6,
+    totalNodeCount: 5,
     masteryScore: 0,
   },
 
@@ -414,7 +390,7 @@ export const learningPaths: Record<string, LearningPath> = {
     nodes: createNodesForTopic('t12', 'Friction and Motion'),
     currentNodeId: 't12-n1',
     completedNodeCount: 0,
-    totalNodeCount: 6,
+    totalNodeCount: 5,
     masteryScore: 0,
   },
 };
@@ -432,16 +408,15 @@ export interface NodeOutcome {
   confidenceScore: number; // 0–100, based on assessment frames
 }
 
-// Helper function to update node status based on signals (not raw completion)
+// Helper function to update node status. Linear unlock: complete N → unlock N+1. Mistakes in apply/exam are rectified in-session by A.C.E Support Lock.
 export function updateNodeStatus(
   path: LearningPath,
   nodeId: string,
   outcome: NodeOutcome
 ): LearningPath {
-  const { completed, partial, needsSupport, confidenceScore } = outcome;
+  const { completed, partial, confidenceScore } = outcome;
 
   const updatedNodes = path.nodes.map((node) => {
-    // Update the node that just ran
     if (node.id === nodeId) {
       return {
         ...node,
@@ -451,38 +426,12 @@ export function updateNodeStatus(
       } as LearningNode;
     }
 
-    // Unlock nodes that depend on this one, using signal-aware rules
-    if (node.prerequisiteNodeIds?.includes(nodeId)) {
-      // Support nodes only unlock when the engine signals struggle
-      if (node.type === 'support') {
-        if (needsSupport || partial) {
-          return {
-            ...node,
-            status: node.status === 'locked' ? 'available' : node.status,
-          } as LearningNode;
-        }
-        return node;
-      }
-
-      // Reward nodes only unlock for strong mastery (high confidence, no support)
-      if (node.type === 'reward') {
-        const strongMastery = !partial && !needsSupport && confidenceScore >= 80;
-        if (strongMastery) {
-          return {
-            ...node,
-            status: node.status === 'locked' ? 'available' : node.status,
-          } as LearningNode;
-        }
-        return node;
-      }
-
-      // Regular learning nodes: unlock when the prerequisite was at least completed
-      if (completed) {
-        return {
-          ...node,
-          status: node.status === 'locked' ? 'available' : node.status,
-        } as LearningNode;
-      }
+    // Linear unlock: prerequisite completed → next node available
+    if (node.prerequisiteNodeIds?.includes(nodeId) && completed) {
+      return {
+        ...node,
+        status: node.status === 'locked' ? 'available' : node.status,
+      } as LearningNode;
     }
 
     return node;
@@ -492,13 +441,7 @@ export function updateNodeStatus(
     (n) => n.status === 'completed' || n.status === 'partial'
   ).length;
 
-  // Choose next node:
-  // 1) If a support node just became available, prefer it
-  // 2) Otherwise, first available learning node
-  const nextSupport = updatedNodes.find(
-    (n) => n.type === 'support' && n.status === 'available'
-  );
-  const nextNode = nextSupport ?? updatedNodes.find((n) => n.status === 'available');
+  const nextNode = updatedNodes.find((n) => n.status === 'available');
 
   return {
     ...path,

@@ -11,7 +11,7 @@ interface LearningPathProps {
   emotionalMessage?: string | null;
 }
 
-/** Subject-based soft background (3–6% opacity), alive but quiet */
+/** Subject-based soft background (3–6% opacity), alive but quiet — no text overlap */
 function PathBackground({ subjectId }: { subjectId: string }) {
   const isScience = subjectId === '2' || subjectId?.toLowerCase().includes('science');
   const isMath = subjectId === '1' || subjectId?.toLowerCase().includes('math');
@@ -23,37 +23,79 @@ function PathBackground({ subjectId }: { subjectId: string }) {
       aria-hidden
     >
       {isScience && (
-        <div
-          className="absolute inset-0 opacity-[0.05] dark:opacity-[0.04]"
-          style={{
-            background: 'radial-gradient(ellipse 80% 60% at 50% 30%, rgba(129, 140, 248, 0.4), transparent 60%), linear-gradient(180deg, rgba(59, 130, 246, 0.08) 0%, transparent 50%)',
-          }}
-        />
+        <>
+          {/* Science: soft sky, space haze — top light, bottom deeper */}
+          <div
+            className="absolute inset-0 rounded-3xl"
+            style={{
+              background: 'linear-gradient(180deg, rgba(147, 197, 253, 0.06) 0%, rgba(129, 140, 248, 0.04) 35%, rgba(99, 102, 241, 0.03) 70%, transparent 100%)',
+            }}
+          />
+          <div
+            className="absolute inset-0 rounded-3xl"
+            style={{
+              background: 'radial-gradient(ellipse 90% 50% at 50% 20%, rgba(191, 219, 254, 0.05), transparent 55%), radial-gradient(ellipse 70% 60% at 80% 70%, rgba(129, 140, 248, 0.03), transparent 50%)',
+            }}
+          />
+        </>
       )}
       {isMath && (
-        <div
-          className="absolute inset-0 opacity-[0.05] dark:opacity-[0.04]"
-          style={{
-            background: 'repeating-linear-gradient( -45deg, transparent, transparent 40px, rgba(139, 92, 246, 0.06) 40px, rgba(139, 92, 246, 0.06) 41px ), linear-gradient(135deg, rgba(139, 92, 246, 0.04), transparent 50%)',
-          }}
-        />
+        <>
+          {/* Math: abstract geometric waves — soft purple grid feel */}
+          <div
+            className="absolute inset-0 rounded-3xl"
+            style={{
+              background: 'linear-gradient(135deg, rgba(196, 181, 253, 0.05) 0%, transparent 45%), linear-gradient(315deg, rgba(139, 92, 246, 0.04) 0%, transparent 45%)',
+            }}
+          />
+          <div
+            className="absolute inset-0 rounded-3xl opacity-80"
+            style={{
+              backgroundImage: 'repeating-linear-gradient(0deg, transparent, transparent 48px, rgba(139, 92, 246, 0.02) 48px, rgba(139, 92, 246, 0.02) 49px), repeating-linear-gradient(90deg, transparent, transparent 48px, rgba(139, 92, 246, 0.02) 48px, rgba(139, 92, 246, 0.02) 49px)',
+            }}
+          />
+        </>
       )}
       {isHistory && (
-        <div
-          className="absolute inset-0 opacity-[0.05] dark:opacity-[0.04]"
-          style={{
-            background: 'linear-gradient(180deg, rgba(180, 160, 120, 0.06) 0%, transparent 40%), radial-gradient(ellipse 100% 80% at 80% 80%, rgba(180, 160, 120, 0.05), transparent 50%)',
-          }}
-        />
+        <>
+          {/* History: faint map, parchment texture */}
+          <div
+            className="absolute inset-0 rounded-3xl"
+            style={{
+              background: 'linear-gradient(180deg, rgba(254, 243, 199, 0.05) 0%, rgba(245, 230, 190, 0.04) 50%, transparent 100%)',
+            }}
+          />
+          <div
+            className="absolute inset-0 rounded-3xl"
+            style={{
+              background: 'radial-gradient(ellipse 100% 100% at 30% 60%, rgba(217, 199, 160, 0.03), transparent 60%)',
+            }}
+          />
+        </>
       )}
       {!isScience && !isMath && !isHistory && (
-        <div
-          className="absolute inset-0 opacity-[0.04] dark:opacity-[0.03]"
-          style={{
-            background: 'linear-gradient(135deg, rgba(139, 92, 246, 0.06), transparent 50%)',
-          }}
-        />
+        <>
+          <div
+            className="absolute inset-0 rounded-3xl"
+            style={{
+              background: 'linear-gradient(135deg, rgba(196, 181, 253, 0.05) 0%, transparent 50%)',
+            }}
+          />
+          <div
+            className="absolute inset-0 rounded-3xl"
+            style={{
+              background: 'radial-gradient(ellipse 80% 60% at 70% 30%, rgba(139, 92, 246, 0.03), transparent 55%)',
+            }}
+          />
+        </>
       )}
+      {/* Dark mode overlay */}
+      <div
+        className="absolute inset-0 rounded-3xl hidden dark:block"
+        style={{
+          background: 'radial-gradient(ellipse 100% 80% at 50% 50%, rgba(30, 27, 75, 0.03), transparent 60%)',
+        }}
+      ></div>
     </div>
   );
 }
