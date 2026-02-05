@@ -108,16 +108,16 @@ const TeacherAssessmentsContent = () => {
   };
 
   return (
-    <div className="space-y-10 max-w-[1600px]">
+    <div className="h-full">
       {/* Page Header - Clean */}
-      <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4 pb-6 border-b border-gray-100">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 md:gap-4 mb-3">
         <div>
-          <h1 className="text-3xl font-bold text-gray-900">Assessments</h1>
-          <p className="text-sm text-gray-500 mt-2">Create and manage assessments for your classes</p>
+          <h1 className="text-lg md:text-xl font-bold text-gray-900">Assessments</h1>
+          <p className="text-xs md:text-sm text-gray-500 mt-0.5">Create and manage assessments</p>
         </div>
-        <Button size="sm" className="gap-2 h-10 rounded-xl" onClick={() => setWizardOpen(true)}>
-          <Plus className="w-4 h-4" />
-          Create Assessment
+        <Button size="sm" className="gap-1 h-7 md:h-8 text-xs rounded-lg" onClick={() => setWizardOpen(true)}>
+          <Plus className="w-3 h-3" />
+          Create
         </Button>
 
         {/* Assessment Wizard */}

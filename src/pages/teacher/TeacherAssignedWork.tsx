@@ -101,8 +101,8 @@ const TeacherAssignedWorkContent = () => {
       {/* Page Header */}
       <div className="flex items-center justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">Assigned Work Tracker</h1>
-          <p className="text-sm text-gray-500 mt-1">Track and evaluate all assigned assessments, assignments, and homework</p>
+          <h1 className="text-lg md:text-xl font-bold text-gray-900">Assigned Work Tracker</h1>
+          <p className="text-xs md:text-sm text-gray-500 mt-0.5">Track and evaluate all assigned assessments, assignments, and homework</p>
         </div>
         <Button onClick={() => navigate('/teacher/ai-tools/question-generator')} className="gap-2">
           <Plus className="w-4 h-4" />
@@ -120,7 +120,7 @@ const TeacherAssignedWorkContent = () => {
               </div>
               <div>
                 <p className="text-xs text-gray-500">Active</p>
-                <p className="text-xl font-bold text-gray-900">{stats.active}</p>
+                <p className="text-base font-bold text-gray-900">{stats.active}</p>
               </div>
             </div>
           </CardContent>
@@ -134,7 +134,7 @@ const TeacherAssignedWorkContent = () => {
               </div>
               <div>
                 <p className="text-xs text-gray-500">Draft</p>
-                <p className="text-xl font-bold text-gray-900">{stats.draft}</p>
+                <p className="text-base font-bold text-gray-900">{stats.draft}</p>
               </div>
             </div>
           </CardContent>
@@ -148,7 +148,7 @@ const TeacherAssignedWorkContent = () => {
               </div>
               <div>
                 <p className="text-xs text-gray-500">Completed</p>
-                <p className="text-xl font-bold text-gray-900">{stats.completed}</p>
+                <p className="text-base font-bold text-gray-900">{stats.completed}</p>
               </div>
             </div>
           </CardContent>
@@ -162,7 +162,7 @@ const TeacherAssignedWorkContent = () => {
               </div>
               <div>
                 <p className="text-xs text-gray-500">Total Submissions</p>
-                <p className="text-xl font-bold text-gray-900">{stats.totalSubmissions}</p>
+                <p className="text-base font-bold text-gray-900">{stats.totalSubmissions}</p>
               </div>
             </div>
           </CardContent>
@@ -176,7 +176,7 @@ const TeacherAssignedWorkContent = () => {
               </div>
               <div>
                 <p className="text-xs text-gray-500">Evaluated</p>
-                <p className="text-xl font-bold text-gray-900">{stats.evaluatedSubmissions}</p>
+                <p className="text-base font-bold text-gray-900">{stats.evaluatedSubmissions}</p>
               </div>
             </div>
           </CardContent>
@@ -190,7 +190,7 @@ const TeacherAssignedWorkContent = () => {
               </div>
               <div>
                 <p className="text-xs text-gray-500">Pending</p>
-                <p className="text-xl font-bold text-gray-900">{stats.pendingEvaluation}</p>
+                <p className="text-base font-bold text-gray-900">{stats.pendingEvaluation}</p>
               </div>
             </div>
           </CardContent>
@@ -237,7 +237,7 @@ const TeacherAssignedWorkContent = () => {
                   <div className="flex items-start justify-between mb-4">
                     <div className="flex-1">
                       <div className="flex items-center gap-2 mb-2">
-                        <h3 className="text-lg font-bold text-gray-900">{work.title}</h3>
+                        <h3 className="text-sm font-bold text-gray-900">{work.title}</h3>
                         <Badge variant="outline" className={`text-xs ${getTypeColor(work.type)}`}>
                           {work.type}
                         </Badge>
@@ -288,19 +288,19 @@ const TeacherAssignedWorkContent = () => {
                   {/* Submission Stats */}
                   <div className="grid grid-cols-4 gap-4 p-4 rounded-lg bg-gray-50 mb-4">
                     <div className="text-center">
-                      <p className="text-2xl font-bold text-gray-900">{submissionStats.total}</p>
+                      <p className="text-sm font-bold text-gray-900">{submissionStats.total}</p>
                       <p className="text-xs text-gray-500">Total Students</p>
                     </div>
                     <div className="text-center">
-                      <p className="text-2xl font-bold text-green-600">{submissionStats.evaluated}</p>
+                      <p className="text-sm font-bold text-green-600">{submissionStats.evaluated}</p>
                       <p className="text-xs text-gray-500">Evaluated</p>
                     </div>
                     <div className="text-center">
-                      <p className="text-2xl font-bold text-blue-600">{submissionStats.submitted}</p>
+                      <p className="text-sm font-bold text-blue-600">{submissionStats.submitted}</p>
                       <p className="text-xs text-gray-500">Submitted</p>
                     </div>
                     <div className="text-center">
-                      <p className="text-2xl font-bold text-gray-500">{submissionStats.notStarted}</p>
+                      <p className="text-sm font-bold text-gray-500">{submissionStats.notStarted}</p>
                       <p className="text-xs text-gray-500">Not Started</p>
                     </div>
                   </div>
@@ -358,7 +358,7 @@ const TeacherAssignedWorkContent = () => {
             <Card className="border-0 shadow-sm">
               <CardContent className="p-12 text-center">
                 <FileText className="w-12 h-12 text-gray-400 mx-auto mb-4" />
-                <h3 className="text-lg font-semibold mb-2">No assigned work found</h3>
+                <h3 className="text-sm font-semibold mb-2">No assigned work found</h3>
                 <p className="text-gray-500 mb-4">Create your first assignment using AI Tools</p>
                 <Button onClick={() => navigate('/teacher/ai-tools/question-generator')}>
                   <Plus className="w-4 h-4 mr-2" />
@@ -401,7 +401,7 @@ const TeacherAssignedWorkContent = () => {
                     <div className="grid grid-cols-2 gap-4 p-3 rounded-lg bg-gray-50">
                       <div>
                         <Label className="text-xs text-gray-500">Auto-scored (MCQs)</Label>
-                        <p className="text-lg font-bold text-gray-900">{submission.autoScore || 0}</p>
+                        <p className="text-sm font-bold text-gray-900">{submission.autoScore || 0}</p>
                       </div>
                       <div>
                         <Label className="text-xs text-gray-500 mb-2 block">Manual Score (Subjective)</Label>
@@ -417,7 +417,7 @@ const TeacherAssignedWorkContent = () => {
                             className="h-8"
                           />
                         ) : (
-                          <p className="text-lg font-bold text-gray-900">{submission.manualScore || 0}</p>
+                          <p className="text-sm font-bold text-gray-900">{submission.manualScore || 0}</p>
                         )}
                       </div>
                     </div>

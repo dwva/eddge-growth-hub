@@ -21,7 +21,7 @@ const TeacherSubjectClassesContent = () => {
     return (
       <div className="flex flex-col items-center justify-center min-h-[60vh] text-center">
         <AlertCircle className="w-16 h-16 text-muted-foreground mb-4" />
-        <h2 className="text-xl font-semibold mb-2">Subject Teacher Mode Required</h2>
+        <h2 className="text-sm font-semibold mb-2">Subject Teacher Mode Required</h2>
         <p className="text-muted-foreground mb-4">This page is only accessible in Subject Teacher mode.</p>
         <Button onClick={() => navigate('/teacher')}>Back to Dashboard</Button>
       </div>
@@ -31,15 +31,15 @@ const TeacherSubjectClassesContent = () => {
   const filteredClasses = subjectClasses.filter(c => c.subject === selectedSubject);
 
   return (
-    <div className="space-y-5 max-w-[1600px]">
+    <div className="space-y-3 md:space-y-4 max-w-[1600px]">
       {/* Page Header */}
-      <div className="flex items-center justify-between gap-4">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 md:gap-4">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">My Classes</h1>
-          <p className="text-sm text-gray-500 mt-1">View all classes where you teach your subject</p>
+          <h1 className="text-lg md:text-xl font-bold text-gray-900">My Classes</h1>
+          <p className="text-xs md:text-sm text-gray-500 mt-0.5">View all classes where you teach</p>
         </div>
         <Select value={selectedSubject} onValueChange={setSelectedSubject}>
-          <SelectTrigger className="w-full sm:w-[200px] h-9 rounded-xl border-gray-200">
+          <SelectTrigger className="w-full sm:w-[160px] h-8 text-xs rounded-lg border-gray-200">
             <SelectValue />
           </SelectTrigger>
           <SelectContent>
@@ -51,46 +51,46 @@ const TeacherSubjectClassesContent = () => {
 
       {/* Section: Classes */}
       <div>
-        <h2 className="text-xs font-semibold text-gray-400 uppercase tracking-wide mb-3">
+        <h2 className="text-[10px] md:text-xs font-semibold text-gray-400 uppercase tracking-wide mb-2 md:mb-3">
           {filteredClasses.length} Classes
         </h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2 md:gap-3">
           {filteredClasses.map((cls) => (
-            <Card key={cls.id}>
-              <CardContent className="p-4">
-                <div className="flex items-start justify-between mb-3">
+            <Card key={cls.id} className="rounded-xl">
+              <CardContent className="p-3">
+                <div className="flex items-start justify-between mb-2">
                   <div className="flex-1 min-w-0">
-                    <h3 className="font-semibold text-sm mb-1 truncate">{cls.name}</h3>
-                    <Badge variant="outline" className="text-xs">
-                      <BookOpen className="w-3 h-3 mr-1" />
+                    <h3 className="font-semibold text-xs mb-1 truncate">{cls.name}</h3>
+                    <Badge variant="outline" className="text-[9px] h-5">
+                      <BookOpen className="w-2.5 h-2.5 mr-1" />
                       {cls.subject}
                     </Badge>
                   </div>
-                  <Badge variant={cls.avgScore >= 75 ? 'default' : cls.avgScore >= 60 ? 'secondary' : 'destructive'} className="ml-2">
+                  <Badge variant={cls.avgScore >= 75 ? 'default' : cls.avgScore >= 60 ? 'secondary' : 'destructive'} className="ml-2 text-[9px]">
                     {cls.avgScore}%
                   </Badge>
                 </div>
 
-                <div className="space-y-3">
-                  <div className="flex items-center gap-2 text-sm text-gray-600">
-                    <Users className="w-4 h-4 text-muted-foreground" />
+                <div className="space-y-2">
+                  <div className="flex items-center gap-2 text-[10px] text-gray-600">
+                    <Users className="w-3 h-3 text-muted-foreground" />
                     <span>{cls.students} students</span>
                   </div>
 
-                  <div className="space-y-1.5">
-                    <div className="flex items-center justify-between text-xs">
+                  <div className="space-y-1">
+                    <div className="flex items-center justify-between text-[10px]">
                       <span className="text-gray-600">Subject Performance</span>
                       <span className="font-medium text-gray-900">{cls.avgScore}%</span>
                     </div>
-                    <Progress value={cls.avgScore} />
+                    <Progress value={cls.avgScore} className="h-1.5" />
                   </div>
 
-                  <div className="flex items-center gap-2 text-xs text-gray-500">
-                    <Calendar className="w-3.5 h-3.5" />
+                  <div className="flex items-center gap-1.5 text-[9px] text-gray-500">
+                    <Calendar className="w-3 h-3" />
                     <span>Last: {cls.lastAssessment}</span>
                   </div>
 
-                  <Button variant="outline" className="w-full h-9" onClick={() => navigate(`/teacher/my-subject/students?class=${cls.id}`)}>
+                  <Button variant="outline" className="w-full h-7 text-xs" onClick={() => navigate(`/teacher/my-subject/students?class=${cls.id}`)}>
                     View Details
                   </Button>
                 </div>

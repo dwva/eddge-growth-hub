@@ -46,7 +46,7 @@ const TeacherSubjectAnalyticsContent = () => {
     return (
       <div className="flex flex-col items-center justify-center min-h-[60vh] text-center">
         <AlertCircle className="w-16 h-16 text-muted-foreground mb-4" />
-        <h2 className="text-xl font-semibold mb-2">Subject Teacher Mode Required</h2>
+        <h2 className="text-sm font-semibold mb-2">Subject Teacher Mode Required</h2>
         <p className="text-muted-foreground mb-4">This page is only accessible in Subject Teacher mode.</p>
         <Button onClick={() => navigate('/teacher')}>Back to Dashboard</Button>
       </div>
@@ -81,34 +81,34 @@ const TeacherSubjectAnalyticsContent = () => {
   const weakestChapter = filteredChapters[0]?.name || 'N/A';
 
   return (
-    <div className="space-y-5 max-w-[1600px]">
+    <div className="space-y-3 md:space-y-4 max-w-[1600px]">
       {/* Page Header */}
-      <div className="flex items-center justify-between gap-4">
+      <div className="flex items-center justify-between gap-2 md:gap-4">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">Subject Analytics</h1>
-          <p className="text-sm text-gray-500 mt-1">Analyze chapter and topic-level performance</p>
+          <h1 className="text-lg md:text-xl font-bold text-gray-900">Subject Analytics</h1>
+          <p className="text-xs md:text-sm text-gray-500 mt-0.5">Analyze chapter and topic-level performance</p>
         </div>
-        <Button variant="ghost" size="sm" className="gap-2 h-9 rounded-xl" onClick={() => navigate('/teacher')}>
-          <ArrowLeft className="w-4 h-4" />
+        <Button variant="ghost" size="sm" className="h-7 md:h-8 text-xs rounded-lg gap-1" onClick={() => navigate('/teacher')}>
+          <ArrowLeft className="w-3 h-3" />
           Back
         </Button>
       </div>
 
       <Tabs value={activeTab} onValueChange={handleTabChange}>
-        <TabsList className="grid w-full grid-cols-3 lg:w-auto lg:inline-grid h-8 p-1 rounded-lg bg-gray-100">
-          <TabsTrigger value="chapters" className="text-xs px-3 py-1.5 h-7 data-[state=active]:bg-white data-[state=active]:shadow-sm rounded-md">Chapters</TabsTrigger>
-          <TabsTrigger value="topics" className="text-xs px-3 py-1.5 h-7 data-[state=active]:bg-white data-[state=active]:shadow-sm rounded-md">Topics</TabsTrigger>
-          <TabsTrigger value="mistakes" className="text-xs px-3 py-1.5 h-7 data-[state=active]:bg-white data-[state=active]:shadow-sm rounded-md">Common Mistakes</TabsTrigger>
+        <TabsList className="grid w-full grid-cols-3 lg:w-auto lg:inline-grid h-7 md:h-8 p-0.5 md:p-1 rounded-lg bg-gray-100">
+          <TabsTrigger value="chapters" className="text-[9px] md:text-xs px-2 md:px-3 py-1 md:py-1.5 h-6 md:h-7 data-[state=active]:bg-white data-[state=active]:shadow-sm rounded-md">Chapters</TabsTrigger>
+          <TabsTrigger value="topics" className="text-[9px] md:text-xs px-2 md:px-3 py-1 md:py-1.5 h-6 md:h-7 data-[state=active]:bg-white data-[state=active]:shadow-sm rounded-md">Topics</TabsTrigger>
+          <TabsTrigger value="mistakes" className="text-[9px] md:text-xs px-2 md:px-3 py-1 md:py-1.5 h-6 md:h-7 data-[state=active]:bg-white data-[state=active]:shadow-sm rounded-md">Mistakes</TabsTrigger>
         </TabsList>
 
         {/* Chapters Tab */}
-        <TabsContent value="chapters" className="space-y-4 mt-4">
+        <TabsContent value="chapters" className="space-y-3 mt-3">
           {/* Filters */}
-          <Card className="shadow-sm border-0 rounded-2xl">
-            <CardContent className="p-4">
-              <div className="flex flex-col sm:flex-row gap-3">
+          <Card className="shadow-sm border-0 rounded-xl">
+            <CardContent className="p-3">
+              <div className="flex flex-col sm:flex-row gap-2">
                 <Select value={subjectFilter} onValueChange={setSubjectFilter}>
-                  <SelectTrigger className="w-full sm:w-48 h-9 rounded-xl">
+                  <SelectTrigger className="w-full sm:w-40 h-8 text-xs rounded-lg">
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
@@ -117,7 +117,7 @@ const TeacherSubjectAnalyticsContent = () => {
                   </SelectContent>
                 </Select>
                 <Select value={masteryFilter} onValueChange={setMasteryFilter}>
-                  <SelectTrigger className="w-full sm:w-48 h-9 rounded-xl">
+                  <SelectTrigger className="w-full sm:w-40 h-8 text-xs rounded-lg">
                     <SelectValue placeholder="Filter by mastery" />
                   </SelectTrigger>
                   <SelectContent>
@@ -140,8 +140,8 @@ const TeacherSubjectAnalyticsContent = () => {
                     <BookOpen className="w-5 h-5 text-primary" />
                   </div>
                   <div>
-                    <p className="text-sm text-muted-foreground">Total Chapters</p>
-                    <p className="text-2xl font-bold">{filteredChapters.length}</p>
+                    <p className="text-xs text-muted-foreground">Total Chapters</p>
+                    <p className="text-base font-bold">{filteredChapters.length}</p>
                   </div>
                 </div>
               </CardContent>
@@ -154,7 +154,7 @@ const TeacherSubjectAnalyticsContent = () => {
                   </div>
                   <div>
                     <p className="text-xs text-muted-foreground">High-Risk</p>
-                    <p className="text-xl font-bold text-red-500">{highRiskChapters}</p>
+                    <p className="text-base font-bold text-red-500">{highRiskChapters}</p>
                   </div>
                 </div>
               </CardContent>
@@ -167,7 +167,7 @@ const TeacherSubjectAnalyticsContent = () => {
                   </div>
                   <div>
                     <p className="text-xs text-muted-foreground">Avg Mastery</p>
-                    <p className="text-xl font-bold">{avgMastery}%</p>
+                    <p className="text-base font-bold">{avgMastery}%</p>
                   </div>
                 </div>
               </CardContent>
@@ -226,15 +226,15 @@ const TeacherSubjectAnalyticsContent = () => {
 
                   <div className="grid grid-cols-3 gap-4 text-center">
                     <div>
-                      <p className="text-lg font-bold">{chapter.avgScore}%</p>
+                      <p className="text-sm font-bold">{chapter.avgScore}%</p>
                       <p className="text-xs text-muted-foreground">Avg Score</p>
                     </div>
                     <div>
-                      <p className="text-lg font-bold">{chapter.accuracy}%</p>
+                      <p className="text-sm font-bold">{chapter.accuracy}%</p>
                       <p className="text-xs text-muted-foreground">Accuracy</p>
                     </div>
                     <div>
-                      <p className="text-lg font-bold">{chapter.completion}%</p>
+                      <p className="text-sm font-bold">{chapter.completion}%</p>
                       <p className="text-xs text-muted-foreground">Completion</p>
                     </div>
                   </div>
@@ -248,7 +248,7 @@ const TeacherSubjectAnalyticsContent = () => {
         <TabsContent value="topics" className="space-y-4 mt-4">
           <Card className="shadow-sm border-0 rounded-2xl">
             <CardHeader className="pb-3">
-              <CardTitle className="flex items-center gap-2 text-lg">
+              <CardTitle className="flex items-center gap-2 text-sm">
                 <BookOpen className="w-5 h-5" />
                 Topic Analysis
               </CardTitle>
@@ -292,7 +292,7 @@ const TeacherSubjectAnalyticsContent = () => {
         <TabsContent value="mistakes" className="space-y-4 mt-4">
           <Card className="shadow-sm border-0 rounded-2xl">
             <CardHeader className="pb-3">
-              <CardTitle className="flex items-center gap-2 text-lg">
+              <CardTitle className="flex items-center gap-2 text-sm">
                 <Brain className="w-5 h-5" />
                 Common Mistake Patterns
               </CardTitle>

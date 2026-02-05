@@ -63,8 +63,8 @@ const TeacherCommunicationContent = () => {
     <div className="flex flex-col h-[calc(100vh-8rem)] min-h-[500px]">
       {/* Page Header */}
       <div className="mb-3">
-        <h1 className="text-xl font-bold text-gray-900">Messages & Inbox</h1>
-        <p className="text-xs text-gray-500 mt-0.5">
+        <h1 className="text-lg md:text-xl font-bold text-gray-900">Messages & Inbox</h1>
+        <p className="text-xs md:text-sm text-gray-500 mt-0.5">
           Client and team communications
         </p>
       </div>

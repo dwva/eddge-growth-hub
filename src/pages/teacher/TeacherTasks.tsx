@@ -48,7 +48,7 @@ const TeacherTasksContent = () => {
     return (
       <div className="flex flex-col items-center justify-center min-h-[60vh] text-center">
         <AlertCircle className="w-16 h-16 text-muted-foreground mb-4" />
-        <h2 className="text-xl font-semibold mb-2">Class Teacher Mode Required</h2>
+        <h2 className="text-sm font-semibold mb-2">Class Teacher Mode Required</h2>
         <p className="text-muted-foreground mb-4">Tasks are only accessible in Class Teacher mode.</p>
         <Button onClick={() => navigate('/teacher')}>Back to Dashboard</Button>
       </div>
@@ -170,8 +170,8 @@ const TeacherTasksContent = () => {
       {/* Header */}
       <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">Tasks & Follow-ups</h1>
-          <p className="text-sm text-gray-500 mt-1">Track actions and interventions for your students</p>
+          <h1 className="text-lg md:text-xl font-bold text-gray-900">Tasks & Follow-ups</h1>
+          <p className="text-xs md:text-sm text-gray-500 mt-0.5">Track actions and interventions for your students</p>
         </div>
         <Dialog open={isCreateOpen} onOpenChange={setIsCreateOpen}>
           <DialogTrigger asChild>
@@ -251,7 +251,7 @@ const TeacherTasksContent = () => {
               </div>
               <div>
                 <p className="text-xs text-gray-500">Pending</p>
-                <p className="text-2xl font-bold text-gray-900">{pendingTasks.length}</p>
+                <p className="text-sm font-bold text-gray-900">{pendingTasks.length}</p>
               </div>
             </div>
           </CardContent>
@@ -265,7 +265,7 @@ const TeacherTasksContent = () => {
               </div>
               <div>
                 <p className="text-xs text-gray-500">In Progress</p>
-                <p className="text-2xl font-bold text-blue-600">{inProgressTasks.length}</p>
+                <p className="text-sm font-bold text-blue-600">{inProgressTasks.length}</p>
               </div>
             </div>
           </CardContent>
@@ -279,7 +279,7 @@ const TeacherTasksContent = () => {
               </div>
               <div>
                 <p className="text-xs text-gray-500">Completed</p>
-                <p className="text-2xl font-bold text-emerald-600">{completedTasks.length}</p>
+                <p className="text-sm font-bold text-emerald-600">{completedTasks.length}</p>
               </div>
             </div>
           </CardContent>
@@ -293,7 +293,7 @@ const TeacherTasksContent = () => {
               </div>
               <div>
                 <p className="text-xs text-red-600">Overdue</p>
-                <p className="text-2xl font-bold text-red-700">{overdueTasks.length}</p>
+                <p className="text-sm font-bold text-red-700">{overdueTasks.length}</p>
               </div>
             </div>
           </CardContent>
@@ -367,16 +367,16 @@ const TeacherTasksContent = () => {
                   <CardContent className="p-4">
                     <div className="flex flex-col md:flex-row md:items-center gap-4">
                       {/* Left: Icon & Info */}
-                      <div className="flex items-start gap-4 flex-1 min-w-0">
-                        <div className={`w-12 h-12 rounded-xl flex items-center justify-center flex-shrink-0 ${getPriorityColor(task.priority)}`}>
-                          <TaskIcon className="w-6 h-6" />
+                      <div className="flex items-start gap-3 flex-1 min-w-0">
+                        <div className={`w-9 h-9 rounded-lg flex items-center justify-center flex-shrink-0 ${getPriorityColor(task.priority)}`}>
+                          <TaskIcon className="w-4 h-4" />
                         </div>
 
                         <div className="flex-1 min-w-0">
-                          <div className="flex items-start gap-2 mb-2">
+                          <div className="flex items-start gap-2 mb-1">
                             <div className="flex-1">
-                              <h3 className="font-semibold text-gray-900 mb-1">{task.type}</h3>
-                              <p className="text-sm text-gray-600 cursor-pointer hover:text-primary" onClick={() => navigate(`/teacher/student-profile/${task.studentId}`)}>
+                              <h3 className="text-sm font-semibold text-gray-900">{task.type}</h3>
+                              <p className="text-xs text-gray-600 cursor-pointer hover:text-primary" onClick={() => navigate(`/teacher/student-profile/${task.studentId}`)}>
                                 {task.studentName}
                               </p>
                             </div>
@@ -386,7 +386,7 @@ const TeacherTasksContent = () => {
                               </Badge>
                             )}
                           </div>
-                          <p className="text-sm text-gray-700 mb-2">{task.description}</p>
+                          <p className="text-xs text-gray-700 mb-1.5">{task.description}</p>
                           <div className="flex flex-wrap items-center gap-2">
                             <div className="flex items-center gap-1 text-xs text-gray-500">
                               <Calendar className="w-3 h-3" />
@@ -472,7 +472,7 @@ const TeacherTasksContent = () => {
           <Card className="rounded-xl shadow-sm border-0">
             <CardContent className="py-16 text-center">
               <ClipboardList className="w-16 h-16 text-gray-300 mx-auto mb-4" />
-              <h3 className="text-lg font-semibold text-gray-900 mb-2">No tasks found</h3>
+              <h3 className="text-sm font-semibold text-gray-900 mb-2">No tasks found</h3>
               <p className="text-gray-500 mb-4">
                 {searchQuery || statusFilter !== 'all' || typeFilter !== 'all' || priorityFilter !== 'all'
                   ? 'Try adjusting your filters'

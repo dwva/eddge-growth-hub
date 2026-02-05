@@ -79,8 +79,8 @@ const TeacherAttendanceContent = () => {
       {/* Page Header - Clean */}
       <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">Mark Attendance</h1>
-          <p className="text-sm text-gray-500 mt-1">Class 10-A • Record daily attendance</p>
+          <h1 className="text-lg md:text-xl font-bold text-gray-900">Mark Attendance</h1>
+          <p className="text-xs md:text-sm text-gray-500 mt-0.5">Class 10-A • Record daily attendance</p>
         </div>
         <div className="flex items-center gap-3">
           <Input

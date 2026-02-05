@@ -100,12 +100,12 @@ const TeacherMeetingsContent = () => {
   };
 
   return (
-    <div className="space-y-10 max-w-[1600px]">
+    <div className="space-y-6 max-w-[1600px]">
       {/* Page Header - Clean */}
-      <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4 pb-6 border-b border-gray-100">
+      <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4 pb-4 border-b border-gray-100">
         <div>
-          <h1 className="text-3xl font-bold text-gray-900">PTM Scheduling</h1>
-          <p className="text-sm text-gray-500 mt-2">Schedule and manage parent-teacher meetings</p>
+          <h1 className="text-lg md:text-xl font-bold text-gray-900">PTM Scheduling</h1>
+          <p className="text-xs md:text-sm text-gray-500 mt-0.5">Schedule and manage parent-teacher meetings</p>
         </div>
         <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
           <DialogTrigger asChild>
@@ -213,7 +213,7 @@ const TeacherMeetingsContent = () => {
             <Card className="lg:col-span-2 rounded-xl shadow-sm border-gray-100 overflow-hidden">
               <CardHeader className="pb-3">
                 <div className="flex items-center justify-between">
-                  <CardTitle className="text-base flex items-center gap-2">
+                  <CardTitle className="text-sm flex items-center gap-2">
                     <Calendar className="w-4 h-4 text-primary" />
                     {currentMonth}
                   </CardTitle>
@@ -272,7 +272,7 @@ const TeacherMeetingsContent = () => {
             </Card>
             <Card className="rounded-xl shadow-sm border-gray-100">
               <CardHeader>
-                <CardTitle className="text-base">Upcoming</CardTitle>
+                <CardTitle className="text-sm">Upcoming</CardTitle>
               </CardHeader>
               <CardContent className="space-y-3 max-h-[360px] overflow-y-auto">
                 {meetings.slice(0, 5).map((meeting) => (
@@ -298,7 +298,7 @@ const TeacherMeetingsContent = () => {
             <Card className="lg:col-span-2 rounded-xl shadow-sm border-gray-100 overflow-hidden">
               <CardHeader className="pb-2">
                 <div className="flex items-center justify-between">
-                  <CardTitle className="text-base flex items-center gap-2">
+                  <CardTitle className="text-sm flex items-center gap-2">
                     <Calendar className="w-4 h-4 text-primary" />
                     {currentMonth}
                   </CardTitle>
@@ -336,7 +336,7 @@ const TeacherMeetingsContent = () => {
             </Card>
             <Card className="rounded-xl shadow-sm border-gray-100">
               <CardHeader>
-                <CardTitle className="text-base">Upcoming Meetings</CardTitle>
+                <CardTitle className="text-sm">Upcoming Meetings</CardTitle>
               </CardHeader>
               <CardContent className="space-y-3">
                 {meetings.map((meeting) => (

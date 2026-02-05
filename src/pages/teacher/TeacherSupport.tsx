@@ -59,11 +59,11 @@ const TeacherSupportContent = () => {
   };
 
   return (
-    <div className="space-y-10 max-w-[1600px]">
+    <div className="space-y-6 max-w-[1600px]">
       {/* Page Header - Clean */}
-      <div className="pb-6 border-b border-gray-100">
-        <h1 className="text-3xl font-bold text-gray-900">Help & Support</h1>
-        <p className="text-sm text-gray-500 mt-2">Get help with using EDDGE Teacher Portal</p>
+      <div className="pb-4 border-b border-gray-100">
+        <h1 className="text-lg md:text-xl font-bold text-gray-900">Help & Support</h1>
+        <p className="text-xs md:text-sm text-gray-500 mt-0.5">Get help with using EDDGE Teacher Portal</p>
       </div>
 
       {/* Quick Links */}

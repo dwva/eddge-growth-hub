@@ -30,7 +30,7 @@ const TeacherClassAnalyticsContent = () => {
     return (
       <div className="flex flex-col items-center justify-center min-h-[60vh] text-center">
         <AlertCircle className="w-16 h-16 text-muted-foreground mb-4" />
-        <h2 className="text-xl font-semibold mb-2">Class Teacher Mode Required</h2>
+        <h2 className="text-sm font-semibold mb-2">Class Teacher Mode Required</h2>
         <p className="text-muted-foreground mb-4">This page is only accessible in Class Teacher mode.</p>
         <Button onClick={() => navigate('/teacher')}>Back to Dashboard</Button>
       </div>
@@ -50,8 +50,8 @@ const TeacherClassAnalyticsContent = () => {
               <div className="inline-block px-3 py-1 bg-primary/10 rounded-full text-xs font-medium mb-2 text-primary">
                 CLASS TEACHER • GRADE 10-A
               </div>
-              <h1 className="text-2xl font-bold text-gray-900 mb-1">Class Analytics</h1>
-              <p className="text-gray-600 text-sm">Performance metrics • Updated today</p>
+              <h1 className="text-lg md:text-xl font-bold text-gray-900 mb-1">Class Analytics</h1>
+              <p className="text-gray-500 text-xs md:text-sm">Performance metrics • Updated today</p>
             </div>
           </div>
 
@@ -88,7 +88,7 @@ const TeacherClassAnalyticsContent = () => {
             <div>
               <div className="text-xs text-white/70 mb-1">Class Average</div>
               <div className="flex items-end gap-2">
-                <span className="text-3xl font-bold">{classAnalyticsData.classAverage}%</span>
+                <span className="text-base font-bold">{classAnalyticsData.classAverage}%</span>
                 <span className="text-emerald-200 text-sm mb-1 flex items-center gap-0.5">
                   <TrendingUp className="w-3 h-3" />
                   3%
@@ -99,11 +99,11 @@ const TeacherClassAnalyticsContent = () => {
             <div className="grid grid-cols-2 gap-3 text-center">
               <div>
                 <div className="text-xs text-white/70 mb-1">Students</div>
-                <div className="text-xl font-bold">{classAnalyticsData.totalStudents}</div>
+                <div className="text-base font-bold">{classAnalyticsData.totalStudents}</div>
               </div>
               <div>
                 <div className="text-xs text-white/70 mb-1">At-Risk</div>
-                <div className="text-xl font-bold">{atRiskData.length}</div>
+                <div className="text-base font-bold">{atRiskData.length}</div>
               </div>
             </div>
           </div>
@@ -124,7 +124,7 @@ const TeacherClassAnalyticsContent = () => {
             <CardHeader className="pb-3">
               <div className="flex items-center justify-between">
                 <div>
-                  <CardTitle className="text-lg">Performance Over Time</CardTitle>
+                  <CardTitle className="text-sm">Performance Over Time</CardTitle>
                   <p className="text-sm text-gray-500 mt-1">Weekly class average scores</p>
                 </div>
                 <div className="flex items-center gap-2 text-sm px-3 py-1.5 rounded-full bg-emerald-50 text-emerald-700">
@@ -181,7 +181,7 @@ const TeacherClassAnalyticsContent = () => {
           {/* Subject Comparison */}
           <Card className="border-gray-100 shadow-sm">
             <CardHeader>
-              <CardTitle className="text-lg">Subject Comparison</CardTitle>
+              <CardTitle className="text-sm">Subject Comparison</CardTitle>
             </CardHeader>
             <CardContent>
               <div className="h-64">
@@ -218,7 +218,7 @@ const TeacherClassAnalyticsContent = () => {
 
           {/* Subject Details Grid */}
           <div>
-            <h3 className="text-base font-semibold text-gray-900 mb-4">Subject Performance Details</h3>
+            <h3 className="text-sm font-semibold text-gray-900 mb-4">Subject Performance Details</h3>
             <div className="overflow-x-auto pb-2">
               <div className="flex gap-4 min-w-max">
                 {classAnalyticsData.subjectPerformance.map((subject) => (
@@ -227,7 +227,7 @@ const TeacherClassAnalyticsContent = () => {
                       <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center">
                         <BookOpen className="w-5 h-5 text-primary" />
                       </div>
-                      <span className={`text-lg font-bold ${
+                      <span className={`text-sm font-bold ${
                         subject.avgScore >= 75 ? 'text-emerald-600' :
                         subject.avgScore >= 60 ? 'text-amber-600' : 'text-red-600'
                       }`}>
@@ -264,7 +264,7 @@ const TeacherClassAnalyticsContent = () => {
             {/* Top Performers */}
             <Card className="border-gray-100 shadow-sm">
               <CardHeader>
-                <CardTitle className="text-lg">Top Performers</CardTitle>
+                <CardTitle className="text-sm">Top Performers</CardTitle>
                 <p className="text-sm text-gray-500">Students with highest scores</p>
               </CardHeader>
               <CardContent>
@@ -292,7 +292,7 @@ const TeacherClassAnalyticsContent = () => {
             {/* At-Risk Students */}
             <Card className="border-gray-100 shadow-sm">
               <CardHeader>
-                <CardTitle className="flex items-center gap-2 text-lg">
+                <CardTitle className="flex items-center gap-2 text-sm">
                   <AlertTriangle className="w-5 h-5 text-red-500" />
                   At-Risk Students ({atRiskData.length})
                 </CardTitle>
@@ -344,14 +344,14 @@ const TeacherClassAnalyticsContent = () => {
           {/* Class Performance Summary */}
           <Card className="border-gray-100 shadow-sm">
             <CardHeader>
-              <CardTitle className="text-lg">Class Performance Summary</CardTitle>
+              <CardTitle className="text-sm">Class Performance Summary</CardTitle>
             </CardHeader>
             <CardContent>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                 <div className="space-y-3">
                   <div className="flex items-center justify-between">
                     <span className="text-sm text-gray-600">Class Average</span>
-                    <span className="text-2xl font-bold text-primary">{classAnalyticsData.classAverage}%</span>
+                    <span className="text-sm font-bold text-primary">{classAnalyticsData.classAverage}%</span>
                   </div>
                   <Progress value={classAnalyticsData.classAverage} className="h-2" />
                 </div>
@@ -388,7 +388,7 @@ const TeacherClassAnalyticsContent = () => {
                       <div className="p-3 rounded-lg bg-emerald-50 border border-emerald-100">
                         <div className="font-semibold text-sm">{best.subject}</div>
                         <div className="text-xs text-gray-600 mt-0.5">{best.teacher}</div>
-                        <div className="text-lg font-bold text-emerald-700 mt-1">{best.avgScore}%</div>
+                        <div className="text-sm font-bold text-emerald-700 mt-1">{best.avgScore}%</div>
                       </div>
                     );
                   })()}

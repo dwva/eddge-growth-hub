@@ -60,12 +60,12 @@ const TeacherReportsContent = () => {
   };
 
   return (
-    <div className="space-y-10 max-w-[1600px]">
+    <div className="space-y-6 max-w-[1600px]">
       {/* Page Header - Clean */}
-      <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4 pb-6 border-b border-gray-100">
+      <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4 pb-4 border-b border-gray-100">
         <div>
-          <h1 className="text-3xl font-bold text-gray-900">Reports</h1>
-          <p className="text-sm text-gray-500 mt-2">Generate and export reports</p>
+          <h1 className="text-lg md:text-xl font-bold text-gray-900">Reports</h1>
+          <p className="text-xs md:text-sm text-gray-500 mt-0.5">Generate and export reports</p>
         </div>
         <Button variant="outline" size="sm" className="h-10 px-4 rounded-xl border-gray-200 gap-2" onClick={handleExportPDF}>
           <Download className="w-4 h-4" />
@@ -159,7 +159,7 @@ const TeacherReportsContent = () => {
 
             <Card className="rounded-xl shadow-sm border-gray-100">
               <CardHeader>
-                <CardTitle className="text-base">Subject-wise Breakdown</CardTitle>
+                <CardTitle className="text-sm">Subject-wise Breakdown</CardTitle>
               </CardHeader>
               <CardContent>
                 <div className="h-48 rounded-lg bg-gradient-to-b from-gray-50/50 to-transparent p-4">
@@ -286,7 +286,7 @@ const TeacherReportsContent = () => {
 
             <Card className="rounded-xl shadow-sm border-gray-100">
               <CardHeader>
-                <CardTitle className="text-base">Class Comparison - Mathematics</CardTitle>
+                <CardTitle className="text-sm">Class Comparison - Mathematics</CardTitle>
               </CardHeader>
               <CardContent>
                 <div className="h-64 rounded-lg bg-gradient-to-b from-gray-50/50 to-transparent p-4">

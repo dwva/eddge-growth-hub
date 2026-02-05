@@ -30,11 +30,11 @@ const ClassTeacherModeView = () => {
           {/* Top Row: Header + KPIs */}
           <div className="flex flex-col gap-3 md:gap-4 mb-4 md:mb-5">
             <div className="space-y-1">
-              <Badge variant="outline" className="bg-white/10 text-white border-white/20 px-2 md:px-2.5 py-0.5 text-[8px] md:text-[9px] uppercase tracking-wider font-semibold">
+              <Badge variant="outline" className="bg-white/10 text-white border-white/20 px-2 md:px-2.5 py-0.5 text-[7px] md:text-[8px] uppercase tracking-wider font-semibold">
                 Class Teacher • Grade 10-A
               </Badge>
-              <h1 className="text-lg md:text-2xl font-bold tracking-tight">Class Overview</h1>
-              <p className="text-white/60 text-[10px] md:text-xs max-w-sm">
+              <h1 className="text-sm md:text-lg font-bold tracking-tight">Class Overview</h1>
+              <p className="text-white/60 text-[9px] md:text-[11px] max-w-sm">
                 {assessments.filter(a => a.status === 'draft').length} pending assessments • PTM tomorrow
               </p>
             </div>
@@ -44,15 +44,15 @@ const ClassTeacherModeView = () => {
               <div className="bg-white/10 backdrop-blur-md border border-white/10 px-2.5 md:px-3 py-1.5 md:py-2 rounded-lg md:rounded-xl flex items-center gap-1.5 md:gap-2">
                 <Users className="w-3.5 md:w-4 h-3.5 md:h-4 text-white/70" />
                 <div>
-                  <p className="text-[8px] md:text-[9px] text-white/50 uppercase tracking-wide">Students</p>
-                  <p className="text-xs md:text-sm font-bold">32</p>
+                  <p className="text-[7px] md:text-[8px] text-white/50 uppercase tracking-wide">Students</p>
+                  <p className="text-[11px] md:text-xs font-bold">32</p>
                 </div>
               </div>
               <div className="bg-white/10 backdrop-blur-md border border-white/10 px-2.5 md:px-3 py-1.5 md:py-2 rounded-lg md:rounded-xl flex items-center gap-1.5 md:gap-2">
                 <Target className="w-3.5 md:w-4 h-3.5 md:h-4 text-white/70" />
                 <div>
-                  <p className="text-[8px] md:text-[9px] text-white/50 uppercase tracking-wide">Attendance</p>
-                  <p className="text-xs md:text-sm font-bold">94%</p>
+                  <p className="text-[7px] md:text-[8px] text-white/50 uppercase tracking-wide">Attendance</p>
+                  <p className="text-[11px] md:text-xs font-bold">94%</p>
                 </div>
               </div>
             </div>
@@ -61,21 +61,21 @@ const ClassTeacherModeView = () => {
             <div className="flex items-center gap-2">
               <Button 
                 size="sm" 
-                className="bg-white text-primary hover:bg-white/90 rounded-lg md:rounded-xl px-3 md:px-4 h-7 md:h-8 text-[10px] md:text-xs font-medium shadow-lg"
+                className="bg-white text-primary hover:bg-white/90 rounded-lg md:rounded-xl px-2.5 md:px-3 h-6 md:h-7 text-[9px] md:text-[10px] font-medium shadow-lg"
                 onClick={() => navigate('/teacher/assessments')}
               >
-                <ClipboardList className="w-3 md:w-3.5 h-3 md:h-3.5 mr-1 md:mr-1.5" />
+                <ClipboardList className="w-2.5 md:w-3 h-2.5 md:h-3 mr-1" />
                 Assessment
               </Button>
               <Button 
                 variant="outline" 
                 size="sm" 
-                className="border-white/20 bg-white/5 hover:bg-white/10 text-white rounded-lg md:rounded-xl px-3 md:px-4 h-7 md:h-8 text-[10px] md:text-xs"
+                className="border-white/20 bg-white/5 hover:bg-white/10 text-white rounded-lg md:rounded-xl px-2.5 md:px-3 h-6 md:h-7 text-[9px] md:text-[10px]"
                 onClick={() => navigate('/teacher/communication')}
               >
-                <MessageCircle className="w-3 md:w-3.5 h-3 md:h-3.5 mr-1 md:mr-1.5" />
+                <MessageCircle className="w-2.5 md:w-3 h-2.5 md:h-3 mr-1" />
                 Messages
-                <Badge className="ml-1 md:ml-1.5 bg-red-500 text-white border-0 h-3.5 md:h-4 px-1 md:px-1.5 min-w-[14px] md:min-w-[18px] text-[8px] md:text-[9px]">
+                <Badge className="ml-1 bg-red-500 text-white border-0 h-3 md:h-3.5 px-1 min-w-[12px] md:min-w-[14px] text-[7px] md:text-[8px]">
                   {messagesOverview.unreadMessages}
                 </Badge>
               </Button>
@@ -124,14 +124,14 @@ const ClassTeacherModeView = () => {
           <button
             key={action.label}
             onClick={() => navigate(action.path)}
-            className="flex items-center gap-2 md:gap-2.5 p-2.5 md:p-3 bg-white rounded-lg md:rounded-xl shadow-sm hover:shadow-md active:scale-[0.98] transition-all group"
+            className="flex items-center gap-2 md:gap-2.5 p-2 md:p-2.5 bg-white rounded-lg md:rounded-xl shadow-sm hover:shadow-md active:scale-[0.98] transition-all group"
           >
-            <div className="w-7 h-7 md:w-8 md:h-8 rounded-lg bg-primary/10 flex items-center justify-center group-hover:scale-110 transition-transform flex-shrink-0">
-              <action.icon className="w-3.5 h-3.5 md:w-4 md:h-4 text-primary" />
+            <div className="w-6 h-6 md:w-7 md:h-7 rounded-lg bg-primary/10 flex items-center justify-center group-hover:scale-110 transition-transform flex-shrink-0">
+              <action.icon className="w-3 h-3 md:w-3.5 md:h-3.5 text-primary" />
             </div>
             <div className="text-left min-w-0">
-              <span className="text-[10px] md:text-xs font-bold text-gray-900 block">{action.label}</span>
-              <span className="text-[8px] md:text-[9px] text-gray-500 hidden sm:block">{action.desc}</span>
+              <span className="text-[9px] md:text-[10px] font-bold text-gray-900 block">{action.label}</span>
+              <span className="text-[7px] md:text-[8px] text-gray-500 hidden sm:block">{action.desc}</span>
             </div>
           </button>
         ))}
@@ -178,7 +178,7 @@ const ClassTeacherModeView = () => {
               ].map((stat) => (
                 <div key={stat.label} className={cn("px-2 md:px-3 py-1.5 md:py-2 rounded-lg", stat.bg)}>
                   <p className="text-[8px] md:text-[10px] text-gray-600 font-medium">{stat.label}</p>
-                  <p className={cn("text-lg md:text-xl font-bold", stat.color)}>{stat.count}</p>
+                  <p className={cn("text-sm md:text-base font-bold", stat.color)}>{stat.count}</p>
                 </div>
               ))}
             </div>
@@ -221,13 +221,13 @@ const ClassTeacherModeView = () => {
             <div className="grid grid-cols-2 gap-2 md:gap-3 mb-3 md:mb-4">
               <div className="px-2 md:px-3 py-1.5 md:py-2 rounded-lg bg-emerald-50">
                 <p className="text-[8px] md:text-[10px] text-gray-600 font-medium">High Engagement</p>
-                <p className="text-lg md:text-xl font-bold text-emerald-600">
+                <p className="text-sm md:text-base font-bold text-emerald-600">
                   {parentEngagementData.filter(p => p.engagementLevel === 'high').length}
                 </p>
               </div>
               <div className="px-2 md:px-3 py-1.5 md:py-2 rounded-lg bg-red-50">
                 <p className="text-[8px] md:text-[10px] text-gray-600 font-medium">Low Engagement</p>
-                <p className="text-lg md:text-xl font-bold text-red-600">
+                <p className="text-sm md:text-base font-bold text-red-600">
                   {parentEngagementData.filter(p => p.engagementLevel === 'low').length}
                 </p>
               </div>
@@ -296,7 +296,7 @@ const ClassTeacherModeView = () => {
                         <span className="text-[8px] md:text-[10px] text-gray-700 font-medium block">{item.label}</span>
                         <span className="text-[7px] md:text-[9px] text-gray-500">{item.sub}</span>
                       </div>
-                      <span className={cn("text-lg md:text-xl font-bold", item.color)}>{item.value}</span>
+                      <span className={cn("text-sm md:text-base font-bold", item.color)}>{item.value}</span>
                     </div>
                   ))}
                 </div>
@@ -387,8 +387,8 @@ const SubjectTeacherModeView = () => {
     <div className="space-y-3">
       {/* Page Header */}
       <div>
-        <h1 className="text-lg md:text-xl font-bold text-gray-900">Mathematics Teaching Hub</h1>
-        <p className="text-[10px] md:text-xs text-gray-500 mt-0.5">Manage your subject across all classes</p>
+        <h1 className="text-base md:text-lg font-bold text-gray-900">Mathematics Teaching Hub</h1>
+        <p className="text-[9px] md:text-[10px] text-gray-500 mt-0.5">Manage your subject across all classes</p>
       </div>
 
       {/* Hero Cards Row */}
@@ -405,7 +405,7 @@ const SubjectTeacherModeView = () => {
                   </div>
                 </div>
                 <div>
-                  <h2 className="text-lg md:text-xl font-bold text-gray-900 mb-1.5 md:mb-2">Explore AI Tools,<br/>Create & Engage!</h2>
+                  <h2 className="text-sm md:text-base font-bold text-gray-900 mb-1.5 md:mb-2">Explore AI Tools,<br/>Create & Engage!</h2>
                   <p className="text-xs md:text-sm text-gray-600 max-w-[480px] mb-3 md:mb-4">
                     Generate quizzes, create lesson plans, and analyze student performance with AI. 
                     Use our intelligent tools to create targeted practice questions and worksheets.

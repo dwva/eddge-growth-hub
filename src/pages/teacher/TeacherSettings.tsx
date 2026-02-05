@@ -45,11 +45,11 @@ const TeacherSettingsContent = () => {
   };
 
   return (
-    <div className="space-y-10 max-w-[1600px]">
+    <div className="space-y-6 max-w-[1600px]">
       {/* Page Header - Clean */}
-      <div className="pb-6 border-b border-gray-100">
-        <h1 className="text-3xl font-bold text-gray-900">Settings</h1>
-        <p className="text-sm text-gray-500 mt-2">Manage your profile and preferences</p>
+      <div className="pb-4 border-b border-gray-100">
+        <h1 className="text-lg md:text-xl font-bold text-gray-900">Settings</h1>
+        <p className="text-xs md:text-sm text-gray-500 mt-0.5">Manage your profile and preferences</p>
       </div>
 
       <Tabs defaultValue="profile">
@@ -85,7 +85,7 @@ const TeacherSettingsContent = () => {
                 <div className="relative">
                   <Avatar className="w-20 h-20">
                     <AvatarImage src="" />
-                    <AvatarFallback className="bg-primary text-white text-xl">
+                    <AvatarFallback className="bg-primary text-white text-sm">
                       {profile.name.charAt(0)}
                     </AvatarFallback>
                   </Avatar>

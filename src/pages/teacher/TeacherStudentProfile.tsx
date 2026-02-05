@@ -40,7 +40,7 @@ const TeacherStudentProfileContent = () => {
     return (
       <div className="flex flex-col items-center justify-center min-h-[60vh] text-center">
         <AlertCircleIcon className="w-16 h-16 text-muted-foreground mb-4" />
-        <h2 className="text-xl font-semibold mb-2">Class Teacher Mode Required</h2>
+        <h2 className="text-sm font-semibold mb-2">Class Teacher Mode Required</h2>
         <p className="text-muted-foreground mb-4">Student profiles are only accessible in Class Teacher mode.</p>
         <Button onClick={() => navigate('/teacher')}>Back to Dashboard</Button>
       </div>
@@ -58,7 +58,7 @@ const TeacherStudentProfileContent = () => {
     return (
       <div className="flex flex-col items-center justify-center min-h-[60vh] text-center">
         <Users className="w-16 h-16 text-muted-foreground mb-4" />
-        <h2 className="text-xl font-semibold mb-2">Student Not Found</h2>
+        <h2 className="text-sm font-semibold mb-2">Student Not Found</h2>
         <p className="text-muted-foreground mb-4">The requested student profile could not be found.</p>
         <Button onClick={() => navigate('/teacher/my-class/students')}>Back to Students</Button>
       </div>
@@ -136,16 +136,16 @@ const TeacherStudentProfileContent = () => {
             {/* Left: Avatar & Basic Info */}
             <div className="flex items-start gap-4">
               <div className="relative">
-                <Avatar className="w-24 h-24 border-4 border-white shadow-lg">
-                  <AvatarFallback className="bg-primary text-white text-2xl font-bold">
+                <Avatar className="w-16 h-16 border-4 border-white shadow-lg">
+                  <AvatarFallback className="bg-primary text-white text-sm font-bold">
                     {studentProfile.avatar}
                   </AvatarFallback>
                 </Avatar>
-                <div className={`absolute -bottom-1 -right-1 w-6 h-6 rounded-full border-3 border-white ${getBehaviourStyle(studentProfile.behaviour)}`} />
+                <div className={`absolute -bottom-1 -right-1 w-5 h-5 rounded-full border-2 border-white ${getBehaviourStyle(studentProfile.behaviour)}`} />
               </div>
               <div>
-                <h1 className="text-2xl font-bold text-gray-900 mb-1">{studentProfile.name}</h1>
-                <div className="space-y-1 text-sm text-gray-600">
+                <h1 className="text-lg md:text-xl font-bold text-gray-900 mb-1">{studentProfile.name}</h1>
+                <div className="space-y-0.5 text-xs text-gray-600">
                   <p>Roll Number: <span className="font-medium">{studentProfile.rollNumber}</span></p>
                   <p>Class: <span className="font-medium">10-A</span></p>
                   <p>Rank: <span className="font-medium">#{studentProfile.rank}</span></p>
@@ -160,7 +160,7 @@ const TeacherStudentProfileContent = () => {
                   <Target className="w-4 h-4 text-primary" />
                   <span className="text-xs text-gray-500 uppercase">Overall</span>
                 </div>
-                <p className={`text-2xl font-bold ${getPerformanceColor(studentProfile.overallScore)}`}>
+                <p className={`text-base font-bold ${getPerformanceColor(studentProfile.overallScore)}`}>
                   {studentProfile.overallScore}%
                 </p>
                 <div className="flex items-center gap-1 mt-1">
@@ -180,7 +180,7 @@ const TeacherStudentProfileContent = () => {
                   <Calendar className="w-4 h-4 text-blue-500" />
                   <span className="text-xs text-gray-500 uppercase">Attendance</span>
                 </div>
-                <p className="text-2xl font-bold text-gray-900">
+                <p className="text-sm font-bold text-gray-900">
                   {studentProfile.attendanceHistory?.[studentProfile.attendanceHistory.length - 1]?.percentage || 95}%
                 </p>
                 <Progress value={studentProfile.attendanceHistory?.[studentProfile.attendanceHistory.length - 1]?.percentage || 95} className="h-1.5 mt-2" />
@@ -202,7 +202,7 @@ const TeacherStudentProfileContent = () => {
                   <AlertTriangle className="w-4 h-4 text-amber-500" />
                   <span className="text-xs text-gray-500 uppercase">Tasks</span>
                 </div>
-                <p className="text-2xl font-bold text-gray-900">{pendingTasks.length + activeTasks.length}</p>
+                <p className="text-base font-bold text-gray-900">{pendingTasks.length + activeTasks.length}</p>
                 <p className="text-xs text-gray-500 mt-1">
                   {pendingTasks.length} pending
                 </p>
@@ -279,7 +279,7 @@ const TeacherStudentProfileContent = () => {
       {studentProfile.aiInsights && (
         <Card className="border-2 border-primary/20 bg-gradient-to-br from-primary/5 to-purple/5 shadow-sm rounded-2xl">
           <CardHeader className="pb-3">
-            <CardTitle className="flex items-center gap-2 text-base">
+            <CardTitle className="flex items-center gap-2 text-sm">
               <Sparkles className="w-5 h-5 text-primary" />
               AI-Generated Insights
             </CardTitle>
@@ -352,7 +352,7 @@ const TeacherStudentProfileContent = () => {
             {/* Subject Cards */}
             <Card className="rounded-xl shadow-sm">
               <CardHeader>
-                <CardTitle className="text-base">Subject Performance</CardTitle>
+                <CardTitle className="text-sm">Subject Performance</CardTitle>
               </CardHeader>
               <CardContent className="space-y-3">
                 {Object.entries(studentProfile.subjects || {}).map(([subject, score]) => (
@@ -378,7 +378,7 @@ const TeacherStudentProfileContent = () => {
             {/* Performance Trend Chart */}
             <Card className="rounded-xl shadow-sm">
               <CardHeader>
-                <CardTitle className="text-base">6-Month Performance Trend</CardTitle>
+                <CardTitle className="text-sm">6-Month Performance Trend</CardTitle>
               </CardHeader>
               <CardContent>
                 <div className="h-64">
@@ -413,7 +413,7 @@ const TeacherStudentProfileContent = () => {
         <TabsContent value="attendance" className="space-y-4 mt-4">
           <Card className="rounded-xl shadow-sm">
             <CardHeader>
-              <CardTitle className="text-base">Monthly Attendance</CardTitle>
+              <CardTitle className="text-sm">Monthly Attendance</CardTitle>
             </CardHeader>
             <CardContent>
               <div className="h-80">
@@ -432,7 +432,7 @@ const TeacherStudentProfileContent = () => {
                 {studentProfile.attendanceHistory?.map((record, idx) => (
                   <div key={idx} className="bg-gray-50 rounded-lg p-3">
                     <p className="text-xs text-gray-500 mb-1">{record.month}</p>
-                    <p className="text-lg font-bold text-gray-900">{record.percentage}%</p>
+                    <p className="text-sm font-bold text-gray-900">{record.percentage}%</p>
                     <p className="text-xs text-gray-600 mt-1">
                       {record.present}P / {record.absent}A
                     </p>
@@ -447,7 +447,7 @@ const TeacherStudentProfileContent = () => {
         <TabsContent value="behavior" className="space-y-4 mt-4">
           <Card className="rounded-xl shadow-sm">
             <CardHeader>
-              <CardTitle className="text-base">Behavior Timeline</CardTitle>
+              <CardTitle className="text-sm">Behavior Timeline</CardTitle>
             </CardHeader>
             <CardContent>
               {studentProfile.behaviorNotes && studentProfile.behaviorNotes.length > 0 ? (
@@ -494,7 +494,7 @@ const TeacherStudentProfileContent = () => {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <Card className="rounded-xl shadow-sm">
               <CardHeader>
-                <CardTitle className="text-base">Parent Information</CardTitle>
+                <CardTitle className="text-sm">Parent Information</CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
                 <div>
@@ -530,7 +530,7 @@ const TeacherStudentProfileContent = () => {
 
             <Card className="rounded-xl shadow-sm">
               <CardHeader>
-                <CardTitle className="text-base">Engagement Metrics</CardTitle>
+                <CardTitle className="text-sm">Engagement Metrics</CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
                 <div>
@@ -578,7 +578,7 @@ const TeacherStudentProfileContent = () => {
             <Card className="rounded-xl shadow-sm">
               <CardHeader>
                 <div className="flex items-center justify-between">
-                  <CardTitle className="text-base">Active Interventions</CardTitle>
+                  <CardTitle className="text-sm">Active Interventions</CardTitle>
                   <Badge className="bg-blue-50 text-blue-700 border-blue-200">
                     {activeInterventions.length} Active
                   </Badge>
@@ -598,15 +598,15 @@ const TeacherStudentProfileContent = () => {
                     <div className="grid grid-cols-3 gap-4 mb-4">
                       <div>
                         <p className="text-xs text-gray-500 mb-1">Before</p>
-                        <p className="text-lg font-bold text-red-600">{intervention.beforeScore}%</p>
+                        <p className="text-sm font-bold text-red-600">{intervention.beforeScore}%</p>
                       </div>
                       <div>
                         <p className="text-xs text-gray-500 mb-1">Current</p>
-                        <p className="text-lg font-bold text-amber-600">{intervention.currentScore}%</p>
+                        <p className="text-sm font-bold text-amber-600">{intervention.currentScore}%</p>
                       </div>
                       <div>
                         <p className="text-xs text-gray-500 mb-1">Target</p>
-                        <p className="text-lg font-bold text-emerald-600">{intervention.targetScore}%</p>
+                        <p className="text-sm font-bold text-emerald-600">{intervention.targetScore}%</p>
                       </div>
                     </div>
                     
@@ -638,7 +638,7 @@ const TeacherStudentProfileContent = () => {
             <Card className="rounded-xl shadow-sm">
               <CardHeader>
                 <div className="flex items-center justify-between">
-                  <CardTitle className="text-base">Completed Interventions</CardTitle>
+                  <CardTitle className="text-sm">Completed Interventions</CardTitle>
                   <Badge className="bg-emerald-50 text-emerald-700 border-emerald-200">
                     {completedInterventions.length} Completed
                   </Badge>
@@ -660,7 +660,7 @@ const TeacherStudentProfileContent = () => {
                     <div className="grid grid-cols-2 gap-4 mb-3">
                       <div>
                         <p className="text-xs text-gray-500 mb-1">Before → After</p>
-                        <p className="text-lg font-bold">
+                        <p className="text-sm font-bold">
                           <span className="text-red-600">{intervention.beforeScore}%</span>
                           <span className="mx-2">→</span>
                           <span className="text-emerald-600">{intervention.afterScore}%</span>
@@ -668,7 +668,7 @@ const TeacherStudentProfileContent = () => {
                       </div>
                       <div>
                         <p className="text-xs text-gray-500 mb-1">Improvement</p>
-                        <p className="text-lg font-bold text-emerald-600">
+                        <p className="text-sm font-bold text-emerald-600">
                           +{(intervention.afterScore || 0) - intervention.beforeScore}%
                         </p>
                       </div>
@@ -687,7 +687,7 @@ const TeacherStudentProfileContent = () => {
             <Card className="rounded-xl shadow-sm">
               <CardContent className="py-12 text-center">
                 <Target className="w-16 h-16 text-gray-300 mx-auto mb-4" />
-                <h3 className="text-lg font-semibold text-gray-900 mb-2">No Interventions Yet</h3>
+                <h3 className="text-sm font-semibold text-gray-900 mb-2">No Interventions Yet</h3>
                 <p className="text-gray-500 mb-4">Create a remedial plan to track student improvement</p>
                 <Button className="gap-2">
                   <Plus className="w-4 h-4" />

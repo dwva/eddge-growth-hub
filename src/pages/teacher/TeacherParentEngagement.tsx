@@ -26,7 +26,7 @@ const TeacherParentEngagementContent = () => {
     return (
       <div className="flex flex-col items-center justify-center min-h-[60vh] text-center">
         <AlertCircle className="w-16 h-16 text-muted-foreground mb-4" />
-        <h2 className="text-xl font-semibold mb-2">Class Teacher Mode Required</h2>
+        <h2 className="text-sm font-semibold mb-2">Class Teacher Mode Required</h2>
         <p className="text-muted-foreground mb-4">Parent engagement analytics is only accessible in Class Teacher mode.</p>
         <Button onClick={() => navigate('/teacher')}>Back to Dashboard</Button>
       </div>
@@ -74,8 +74,8 @@ const TeacherParentEngagementContent = () => {
       {/* Header */}
       <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">Parent Engagement Analytics</h1>
-          <p className="text-sm text-gray-500 mt-1">Monitor parent communication and responsiveness</p>
+          <h1 className="text-lg md:text-xl font-bold text-gray-900">Parent Engagement Analytics</h1>
+          <p className="text-xs md:text-sm text-gray-500 mt-0.5">Monitor parent communication and responsiveness</p>
         </div>
         <Button variant="outline" className="gap-2" onClick={handleExport}>
           <Download className="w-4 h-4" />
@@ -93,7 +93,7 @@ const TeacherParentEngagementContent = () => {
               </div>
               <div>
                 <p className="text-xs text-gray-500">High Engagement</p>
-                <p className="text-2xl font-bold text-emerald-600">{highEngagement}</p>
+                <p className="text-sm font-bold text-emerald-600">{highEngagement}</p>
               </div>
             </div>
           </CardContent>
@@ -107,7 +107,7 @@ const TeacherParentEngagementContent = () => {
               </div>
               <div>
                 <p className="text-xs text-gray-500">Medium Engagement</p>
-                <p className="text-2xl font-bold text-amber-600">{mediumEngagement}</p>
+                <p className="text-sm font-bold text-amber-600">{mediumEngagement}</p>
               </div>
             </div>
           </CardContent>
@@ -121,7 +121,7 @@ const TeacherParentEngagementContent = () => {
               </div>
               <div>
                 <p className="text-xs text-red-600">Low Engagement</p>
-                <p className="text-2xl font-bold text-red-700">{lowEngagement}</p>
+                <p className="text-sm font-bold text-red-700">{lowEngagement}</p>
               </div>
             </div>
           </CardContent>
@@ -135,7 +135,7 @@ const TeacherParentEngagementContent = () => {
               </div>
               <div>
                 <p className="text-xs text-gray-500">Avg Response Rate</p>
-                <p className="text-2xl font-bold text-primary">{avgResponseRate}%</p>
+                <p className="text-sm font-bold text-primary">{avgResponseRate}%</p>
               </div>
             </div>
           </CardContent>
@@ -146,7 +146,7 @@ const TeacherParentEngagementContent = () => {
       {nonResponsiveParents.length > 0 && (
         <Card className="rounded-xl shadow-sm border-2 border-red-200 bg-red-50/50">
           <CardHeader className="pb-3">
-            <CardTitle className="flex items-center gap-2 text-base text-red-700">
+            <CardTitle className="flex items-center gap-2 text-sm text-red-700">
               <AlertTriangle className="w-5 h-5" />
               Non-Responsive Parents Requiring Attention
             </CardTitle>
@@ -206,7 +206,7 @@ const TeacherParentEngagementContent = () => {
       {/* Parent Engagement Table */}
       <Card className="rounded-xl shadow-sm border-0">
         <CardHeader>
-          <CardTitle className="text-base">Parent Communication Details</CardTitle>
+          <CardTitle className="text-sm">Parent Communication Details</CardTitle>
         </CardHeader>
         <CardContent>
           {filteredParents.length > 0 ? (
@@ -284,7 +284,7 @@ const TeacherParentEngagementContent = () => {
           ) : (
             <div className="text-center py-12">
               <Users className="w-16 h-16 text-gray-300 mx-auto mb-4" />
-              <h3 className="text-lg font-semibold text-gray-900 mb-2">No parents found</h3>
+              <h3 className="text-sm font-semibold text-gray-900 mb-2">No parents found</h3>
               <p className="text-gray-500">
                 {searchQuery || engagementFilter !== 'all'
                   ? 'Try adjusting your filters'

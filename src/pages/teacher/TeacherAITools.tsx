@@ -17,7 +17,7 @@ import { Switch } from '@/components/ui/switch';
 import { 
   ArrowLeft, Sparkles, Brain, FileText, Loader2, CheckCircle, Save, Users, AlertCircle, Download,
   Library, BookmarkPlus, Search, Filter, Star, Check, X, AlertTriangle, Info, Eye, Trash2, Edit,
-  ThumbsUp, ThumbsDown, Shield, Target, TrendingUp, Upload, FileUp, Plus
+  ThumbsUp, ThumbsDown, Shield, Target, TrendingUp, Upload, FileUp, Plus, RefreshCw
 } from 'lucide-react';
 import { chapters, questionLibrary } from '@/data/teacherMockData';
 import { toast } from 'sonner';
@@ -38,6 +38,7 @@ interface GeneratedQuestion {
   aiConfidence: number;
   issues: string[];
   approved?: boolean;
+  isRegenerating?: boolean;
 }
 
 const TeacherAIToolsContent = () => {
@@ -197,6 +198,44 @@ const TeacherAIToolsContent = () => {
     };
     setSavedQuestions(prev => [newQuestion, ...prev]);
     toast.success('Question saved to library');
+  };
+
+  const handleRegenerateQuestion = async (questionId: string) => {
+    setGeneratedQuestions(prev => 
+      prev.map(q => q.id === questionId ? { ...q, isRegenerating: true } : q)
+    );
+    
+    // Simulate regeneration delay
+    await new Promise(resolve => setTimeout(resolve, 2000));
+    
+    // Mock regenerated question
+    const regeneratedQuestion: GeneratedQuestion = {
+      id: questionId,
+      type: formData.questionType,
+      question: 'What is the derivative of f(x) = 3x² + 5x - 2?',
+      options: formData.questionType === 'mcq' ? [
+        'f\'(x) = 6x + 5',
+        'f\'(x) = 6x - 5', 
+        'f\'(x) = 3x + 5',
+        'f\'(x) = 6x + 2'
+      ] : undefined,
+      correctAnswer: formData.questionType === 'mcq' ? 'f\'(x) = 6x + 5' : 'f\'(x) = 6x + 5',
+      explanation: 'Using the power rule: d/dx(3x²) = 6x, d/dx(5x) = 5, d/dx(-2) = 0',
+      marks: parseInt(formData.marks) || 2,
+      difficulty: formData.difficulty,
+      cbseAligned: true,
+      bloomsLevel: 'Apply' as const,
+      aiConfidence: Math.floor(Math.random() * 15) + 85,
+      issues: [],
+      approved: undefined,
+      isRegenerating: false
+    };
+    
+    setGeneratedQuestions(prev => 
+      prev.map(q => q.id === questionId ? regeneratedQuestion : q)
+    );
+    
+    toast.success('Question regenerated successfully!');
   };
 
   const handleToggleHighQuality = (questionId: string) => {
@@ -377,42 +416,42 @@ const TeacherAIToolsContent = () => {
   const selectedChapter = chapters.find(ch => ch.id === formData.chapter);
 
   return (
-    <div className="space-y-10 max-w-[1600px]">
+    <div className="h-full">
       {/* Page Header - Clean */}
-      <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4 pb-6 border-b border-gray-100">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 sm:gap-4 mb-3">
         <div>
-          <h1 className="text-3xl font-bold text-gray-900">AI Tools</h1>
-          <p className="text-sm text-gray-500 mt-2">Generate CBSE-aligned questions and worksheets using AI</p>
+          <h1 className="text-lg md:text-xl font-bold text-gray-900">AI Tools</h1>
+          <p className="text-xs md:text-sm text-gray-500 mt-0.5">Generate CBSE-aligned questions and worksheets</p>
         </div>
-        <Button variant="ghost" size="sm" className="h-10 rounded-xl" onClick={() => navigate('/teacher')}>
-          <ArrowLeft className="w-4 h-4 mr-2" />
+        <Button variant="ghost" size="sm" className="h-7 md:h-8 text-xs rounded-lg" onClick={() => navigate('/teacher')}>
+          <ArrowLeft className="w-3 h-3 mr-1" />
           Back
         </Button>
       </div>
 
-      <Tabs value={activeTab} onValueChange={setActiveTab}>
-        <TabsList className="h-8 p-1 rounded-lg bg-gray-100">
-          <TabsTrigger value="questions" className="gap-2 text-xs px-3 py-1.5 h-7 data-[state=active]:bg-white data-[state=active]:shadow-sm rounded-md">
-            <Sparkles className="w-3.5 h-3.5" />
-            Question Generator
+      <Tabs value={activeTab} onValueChange={setActiveTab} className="h-full">
+        <TabsList className="h-7 md:h-8 p-0.5 md:p-1 rounded-lg bg-gray-100 overflow-x-auto flex-shrink-0 w-full md:w-auto">
+          <TabsTrigger value="questions" className="gap-1 md:gap-2 text-[9px] md:text-xs px-2 md:px-3 py-1 md:py-1.5 h-6 md:h-7 data-[state=active]:bg-white data-[state=active]:shadow-sm rounded-md whitespace-nowrap">
+            <Sparkles className="w-3 h-3" />
+            <span className="hidden xs:inline">Question</span> Gen
           </TabsTrigger>
-          <TabsTrigger value="pdf-upload" className="gap-2 text-xs px-3 py-1.5 h-7 data-[state=active]:bg-white data-[state=active]:shadow-sm rounded-md">
-            <Upload className="w-3.5 h-3.5" />
-            PDF Upload
+          <TabsTrigger value="pdf-upload" className="gap-1 md:gap-2 text-[9px] md:text-xs px-2 md:px-3 py-1 md:py-1.5 h-6 md:h-7 data-[state=active]:bg-white data-[state=active]:shadow-sm rounded-md whitespace-nowrap">
+            <Upload className="w-3 h-3" />
+            PDF
           </TabsTrigger>
-          <TabsTrigger value="library" className="gap-2 text-xs px-3 py-1.5 h-7 data-[state=active]:bg-white data-[state=active]:shadow-sm rounded-md">
-            <Library className="w-3.5 h-3.5" />
-            Question Library
+          <TabsTrigger value="library" className="gap-1 md:gap-2 text-[9px] md:text-xs px-2 md:px-3 py-1 md:py-1.5 h-6 md:h-7 data-[state=active]:bg-white data-[state=active]:shadow-sm rounded-md whitespace-nowrap">
+            <Library className="w-3 h-3" />
+            Library
           </TabsTrigger>
-          <TabsTrigger value="worksheet" className="gap-2 text-xs px-3 py-1.5 h-7 data-[state=active]:bg-white data-[state=active]:shadow-sm rounded-md">
-            <FileText className="w-3.5 h-3.5" />
-            Worksheet Generator
+          <TabsTrigger value="worksheet" className="gap-1 md:gap-2 text-[9px] md:text-xs px-2 md:px-3 py-1 md:py-1.5 h-6 md:h-7 data-[state=active]:bg-white data-[state=active]:shadow-sm rounded-md whitespace-nowrap">
+            <FileText className="w-3 h-3" />
+            Worksheet
           </TabsTrigger>
         </TabsList>
 
-        {/* Question Generator Tab */}
-        <TabsContent value="questions" className="space-y-6">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <TabsContent value="questions" className="pt-3 md:pt-4">
+          <div className="space-y-4 md:space-y-6">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-3 md:gap-6">
             {/* Left: Parameters */}
             <div className="space-y-6">
               {/* Analytics Context */}
@@ -817,6 +856,20 @@ const TeacherAIToolsContent = () => {
                             Save to Library
                           </Button>
                           <div className="flex-1" />
+                          <Button 
+                            size="sm" 
+                            variant="outline" 
+                            onClick={() => handleRegenerateQuestion(q.id)}
+                            disabled={q.isRegenerating}
+                            className="gap-1"
+                          >
+                            {q.isRegenerating ? (
+                              <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                            ) : (
+                              <RefreshCw className="w-3.5 h-3.5" />
+                            )}
+                            {q.isRegenerating ? 'Regenerating...' : 'Regenerate'}
+                          </Button>
                           <Button size="sm" variant="ghost" className="gap-1">
                             <Edit className="w-3.5 h-3.5" />
                           </Button>
@@ -841,10 +894,10 @@ const TeacherAIToolsContent = () => {
               )}
             </div>
           </div>
+          </div>
         </TabsContent>
 
-        {/* PDF Upload Tab */}
-        <TabsContent value="pdf-upload" className="space-y-6">
+        <TabsContent value="pdf-upload" className="p-4 md:p-6 pt-4">
           <Card>
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
@@ -1105,8 +1158,7 @@ const TeacherAIToolsContent = () => {
           </Card>
         </TabsContent>
 
-        {/* Question Library Tab */}
-        <TabsContent value="library" className="space-y-6">
+        <TabsContent value="library" className="p-4 md:p-6 pt-4">
           <Card>
             <CardHeader>
               <div className="flex items-center justify-between">
@@ -1287,8 +1339,7 @@ const TeacherAIToolsContent = () => {
           </Card>
         </TabsContent>
 
-        {/* Worksheet Generator Tab */}
-        <TabsContent value="worksheet" className="space-y-6">
+        <TabsContent value="worksheet" className="p-4 md:p-6 pt-4">
           <Card>
             <CardHeader>
               <CardTitle className="flex items-center gap-2">

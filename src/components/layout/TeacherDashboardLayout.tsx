@@ -94,7 +94,7 @@ const TeacherDashboardContent = ({ children }: TeacherDashboardLayoutProps) => {
       {/* Main Content */}
       <div className="flex-1 flex flex-col min-w-0">
         {/* Top Bar - Mobile Optimized */}
-        <header className="h-14 md:h-20 bg-white px-3 md:px-6 lg:px-8 flex items-center justify-between sticky top-0 z-10 flex-shrink-0 border-b border-gray-100">
+        <header className="h-14 md:h-16 bg-white px-3 md:px-6 lg:px-8 flex items-center justify-between sticky top-0 z-50 flex-shrink-0 border-b border-gray-100 shadow-sm">
           {/* Left: Menu + Welcome + Mode Toggle */}
           <div className="flex items-center gap-2 md:gap-4">
             <Sheet open={mobileOpen} onOpenChange={setMobileOpen}>
@@ -113,8 +113,8 @@ const TeacherDashboardContent = ({ children }: TeacherDashboardLayoutProps) => {
               <Menu className="w-4 h-4 text-gray-500" />
             </Button>
             <div className="hidden md:block">
-              <h1 className="text-base font-semibold text-gray-900">Welcome to EDDGE.</h1>
-              <p className="text-[11px] text-gray-500">Hello {firstName}, welcome back!</p>
+              <h1 className="text-sm font-semibold text-gray-900">Welcome to EDDGE.</h1>
+              <p className="text-[10px] text-gray-500">Hello {firstName}, welcome back!</p>
             </div>
             {/* Mode Toggle - Mobile Compact */}
             <div className="flex md:hidden">
@@ -228,7 +228,7 @@ const TeacherDashboardContent = ({ children }: TeacherDashboardLayoutProps) => {
         </header>
 
         {/* Page Content */}
-        <main className="flex-1 p-4 md:p-6 overflow-y-auto">
+        <main className="flex-1 overflow-y-auto px-2 md:px-4 py-3 md:py-4">
           {children}
         </main>
       </div>

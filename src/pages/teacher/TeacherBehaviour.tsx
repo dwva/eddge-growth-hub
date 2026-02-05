@@ -38,7 +38,7 @@ const TeacherBehaviourContent = () => {
     return (
       <div className="flex flex-col items-center justify-center min-h-[60vh] text-center">
         <AlertCircle className="w-16 h-16 text-muted-foreground mb-4" />
-        <h2 className="text-xl font-semibold mb-2">Class Teacher Mode Required</h2>
+        <h2 className="text-sm font-semibold mb-2">Class Teacher Mode Required</h2>
         <p className="text-muted-foreground mb-4">This page is only accessible in Class Teacher mode.</p>
         <Button onClick={() => navigate('/teacher')}>Back to Dashboard</Button>
       </div>
@@ -130,12 +130,12 @@ const TeacherBehaviourContent = () => {
   };
 
   return (
-    <div className="space-y-10 max-w-[1600px]">
+    <div className="space-y-6 max-w-[1600px]">
       {/* Page Header - Clean */}
-      <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4 pb-6 border-b border-gray-100">
+      <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4 pb-4 border-b border-gray-100">
         <div>
-          <h1 className="text-3xl font-bold text-gray-900">Behaviour & Notes</h1>
-          <p className="text-sm text-gray-500 mt-2">Track and record student behavior observations</p>
+          <h1 className="text-lg md:text-xl font-bold text-gray-900">Behaviour & Notes</h1>
+          <p className="text-xs md:text-sm text-gray-500 mt-0.5">Track and record student behavior observations</p>
         </div>
         <Dialog open={isDialogOpen} onOpenChange={(open) => {
           setIsDialogOpen(open);
@@ -229,7 +229,7 @@ const TeacherBehaviourContent = () => {
               <ThumbsUp className="w-5 h-5 text-emerald-600" />
             </div>
             <div>
-              <p className="text-2xl font-bold text-emerald-700">{countByType.positive}</p>
+              <p className="text-sm font-bold text-emerald-700">{countByType.positive}</p>
               <p className="text-xs text-emerald-600">Positive</p>
             </div>
           </div>
@@ -240,7 +240,7 @@ const TeacherBehaviourContent = () => {
               <AlertTriangle className="w-5 h-5 text-amber-600" />
             </div>
             <div>
-              <p className="text-2xl font-bold text-amber-700">{countByType.attention}</p>
+              <p className="text-sm font-bold text-amber-700">{countByType.attention}</p>
               <p className="text-xs text-amber-600">Attention</p>
             </div>
           </div>
@@ -251,7 +251,7 @@ const TeacherBehaviourContent = () => {
               <AlertCircle className="w-5 h-5 text-red-600" />
             </div>
             <div>
-              <p className="text-2xl font-bold text-red-700">{countByType.concern}</p>
+              <p className="text-sm font-bold text-red-700">{countByType.concern}</p>
               <p className="text-xs text-red-600">Concerns</p>
             </div>
           </div>
@@ -377,7 +377,7 @@ const TeacherBehaviourContent = () => {
               <div className="w-16 h-16 rounded-2xl bg-gray-100 flex items-center justify-center mx-auto mb-4">
                 <FileText className="w-8 h-8 text-gray-400" />
               </div>
-              <h3 className="text-lg font-semibold text-gray-900 mb-2">No notes found</h3>
+              <h3 className="text-sm font-semibold text-gray-900 mb-2">No notes found</h3>
               <p className="text-gray-500 text-sm mb-4">
                 {searchQuery || typeFilter !== 'all' ? 'Try adjusting your filters' : 'Start by adding a behavior note'}
               </p>

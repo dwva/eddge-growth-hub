@@ -24,7 +24,7 @@ const TeacherSubjectStudentProfileContent = () => {
     return (
       <div className="flex flex-col items-center justify-center min-h-[60vh] text-center">
         <AlertCircle className="w-16 h-16 text-muted-foreground mb-4" />
-        <h2 className="text-xl font-semibold mb-2">Subject Teacher Mode Required</h2>
+        <h2 className="text-sm font-semibold mb-2">Subject Teacher Mode Required</h2>
         <p className="text-muted-foreground mb-4">This page is only accessible in Subject Teacher mode.</p>
         <Button onClick={() => navigate('/teacher')}>Back to Dashboard</Button>
       </div>
@@ -37,7 +37,7 @@ const TeacherSubjectStudentProfileContent = () => {
     return (
       <div className="flex flex-col items-center justify-center min-h-[60vh] text-center">
         <AlertCircle className="w-16 h-16 text-muted-foreground mb-4" />
-        <h2 className="text-xl font-semibold mb-2">Student Not Found</h2>
+        <h2 className="text-sm font-semibold mb-2">Student Not Found</h2>
         <p className="text-muted-foreground mb-4">The student you're looking for doesn't exist.</p>
         <Button onClick={() => navigate('/teacher/my-subject/students')}>Back to Students</Button>
       </div>
@@ -80,16 +80,16 @@ const TeacherSubjectStudentProfileContent = () => {
       <Card className="border-0 shadow-sm">
         <CardContent className="p-6">
           <div className="flex items-start justify-between">
-            <div className="flex items-center gap-4">
-              <Avatar className="w-16 h-16">
-                <AvatarFallback className="bg-primary/10 text-primary text-lg font-bold">
+            <div className="flex items-center gap-3">
+              <Avatar className="w-12 h-12">
+                <AvatarFallback className="bg-primary/10 text-primary text-sm font-bold">
                   {studentData.avatar}
                 </AvatarFallback>
               </Avatar>
               <div>
-                <h1 className="text-2xl font-bold text-gray-900">{studentData.name}</h1>
-                <div className="flex items-center gap-3 mt-1">
-                  <p className="text-sm text-gray-500">{studentData.class}</p>
+                <h1 className="text-lg md:text-xl font-bold text-gray-900">{studentData.name}</h1>
+                <div className="flex items-center gap-3 mt-0.5">
+                  <p className="text-xs text-gray-500">{studentData.class}</p>
                   <span className="text-gray-300">•</span>
                   <p className="text-sm text-gray-500">{studentData.subject}</p>
                 </div>
@@ -99,7 +99,7 @@ const TeacherSubjectStudentProfileContent = () => {
               <div className="text-right">
                 <p className="text-xs text-gray-500 mb-1">Overall Score</p>
                 <div className="flex items-center gap-2">
-                  <span className="text-3xl font-bold text-gray-900">{studentData.overallScore}%</span>
+                  <span className="text-base font-bold text-gray-900">{studentData.overallScore}%</span>
                   {getTrendIcon(studentData.trend)}
                 </div>
                 <p className="text-xs text-gray-500 mt-1">Accuracy: {studentData.accuracy}%</p>
@@ -139,7 +139,7 @@ const TeacherSubjectStudentProfileContent = () => {
         <Card className="border-0 shadow-sm lg:col-span-2">
           <CardHeader className="pb-3">
             <div className="flex items-center justify-between">
-              <CardTitle className="text-base font-bold">Performance Trend</CardTitle>
+              <CardTitle className="text-sm font-bold">Performance Trend</CardTitle>
               <Badge variant="outline" className="text-xs">
                 <BarChart3 className="w-3 h-3 mr-1" />
                 Last 5 Months
@@ -168,7 +168,7 @@ const TeacherSubjectStudentProfileContent = () => {
         {/* Weak & Strong Topics */}
         <Card className="border-0 shadow-sm">
           <CardHeader className="pb-3">
-            <CardTitle className="text-base font-bold">Topic Analysis</CardTitle>
+            <CardTitle className="text-sm font-bold">Topic Analysis</CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
             <div>
@@ -213,7 +213,7 @@ const TeacherSubjectStudentProfileContent = () => {
       {/* Chapter-wise Mastery */}
       <Card className="border-0 shadow-sm">
         <CardHeader className="pb-3">
-          <CardTitle className="text-base font-bold">Chapter-wise Mastery Progress</CardTitle>
+          <CardTitle className="text-sm font-bold">Chapter-wise Mastery Progress</CardTitle>
         </CardHeader>
         <CardContent>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -247,7 +247,7 @@ const TeacherSubjectStudentProfileContent = () => {
       <Card className="border-0 shadow-sm">
         <CardHeader className="pb-3">
           <div className="flex items-center justify-between">
-            <CardTitle className="text-base font-bold">Assigned Assessments</CardTitle>
+            <CardTitle className="text-sm font-bold">Assigned Assessments</CardTitle>
             <Badge variant="outline" className="text-xs">
               {studentData.assignedAssessments.length} Total
             </Badge>
@@ -286,7 +286,7 @@ const TeacherSubjectStudentProfileContent = () => {
                 <div className="text-right ml-4">
                   {assessment.status === 'Completed' && assessment.score !== null ? (
                     <div>
-                      <p className="text-lg font-bold text-gray-900">{assessment.score}/{assessment.maxScore}</p>
+                      <p className="text-sm font-bold text-gray-900">{assessment.score}/{assessment.maxScore}</p>
                       <p className="text-xs text-gray-500">
                         {Math.round((assessment.score / assessment.maxScore) * 100)}%
                       </p>
@@ -306,7 +306,7 @@ const TeacherSubjectStudentProfileContent = () => {
       {/* Recent Activity */}
       <Card className="border-0 shadow-sm">
         <CardHeader className="pb-3">
-          <CardTitle className="text-base font-bold">Recent Activity</CardTitle>
+          <CardTitle className="text-sm font-bold">Recent Activity</CardTitle>
         </CardHeader>
         <CardContent>
           <div className="space-y-3">
