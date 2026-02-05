@@ -236,4 +236,22 @@
   .animate-shimmer {
     animation: shimmer 2s infinite;
   }
+
+  /* EDDGE Learning Path – calm motion (300–600ms, subtle) */
+  @keyframes path-node-breathe {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.94; transform: scale(1.03); }
+  }
+  .animate-path-breathe {
+    animation: path-node-breathe 3s ease-in-out infinite;
+  }
+
+  @keyframes path-sparkle-once {
+    0% { opacity: 0; transform: scale(0.85); filter: brightness(0.8); }
+    55% { opacity: 1; transform: scale(1.08); filter: brightness(1.15); }
+    100% { opacity: 1; transform: scale(1); filter: brightness(1); }
+  }
+  .animate-path-sparkle-once {
+    animation: path-sparkle-once 0.5s ease-out forwards;
+  }
 }

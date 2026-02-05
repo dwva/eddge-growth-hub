@@ -61,7 +61,7 @@ const ParentDashboardLayoutInner = ({ children, title = "Parent Dashboard" }: Pa
         {/* Main Content Area */}
         <div className="flex-1 flex flex-col min-w-0">
           {/* Top Bar */}
-          <header className="h-20 bg-white px-6 md:px-8 flex items-center justify-between sticky top-0 z-10 flex-shrink-0 border-b border-gray-100">
+          <header className="h-20 bg-white px-6 md:px-8 flex items-center justify-between sticky top-0 z-50 flex-shrink-0 border-b border-gray-100 shadow-sm">
             {/* Left: Menu + Welcome */}
             <div className="flex items-center gap-4">
               <Sheet open={mobileOpen} onOpenChange={setMobileOpen}>
@@ -85,16 +85,18 @@ const ParentDashboardLayoutInner = ({ children, title = "Parent Dashboard" }: Pa
               </div>
             </div>
             
-            {/* Right: Icons + Avatar */}
-            <div className="flex items-center gap-2 flex-shrink-0">
-              {/* Messages */}
-              <Button 
-                variant="ghost" 
-                size="icon" 
-                className="h-9 w-9 hover:bg-gray-100 rounded-lg"
-              >
-                <MessageSquare className="w-4 h-4 text-gray-500" />
-              </Button>
+          {/* Right: Help Center + Icons + Avatar */}
+          <div className="flex items-center gap-2 flex-shrink-0">
+            {/* Help Center - Desktop only */}
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => navigate('/parent/support')}
+              className="hidden md:flex items-center gap-1.5 h-9 px-3 hover:bg-gray-100 rounded-lg"
+            >
+              <HelpCircle className="w-4 h-4 text-gray-500" />
+              <span className="text-xs text-gray-600">Support</span>
+            </Button>
 
               {/* Notifications */}
               <Button 

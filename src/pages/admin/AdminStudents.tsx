@@ -1,5 +1,9 @@
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { useAdminData } from '@/contexts/AdminDataContext';
+import type { Student } from '@/types/admin';
 import AdminDashboardLayout from '@/components/layout/AdminDashboardLayout';
+import { toast } from '@/hooks/use-toast';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -44,25 +48,157 @@ import {
 } from '@/components/ui/select';
 import { Progress } from '@/components/ui/progress';
 
-const studentsData = [
-  { id: 1, name: 'Alex Johnson', email: 'alex.j@school.edu', phone: '+91 98765 43210', class: '10-A', rollNo: 15, attendance: 92, performance: 85, status: 'active', parent: 'Mr. Robert Johnson' },
-  { id: 2, name: 'Emma Wilson', email: 'emma.w@school.edu', phone: '+91 98765 43211', class: '10-B', rollNo: 8, attendance: 88, performance: 78, status: 'active', parent: 'Ms. Sarah Wilson' },
-  { id: 3, name: 'Rahul Sharma', email: 'rahul.s@school.edu', phone: '+91 98765 43212', class: '9-A', rollNo: 22, attendance: 95, performance: 92, status: 'active', parent: 'Mr. Vikram Sharma' },
-  { id: 4, name: 'Priya Patel', email: 'priya.p@school.edu', phone: '+91 98765 43213', class: '10-A', rollNo: 18, attendance: 72, performance: 68, status: 'at_risk', parent: 'Mr. Amit Patel' },
-  { id: 5, name: 'David Brown', email: 'david.b@school.edu', phone: '+91 98765 43214', class: '11-A', rollNo: 5, attendance: 90, performance: 88, status: 'active', parent: 'Mr. James Brown' },
-];
+const generateId = () => `${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
 
 const AdminStudents = () => {
+  const navigate = useNavigate();
+  const { state, dispatch } = useAdminData();
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedClass, setSelectedClass] = useState('all');
   const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
+  const [selectedStudents, setSelectedStudents] = useState<Set<string>>(new Set());
+  const [newStudent, setNewStudent] = useState<{
+    name: string;
+    email: string;
+    rollNumber: string;
+    classId: string;
+    parentContact: string;
+  }>({
+    name: '',
+    email: '',
+    rollNumber: '',
+    classId: '',
+    parentContact: '',
+  });
 
-  const filteredStudents = studentsData.filter(student => {
-    const matchesSearch = student.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                         student.email.toLowerCase().includes(searchQuery.toLowerCase());
-    const matchesClass = selectedClass === 'all' || student.class === selectedClass;
+  const totalStudents = state.students.length;
+  const avgAttendance =
+    totalStudents === 0
+      ? 0
+      : Math.round(
+          state.students.reduce((sum, s) => sum + (s.attendancePercentage || 0), 0) /
+            totalStudents,
+        );
+  const totalClasses = new Set(state.students.map((s) => s.classId).filter(Boolean)).size;
+  const atRiskCount = state.students.filter((s) => s.status === 'AtRisk').length;
+
+  const filteredStudents = state.students.filter((student) => {
+    const matchesSearch =
+      student.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      student.email.toLowerCase().includes(searchQuery.toLowerCase());
+    const matchesClass = selectedClass === 'all' || student.classId === selectedClass;
     return matchesSearch && matchesClass;
   });
+
+  const handleCreate = () => {
+    if (!newStudent.name.trim() || !newStudent.email.trim()) {
+      return;
+    }
+
+    const student: Student = {
+      id: generateId(),
+      name: newStudent.name.trim(),
+      email: newStudent.email.trim(),
+      rollNumber: Number(newStudent.rollNumber) || 0,
+      classId: newStudent.classId || null,
+      parentContact: newStudent.parentContact.trim(),
+      attendancePercentage: 90,
+      performanceScore: 80,
+      status: 'Active',
+    };
+
+    dispatch({ type: 'ADD_STUDENT', payload: student });
+    setIsAddDialogOpen(false);
+    setNewStudent({
+      name: '',
+      email: '',
+      rollNumber: '',
+      classId: '',
+      parentContact: '',
+    });
+  };
+
+  const handleDelete = (id: string) => {
+    dispatch({ type: 'DELETE_STUDENT', payload: { id } });
+  };
+
+  const handleToggleSelection = (id: string) => {
+    setSelectedStudents(prev => {
+      const next = new Set(prev);
+      if (next.has(id)) {
+        next.delete(id);
+      } else {
+        next.add(id);
+      }
+      return next;
+    });
+  };
+
+  const handleSelectAll = () => {
+    if (selectedStudents.size === filteredStudents.length) {
+      setSelectedStudents(new Set());
+    } else {
+      setSelectedStudents(new Set(filteredStudents.map(s => s.id)));
+    }
+  };
+
+  const handleBulkUpdateStatus = (status: 'Active' | 'AtRisk') => {
+    selectedStudents.forEach(id => {
+      const student = state.students.find(s => s.id === id);
+      if (student) {
+        dispatch({ type: 'UPDATE_STUDENT', payload: { ...student, status } });
+      }
+    });
+    toast({
+      title: 'Status Updated',
+      description: `Updated ${selectedStudents.size} student(s) to ${status}.`,
+    });
+    setSelectedStudents(new Set());
+  };
+
+  const handleExportCSV = () => {
+    const selected = filteredStudents.filter(s => selectedStudents.has(s.id));
+    if (selected.length === 0) {
+      toast({
+        title: 'No Selection',
+        description: 'Please select students to export.',
+        variant: 'destructive',
+      });
+      return;
+    }
+
+    const headers = ['Name', 'Email', 'Roll Number', 'Class', 'Attendance %', 'Performance %', 'Status'];
+    const rows = selected.map(s => {
+      const cls = state.classes.find(c => c.id === s.classId);
+      return [
+        s.name,
+        s.email,
+        s.rollNumber.toString(),
+        cls ? `${cls.grade}-${cls.section}` : 'N/A',
+        s.attendancePercentage.toString(),
+        s.performanceScore.toString(),
+        s.status,
+      ];
+    });
+
+    const csvContent = [
+      headers.join(','),
+      ...rows.map(row => row.map(cell => `"${cell}"`).join(','))
+    ].join('\n');
+
+    const blob = new Blob([csvContent], { type: 'text/csv' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `students_export_${new Date().toISOString().split('T')[0]}.csv`;
+    a.click();
+    URL.revokeObjectURL(url);
+
+    toast({
+      title: 'Export Complete',
+      description: `Exported ${selected.length} student(s) to CSV.`,
+    });
+  };
 
   return (
     <AdminDashboardLayout 
@@ -78,7 +214,7 @@ const AdminStudents = () => {
                 <GraduationCap className="w-6 h-6 text-primary" />
               </div>
               <div>
-                <div className="text-2xl font-bold">1,250</div>
+                <div className="text-2xl font-bold">{totalStudents}</div>
                 <div className="text-sm text-muted-foreground">Total Students</div>
               </div>
             </CardContent>
@@ -89,7 +225,7 @@ const AdminStudents = () => {
                 <TrendingUp className="w-6 h-6 text-green-600" />
               </div>
               <div>
-                <div className="text-2xl font-bold">89%</div>
+                <div className="text-2xl font-bold">{avgAttendance}%</div>
                 <div className="text-sm text-muted-foreground">Avg. Attendance</div>
               </div>
             </CardContent>
@@ -100,7 +236,7 @@ const AdminStudents = () => {
                 <Users className="w-6 h-6 text-blue-600" />
               </div>
               <div>
-                <div className="text-2xl font-bold">42</div>
+                <div className="text-2xl font-bold">{totalClasses}</div>
                 <div className="text-sm text-muted-foreground">Total Classes</div>
               </div>
             </CardContent>
@@ -111,7 +247,7 @@ const AdminStudents = () => {
                 <Calendar className="w-6 h-6 text-amber-600" />
               </div>
               <div>
-                <div className="text-2xl font-bold">18</div>
+                <div className="text-2xl font-bold">{atRiskCount}</div>
                 <div className="text-sm text-muted-foreground">At Risk</div>
               </div>
             </CardContent>
@@ -171,7 +307,12 @@ const AdminStudents = () => {
                       <div className="grid grid-cols-2 gap-4">
                         <div className="space-y-2">
                           <Label>Class</Label>
-                          <Select>
+                          <Select
+                            value={newStudent.classId}
+                            onValueChange={(value) =>
+                              setNewStudent((prev) => ({ ...prev, classId: value }))
+                            }
+                          >
                             <SelectTrigger>
                               <SelectValue placeholder="Select class" />
                             </SelectTrigger>
@@ -185,27 +326,57 @@ const AdminStudents = () => {
                         </div>
                         <div className="space-y-2">
                           <Label>Roll Number</Label>
-                          <Input placeholder="Roll No." />
+                          <Input
+                            placeholder="Roll No."
+                            value={newStudent.rollNumber}
+                            onChange={(e) =>
+                              setNewStudent((prev) => ({
+                                ...prev,
+                                rollNumber: e.target.value,
+                              }))
+                            }
+                          />
                         </div>
                       </div>
                       <div className="space-y-2">
                         <Label>Parent/Guardian Name</Label>
-                        <Input placeholder="Enter parent's name" />
+                        <Input
+                          placeholder="Enter parent's name"
+                          value={newStudent.parentContact}
+                          onChange={(e) =>
+                            setNewStudent((prev) => ({
+                              ...prev,
+                              parentContact: e.target.value,
+                            }))
+                          }
+                        />
                       </div>
                       <div className="grid grid-cols-2 gap-4">
                         <div className="space-y-2">
                           <Label>Email</Label>
-                          <Input placeholder="email@school.edu" />
+                          <Input
+                            placeholder="email@school.edu"
+                            value={newStudent.email}
+                            onChange={(e) =>
+                              setNewStudent((prev) => ({ ...prev, email: e.target.value }))
+                            }
+                          />
                         </div>
                         <div className="space-y-2">
-                          <Label>Phone</Label>
-                          <Input placeholder="+91 98765 43210" />
+                          <Label>Student Name</Label>
+                          <Input
+                            placeholder="Enter student's name"
+                            value={newStudent.name}
+                            onChange={(e) =>
+                              setNewStudent((prev) => ({ ...prev, name: e.target.value }))
+                            }
+                          />
                         </div>
                       </div>
                     </div>
                     <DialogFooter>
                       <Button variant="outline" onClick={() => setIsAddDialogOpen(false)}>Cancel</Button>
-                      <Button className="bg-primary hover:bg-primary/90" onClick={() => setIsAddDialogOpen(false)}>Enroll Student</Button>
+                      <Button className="bg-primary hover:bg-primary/90" onClick={handleCreate}>Enroll Student</Button>
                     </DialogFooter>
                   </DialogContent>
                 </Dialog>
@@ -214,6 +385,49 @@ const AdminStudents = () => {
           </CardContent>
         </Card>
 
+        {/* Bulk Actions Toolbar */}
+        {selectedStudents.size > 0 && (
+          <Card>
+            <CardContent className="p-4">
+              <div className="flex items-center justify-between">
+                <p className="text-sm font-medium">
+                  {selectedStudents.size} student(s) selected
+                </p>
+                <div className="flex gap-2">
+                  <Button 
+                    variant="outline" 
+                    size="sm"
+                    onClick={() => handleBulkUpdateStatus('Active')}
+                  >
+                    Mark Active
+                  </Button>
+                  <Button 
+                    variant="outline" 
+                    size="sm"
+                    onClick={() => handleBulkUpdateStatus('AtRisk')}
+                  >
+                    Mark At Risk
+                  </Button>
+                  <Button 
+                    variant="outline" 
+                    size="sm"
+                    onClick={handleExportCSV}
+                  >
+                    Export CSV
+                  </Button>
+                  <Button 
+                    variant="ghost" 
+                    size="sm"
+                    onClick={() => setSelectedStudents(new Set())}
+                  >
+                    Clear Selection
+                  </Button>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        )}
+
         {/* Students Table */}
         <Card>
           <CardContent className="p-0">
@@ -221,6 +435,14 @@ const AdminStudents = () => {
               <table className="w-full">
                 <thead>
                   <tr className="bg-muted/50 border-b">
+                    <th className="px-6 py-4 text-left text-xs font-semibold text-muted-foreground uppercase tracking-wider">
+                      <input
+                        type="checkbox"
+                        checked={selectedStudents.size === filteredStudents.length && filteredStudents.length > 0}
+                        onChange={handleSelectAll}
+                        className="rounded"
+                      />
+                    </th>
                     <th className="px-6 py-4 text-left text-xs font-semibold text-muted-foreground uppercase tracking-wider">Student</th>
                     <th className="px-6 py-4 text-left text-xs font-semibold text-muted-foreground uppercase tracking-wider">Class</th>
                     <th className="px-6 py-4 text-left text-xs font-semibold text-muted-foreground uppercase tracking-wider">Attendance</th>
@@ -234,9 +456,21 @@ const AdminStudents = () => {
                   {filteredStudents.map((student) => (
                     <tr key={student.id} className="hover:bg-muted/30 transition-colors">
                       <td className="px-6 py-4">
+                        <input
+                          type="checkbox"
+                          checked={selectedStudents.has(student.id)}
+                          onChange={() => handleToggleSelection(student.id)}
+                          className="rounded"
+                        />
+                      </td>
+                      <td className="px-6 py-4">
                         <div className="flex items-center gap-3">
                           <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center text-primary font-semibold">
-                            {student.name.split(' ').map(n => n[0]).join('').slice(0, 2)}
+                            {student.name
+                              .split(' ')
+                              .map((n) => n[0])
+                              .join('')
+                              .slice(0, 2)}
                           </div>
                           <div>
                             <div className="font-medium">{student.name}</div>
@@ -246,40 +480,40 @@ const AdminStudents = () => {
                       </td>
                       <td className="px-6 py-4">
                         <div>
-                          <div className="font-medium">{student.class}</div>
-                          <div className="text-sm text-muted-foreground">Roll #{student.rollNo}</div>
+                          <div className="font-medium">{student.classId || '-'}</div>
+                          <div className="text-sm text-muted-foreground">Roll #{student.rollNumber}</div>
                         </div>
                       </td>
                       <td className="px-6 py-4">
                         <div className="w-32">
                           <div className="flex justify-between text-sm mb-1">
-                            <span>{student.attendance}%</span>
+                            <span>{student.attendancePercentage}%</span>
                           </div>
                           <Progress 
-                            value={student.attendance} 
-                            className={`h-2 ${student.attendance < 75 ? '[&>div]:bg-red-500' : ''}`}
+                            value={student.attendancePercentage} 
+                            className={`h-2 ${student.attendancePercentage < 75 ? '[&>div]:bg-red-500' : ''}`}
                           />
                         </div>
                       </td>
                       <td className="px-6 py-4">
                         <div className="w-32">
                           <div className="flex justify-between text-sm mb-1">
-                            <span>{student.performance}%</span>
+                            <span>{student.performanceScore}%</span>
                           </div>
-                          <Progress value={student.performance} className="h-2" />
+                          <Progress value={student.performanceScore} className="h-2" />
                         </div>
                       </td>
                       <td className="px-6 py-4">
-                        <div className="text-sm">{student.parent}</div>
+                        <div className="text-sm">{student.parentContact}</div>
                       </td>
                       <td className="px-6 py-4">
                         <Badge 
-                          className={student.status === 'active' 
+                          className={student.status === 'Active' 
                             ? 'bg-green-100 text-green-700 hover:bg-green-100' 
                             : 'bg-red-100 text-red-700 hover:bg-red-100'
                           }
                         >
-                          {student.status === 'active' ? 'Active' : 'At Risk'}
+                          {student.status === 'Active' ? 'Active' : 'At Risk'}
                         </Badge>
                       </td>
                       <td className="px-6 py-4">
@@ -290,13 +524,16 @@ const AdminStudents = () => {
                             </Button>
                           </DropdownMenuTrigger>
                           <DropdownMenuContent align="end">
-                            <DropdownMenuItem className="gap-2">
+                            <DropdownMenuItem className="gap-2" onClick={() => navigate(`/admin/students/${student.id}`)}>
                               <Eye className="w-4 h-4" /> View Profile
                             </DropdownMenuItem>
                             <DropdownMenuItem className="gap-2">
                               <Edit className="w-4 h-4" /> Edit
                             </DropdownMenuItem>
-                            <DropdownMenuItem className="gap-2 text-destructive">
+                            <DropdownMenuItem
+                              className="gap-2 text-destructive"
+                              onClick={() => handleDelete(student.id)}
+                            >
                               <Trash2 className="w-4 h-4" /> Remove
                             </DropdownMenuItem>
                           </DropdownMenuContent>

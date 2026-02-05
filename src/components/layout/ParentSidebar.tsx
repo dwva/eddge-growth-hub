@@ -10,7 +10,6 @@ import {
   MessageSquare,
   BookOpen,
   Bell,
-  HelpCircle,
   LogOut,
   ChevronDown,
   Sparkles,
@@ -39,7 +38,10 @@ const navSections: NavSection[] = [
   {
     title: 'Communication',
     icon: <MessageSquare className="w-5 h-5" />,
-    items: [{ label: 'Messages', icon: <MessageSquare className="w-4 h-4" />, path: '/parent/communications' }],
+    items: [
+      { label: 'Messages', icon: <MessageSquare className="w-4 h-4" />, path: '/parent/communications' },
+      { label: 'Communication Center', icon: <MessageSquare className="w-4 h-4" />, path: '/parent/communication-center' },
+    ],
   },
   {
     title: 'Learning',
@@ -251,16 +253,6 @@ const ParentSidebar = ({ collapsed = false, isMobile = false, onMobileClose, onC
       {showText && (
         <div className="p-3 space-y-2 flex-shrink-0">
           <button
-            onClick={() => handleNavigate('/parent/support')}
-            className={cn(
-              'w-full flex items-center px-4 py-3 gap-3 rounded-xl transition-all duration-200 text-gray-600 hover:bg-gray-50 hover:text-gray-900',
-            )}
-          >
-            <HelpCircle className="w-5 h-5 flex-shrink-0 text-gray-400" />
-            <span className="font-medium text-sm">Help & Support</span>
-          </button>
-
-          <button
             onClick={handleLogout}
             className="w-full flex items-center justify-center px-4 py-3 gap-3 rounded-xl text-red-600 bg-red-50 hover:bg-red-100 transition-colors"
           >
@@ -273,12 +265,6 @@ const ParentSidebar = ({ collapsed = false, isMobile = false, onMobileClose, onC
       {/* Collapsed Icons */}
       {!showText && (
         <div className="p-3 border-t border-gray-100 flex-shrink-0">
-          <button
-            onClick={() => handleNavigate('/parent/support')}
-            className="w-full flex justify-center items-center py-3 rounded-xl text-gray-400 hover:bg-gray-50 hover:text-gray-600 transition-colors mb-2"
-          >
-            <HelpCircle className="w-5 h-5" />
-          </button>
           <button
             onClick={handleLogout}
             className="w-full flex justify-center items-center py-3 rounded-xl text-red-400 hover:bg-red-50 hover:text-red-600 transition-colors"
