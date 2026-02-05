@@ -330,6 +330,46 @@ export const studentPerformance = {
   ],
 };
 
+// ─── New EDDGE Performance Philosophy (Readiness + Consistency + Clarity) ───
+export type ReadinessLevel = 'Building' | 'Stable' | 'Strong';
+export type StabilityLabel = 'Consistent' | 'Improving' | 'Needs regular revision';
+export type FocusLoadLabel = 'Balanced' | 'Too many open topics' | 'Focused';
+export type KnowledgeHealth = 'strong' | 'needs-refresh' | 'needs-attention';
+
+export const performanceDashboard = {
+  readiness: 'Stable' as ReadinessLevel,
+  stability: 'Improving' as StabilityLabel,
+  focusLoad: 'Balanced' as FocusLoadLabel,
+  knowledgeHealthMap: [
+    { id: 'k1', name: 'Algebra', subject: 'Mathematics', health: 'strong' as KnowledgeHealth },
+    { id: 'k2', name: 'Grammar', subject: 'English', health: 'strong' as KnowledgeHealth },
+    { id: 'k3', name: 'World History', subject: 'History', health: 'strong' as KnowledgeHealth },
+    { id: 'k4', name: 'Geometry', subject: 'Mathematics', health: 'needs-refresh' as KnowledgeHealth },
+    { id: 'k5', name: 'Chemical Reactions', subject: 'Chemistry', health: 'needs-refresh' as KnowledgeHealth },
+    { id: 'k6', name: 'Trigonometry', subject: 'Mathematics', health: 'needs-attention' as KnowledgeHealth },
+    { id: 'k7', name: 'Organic Chemistry', subject: 'Chemistry', health: 'needs-attention' as KnowledgeHealth },
+  ],
+  improvementTrajectory: [
+    { id: 't1', label: 'Understanding improving', positive: true },
+    { id: 't2', label: 'Fewer repeated mistakes', positive: true },
+    { id: 't3', label: 'Revision effectiveness: Good', positive: true },
+  ],
+  strengths: [
+    { id: 's1', name: 'Algebra', note: 'Reliable — use for confidence' },
+    { id: 's2', name: 'Grammar', note: 'Reliable — use for confidence' },
+    { id: 's3', name: 'World History', note: 'Reliable — use for confidence' },
+  ],
+  currentlyBuilding: [
+    { id: 'c1', name: 'Geometry', note: 'Needs one more revision' },
+    { id: 'c2', name: 'Chemistry', note: 'Concept clarity pending' },
+  ],
+  coachAction: {
+    title: 'If you do ONE thing today…',
+    action: 'Revise Geometry for 10 minutes — it\'s cooling down.',
+    whyMatters: 'Geometry is moving from "needs refresh" to "strong" with a short revision. A little now helps more than a long session later.',
+  },
+};
+
 export const attendance = {
   totalDays: 180,
   presentDays: 165,
