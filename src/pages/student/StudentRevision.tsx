@@ -1,9 +1,9 @@
 import { useState } from 'react';
 import StudentDashboardLayout from '@/components/layout/StudentDashboardLayout';
 import {
-  RevisionSelectionView,
+  RevisionFirstView,
   type RevisionSelection,
-} from '@/components/revision/RevisionSelectionView';
+} from '@/components/revision/RevisionFirstView';
 
 const StudentRevision = () => {
   const [selection, setSelection] = useState<RevisionSelection>({
@@ -23,7 +23,7 @@ const StudentRevision = () => {
 
   return (
     <StudentDashboardLayout title="Revision">
-      <RevisionSelectionView
+      <RevisionFirstView
         selection={selection}
         onSelectionChange={handleSelectionChange}
         onStartRevision={handleStartRevision}

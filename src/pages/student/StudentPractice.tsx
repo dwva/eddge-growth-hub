@@ -17,13 +17,10 @@ import {
   learningTopics,
 } from '@/data/mockData';
 import {
-  PracticeSelectionView,
+  PracticeFirstView,
   type PracticeSelection,
-} from '@/components/practice/PracticeSelectionView';
-import {
-  PracticeTypeSelectionView,
   type PracticeType,
-} from '@/components/practice/PracticeTypeSelectionView';
+} from '@/components/practice/PracticeFirstView';
 import { PracticeScreen } from '@/components/practice/PracticeScreen';
 
 type PyqPracticeState = {
@@ -32,7 +29,7 @@ type PyqPracticeState = {
   mode?: 'full' | 'mcq' | 'case-study' | 'long-answer';
 };
 
-type View = 'selection' | 'types' | 'practice';
+type View = 'selection' | 'practice';
 
 const MODE_LABELS: Record<string, string> = {
   full: 'Full Paper (Exam Mode)',
@@ -58,7 +55,7 @@ const StudentPractice = () => {
   const pyqState = (location.state as PyqPracticeState) || {};
   const { fromPyq, mode } = pyqState;
 
-  // New flow: selection → types → practice
+  // Flow: selection (with inline practice types when topic chosen) → practice
   const [view, setView] = useState<View>('selection');
   const [selection, setSelection] = useState<PracticeSelection>({
     subjectId: '',
@@ -221,34 +218,20 @@ const StudentPractice = () => {
     <StudentDashboardLayout title="Practice">
       <div className="space-y-6">
         {view === 'selection' && (
-          <PracticeSelectionView
+          <PracticeFirstView
             selection={selection}
             onSelectionChange={(next) => setSelection((s) => ({ ...s, ...next }))}
-            onStartPractice={() => setView('types')}
+            onPracticeTypeSelect={(type) => {
+              setPracticeType(type);
+              setView('practice');
+            }}
           />
-        )}
-
-        {view === 'types' && (
-          <>
-            <Button variant="ghost" size="sm" onClick={() => setView('selection')}>
-              ← Back to topic selection
-            </Button>
-            <PracticeTypeSelectionView
-              subjectName={subjectName}
-              chapterName={chapterName}
-              topicName={topicName}
-              onSelectType={(type) => {
-                setPracticeType(type);
-                setView('practice');
-              }}
-            />
-          </>
         )}
 
         {view === 'practice' && practiceType && (
           <>
-            <Button variant="ghost" size="sm" onClick={() => setView('types')}>
-              ← Back to practice types
+            <Button variant="ghost" size="sm" onClick={() => setView('selection')}>
+              ← Back to selection
             </Button>
             <PracticeScreen
               subjectId={selection.subjectId}
@@ -258,7 +241,7 @@ const StudentPractice = () => {
               chapterName={chapterName}
               topicName={topicName}
               practiceType={practiceType}
-              onBackToTypes={() => setView('types')}
+              onBackToTypes={() => setView('selection')}
               onBackToSelection={() => setView('selection')}
             />
           </>
