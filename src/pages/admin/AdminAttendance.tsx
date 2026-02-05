@@ -1,4 +1,5 @@
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
+import { useNavigate } from 'react-router-dom';
 import AdminDashboardLayout from '@/components/layout/AdminDashboardLayout';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -21,33 +22,89 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { Progress } from '@/components/ui/progress';
-
-const classAttendanceData = [
-  { class: '9-A', present: 32, absent: 3, late: 1, total: 36, percentage: 88.9 },
-  { class: '9-B', present: 30, absent: 2, late: 0, total: 32, percentage: 93.8 },
-  { class: '10-A', present: 28, absent: 4, late: 2, total: 34, percentage: 82.4 },
-  { class: '10-B', present: 26, absent: 1, late: 1, total: 28, percentage: 92.9 },
-  { class: '11-A', present: 24, absent: 1, late: 0, total: 25, percentage: 96.0 },
-  { class: '11-B', present: 25, absent: 2, late: 1, total: 28, percentage: 89.3 },
-];
-
-const weeklyTrend = [
-  { day: 'Mon', attendance: 92 },
-  { day: 'Tue', attendance: 88 },
-  { day: 'Wed', attendance: 95 },
-  { day: 'Thu', attendance: 90 },
-  { day: 'Fri', attendance: 85 },
-];
+import { useAdminData } from '@/contexts/AdminDataContext';
+import { format } from 'date-fns';
 
 const AdminAttendance = () => {
+  const navigate = useNavigate();
+  const { state, dispatch } = useAdminData();
   const [selectedDate, setSelectedDate] = useState<Date | undefined>(new Date());
   const [selectedClass, setSelectedClass] = useState('all');
 
-  const totalPresent = classAttendanceData.reduce((sum, c) => sum + c.present, 0);
-  const totalAbsent = classAttendanceData.reduce((sum, c) => sum + c.absent, 0);
-  const totalLate = classAttendanceData.reduce((sum, c) => sum + c.late, 0);
-  const totalStudents = classAttendanceData.reduce((sum, c) => sum + c.total, 0);
-  const overallPercentage = ((totalPresent / totalStudents) * 100).toFixed(1);
+  // Format selected date as ISO string
+  const selectedDateStr = selectedDate ? format(selectedDate, 'yyyy-MM-dd') : '';
+
+  // Get attendance records for selected date
+  const todayRecords = useMemo(() => {
+    return state.attendanceRecords.filter(r => r.date === selectedDateStr);
+  }, [state.attendanceRecords, selectedDateStr]);
+
+  // Compute class-wise attendance for selected date
+  const classAttendanceData = useMemo(() => {
+    return state.classes.map(cls => {
+      const record = todayRecords.find(r => r.classId === cls.id);
+      if (record) {
+        const total = record.presentCount + record.absentCount + record.lateCount;
+        const percentage = total > 0 ? ((record.presentCount / total) * 100) : 0;
+        return {
+          classId: cls.id,
+          className: `${cls.grade}-${cls.section}`,
+          present: record.presentCount,
+          absent: record.absentCount,
+          late: record.lateCount,
+          total,
+          percentage: Math.round(percentage * 10) / 10,
+        };
+      }
+      // If no record, compute from students in class
+      const studentsInClass = state.students.filter(s => s.classId === cls.id);
+      const total = studentsInClass.length;
+      return {
+        classId: cls.id,
+        className: `${cls.grade}-${cls.section}`,
+        present: 0,
+        absent: total,
+        late: 0,
+        total,
+        percentage: 0,
+      };
+    }).filter(cls => selectedClass === 'all' || cls.className === selectedClass);
+  }, [todayRecords, state.classes, state.students, selectedClass]);
+
+  // Compute overall stats
+  const stats = useMemo(() => {
+    const totalPresent = classAttendanceData.reduce((sum, c) => sum + c.present, 0);
+    const totalAbsent = classAttendanceData.reduce((sum, c) => sum + c.absent, 0);
+    const totalLate = classAttendanceData.reduce((sum, c) => sum + c.late, 0);
+    const totalStudents = classAttendanceData.reduce((sum, c) => sum + c.total, 0);
+    const overallPercentage = totalStudents > 0 ? ((totalPresent / totalStudents) * 100) : 0;
+    return { totalPresent, totalAbsent, totalLate, totalStudents, overallPercentage: Math.round(overallPercentage * 10) / 10 };
+  }, [classAttendanceData]);
+
+  // Compute weekly trend (last 5 weekdays)
+  const weeklyTrend = useMemo(() => {
+    const days = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri'];
+    const today = new Date();
+    const trend = [];
+    
+    for (let i = 4; i >= 0; i--) {
+      const date = new Date(today);
+      date.setDate(date.getDate() - i);
+      const dateStr = format(date, 'yyyy-MM-dd');
+      const dayRecords = state.attendanceRecords.filter(r => r.date === dateStr);
+      
+      if (dayRecords.length > 0) {
+        const totalPresent = dayRecords.reduce((sum, r) => sum + r.presentCount, 0);
+        const totalStudents = dayRecords.reduce((sum, r) => sum + r.presentCount + r.absentCount + r.lateCount, 0);
+        const attendance = totalStudents > 0 ? Math.round((totalPresent / totalStudents) * 100) : 0;
+        trend.push({ day: days[4 - i], attendance });
+      } else {
+        trend.push({ day: days[4 - i], attendance: 0 });
+      }
+    }
+    
+    return trend;
+  }, [state.attendanceRecords]);
 
   return (
     <AdminDashboardLayout 
@@ -63,7 +120,7 @@ const AdminAttendance = () => {
                 <Users className="w-6 h-6 text-primary" />
               </div>
               <div>
-                <div className="text-2xl font-bold">{overallPercentage}%</div>
+                <div className="text-2xl font-bold">{stats.overallPercentage}%</div>
                 <div className="text-sm text-muted-foreground">Overall Attendance</div>
               </div>
             </CardContent>
@@ -74,7 +131,7 @@ const AdminAttendance = () => {
                 <UserCheck className="w-6 h-6 text-green-600" />
               </div>
               <div>
-                <div className="text-2xl font-bold">{totalPresent}</div>
+                <div className="text-2xl font-bold">{stats.totalPresent}</div>
                 <div className="text-sm text-muted-foreground">Present Today</div>
               </div>
             </CardContent>
@@ -85,7 +142,7 @@ const AdminAttendance = () => {
                 <UserX className="w-6 h-6 text-red-600" />
               </div>
               <div>
-                <div className="text-2xl font-bold">{totalAbsent}</div>
+                <div className="text-2xl font-bold">{stats.totalAbsent}</div>
                 <div className="text-sm text-muted-foreground">Absent Today</div>
               </div>
             </CardContent>
@@ -96,7 +153,7 @@ const AdminAttendance = () => {
                 <Clock className="w-6 h-6 text-amber-600" />
               </div>
               <div>
-                <div className="text-2xl font-bold">{totalLate}</div>
+                <div className="text-2xl font-bold">{stats.totalLate}</div>
                 <div className="text-sm text-muted-foreground">Late Arrivals</div>
               </div>
             </CardContent>
@@ -123,10 +180,11 @@ const AdminAttendance = () => {
                   </SelectTrigger>
                   <SelectContent>
                     <SelectItem value="all">All Classes</SelectItem>
-                    <SelectItem value="9-A">Class 9-A</SelectItem>
-                    <SelectItem value="9-B">Class 9-B</SelectItem>
-                    <SelectItem value="10-A">Class 10-A</SelectItem>
-                    <SelectItem value="10-B">Class 10-B</SelectItem>
+                    {state.classes.map(cls => (
+                      <SelectItem key={cls.id} value={`${cls.grade}-${cls.section}`}>
+                        Class {cls.grade}-{cls.section}
+                      </SelectItem>
+                    ))}
                   </SelectContent>
                 </Select>
                 <Button className="w-full gap-2 bg-primary hover:bg-primary/90">
@@ -152,37 +210,47 @@ const AdminAttendance = () => {
             </CardHeader>
             <CardContent>
               <div className="space-y-4">
-                {classAttendanceData.map((cls) => (
-                  <div key={cls.class} className="p-4 rounded-xl bg-muted/30 hover:bg-muted/50 transition-colors">
-                    <div className="flex items-center justify-between mb-3">
-                      <div className="flex items-center gap-3">
-                        <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center">
-                          <Users className="w-5 h-5 text-primary" />
-                        </div>
-                        <div>
-                          <div className="font-medium">Class {cls.class}</div>
-                          <div className="text-sm text-muted-foreground">{cls.total} students</div>
-                        </div>
-                      </div>
-                      <Badge 
-                        className={cls.percentage >= 90 
-                          ? 'bg-green-100 text-green-700 hover:bg-green-100' 
-                          : cls.percentage >= 80 
-                            ? 'bg-amber-100 text-amber-700 hover:bg-amber-100'
-                            : 'bg-red-100 text-red-700 hover:bg-red-100'
-                        }
-                      >
-                        {cls.percentage}%
-                      </Badge>
-                    </div>
-                    <Progress value={cls.percentage} className="h-2 mb-2" />
-                    <div className="flex gap-4 text-sm">
-                      <span className="text-green-600">✓ {cls.present} Present</span>
-                      <span className="text-red-600">✗ {cls.absent} Absent</span>
-                      <span className="text-amber-600">⏱ {cls.late} Late</span>
-                    </div>
+                {classAttendanceData.length === 0 ? (
+                  <div className="text-center py-8 text-muted-foreground">
+                    No attendance data for selected date
                   </div>
-                ))}
+                ) : (
+                  classAttendanceData.map((cls) => (
+                    <div 
+                      key={cls.classId} 
+                      className="p-4 rounded-xl bg-muted/30 hover:bg-muted/50 transition-colors cursor-pointer"
+                      onClick={() => navigate(`/admin/classes/${cls.classId}`)}
+                    >
+                      <div className="flex items-center justify-between mb-3">
+                        <div className="flex items-center gap-3">
+                          <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center">
+                            <Users className="w-5 h-5 text-primary" />
+                          </div>
+                          <div>
+                            <div className="font-medium">Class {cls.className}</div>
+                            <div className="text-sm text-muted-foreground">{cls.total} students</div>
+                          </div>
+                        </div>
+                        <Badge 
+                          className={cls.percentage >= 90 
+                            ? 'bg-green-100 text-green-700 hover:bg-green-100' 
+                            : cls.percentage >= 80 
+                              ? 'bg-amber-100 text-amber-700 hover:bg-amber-100'
+                              : 'bg-red-100 text-red-700 hover:bg-red-100'
+                          }
+                        >
+                          {cls.percentage}%
+                        </Badge>
+                      </div>
+                      <Progress value={cls.percentage} className="h-2 mb-2" />
+                      <div className="flex gap-4 text-sm">
+                        <span className="text-green-600">✓ {cls.present} Present</span>
+                        <span className="text-red-600">✗ {cls.absent} Absent</span>
+                        <span className="text-amber-600">⏱ {cls.late} Late</span>
+                      </div>
+                    </div>
+                  ))
+                )}
               </div>
             </CardContent>
           </Card>
