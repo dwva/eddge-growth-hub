@@ -38,7 +38,7 @@ export function CurriculumSelector3Col({
   const topicList = subjectId && chapterId ? getTopicsForChapter(subjectId, chapterId) : [];
 
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 w-full flex-1 min-h-[55vh]">
+    <div className="grid grid-cols-1 md:grid-cols-3 gap-6 w-full flex-1 min-h-[55vh]">
       {/* Subjects */}
       <Card className="rounded-2xl border border-gray-200 shadow-sm flex flex-col min-h-full">
         <CardContent className="p-6 flex flex-col flex-1 min-h-0">

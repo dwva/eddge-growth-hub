@@ -115,7 +115,7 @@ const StudentHomework = () => {
     <StudentDashboardLayout title="Homework">
       <div className="space-y-6">
         {/* Stats Overview – compact KPIs for quick status glance */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-5">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 md:gap-5">
           <Card className="h-full rounded-2xl border border-amber-200 bg-background/80 shadow-sm">
             <CardContent className="p-4 md:p-5 flex items-center gap-3 md:gap-4">
               <div className="relative flex h-11 w-11 md:h-12 md:w-12 items-center justify-center rounded-xl bg-amber-50">

@@ -68,7 +68,7 @@ const StudentHome = () => {
         <div className="space-y-6 pb-10">
           
           {/* Hero Row: Focus Card + Stats Card */}
-          <div className="grid grid-cols-1 lg:grid-cols-[1fr_360px] gap-4 items-stretch">
+          <div className="grid grid-cols-1 md:grid-cols-[minmax(0,1.4fr)_minmax(0,1fr)] lg:grid-cols-[1fr_360px] gap-4 items-stretch">
             
             {/* Hero Card - Exam countdown + daily plan (flexible width) */}
             <Card className="relative overflow-hidden border-0 dark:border dark:border-white/10 shadow-sm rounded-3xl bg-gradient-to-br from-primary via-primary to-purple-700 min-w-0">
@@ -196,7 +196,7 @@ const StudentHome = () => {
           </div>
 
           {/* Main Content Grid - Left (Quick actions + Contributions) + Right (AI Study Suggestions) */}
-          <div className="grid grid-cols-1 lg:grid-cols-[1fr_340px] gap-6 items-stretch">
+          <div className="grid grid-cols-1 md:grid-cols-[minmax(0,1.4fr)_minmax(0,1fr)] lg:grid-cols-[1fr_340px] gap-6 items-stretch">
             
             {/* Left Column - Quick actions then Contribution heatmap (where Continue Learn was) */}
             <div className="flex flex-col gap-6">
