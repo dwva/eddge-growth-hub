@@ -152,6 +152,65 @@ const achievements: Achievement[] = [
   { id: 'revision-ready', title: 'Revision Ready', description: 'Completed a full revision cycle.', icon: <Trophy className="w-6 h-6" />, earned: false },
 ];
 
+// XP and level spine (mocked)
+const CURRENT_LEVEL = 4;
+const CURRENT_LEVEL_LABEL = 'Focused learner';
+const CURRENT_XP = 1280;
+const NEXT_LEVEL_XP = 1600;
+const XP_PROGRESS_PCT = Math.round((CURRENT_XP / NEXT_LEVEL_XP) * 100);
+
+type XpCheckpoint = {
+  id: string;
+  label: string;
+  reason: string;
+  xp: number;
+  unlocked: boolean;
+};
+
+const XP_CHECKPOINTS: XpCheckpoint[] = [
+  {
+    id: 'first-steps',
+    label: 'First Steps',
+    reason: 'Completed your first learning topic.',
+    xp: 200,
+    unlocked: true,
+  },
+  {
+    id: 'week-warrior',
+    label: 'Week Warrior',
+    reason: 'Maintained a 7-day consistency streak.',
+    xp: 600,
+    unlocked: true,
+  },
+  {
+    id: 'concept-clarity',
+    label: 'Concept Clarity',
+    reason: 'Improved accuracy after revision on a weak topic.',
+    xp: 1100,
+    unlocked: false,
+  },
+  {
+    id: 'exam-ready',
+    label: 'Exam Ready',
+    reason: 'Target line for Level 5.',
+    xp: NEXT_LEVEL_XP,
+    unlocked: false,
+  },
+];
+
+// Grouping by meaning
+const consistencyAchievements = achievements.filter((a) =>
+  ['first-steps', 'week-warrior', 'consistency-builder', 'back-on-track'].includes(a.id),
+);
+
+const qualityAchievements = achievements.filter((a) =>
+  ['concept-clarity', 'doubt-crusher', 'weak-to-strong', 'xp-explorer'].includes(a.id),
+);
+
+const examAchievements = achievements.filter((a) =>
+  ['chapter-champion', 'planner-pro', 'revision-ready', 'century-club'].includes(a.id),
+);
+
 function progressLabel(progress: number): string {
   if (progress >= 80) return 'Almost ready';
   if (progress >= 60) return 'More than halfway there';
@@ -167,7 +226,7 @@ function AchievementCard({ a }: { a: Achievement }) {
       className={cn(
         'rounded-2xl border transition-all duration-200',
         earned
-          ? 'border-emerald-200/60 dark:border-emerald-800/40 bg-emerald-50/40 dark:bg-emerald-950/25 shadow-sm hover:shadow-md'
+          ? 'border-emerald-200/60 dark:border-emerald-800/40 bg-emerald-50/40 dark:bg-emerald-950/25 shadow-sm'
           : 'border-gray-200 dark:border-border bg-card shadow-sm hover:shadow-md hover:border-gray-300/80 dark:hover:border-border'
       )}
     >
@@ -178,9 +237,9 @@ function AchievementCard({ a }: { a: Achievement }) {
         <h3 className="font-semibold text-foreground text-sm">{a.title}</h3>
         <p className="text-xs text-muted-foreground mt-1 leading-relaxed">{a.description}</p>
         {earned ? (
-          <Button size="sm" variant="secondary" className="mt-4 h-8 text-emerald-700 dark:text-emerald-300 bg-emerald-100 dark:bg-emerald-900/50 hover:bg-emerald-200/50 dark:hover:bg-emerald-800/50 border-0 rounded-lg" disabled>
-            Unlocked!
-          </Button>
+          <p className="mt-3 inline-flex items-center text-[11px] font-semibold text-emerald-700 dark:text-emerald-300">
+            ✓ Unlocked
+          </p>
         ) : (
           <>
             <p className="text-[11px] text-muted-foreground mt-3 leading-relaxed">You'll unlock this as you continue learning. No rush.</p>
@@ -212,17 +271,19 @@ function AchievementCard({ a }: { a: Achievement }) {
   return card;
 }
 
-// Show first 9 in grid (3x3); can extend to 12 with same layout
+// Recently earned badges
 const displayedAchievements = achievements.slice(0, 9);
 const unlockedInGrid = displayedAchievements.filter((a) => a.earned).length;
-const earnedForBadges = achievements.filter((a) => a.earned).slice(0, 6); // Moments You Earned
+const earnedForBadges = achievements.filter((a) => a.earned).slice(0, 5);
 
 function MomentsYouEarned() {
   return (
     <div className="space-y-4">
       <div>
-        <h3 className="text-base font-semibold text-foreground">Moments You Earned</h3>
-        <p className="text-xs text-muted-foreground mt-1">Each moment reflects a behavior that helped your learning — not what you &quot;won&quot;.</p>
+        <h3 className="text-base font-semibold text-foreground">Recently earned</h3>
+        <p className="text-xs text-muted-foreground mt-1">
+          A calm view of what you&apos;ve unlocked recently — behaviours that support your exam readiness.
+        </p>
       </div>
       {earnedForBadges.length > 0 ? (
         <div className="flex flex-wrap gap-5 pt-1">
@@ -253,77 +314,148 @@ function MomentsYouEarned() {
 }
 
 const StudentAchievements = () => {
-  const [sortBy, setSortBy] = useState<'default' | 'progress' | 'earned-first'>('default');
-  const [showFilter, setShowFilter] = useState<'all' | 'earned' | 'in-progress'>('all');
-
-  const filtered = [...displayedAchievements].filter((a) => {
-    if (showFilter === 'earned') return a.earned;
-    if (showFilter === 'in-progress') return !a.earned;
-    return true;
-  });
-
-  const sorted = [...filtered].sort((x, y) => {
-    if (sortBy === 'earned-first') return (x.earned ? 0 : 1) - (y.earned ? 0 : 1);
-    if (sortBy === 'progress') return (y.progress ?? 0) - (x.progress ?? 0);
-    return 0;
-  });
+  const totalEarned = achievements.filter((a) => a.earned).length;
 
   return (
     <TooltipProvider>
       <StudentDashboardLayout title="Achievements">
-        <div className="space-y-8 pb-12">
-          <div>
-            <p className="text-sm text-muted-foreground max-w-xl">Track your progress and celebrate your wins.</p>
-          </div>
-          <StatsBar />
+        <div className="space-y-8 pb-12 max-w-6xl mx-auto px-4 md:px-0">
+          {/* XP spine */}
+          <section>
+            <Card className="rounded-2xl border border-border bg-card shadow-sm overflow-hidden">
+              <CardContent className="p-6 space-y-4">
+                <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-3">
+                  <div>
+                    <p className="text-sm font-semibold text-foreground">
+                      Level {CURRENT_LEVEL} · {CURRENT_LEVEL_LABEL}
+                    </p>
+                    <p className="text-xs text-muted-foreground mt-1">
+                      Progress to Level {CURRENT_LEVEL + 1}
+                    </p>
+                  </div>
+                  <p className="text-xs text-muted-foreground">
+                    XP is quality-weighted — driven by revision, improvement, and fixing mistakes.
+                  </p>
+                </div>
+                <div className="relative w-full h-3 rounded-full bg-muted overflow-hidden">
+                  <div
+                    className="absolute inset-y-0 left-0 rounded-full bg-gradient-to-r from-indigo-500 via-purple-500 to-fuchsia-500"
+                    style={{ width: `${XP_PROGRESS_PCT}%` }}
+                  />
+                  {/* checkpoint markers */}
+                  {XP_CHECKPOINTS.map((cp) => {
+                    const left = (cp.xp / NEXT_LEVEL_XP) * 100;
+                    const isPast = cp.unlocked;
+                    return (
+                      <Tooltip key={cp.id}>
+                        <TooltipTrigger asChild>
+                          <button
+                            type="button"
+                            className="absolute -top-1.5"
+                            style={{ left: `calc(${left}% - 8px)` }}
+                          >
+                            <span
+                              className={cn(
+                                'block w-4 h-4 rounded-full border-2 bg-card',
+                                isPast
+                                  ? 'border-emerald-500'
+                                  : 'border-muted-foreground/40',
+                              )}
+                            />
+                          </button>
+                        </TooltipTrigger>
+                        <TooltipContent side="top" className="max-w-xs">
+                          <p className="text-xs font-medium">{cp.label}</p>
+                          <p className="text-[11px] text-muted-foreground mt-0.5">
+                            {cp.reason}
+                          </p>
+                        </TooltipContent>
+                      </Tooltip>
+                    );
+                  })}
+                </div>
+              </CardContent>
+            </Card>
+          </section>
 
-          {/* Your Learning Journey */}
-          <section className="space-y-5">
-            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-              <h2 className="text-xl font-semibold text-foreground tracking-tight">Your Learning Journey</h2>
-              <div className="flex flex-wrap items-center gap-4 text-sm">
-                <span className="flex items-center gap-2">
-                  <span className="text-muted-foreground text-xs font-medium uppercase tracking-wider">Sort</span>
-                  <div className="flex rounded-full bg-muted/60 p-0.5 gap-0.5">
-                    {(['default', 'progress', 'earned-first'] as const).map((s) => (
-                      <Button
-                        key={s}
-                        variant={sortBy === s ? 'secondary' : 'ghost'}
-                        size="sm"
-                        className={cn('h-7 text-xs rounded-full', sortBy === s && 'shadow-sm')}
-                        onClick={() => setSortBy(s)}
-                      >
-                        {s === 'default' ? 'Default' : s === 'progress' ? 'Progress' : 'Earned first'}
-                      </Button>
-                    ))}
-                  </div>
-                </span>
-                <span className="flex items-center gap-2">
-                  <span className="text-muted-foreground text-xs font-medium uppercase tracking-wider">Show</span>
-                  <div className="flex rounded-full bg-muted/60 p-0.5 gap-0.5">
-                    {(['all', 'earned', 'in-progress'] as const).map((f) => (
-                      <Button
-                        key={f}
-                        variant={showFilter === f ? 'secondary' : 'ghost'}
-                        size="sm"
-                        className={cn('h-7 text-xs rounded-full', showFilter === f && 'shadow-sm')}
-                        onClick={() => setShowFilter(f)}
-                      >
-                        {f === 'all' ? 'All' : f === 'earned' ? 'Earned' : 'In progress'}
-                      </Button>
-                    ))}
-                  </div>
-                </span>
-                <span className="text-muted-foreground text-xs tabular-nums">{unlockedInGrid} of {displayedAchievements.length} unlocked</span>
-              </div>
+          {/* Learning summary */}
+          <section className="grid grid-cols-1 md:grid-cols-3 gap-3">
+            <Card className="rounded-2xl border border-border bg-card shadow-sm">
+              <CardContent className="p-4">
+                <p className="text-xs font-semibold uppercase text-muted-foreground">
+                  Learning level
+                </p>
+                <p className="mt-1 text-sm font-medium text-foreground">
+                  Level {CURRENT_LEVEL} · {CURRENT_LEVEL_LABEL}
+                </p>
+              </CardContent>
+            </Card>
+            <Card className="rounded-2xl border border-border bg-card shadow-sm">
+              <CardContent className="p-4">
+                <p className="text-xs font-semibold uppercase text-muted-foreground">
+                  Consistency state
+                </p>
+                <p className="mt-1 text-sm font-medium text-foreground">
+                  Building a steady streak
+                </p>
+              </CardContent>
+            </Card>
+            <Card className="rounded-2xl border border-border bg-card shadow-sm">
+              <CardContent className="p-4">
+                <p className="text-xs font-semibold uppercase text-muted-foreground">
+                  Total achievements earned
+                </p>
+                <p className="mt-1 text-sm font-medium text-foreground">
+                  {totalEarned} badges unlocked so far
+                </p>
+              </CardContent>
+            </Card>
+          </section>
+
+          {/* Grouped achievements */}
+          <section className="space-y-6">
+            <div className="space-y-1">
+              <h2 className="text-lg font-semibold text-foreground">Consistency & discipline</h2>
+              <p className="text-sm text-muted-foreground">
+                Badges that recognise how regularly you show up and stay on track.
+              </p>
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-              {sorted.map((a) => (
+              {consistencyAchievements.map((a) => (
                 <AchievementCard key={a.id} a={a} />
               ))}
             </div>
           </section>
 
+          <section className="space-y-6">
+            <div className="space-y-1">
+              <h2 className="text-lg font-semibold text-foreground">Learning quality</h2>
+              <p className="text-sm text-muted-foreground">
+                Evidence that you&apos;re building deep understanding and fixing weak spots.
+              </p>
+            </div>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+              {qualityAchievements.map((a) => (
+                <AchievementCard key={a.id} a={a} />
+              ))}
+            </div>
+          </section>
+
+          <section className="space-y-6">
+            <div className="space-y-1">
+              <h2 className="text-lg font-semibold text-foreground">Exam readiness</h2>
+              <p className="text-sm text-muted-foreground">
+                Badges that align directly with your chapter coverage and exam-style practice.
+              </p>
+            </div>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+              {examAchievements.map((a) => (
+                <AchievementCard key={a.id} a={a} />
+              ))}
+            </div>
+          </section>
+
+          {/* Recently earned */}
           <Card className="rounded-2xl border border-gray-200/90 dark:border-border bg-gray-50/50 dark:bg-muted/20 shadow-sm overflow-hidden">
             <CardContent className="p-6 sm:p-8">
               <MomentsYouEarned />

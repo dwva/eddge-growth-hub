@@ -124,17 +124,17 @@ const StudentHome = () => {
             </Card>
 
             {/* Stats Card - Learning momentum (compact) */}
-            <Card className="relative overflow-hidden border-0 shadow-sm rounded-3xl bg-white dark:bg-card dark:border dark:border-border min-w-0">
+            <Card className="relative overflow-hidden border-0 shadow-sm rounded-3xl bg-gradient-to-br from-purple-600 via-primary to-purple-700 text-white min-w-0">
               <CardContent className="relative p-8 h-full min-h-[200px] flex flex-col">
                 <div className="flex h-full gap-6">
                   {/* Left block – streak, XP, level */}
                   <div className="flex-1 flex flex-col justify-between">
                     {/* Primary metric – streak */}
                     <div className="mt-2">
-                      <p className="text-3xl font-semibold text-gray-900 dark:text-foreground">
+                      <p className="text-3xl font-semibold text-white">
                         7-day streak
                       </p>
-                      <p className="text-xs text-gray-500 dark:text-muted-foreground mt-1 flex items-center gap-1">
+                      <p className="text-xs text-white/80 mt-1 flex items-center gap-1">
                         <span aria-hidden="true">🔥</span>
                         <span>Consistency streak</span>
                       </p>
@@ -142,17 +142,17 @@ const StudentHome = () => {
 
                     {/* XP progress */}
                     <div className="mt-6 space-y-1.5">
-                      <div className="flex items-center justify-between text-[11px] text-gray-600 dark:text-muted-foreground">
+                      <div className="flex items-center justify-between text-[11px] text-white/80">
                         <span>XP toward next level</span>
                         <span>68%</span>
                       </div>
-                      <div className="h-2.5 w-full rounded-full bg-gray-100 dark:bg-muted overflow-hidden">
+                      <div className="h-2.5 w-full rounded-full bg-white/20 overflow-hidden">
                         <div
                           className="h-full rounded-full bg-gradient-to-r from-purple-500 via-violet-500 to-fuchsia-500"
                           style={{ width: '68%' }}
                         />
                       </div>
-                      <p className="text-[10px] text-gray-500 dark:text-muted-foreground">
+                      <p className="text-[10px] text-white/80">
                         Based on quality-weighted practice & revision
                       </p>
                     </div>

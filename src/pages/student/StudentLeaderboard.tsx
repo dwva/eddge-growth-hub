@@ -8,7 +8,6 @@ import {
   TooltipTrigger,
 } from '@/components/ui/tooltip';
 import {
-  ArrowLeft,
   Trophy,
   Crown,
   Medal,
