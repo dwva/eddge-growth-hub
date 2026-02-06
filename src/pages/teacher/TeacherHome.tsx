@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import TeacherDashboardLayout from '@/components/layout/TeacherDashboardLayout';
 import { useTeacherMode } from '@/contexts/TeacherModeContext';
@@ -14,10 +15,146 @@ import {
   ArrowRight, Crown, Clock, Bell, CheckCircle2, FileText, ChevronRight,
   Target, Zap, Activity, GraduationCap, Plus
 } from 'lucide-react';
-import { 
-  upcomingEvents, messagesOverview, behaviourNotes, classAnalyticsData, 
-  recentActivities, topPerformers, subjectClasses, chapters, assessments, teacherTasks, parentEngagementData
+import {
+  upcomingEvents,
+  messagesOverview,
+  behaviourNotes,
+  classAnalyticsData,
+  recentActivities,
+  topPerformers,
+  subjectClasses,
+  chapters,
+  assessments,
+  teacherTasks,
+  parentEngagementData,
 } from '@/data/teacherMockData';
+import {
+  Area,
+  AreaChart,
+  CartesianGrid,
+  ReferenceLine,
+  ResponsiveContainer,
+  Tooltip,
+  XAxis,
+  YAxis,
+} from 'recharts';
+
+type ClassSummaryRange = '30' | '60' | '90';
+
+const CLASS_SUMMARY_DATA: Record<ClassSummaryRange, { label: string; value: number }[]> = {
+  '30': classAnalyticsData.performanceTrend.map((p, idx) => ({
+    label: `W${idx + 1}`,
+    value: p.score,
+  })),
+  '60': [
+    { label: 'W1', value: 66 },
+    { label: 'W2', value: 68 },
+    { label: 'W3', value: 71 },
+    { label: 'W4', value: 73 },
+    { label: 'W5', value: 75 },
+    { label: 'W6', value: 76 },
+  ],
+  '90': [
+    { label: 'M1', value: 70 },
+    { label: 'M2', value: 72 },
+    { label: 'M3', value: 74 },
+    { label: 'M4', value: 76 },
+    { label: 'M5', value: 75 },
+    { label: 'M6', value: 73 },
+  ],
+};
+
+const CLASS_SUMMARY_COLOR = '#4f46e5';
+
+function ClassPerformanceSummary() {
+  const [range, setRange] = useState<ClassSummaryRange>('30');
+  const data = CLASS_SUMMARY_DATA[range];
+
+  return (
+    <Card className="rounded-lg md:rounded-2xl border-0 shadow-sm bg-white">
+      <CardHeader className="flex flex-row items-center justify-between pb-2 md:pb-3 px-3 md:px-5">
+        <div>
+          <CardTitle className="text-xs md:text-sm font-bold text-gray-900">Class Performance Summary</CardTitle>
+          <p className="text-[9px] md:text-[10px] text-gray-500 mt-0.5">
+            Average scores across the class over the last {range} days.
+          </p>
+        </div>
+        <div className="inline-flex items-center rounded-full bg-gray-100 p-0.5">
+          {(['30', '60', '90'] as ClassSummaryRange[]).map((opt) => {
+            const isActive = range === opt;
+            return (
+              <button
+                key={opt}
+                type="button"
+                onClick={() => setRange(opt)}
+                className={cn(
+                  'px-2.5 md:px-3 py-1 text-[9px] md:text-[10px] rounded-full font-medium transition-colors',
+                  isActive
+                    ? 'bg-white text-primary shadow-sm'
+                    : 'text-gray-500 hover:text-gray-900 hover:bg-white/70',
+                )}
+              >
+                {opt}D
+              </button>
+            );
+          })}
+        </div>
+      </CardHeader>
+      <CardContent className="pt-0 pb-3 md:pb-4 px-3 md:px-5">
+        <div className="h-48 md:h-56">
+          <ResponsiveContainer width="100%" height="100%">
+            <AreaChart data={data} margin={{ top: 8, right: 8, left: -16, bottom: 0 }}>
+              <defs>
+                <linearGradient id="classSummaryFill" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="0%" stopColor={CLASS_SUMMARY_COLOR} stopOpacity={0.3} />
+                  <stop offset="100%" stopColor={CLASS_SUMMARY_COLOR} stopOpacity={0.02} />
+                </linearGradient>
+              </defs>
+              <CartesianGrid strokeDasharray="3 3" stroke="#eef2ff" vertical={false} />
+              <XAxis
+                dataKey="label"
+                tick={{ fontSize: 10, fill: '#9ca3af' }}
+                axisLine={false}
+                tickLine={false}
+              />
+              <YAxis
+                domain={[60, 100]}
+                tick={{ fontSize: 10, fill: '#9ca3af' }}
+                axisLine={false}
+                tickLine={false}
+                tickFormatter={(v) => `${v}`}
+              />
+              <Tooltip
+                contentStyle={{
+                  borderRadius: 8,
+                  border: '1px solid #e5e7eb',
+                  fontSize: 12,
+                }}
+                formatter={(value: number) => [`${value}`, 'Avg score']}
+              />
+              <ReferenceLine
+                y={75}
+                stroke="#e5e7eb"
+                strokeDasharray="4 4"
+                ifOverflow="extendDomain"
+              />
+              <Area
+                type="natural"
+                dataKey="value"
+                stroke={CLASS_SUMMARY_COLOR}
+                strokeWidth={2}
+                fill="url(#classSummaryFill)"
+                dot={{ r: 2 }}
+                activeDot={{ r: 3 }}
+                isAnimationActive={false}
+              />
+            </AreaChart>
+          </ResponsiveContainer>
+        </div>
+      </CardContent>
+    </Card>
+  );
+}
 
 const ClassTeacherModeView = () => {
   const navigate = useNavigate();
@@ -91,8 +228,8 @@ const ClassTeacherModeView = () => {
         <div className="absolute bottom-0 left-0 -mb-10 -ml-10 w-40 h-40 bg-white/5 rounded-full blur-3xl" />
       </div>
 
-      {/* Quick Actions - Horizontal Compact Row */}
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
+      {/* Quick Actions - Horizontal Row (larger cards) */}
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4">
         {[
           { label: 'Attendance', icon: CheckCircle2, path: '/teacher/my-class/attendance', desc: 'Daily records' },
           { label: 'Students', icon: Users, path: '/teacher/my-class/students', desc: 'Class roster' },
@@ -102,14 +239,14 @@ const ClassTeacherModeView = () => {
           <button
             key={action.label}
             onClick={() => navigate(action.path)}
-            className="flex items-center gap-2 md:gap-2.5 p-2 md:p-2.5 bg-white rounded-lg md:rounded-xl shadow-sm hover:shadow-md active:scale-[0.98] transition-all group"
+            className="flex items-center gap-3 md:gap-3.5 p-3 md:p-4 h-20 md:h-24 bg-white rounded-xl md:rounded-2xl shadow-md hover:shadow-lg active:scale-[0.98] transition-all group"
           >
-            <div className="w-6 h-6 md:w-7 md:h-7 rounded-lg bg-primary/10 flex items-center justify-center group-hover:scale-110 transition-transform flex-shrink-0">
-              <action.icon className="w-3 h-3 md:w-3.5 md:h-3.5 text-primary" />
+            <div className="w-8 h-8 md:w-10 md:h-10 rounded-xl bg-primary/10 flex items-center justify-center group-hover:scale-110 transition-transform flex-shrink-0">
+              <action.icon className="w-4 h-4 md:w-5 md:h-5 text-primary" />
             </div>
             <div className="text-left min-w-0">
-              <span className="text-[9px] md:text-[10px] font-bold text-gray-900 block">{action.label}</span>
-              <span className="text-[7px] md:text-[8px] text-gray-500 hidden sm:block">{action.desc}</span>
+              <span className="text-[10px] md:text-sm font-semibold text-gray-900 block">{action.label}</span>
+              <span className="text-[8px] md:text-xs text-gray-500 hidden sm:block">{action.desc}</span>
             </div>
           </button>
         ))}
@@ -244,6 +381,9 @@ const ClassTeacherModeView = () => {
         </Card>
       </div>
 
+      {/* Class Performance Summary - 30D / 60D / 90D */}
+      <ClassPerformanceSummary />
+
         {/* (Academic Performance + Action Required grid removed as requested) */}
     </div>
   );
@@ -267,7 +407,7 @@ const SubjectTeacherModeView = () => {
       {/* Hero Cards Row */}
       <div className="grid grid-cols-1 gap-3">
         {/* AI Tools Card - Full Width */}
-        <Card className="bg-gradient-to-br from-blue-50 to-purple-50 border-0 shadow-sm rounded-xl md:rounded-2xl overflow-hidden relative">
+        <Card className="bg-gradient-to-br from-purple-100 via-violet-100 to-fuchsia-100 border border-purple-200/60 shadow-md rounded-xl md:rounded-2xl overflow-hidden relative">
           <CardContent className="p-4 md:p-6 relative z-10">
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 md:gap-6">
               {/* Left: Main Content */}
