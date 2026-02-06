@@ -178,39 +178,39 @@ const StudentLeaderboard = () => {
 
             {/* Your Rank card */}
             <Card className="border border-primary/20 bg-gradient-to-r from-indigo-600 to-purple-600 text-primary-foreground shadow-sm">
-              <CardContent className="p-4 md:p-6 flex flex-col gap-3">
+              <CardContent className="p-5 md:p-7 flex flex-col gap-4">
                 <div className="flex items-center justify-between gap-4">
-                  <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center text-sm font-semibold">
+                  <div className="flex items-center gap-4">
+                    <div className="w-12 h-12 md:w-14 md:h-14 rounded-full bg-white/15 flex items-center justify-center text-base md:text-lg font-semibold">
                       YO
                     </div>
                     <div>
-                      <p className="text-sm font-medium">
+                      <p className="text-sm md:text-base font-medium">
                         Your Rank in {scopeLabel}
                       </p>
-                      <p className="text-2xl font-semibold leading-tight">
+                      <p className="text-3xl md:text-4xl font-semibold leading-tight">
                         #{sorted.findIndex((e) => e.isYou) + 1 || '—'}
                       </p>
                     </div>
                   </div>
                   <div className="text-right space-y-1">
-                    <p className="text-xs uppercase tracking-wide opacity-80">Level</p>
-                    <p className="text-sm font-semibold">Level {you.level}</p>
-                    <p className="text-xs mt-1 opacity-80">{you.streak} day streak</p>
+                    <p className="text-xs md:text-sm uppercase tracking-wide opacity-80">Level</p>
+                    <p className="text-sm md:text-base font-semibold">Level {you.level}</p>
+                    <p className="text-xs md:text-sm mt-1 opacity-80">{you.streak} day streak</p>
                   </div>
                 </div>
-                <div className="mt-2 space-y-1.5">
-                  <div className="flex items-center justify-between text-[11px] opacity-90">
+                <div className="mt-3 space-y-1.5">
+                  <div className="flex items-center justify-between text-[11px] md:text-xs opacity-90">
                     <span>{xpToNextRank} XP to next rank</span>
                     <span>({progressPct}% progress)</span>
                   </div>
-                  <div className="h-2.5 w-full rounded-full bg-white/20 overflow-hidden">
+                  <div className="h-3 w-full rounded-full bg-white/20 overflow-hidden">
                     <div
                       className="h-full rounded-full bg-white/80"
                       style={{ width: `${progressPct}%` }}
                     />
                   </div>
-                  <p className="text-[11px] italic opacity-90 mt-0.5">
+                  <p className="text-[11px] md:text-xs italic opacity-90 mt-1">
                     💡 Completing today&apos;s plan can move you up.
                   </p>
                 </div>
@@ -271,38 +271,38 @@ const StudentLeaderboard = () => {
             </section>
 
             {/* How XP is calculated – single widget with toggle */}
-            <section className="mt-3 text-[11px] md:text-xs">
-              <div className="w-full rounded-2xl border border-indigo-100 bg-indigo-50/60 px-4 py-3">
+            <section className="mt-4 text-[12px] md:text-sm">
+              <div className="w-full rounded-2xl border border-indigo-100 bg-indigo-50 px-5 py-4 md:px-6 md:py-5">
                 <button
                   type="button"
                   onClick={() => setShowXpDetails((v) => !v)}
-                  className="w-full flex items-center justify-between text-xs text-indigo-700"
+                  className="w-full flex items-center justify-between text-sm md:text-base text-indigo-800"
                 >
                   <div className="flex items-center gap-2">
-                    <span className="inline-flex h-5 w-5 items-center justify-center rounded-full bg-primary/10 text-primary">
+                    <span className="inline-flex h-7 w-7 md:h-8 md:w-8 items-center justify-center rounded-full bg-primary/10 text-primary text-lg">
                       ⚡
                     </span>
-                    <span className="font-medium">How XP is calculated</span>
+                    <span className="font-semibold">How XP is calculated</span>
                   </div>
-                  <span className="text-[11px] font-medium">
+                  <span className="text-[11px] md:text-xs font-medium">
                     {showXpDetails ? 'Hide' : 'Show'}
                   </span>
                 </button>
                 {showXpDetails && (
-                  <div className="mt-3 pt-2 border-t border-indigo-100 text-muted-foreground space-y-2">
-                    <div className="flex items-center justify-between">
+                  <div className="mt-4 pt-3 border-t border-indigo-100 text-muted-foreground space-y-2.5 md:space-y-3">
+                    <div className="flex items-center justify-between text-xs md:text-sm">
                       <span>Complete daily plan</span>
                       <span className="font-semibold text-primary">+10 XP</span>
                     </div>
-                    <div className="flex items-center justify-between">
+                    <div className="flex items-center justify-between text-xs md:text-sm">
                       <span>Maintain streak</span>
                       <span className="font-semibold text-primary">+5 XP</span>
                     </div>
-                    <div className="flex items-center justify-between">
+                    <div className="flex items-center justify-between text-xs md:text-sm">
                       <span>Test improvement</span>
                       <span className="font-semibold text-primary">+20 XP</span>
                     </div>
-                    <div className="flex items-center justify-between">
+                    <div className="flex items-center justify-between text-xs md:text-sm">
                       <span>Accuracy increase</span>
                       <span className="font-semibold text-primary">+15 XP</span>
                     </div>
@@ -319,80 +319,80 @@ const StudentLeaderboard = () => {
               <Card className="border border-border bg-card shadow-sm">
                 <CardHeader className="pb-2">
                   <CardTitle className="text-sm font-semibold">
-                    Exam Readiness Leaderboard
+                    Overall Performance Leaderboard
                   </CardTitle>
                 </CardHeader>
                 <CardContent className="p-4 pt-3">
                   <div className="space-y-3">
                     {sorted.map((entry, idx) => {
-                    const rank = idx + 1;
-                    let borderClass = 'border-border bg-background';
-                    let badgeBg = 'bg-muted text-muted-foreground';
-                    let RankIcon: React.ComponentType<any> = Trophy;
+                      const rank = idx + 1;
+                      let borderClass = 'border-border bg-background';
+                      let badgeBg = 'bg-muted text-muted-foreground';
+                      let RankIcon: React.ComponentType<any> = Trophy;
 
-                    if (rank === 1) {
-                      borderClass = 'border-yellow-300 bg-gradient-to-r from-yellow-50 to-amber-50';
-                      badgeBg = 'bg-yellow-100 text-yellow-800';
-                      RankIcon = Crown;
-                    } else if (rank === 2) {
-                      borderClass = 'border-gray-300 bg-gradient-to-r from-gray-50 to-slate-50';
-                      badgeBg = 'bg-gray-100 text-gray-700';
-                      RankIcon = Medal;
-                    } else if (rank === 3) {
-                      borderClass = 'border-amber-300 bg-gradient-to-r from-amber-50 to-yellow-50';
-                      badgeBg = 'bg-amber-100 text-amber-800';
-                      RankIcon = Award;
-                    }
+                      if (rank === 1) {
+                        borderClass = 'border-yellow-300 bg-gradient-to-r from-yellow-50 to-amber-50';
+                        badgeBg = 'bg-yellow-100 text-yellow-800';
+                        RankIcon = Crown;
+                      } else if (rank === 2) {
+                        borderClass = 'border-gray-300 bg-gradient-to-r from-gray-50 to-slate-50';
+                        badgeBg = 'bg-gray-100 text-gray-700';
+                        RankIcon = Medal;
+                      } else if (rank === 3) {
+                        borderClass = 'border-amber-300 bg-gradient-to-r from-amber-50 to-yellow-50';
+                        badgeBg = 'bg-amber-100 text-amber-800';
+                        RankIcon = Award;
+                      }
 
-                    const { label, className, icon: MomentumIcon } = momentumChip(entry);
+                      const { label, className, icon: MomentumIcon } = momentumChip(entry);
 
-                    return (
-                      <div
-                        key={entry.id}
-                        className={`flex items-center justify-between gap-3 md:gap-4 rounded-xl border px-3 py-3 md:px-4 md:py-3 cursor-pointer transition hover:shadow-md ${
-                          borderClass
-                        }`}
-                      >
-                        <div className="flex flex-col gap-2">
-                          <div className="flex items-center gap-3 md:gap-4">
-                            <div className={`w-8 h-8 rounded-full flex items-center justify-center ${badgeBg}`}>
-                              <RankIcon className="w-4 h-4" />
-                            </div>
-                            <div className="flex items-center gap-3">
-                              <div className="w-7 h-7 rounded-full bg-muted flex items-center justify-center text-[11px] font-semibold text-muted-foreground">
-                                {entry.name
-                                  .split(' ')
-                                  .map((n) => n[0])
-                                  .join('')
-                                  .toUpperCase()
-                                  .slice(0, 2)}
+                      return (
+                        <div
+                          key={entry.id}
+                          className={`flex items-center justify-between gap-3 md:gap-4 rounded-xl border px-3 py-3 md:px-4 md:py-3 cursor-pointer transition hover:shadow-md ${
+                            borderClass
+                          }`}
+                        >
+                          <div className="flex flex-col gap-2">
+                            <div className="flex items-center gap-3 md:gap-4">
+                              <div className={`w-8 h-8 rounded-full flex items-center justify-center ${badgeBg}`}>
+                                <RankIcon className="w-4 h-4" />
                               </div>
-                              <div>
-                                <p className="text-sm font-medium text-foreground">
-                                  {entry.isYou ? 'You' : entry.name}
-                                </p>
-                                <p className="text-xs text-muted-foreground">
-                                  Level {entry.level}
-                                </p>
+                              <div className="flex items-center gap-3">
+                                <div className="w-7 h-7 rounded-full bg-muted flex items-center justify-center text-[11px] font-semibold text-muted-foreground">
+                                  {entry.name
+                                    .split(' ')
+                                    .map((n) => n[0])
+                                    .join('')
+                                    .toUpperCase()
+                                    .slice(0, 2)}
+                                </div>
+                                <div>
+                                  <p className="text-sm font-medium text-foreground">
+                                    {entry.isYou ? 'You' : entry.name}
+                                  </p>
+                                  <p className="text-xs text-muted-foreground">
+                                    Level {entry.level}
+                                  </p>
+                                </div>
                               </div>
                             </div>
+                            <span
+                              className={`inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[11px] font-medium w-fit ${className}`}
+                            >
+                              <MomentumIcon className="w-3 h-3" />
+                              <span>{label}</span>
+                            </span>
                           </div>
-                          <span
-                            className={`inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[11px] font-medium w-fit ${className}`}
-                          >
-                            <MomentumIcon className="w-3 h-3" />
-                            <span>{label}</span>
-                          </span>
+                          <div className="flex flex-col items-end gap-1 text-xs text-muted-foreground">
+                            <span className="text-sm font-semibold text-foreground">
+                              {entry.xp} XP
+                            </span>
+                            <span>{entry.streak} day streak</span>
+                          </div>
                         </div>
-                        <div className="flex flex-col items-end gap-1 text-xs text-muted-foreground">
-                          <span className="text-sm font-semibold text-foreground">
-                            {entry.xp} XP
-                          </span>
-                          <span>{entry.streak} day streak</span>
-                        </div>
-                      </div>
-                    );
-                  })}
+                      );
+                    })}
                   </div>
                 </CardContent>
               </Card>

@@ -174,7 +174,7 @@ const DashboardLayout = ({ children, navItems, title }: DashboardLayoutProps) =>
         {/* Page Content - Scrollable */}
         <main className="flex-1 p-4 md:p-6 overflow-y-auto">
           {children}
-        </main>
+          </main>
       </div>
     </div>
   );

@@ -175,38 +175,7 @@ const StudentXpDashboard = () => {
           </Card>
         </section>
 
-        {/* ─── 2. Insight Cards ─── */}
-        <section>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            {[
-              {
-                label: 'How You Earn XP',
-                value: 'Learning behaviours',
-                sub: 'XP is awarded for actions that actually improve understanding and exam readiness.',
-              },
-              {
-                label: 'XP Momentum',
-                value: 'Steady growth',
-                sub: 'Consistent XP growth matters more than short bursts of intense study.',
-              },
-              {
-                label: 'Readiness Gain',
-                value: 'Exam boost',
-                sub: 'XP connects to your long-term exam preparation, not short-term points.',
-              },
-            ].map((card) => (
-              <Card key={card.label} className="h-full bg-white rounded-2xl border border-gray-200 shadow-sm">
-                <CardContent className={`h-full ${CARD_PAD} flex flex-col`}>
-                  <p className="text-xs font-bold uppercase tracking-wide text-gray-600 mb-3">{card.label}</p>
-                  <p className="text-2xl font-black text-purple-600 leading-tight">{card.value}</p>
-                  <p className="text-xs text-gray-600 mt-1.5">{card.sub}</p>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
-        </section>
-
-        {/* ─── 3. Earn XP Faster ─── */}
+        {/* ─── 2. Earn XP Faster ─── */}
         <section>
           <Card className="bg-white rounded-2xl border border-gray-200 shadow-sm">
             <CardContent className={`${CARD_PAD} space-y-4`}>
