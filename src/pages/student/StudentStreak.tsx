@@ -56,30 +56,30 @@ const StudentStreak = () => {
           Back to Home
         </Button>
 
-        {/* Hero streak card */}
-        <Card className="rounded-2xl border-0 shadow-lg bg-gradient-to-br from-purple-100 via-violet-100 to-purple-200 dark:from-purple-950/50 dark:via-violet-950/40 dark:to-purple-900/60 border border-purple-200/60 dark:border-purple-800/40 overflow-hidden">
-          <CardContent className="p-8">
-            <div className="flex flex-col sm:flex-row items-center sm:items-start gap-6">
-              <div className="rounded-2xl bg-purple-500/20 p-4 flex-shrink-0">
-                <Flame className="w-14 h-14 text-purple-600 dark:text-purple-400" aria-hidden />
+        {/* Hero streak card – compact */}
+        <Card className="rounded-2xl border-0 shadow-md bg-gradient-to-br from-purple-100 via-violet-100 to-purple-200 dark:from-purple-950/50 dark:via-violet-950/40 dark:to-purple-900/60 border border-purple-200/60 dark:border-purple-800/40 overflow-hidden">
+          <CardContent className="p-5">
+            <div className="flex flex-col sm:flex-row items-center sm:items-start gap-4">
+              <div className="rounded-xl bg-purple-500/20 p-3 flex-shrink-0">
+                <Flame className="w-10 h-10 text-purple-600 dark:text-purple-400" aria-hidden />
               </div>
               <div className="text-center sm:text-left">
-                <h1 className="text-3xl font-bold text-purple-900 dark:text-purple-100">
+                <h1 className="text-2xl font-bold text-purple-900 dark:text-purple-100">
                   {currentStreak}-day streak
                 </h1>
-                <p className="text-purple-600 dark:text-purple-300 mt-1">
+                <p className="text-sm text-purple-600 dark:text-purple-300 mt-0.5">
                   {currentStreak === 0
                     ? 'Complete one activity today to start your streak.'
                     : 'You’re on fire! Keep learning every day to grow your streak.'}
                 </p>
-                <div className="flex flex-wrap justify-center sm:justify-start gap-4 mt-4">
-                  <div className="rounded-xl bg-white/60 dark:bg-white/10 px-4 py-2">
-                    <p className="text-xs text-purple-600 dark:text-purple-400 font-medium">Current</p>
-                    <p className="text-xl font-bold text-purple-900 dark:text-white tabular-nums">{currentStreak} days</p>
+                <div className="flex flex-wrap justify-center sm:justify-start gap-3 mt-3">
+                  <div className="rounded-lg bg-white/60 dark:bg-white/10 px-3 py-1.5">
+                    <p className="text-[10px] text-purple-600 dark:text-purple-400 font-medium uppercase tracking-wide">Current</p>
+                    <p className="text-base font-bold text-purple-900 dark:text-white tabular-nums">{currentStreak} days</p>
                   </div>
-                  <div className="rounded-xl bg-white/60 dark:bg-white/10 px-4 py-2">
-                    <p className="text-xs text-purple-600 dark:text-purple-400 font-medium">Best streak</p>
-                    <p className="text-xl font-bold text-purple-900 dark:text-white tabular-nums">{bestStreak} days</p>
+                  <div className="rounded-lg bg-white/60 dark:bg-white/10 px-3 py-1.5">
+                    <p className="text-[10px] text-purple-600 dark:text-purple-400 font-medium uppercase tracking-wide">Best streak</p>
+                    <p className="text-base font-bold text-purple-900 dark:text-white tabular-nums">{bestStreak} days</p>
                   </div>
                 </div>
               </div>
