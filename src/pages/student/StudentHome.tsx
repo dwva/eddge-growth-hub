@@ -102,8 +102,15 @@ const StudentHome = () => {
                     </p>
                   </div>
                   
-                  {/* Bottom section - Rank + CTA */}
+                  {/* Bottom section - CTA + Rank */}
                   <div className="flex flex-wrap items-center gap-3 pt-6">
+                    <Button 
+                      className="bg-white text-primary hover:bg-white/90 font-semibold rounded-xl px-6 h-11 shadow-md flex items-center gap-2"
+                      onClick={() => navigate('/student/planner')}
+                    >
+                      <span>⚡</span>
+                      <span>Start Today&apos;s Plan</span>
+                    </Button>
                     <Button
                       variant="outline"
                       className="inline-flex items-center gap-2 rounded-full border-white/60 text-white bg-white/10 hover:bg-white/20 px-4 h-11 text-xs font-semibold shadow-sm"
@@ -111,13 +118,6 @@ const StudentHome = () => {
                     >
                       <Trophy className="w-4 h-4 text-amber-300" />
                       <span>Rank #5</span>
-                    </Button>
-                    <Button 
-                      className="bg-white text-primary hover:bg-white/90 font-semibold rounded-xl px-6 h-11 shadow-md flex items-center gap-2"
-                      onClick={() => navigate('/student/planner')}
-                    >
-                      <span>⚡</span>
-                      <span>Start Today&apos;s Plan</span>
                     </Button>
                   </div>
                 </CardContent>
@@ -148,7 +148,7 @@ const StudentHome = () => {
                       </div>
                       <div className="h-2.5 w-full rounded-full bg-gray-100 dark:bg-muted overflow-hidden">
                         <div
-                          className="h-full rounded-full bg-gradient-to-r from-indigo-500 to-purple-500"
+                          className="h-full rounded-full bg-gradient-to-r from-purple-500 via-violet-500 to-fuchsia-500"
                           style={{ width: '68%' }}
                         />
                       </div>
