@@ -91,30 +91,7 @@ const ClassTeacherModeView = () => {
             </div>
           </div>
 
-          {/* Next Events - Full Width */}
-          <div className="bg-white/10 backdrop-blur-md border border-white/10 p-2.5 md:p-3 rounded-lg md:rounded-xl">
-            <div className="flex items-center justify-between mb-2">
-              <h3 className="text-[10px] md:text-xs font-semibold flex items-center gap-1.5">
-                <Calendar className="w-3 md:w-3.5 h-3 md:h-3.5 text-violet-300" />
-                Next Events
-              </h3>
-              <Button variant="ghost" size="sm" className="h-5 text-[8px] md:text-[9px] px-1.5 text-white/60 hover:text-white hover:bg-white/10" onClick={() => navigate('/teacher/announcements/events')}>
-                Calendar
-              </Button>
-            </div>
-            <div className="flex gap-2 md:gap-3 overflow-x-auto pb-1 -mx-0.5 px-0.5 scrollbar-hide">
-              {upcomingEvents.slice(0, 3).map((event) => (
-                <div key={event.id} className="bg-white/5 px-2.5 md:px-3 py-1.5 md:py-2 rounded-lg flex-shrink-0 min-w-[100px] md:min-w-0 md:flex-1">
-                  <p className="text-[8px] md:text-[9px] text-white/50 uppercase tracking-wide">{event.date.split(' ')[0]} {event.date.split(' ')[1]}</p>
-                  <p className="text-[10px] md:text-[11px] font-medium mt-0.5 truncate">{event.title}</p>
-                  <p className="text-[8px] md:text-[9px] text-white/40 flex items-center gap-0.5 mt-0.5">
-                    <Clock className="w-2 md:w-2.5 h-2 md:h-2.5" />
-                    {event.time}
-                  </p>
-                </div>
-              ))}
-            </div>
-          </div>
+          {/* (Next Events calendar section removed as requested) */}
         </div>
         
         {/* Background Decorations */}
