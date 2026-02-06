@@ -237,84 +237,61 @@ const TeacherStudentsContent = () => {
           {/* Mobile Card View */}
           <div className="lg:hidden divide-y divide-gray-100">
             {paginatedStudents.map((student, index) => (
-              <div key={student.id} className="p-3 hover:bg-gray-50/50 transition-colors">
+              <div 
+                key={student.id} 
+                className="p-2.5 hover:bg-gray-50/50 transition-colors cursor-pointer"
+                onClick={() => navigate(`/teacher/student-profile/${student.id}`)}
+              >
                 {/* Student Info */}
-                <div className="flex items-start gap-2.5 mb-2">
-                  <div className="flex items-center gap-2 flex-shrink-0">
-                    <span className="text-[10px] font-medium text-gray-500 w-4">{((currentPage - 1) * itemsPerPage) + index + 1}</span>
+                <div className="flex items-start gap-2 mb-1.5">
+                  <div className="flex items-center gap-1.5 flex-shrink-0">
+                    <span className="text-[9px] font-medium text-gray-500 w-3">{((currentPage - 1) * itemsPerPage) + index + 1}</span>
                     <div className="relative">
-                      <Avatar className="w-9 h-9">
-                        <AvatarFallback className="bg-violet-100 text-violet-700 text-[10px] font-medium">
+                      <Avatar className="w-8 h-8">
+                        <AvatarFallback className="bg-violet-100 text-violet-700 text-[9px] font-medium">
                           {student.avatar}
                         </AvatarFallback>
                       </Avatar>
-                      <div className={`absolute -bottom-0.5 -right-0.5 w-2.5 h-2.5 rounded-full border-2 border-white ${student.trend === 'up' ? 'bg-emerald-500' : 'bg-amber-500'}`} />
+                      <div className={`absolute -bottom-0.5 -right-0.5 w-2 h-2 rounded-full border-2 border-white ${student.trend === 'up' ? 'bg-emerald-500' : 'bg-amber-500'}`} />
                     </div>
                   </div>
                   <div className="flex-1 min-w-0">
                     <div className="flex items-start justify-between">
                       <div>
-                        <p className="text-xs font-semibold text-gray-900">{student.name}</p>
-                        <p className="text-[10px] text-gray-500">Rank #{student.rank}</p>
+                        <p className="text-[11px] font-semibold text-gray-900">{student.name}</p>
+                        <p className="text-[9px] text-gray-500">Rank #{student.rank}</p>
                       </div>
-                      <Badge variant="outline" className={`text-[9px] font-medium h-5 ${getBehaviourStyle(student.behaviour)}`}>
+                      <Badge variant="outline" className={`text-[8px] font-medium h-4 px-1.5 ${getBehaviourStyle(student.behaviour)}`}>
                         {student.behaviour}
                       </Badge>
                     </div>
                     {student.weakAreas.length > 0 && (
-                      <p className="text-[9px] text-red-500 mt-0.5 truncate">Weak: {student.weakAreas.join(', ')}</p>
+                      <p className="text-[8px] text-red-500 mt-0.5 truncate">Weak: {student.weakAreas.join(', ')}</p>
                     )}
                   </div>
                 </div>
 
                 {/* Stats Row */}
-                <div className="flex items-center gap-3 mb-2 ml-6">
+                <div className="flex items-center gap-2 ml-5">
                   {/* Score */}
                   <div className="flex-1">
                     <div className="flex items-center gap-1">
-                      <span className="text-sm font-bold text-gray-900">{student.overallScore}%</span>
+                      <span className="text-xs font-bold text-gray-900">{student.overallScore}%</span>
                       {getTrendIcon(student.trend)}
                     </div>
                     {student.trendValue !== 0 && (
-                      <p className={`text-[9px] ${student.trendValue > 0 ? 'text-emerald-600' : 'text-red-600'}`}>
+                      <p className={`text-[8px] ${student.trendValue > 0 ? 'text-emerald-600' : 'text-red-600'}`}>
                         {student.trendValue > 0 ? '+' : ''}{student.trendValue}%
                       </p>
                     )}
                   </div>
                   {/* Attendance */}
                   <div className="flex-1">
-                    <div className="flex items-center justify-between text-[9px] mb-0.5">
+                    <div className="flex items-center justify-between text-[8px] mb-0.5">
                       <span className="text-gray-500">Attend.</span>
                       <span className="font-medium">{Math.min(100, student.overallScore + 8)}%</span>
                     </div>
                     <Progress value={Math.min(100, student.overallScore + 8)} className="h-1" />
-                  </div>
-                </div>
-
-                {/* Actions Row */}
-                <div className="flex items-center justify-between pt-2 border-t border-gray-100 ml-6">
-                  <div className="flex items-center gap-1">
-                    <Button 
-                      variant="ghost" 
-                      size="sm" 
-                      className="h-6 gap-1 text-[10px] px-2"
-                      onClick={() => navigate(`/teacher/student-profile/${student.id}`)}
-                    >
-                      <Eye className="w-3 h-3" />
-                      View
-                    </Button>
-                    <Button variant="ghost" size="sm" className="h-6 gap-1 text-[10px] px-2">
-                      <MessageSquare className="w-3 h-3" />
-                      Msg
-                    </Button>
-                  </div>
-                  <div className="flex items-center gap-1">
-                    <Button size="sm" className="h-6 w-6 p-0 rounded-full bg-emerald-500 hover:bg-emerald-600 text-white">
-                      <Check className="w-3 h-3" />
-                    </Button>
-                    <Button variant="ghost" size="sm" className="h-6 w-6 p-0 rounded-full text-gray-400 hover:bg-gray-100">
-                      <X className="w-3 h-3" />
-                    </Button>
                   </div>
                 </div>
               </div>

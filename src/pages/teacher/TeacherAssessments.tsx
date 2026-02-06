@@ -241,8 +241,8 @@ const TeacherAssessmentsContent = () => {
 
       {/* Section 1: Overview Metrics */}
       <div>
-        <h2 className="text-sm font-semibold text-gray-400 uppercase tracking-wide mb-5">Overview</h2>
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-5">
+        <h2 className="text-[10px] md:text-xs font-semibold text-gray-400 uppercase tracking-wide mb-2 md:mb-4">Overview</h2>
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-2 md:gap-4">
           <StatCard 
             title="Total Assessments" 
             value={assessments.length} 
@@ -271,30 +271,30 @@ const TeacherAssessmentsContent = () => {
       </div>
 
       <Tabs defaultValue="all">
-        <TabsList className="w-full lg:w-auto inline-flex h-8 p-1 rounded-lg bg-gray-100">
-          <TabsTrigger value="all" className="px-4 py-1.5 text-xs rounded-lg data-[state=active]:bg-white data-[state=active]:shadow-sm">
-            All Assessments
+        <TabsList className="w-full md:w-auto inline-flex h-7 md:h-8 p-0.5 md:p-1 rounded-lg bg-gray-100">
+          <TabsTrigger value="all" className="flex-1 md:flex-none px-2.5 md:px-4 py-1 md:py-1.5 text-[10px] md:text-xs rounded-md md:rounded-lg data-[state=active]:bg-white data-[state=active]:shadow-sm">
+            All
           </TabsTrigger>
-          <TabsTrigger value="results" className="px-4 py-1.5 text-xs rounded-lg data-[state=active]:bg-white data-[state=active]:shadow-sm">
+          <TabsTrigger value="results" className="flex-1 md:flex-none px-2.5 md:px-4 py-1 md:py-1.5 text-[10px] md:text-xs rounded-md md:rounded-lg data-[state=active]:bg-white data-[state=active]:shadow-sm">
             Results
           </TabsTrigger>
         </TabsList>
 
         {/* All Assessments Tab */}
-        <TabsContent value="all" className="space-y-6 mt-6">
+        <TabsContent value="all" className="space-y-3 md:space-y-6 mt-3 md:mt-6">
           {/* Filters - Clean Bar */}
-          <div className="flex flex-col sm:flex-row gap-3">
+          <div className="flex flex-col sm:flex-row gap-2 md:gap-3">
             <div className="relative flex-1">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 md:w-4 md:h-4 text-gray-400" />
               <Input
                 placeholder="Search assessments..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="pl-10 h-12 rounded-xl border-gray-200"
+                className="pl-9 md:pl-10 h-8 md:h-10 text-xs rounded-lg md:rounded-xl border-gray-200"
               />
             </div>
             <Select value={statusFilter} onValueChange={setStatusFilter}>
-              <SelectTrigger className="w-full sm:w-[180px] h-12 rounded-xl border-gray-200">
+              <SelectTrigger className="w-full sm:w-[140px] md:w-[180px] h-8 md:h-10 text-xs rounded-lg md:rounded-xl border-gray-200">
                 <SelectValue placeholder="All Status" />
               </SelectTrigger>
               <SelectContent>
@@ -307,14 +307,14 @@ const TeacherAssessmentsContent = () => {
 
           {/* Section 2: Assessments */}
           <div>
-            <h2 className="text-sm font-semibold text-gray-400 uppercase tracking-wide mb-5">
+            <h2 className="text-[10px] md:text-xs font-semibold text-gray-400 uppercase tracking-wide mb-2 md:mb-4">
               {filteredAssessments.length} Assessments
             </h2>
             {filteredAssessments.length > 0 ? (
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2 md:gap-4">
                 {filteredAssessments.map((assessment) => (
-                  <Card key={assessment.id} className="border-0 shadow-sm rounded-2xl hover:shadow-md transition-shadow overflow-hidden">
-                  <CardContent className="p-5">
+                  <Card key={assessment.id} className="border-0 shadow-sm rounded-lg md:rounded-2xl hover:shadow-md transition-shadow overflow-hidden">
+                  <CardContent className="p-3 md:p-5">
                     {/* Header */}
                     <div className="flex items-start justify-between mb-4">
                       <Badge variant="outline" className={`text-xs font-medium ${getStatusStyle(assessment.status)}`}>

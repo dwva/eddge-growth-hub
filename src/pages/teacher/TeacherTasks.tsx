@@ -242,57 +242,57 @@ const TeacherTasksContent = () => {
       </div>
 
       {/* Summary Cards */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-        <Card className="rounded-xl shadow-sm border-0">
-          <CardContent className="p-4">
-            <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-lg bg-gray-100 flex items-center justify-center">
-                <Clock className="w-5 h-5 text-gray-600" />
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-2 md:gap-4">
+        <Card className="rounded-lg md:rounded-xl shadow-sm border-0">
+          <CardContent className="p-2.5 md:p-4">
+            <div className="flex items-center gap-2 md:gap-3">
+              <div className="w-8 h-8 md:w-10 md:h-10 rounded-lg bg-gray-100 flex items-center justify-center">
+                <Clock className="w-4 h-4 md:w-5 md:h-5 text-gray-600" />
               </div>
               <div>
-                <p className="text-xs text-gray-500">Pending</p>
+                <p className="text-[10px] md:text-xs text-gray-500">Pending</p>
                 <p className="text-sm font-bold text-gray-900">{pendingTasks.length}</p>
               </div>
             </div>
           </CardContent>
         </Card>
 
-        <Card className="rounded-xl shadow-sm border-0">
-          <CardContent className="p-4">
-            <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-lg bg-blue-100 flex items-center justify-center">
-                <TrendingUp className="w-5 h-5 text-blue-600" />
+        <Card className="rounded-lg md:rounded-xl shadow-sm border-0">
+          <CardContent className="p-2.5 md:p-4">
+            <div className="flex items-center gap-2 md:gap-3">
+              <div className="w-8 h-8 md:w-10 md:h-10 rounded-lg bg-blue-100 flex items-center justify-center">
+                <TrendingUp className="w-4 h-4 md:w-5 md:h-5 text-blue-600" />
               </div>
               <div>
-                <p className="text-xs text-gray-500">In Progress</p>
+                <p className="text-[10px] md:text-xs text-gray-500">In Progress</p>
                 <p className="text-sm font-bold text-blue-600">{inProgressTasks.length}</p>
               </div>
             </div>
           </CardContent>
         </Card>
 
-        <Card className="rounded-xl shadow-sm border-0">
-          <CardContent className="p-4">
-            <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-lg bg-emerald-100 flex items-center justify-center">
-                <CheckCircle className="w-5 h-5 text-emerald-600" />
+        <Card className="rounded-lg md:rounded-xl shadow-sm border-0">
+          <CardContent className="p-2.5 md:p-4">
+            <div className="flex items-center gap-2 md:gap-3">
+              <div className="w-8 h-8 md:w-10 md:h-10 rounded-lg bg-emerald-100 flex items-center justify-center">
+                <CheckCircle className="w-4 h-4 md:w-5 md:h-5 text-emerald-600" />
               </div>
               <div>
-                <p className="text-xs text-gray-500">Completed</p>
+                <p className="text-[10px] md:text-xs text-gray-500">Completed</p>
                 <p className="text-sm font-bold text-emerald-600">{completedTasks.length}</p>
               </div>
             </div>
           </CardContent>
         </Card>
 
-        <Card className="rounded-xl shadow-sm border-0 bg-red-50">
-          <CardContent className="p-4">
-            <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-lg bg-red-200 flex items-center justify-center">
-                <AlertTriangle className="w-5 h-5 text-red-600" />
+        <Card className="rounded-lg md:rounded-xl shadow-sm border-0 bg-red-50">
+          <CardContent className="p-2.5 md:p-4">
+            <div className="flex items-center gap-2 md:gap-3">
+              <div className="w-8 h-8 md:w-10 md:h-10 rounded-lg bg-red-200 flex items-center justify-center">
+                <AlertTriangle className="w-4 h-4 md:w-5 md:h-5 text-red-600" />
               </div>
               <div>
-                <p className="text-xs text-red-600">Overdue</p>
+                <p className="text-[10px] md:text-xs text-red-600">Overdue</p>
                 <p className="text-sm font-bold text-red-700">{overdueTasks.length}</p>
               </div>
             </div>
@@ -301,101 +301,103 @@ const TeacherTasksContent = () => {
       </div>
 
       {/* Filters */}
-      <Card className="rounded-xl shadow-sm border-0">
-        <CardContent className="p-4">
-          <div className="flex flex-col sm:flex-row gap-3">
+      <Card className="rounded-lg md:rounded-xl shadow-sm border-0">
+        <CardContent className="p-2.5 md:p-4">
+          <div className="flex flex-col gap-2 md:gap-3">
             <div className="relative flex-1">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+              <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-gray-400" />
               <Input
-                placeholder="Search tasks or students..."
+                placeholder="Search tasks..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="pl-10"
+                className="pl-8 h-8 md:h-9 text-xs"
               />
             </div>
-            <Select value={statusFilter} onValueChange={setStatusFilter}>
-              <SelectTrigger className="w-full sm:w-40">
-                <SelectValue placeholder="Status" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">All Status</SelectItem>
-                <SelectItem value="pending">Pending</SelectItem>
-                <SelectItem value="in-progress">In Progress</SelectItem>
-                <SelectItem value="completed">Completed</SelectItem>
-              </SelectContent>
-            </Select>
-            <Select value={typeFilter} onValueChange={setTypeFilter}>
-              <SelectTrigger className="w-full sm:w-48">
-                <SelectValue placeholder="Type" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">All Types</SelectItem>
-                <SelectItem value="Call Parent">Call Parent</SelectItem>
-                <SelectItem value="Remedial Plan">Remedial Plan</SelectItem>
-                <SelectItem value="Monitor Progress">Monitor Progress</SelectItem>
-                <SelectItem value="Submit Report">Submit Report</SelectItem>
-              </SelectContent>
-            </Select>
-            <Select value={priorityFilter} onValueChange={setPriorityFilter}>
-              <SelectTrigger className="w-full sm:w-40">
-                <SelectValue placeholder="Priority" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">All Priority</SelectItem>
-                <SelectItem value="high">High</SelectItem>
-                <SelectItem value="medium">Medium</SelectItem>
-                <SelectItem value="low">Low</SelectItem>
-              </SelectContent>
-            </Select>
+            <div className="grid grid-cols-3 gap-1.5 md:gap-3">
+              <Select value={statusFilter} onValueChange={setStatusFilter}>
+                <SelectTrigger className="h-8 md:h-9 text-[10px] md:text-xs">
+                  <SelectValue placeholder="Status" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">All Status</SelectItem>
+                  <SelectItem value="pending">Pending</SelectItem>
+                  <SelectItem value="in-progress">In Progress</SelectItem>
+                  <SelectItem value="completed">Completed</SelectItem>
+                </SelectContent>
+              </Select>
+              <Select value={typeFilter} onValueChange={setTypeFilter}>
+                <SelectTrigger className="h-8 md:h-9 text-[10px] md:text-xs">
+                  <SelectValue placeholder="Type" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">All Types</SelectItem>
+                  <SelectItem value="Call Parent">Call Parent</SelectItem>
+                  <SelectItem value="Remedial Plan">Remedial</SelectItem>
+                  <SelectItem value="Monitor Progress">Monitor</SelectItem>
+                  <SelectItem value="Submit Report">Report</SelectItem>
+                </SelectContent>
+              </Select>
+              <Select value={priorityFilter} onValueChange={setPriorityFilter}>
+                <SelectTrigger className="h-8 md:h-9 text-[10px] md:text-xs">
+                  <SelectValue placeholder="Priority" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">All Priority</SelectItem>
+                  <SelectItem value="high">High</SelectItem>
+                  <SelectItem value="medium">Medium</SelectItem>
+                  <SelectItem value="low">Low</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
           </div>
         </CardContent>
       </Card>
 
       {/* Tasks List */}
-      <div className="space-y-3">
-        <h2 className="text-sm font-semibold text-gray-400 uppercase tracking-wide">
+      <div className="space-y-2 md:space-y-3">
+        <h2 className="text-[10px] md:text-xs font-semibold text-gray-400 uppercase tracking-wide">
           {filteredTasks.length} Tasks
         </h2>
         {filteredTasks.length > 0 ? (
-          <div className="space-y-3">
+          <div className="space-y-2 md:space-y-3">
             {filteredTasks.map((task) => {
               const TaskIcon = getTaskIcon(task.type);
               const overdueStatus = isOverdue(task);
 
               return (
-                <Card key={task.id} className={`rounded-xl shadow-sm border-0 ${overdueStatus ? 'border-2 border-red-200' : ''}`}>
-                  <CardContent className="p-4">
-                    <div className="flex flex-col md:flex-row md:items-center gap-4">
+                <Card key={task.id} className={`rounded-lg md:rounded-xl shadow-sm border-0 ${overdueStatus ? 'border-2 border-red-200' : ''}`}>
+                  <CardContent className="p-2.5 md:p-4">
+                    <div className="flex flex-col md:flex-row md:items-center gap-2.5 md:gap-4">
                       {/* Left: Icon & Info */}
-                      <div className="flex items-start gap-3 flex-1 min-w-0">
-                        <div className={`w-9 h-9 rounded-lg flex items-center justify-center flex-shrink-0 ${getPriorityColor(task.priority)}`}>
-                          <TaskIcon className="w-4 h-4" />
+                      <div className="flex items-start gap-2 md:gap-3 flex-1 min-w-0">
+                        <div className={`w-7 h-7 md:w-9 md:h-9 rounded-lg flex items-center justify-center flex-shrink-0 ${getPriorityColor(task.priority)}`}>
+                          <TaskIcon className="w-3.5 h-3.5 md:w-4 md:h-4" />
                         </div>
 
                         <div className="flex-1 min-w-0">
-                          <div className="flex items-start gap-2 mb-1">
-                            <div className="flex-1">
-                              <h3 className="text-sm font-semibold text-gray-900">{task.type}</h3>
-                              <p className="text-xs text-gray-600 cursor-pointer hover:text-primary" onClick={() => navigate(`/teacher/student-profile/${task.studentId}`)}>
+                          <div className="flex items-start gap-1.5 mb-0.5">
+                            <div className="flex-1 min-w-0">
+                              <h3 className="text-xs md:text-sm font-semibold text-gray-900 truncate">{task.type}</h3>
+                              <p className="text-[10px] md:text-xs text-gray-600 cursor-pointer hover:text-primary truncate" onClick={() => navigate(`/teacher/student-profile/${task.studentId}`)}>
                                 {task.studentName}
                               </p>
                             </div>
                             {task.autoGenerated && (
-                              <Badge variant="outline" className="bg-purple-50 text-purple-700 border-purple-200 text-xs">
+                              <Badge variant="outline" className="bg-purple-50 text-purple-700 border-purple-200 text-[9px] md:text-xs flex-shrink-0">
                                 Auto
                               </Badge>
                             )}
                           </div>
-                          <p className="text-xs text-gray-700 mb-1.5">{task.description}</p>
-                          <div className="flex flex-wrap items-center gap-2">
-                            <div className="flex items-center gap-1 text-xs text-gray-500">
-                              <Calendar className="w-3 h-3" />
-                              Due: {task.dueDate}
+                          <p className="text-[10px] md:text-xs text-gray-700 mb-1 line-clamp-2">{task.description}</p>
+                          <div className="flex flex-wrap items-center gap-1 md:gap-2">
+                            <div className="flex items-center gap-0.5 text-[10px] md:text-xs text-gray-500">
+                              <Calendar className="w-2.5 h-2.5 md:w-3 md:h-3" />
+                              {task.dueDate}
                             </div>
                             {overdueStatus && (
-                              <Badge className="bg-red-500 text-white text-xs">Overdue</Badge>
+                              <Badge className="bg-red-500 text-white text-[9px] md:text-xs">Overdue</Badge>
                             )}
-                            <Badge variant="outline" className={`${getPriorityColor(task.priority)} text-xs`}>
+                            <Badge variant="outline" className={`${getPriorityColor(task.priority)} text-[9px] md:text-xs`}>
                               {task.priority}
                             </Badge>
                           </div>
@@ -403,8 +405,8 @@ const TeacherTasksContent = () => {
                       </div>
 
                       {/* Right: Status & Actions */}
-                      <div className="flex items-center gap-2 md:flex-col md:items-end">
-                        <Badge variant="outline" className={`${getStatusColor(task.status)} whitespace-nowrap`}>
+                      <div className="flex items-center gap-1.5 md:gap-2 md:flex-col md:items-end">
+                        <Badge variant="outline" className={`${getStatusColor(task.status)} whitespace-nowrap text-[9px] md:text-xs`}>
                           {task.status === 'in-progress' ? 'In Progress' : task.status}
                         </Badge>
 
@@ -415,7 +417,7 @@ const TeacherTasksContent = () => {
                                 <Button
                                   size="sm"
                                   variant="outline"
-                                  className="h-8 text-xs"
+                                  className="h-6 md:h-8 text-[10px] md:text-xs px-2"
                                   onClick={() => handleStatusChange(task.id, 'in-progress')}
                                 >
                                   Start
@@ -423,21 +425,21 @@ const TeacherTasksContent = () => {
                               )}
                               <Button
                                 size="sm"
-                                className="h-8 gap-1 text-xs"
+                                className="h-6 md:h-8 gap-0.5 text-[10px] md:text-xs px-2"
                                 onClick={() => {
                                   setSelectedTask(task);
                                   setIsCompleteOpen(true);
                                 }}
                               >
-                                <CheckCircle className="w-3 h-3" />
-                                Complete
+                                <CheckCircle className="w-2.5 h-2.5 md:w-3 md:h-3" />
+                                <span className="hidden sm:inline">Complete</span>
                               </Button>
                             </>
                           )}
                           <DropdownMenu>
                             <DropdownMenuTrigger asChild>
-                              <Button variant="ghost" size="icon" className="h-8 w-8">
-                                <MoreHorizontal className="w-4 h-4" />
+                              <Button variant="ghost" size="icon" className="h-6 w-6 md:h-8 md:w-8">
+                                <MoreHorizontal className="w-3.5 h-3.5 md:w-4 md:h-4" />
                               </Button>
                             </DropdownMenuTrigger>
                             <DropdownMenuContent align="end">
@@ -455,11 +457,11 @@ const TeacherTasksContent = () => {
                     </div>
 
                     {task.notes && task.status === 'completed' && (
-                      <div className="mt-4 pt-4 border-t">
-                        <p className="text-xs text-gray-500 mb-1">Completion Notes:</p>
-                        <p className="text-sm text-gray-700 bg-gray-50 rounded-lg p-3">{task.notes}</p>
+                      <div className="mt-2.5 md:mt-4 pt-2.5 md:pt-4 border-t">
+                        <p className="text-[10px] md:text-xs text-gray-500 mb-0.5">Completion Notes:</p>
+                        <p className="text-xs md:text-sm text-gray-700 bg-gray-50 rounded-lg p-2 md:p-3">{task.notes}</p>
                         {task.completedDate && (
-                          <p className="text-xs text-gray-500 mt-2">Completed on: {task.completedDate}</p>
+                          <p className="text-[10px] md:text-xs text-gray-500 mt-1.5">Completed on: {task.completedDate}</p>
                         )}
                       </div>
                     )}
@@ -469,11 +471,11 @@ const TeacherTasksContent = () => {
             })}
           </div>
         ) : (
-          <Card className="rounded-xl shadow-sm border-0">
-            <CardContent className="py-16 text-center">
-              <ClipboardList className="w-16 h-16 text-gray-300 mx-auto mb-4" />
-              <h3 className="text-sm font-semibold text-gray-900 mb-2">No tasks found</h3>
-              <p className="text-gray-500 mb-4">
+          <Card className="rounded-lg md:rounded-xl shadow-sm border-0">
+            <CardContent className="py-8 md:py-16 text-center">
+              <ClipboardList className="w-10 h-10 md:w-16 md:h-16 text-gray-300 mx-auto mb-2 md:mb-4" />
+              <h3 className="text-xs md:text-sm font-semibold text-gray-900 mb-1 md:mb-2">No tasks found</h3>
+              <p className="text-[10px] md:text-sm text-gray-500 mb-2 md:mb-4">
                 {searchQuery || statusFilter !== 'all' || typeFilter !== 'all' || priorityFilter !== 'all'
                   ? 'Try adjusting your filters'
                   : 'Create your first task to get started'}

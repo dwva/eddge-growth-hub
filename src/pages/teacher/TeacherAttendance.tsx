@@ -75,50 +75,50 @@ const TeacherAttendanceContent = () => {
   const getAttendancePercent = (student: typeof classStudents[0]) => Math.min(100, student.overallScore + 8);
 
   return (
-    <div className="space-y-5 max-w-[1600px]">
-      {/* Page Header - Clean */}
-      <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
+    <div className="space-y-3 md:space-y-5 max-w-[1600px]">
+      {/* Page Header - Mobile Optimized */}
+      <div className="flex flex-col gap-2 md:gap-4">
         <div>
-          <h1 className="text-lg md:text-xl font-bold text-gray-900">Mark Attendance</h1>
-          <p className="text-xs md:text-sm text-gray-500 mt-0.5">Class 10-A • Record daily attendance</p>
+          <h1 className="text-base md:text-lg font-bold text-gray-900">Mark Attendance</h1>
+          <p className="text-[10px] md:text-xs text-gray-500 mt-0.5">Class 10-A • Record daily attendance</p>
         </div>
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-2 md:gap-3 flex-wrap">
           <Input
             type="date"
             value={selectedDate}
             onChange={(e) => setSelectedDate(e.target.value)}
-            className="w-44 h-10 rounded-xl border-gray-200"
+            className="w-32 md:w-44 h-8 md:h-10 rounded-lg md:rounded-xl border-gray-200 text-xs md:text-sm"
           />
-          <Button variant="outline" size="sm" className="h-10 rounded-xl border-gray-200" onClick={handleMarkAllPresent}>
-            Mark All Present
+          <Button variant="outline" size="sm" className="h-7 md:h-10 rounded-lg md:rounded-xl border-gray-200 text-[10px] md:text-sm px-2 md:px-4" onClick={handleMarkAllPresent}>
+            <span className="hidden sm:inline">Mark </span>All Present
           </Button>
-          <Button size="sm" className="h-10 rounded-xl" onClick={handleSubmit}>
+          <Button size="sm" className="h-7 md:h-10 rounded-lg md:rounded-xl text-[10px] md:text-sm px-3 md:px-4" onClick={handleSubmit}>
             Submit
           </Button>
         </div>
       </div>
 
       {/* Summary Bar */}
-      <div className="flex flex-wrap gap-4">
-        <div className="flex items-center gap-2 px-4 py-2 rounded-xl bg-emerald-50 border border-emerald-100">
-          <Check className="w-5 h-5 text-emerald-600" />
-          <span className="font-semibold text-emerald-700">{presentCount}</span>
-          <span className="text-sm text-emerald-600">Present</span>
+      <div className="flex flex-wrap gap-2 md:gap-4">
+        <div className="flex items-center gap-1.5 md:gap-2 px-2.5 md:px-4 py-1.5 md:py-2 rounded-lg md:rounded-xl bg-emerald-50 border border-emerald-100">
+          <Check className="w-4 h-4 md:w-5 md:h-5 text-emerald-600" />
+          <span className="text-sm md:text-base font-semibold text-emerald-700">{presentCount}</span>
+          <span className="text-xs md:text-sm text-emerald-600">Present</span>
         </div>
-        <div className="flex items-center gap-2 px-4 py-2 rounded-xl bg-red-50 border border-red-100">
-          <X className="w-5 h-5 text-red-600" />
-          <span className="font-semibold text-red-700">{absentCount}</span>
-          <span className="text-sm text-red-600">Absent</span>
+        <div className="flex items-center gap-1.5 md:gap-2 px-2.5 md:px-4 py-1.5 md:py-2 rounded-lg md:rounded-xl bg-red-50 border border-red-100">
+          <X className="w-4 h-4 md:w-5 md:h-5 text-red-600" />
+          <span className="text-sm md:text-base font-semibold text-red-700">{absentCount}</span>
+          <span className="text-xs md:text-sm text-red-600">Absent</span>
         </div>
       </div>
 
-      {/* Student List - Horizontal row format matching reference image */}
-      <Card className="rounded-2xl shadow-sm border-gray-100 overflow-hidden">
-        <CardHeader className="pb-4">
-          <CardTitle className="text-lg font-semibold">Class Students</CardTitle>
-          <p className="text-sm text-gray-500">Use ✓ Present and ✗ Absent, then Submit</p>
+      {/* Student List */}
+      <Card className="rounded-lg md:rounded-2xl shadow-sm border-gray-100 overflow-hidden">
+        <CardHeader className="p-2.5 md:p-4 pb-2 md:pb-4">
+          <CardTitle className="text-sm md:text-lg font-semibold">Class Students</CardTitle>
+          <p className="text-[10px] md:text-sm text-gray-500">Use ✓ Present and ✗ Absent, then Submit</p>
         </CardHeader>
-        <CardContent>
+        <CardContent className="p-2.5 md:p-4 pt-0">
           <div className="space-y-1">
             {/* Table header */}
             <div className="hidden md:grid grid-cols-12 gap-4 px-4 py-3 bg-gray-50 rounded-xl text-xs font-semibold text-gray-500 uppercase">
@@ -132,27 +132,27 @@ const TeacherAttendanceContent = () => {
             {classStudents.map((student) => (
               <div
                 key={student.id}
-                className={`flex flex-col md:flex-row md:items-center gap-4 p-4 rounded-xl border transition-all hover:bg-gray-50/50 ${
+                className={`flex flex-col md:flex-row md:items-center gap-2 md:gap-4 p-2.5 md:p-4 rounded-lg md:rounded-xl border transition-all hover:bg-gray-50/50 ${
                   attendance[student.id] === 'present'
                     ? 'border-emerald-200/50 bg-emerald-50/10'
                     : 'border-red-200/50 bg-red-50/10'
                 }`}
               >
                 {/* Avatar + Name + Rank + Weak */}
-                <div className="flex items-center gap-4 md:col-span-3 flex-1 min-w-0">
+                <div className="flex items-center gap-2 md:gap-4 md:col-span-3 flex-1 min-w-0">
                   <div className="relative flex-shrink-0">
-                    <Avatar className="w-12 h-12 border-2 border-white shadow-sm">
-                      <AvatarFallback className="bg-primary/10 text-primary font-semibold">
+                    <Avatar className="w-9 h-9 md:w-12 md:h-12 border-2 border-white shadow-sm">
+                      <AvatarFallback className="bg-primary/10 text-primary font-semibold text-xs md:text-sm">
                         {student.avatar}
                       </AvatarFallback>
                     </Avatar>
-                    <span className={`absolute -bottom-0.5 -right-0.5 w-3 h-3 rounded-full border-2 border-white ${getStatusDotColor(student.behaviour)}`} />
+                    <span className={`absolute -bottom-0.5 -right-0.5 w-2.5 h-2.5 md:w-3 md:h-3 rounded-full border-2 border-white ${getStatusDotColor(student.behaviour)}`} />
                   </div>
-                  <div className="min-w-0">
-                    <p className="font-semibold text-gray-900 truncate">{student.name}</p>
-                    <p className="text-xs text-gray-500">Rank #{student.rank}</p>
+                  <div className="min-w-0 flex-1">
+                    <p className="text-xs md:text-sm font-semibold text-gray-900 truncate">{student.name}</p>
+                    <p className="text-[10px] md:text-xs text-gray-500">Rank #{student.rank}</p>
                     {student.weakAreas.length > 0 && (
-                      <span className="inline-block mt-1 px-2 py-0.5 rounded-md text-xs font-medium bg-red-50 text-red-600">
+                      <span className="hidden sm:inline-block mt-0.5 px-1.5 py-0.5 rounded-md text-[10px] font-medium bg-red-50 text-red-600">
                         Weak: {student.weakAreas.join(', ')}
                       </span>
                     )}
@@ -160,7 +160,7 @@ const TeacherAttendanceContent = () => {
                 </div>
 
                 {/* Performance % + Trend */}
-                <div className="flex items-center gap-2 md:col-span-2">
+                <div className="hidden md:flex items-center gap-2 md:col-span-2">
                   <span className="text-lg font-bold text-gray-900">{student.overallScore}%</span>
                   {student.trendValue > 0 && (
                     <span className="flex items-center gap-0.5 text-xs font-medium text-emerald-600">
@@ -177,8 +177,8 @@ const TeacherAttendanceContent = () => {
                   )}
                 </div>
 
-                {/* Attendance + Progress bar */}
-                <div className="flex flex-col gap-1 md:col-span-2">
+                {/* Attendance + Progress bar - hidden on mobile */}
+                <div className="hidden md:flex flex-col gap-1 md:col-span-2">
                   <div className="flex items-center justify-between text-sm">
                     <span className="text-gray-500">Attendance</span>
                     <span className="font-medium">{getAttendancePercent(student)}%</span>
@@ -186,15 +186,15 @@ const TeacherAttendanceContent = () => {
                   <Progress value={getAttendancePercent(student)} className="h-2 w-24 md:w-28" />
                 </div>
 
-                {/* Behaviour tag */}
-                <div className="md:col-span-2">
+                {/* Behaviour tag - hidden on mobile */}
+                <div className="hidden md:block md:col-span-2">
                   <span className={`inline-block px-3 py-1 rounded-full text-xs font-medium ${getBehaviourStyle(student.behaviour)}`}>
                     {student.behaviour}
                   </span>
                 </div>
 
-                {/* Action icons */}
-                <div className="flex items-center gap-1 md:col-span-2">
+                {/* Action icons - hidden on mobile */}
+                <div className="hidden md:flex items-center gap-1 md:col-span-2">
                   <Button variant="ghost" size="icon" className="h-8 w-8 rounded-lg text-gray-500 hover:text-gray-700">
                     <Eye className="w-4 h-4" />
                   </Button>
@@ -207,28 +207,28 @@ const TeacherAttendanceContent = () => {
                 </div>
 
                 {/* Present / Absent */}
-                <div className="flex items-center gap-2 md:col-span-1 md:justify-end">
+                <div className="flex items-center gap-1.5 md:gap-2 md:col-span-1 md:justify-end">
                   <button
                     onClick={() => handleStatusChange(student.id, 'present')}
-                    className={`w-9 h-9 rounded-lg flex items-center justify-center transition-all ${
+                    className={`w-7 h-7 md:w-9 md:h-9 rounded-lg flex items-center justify-center transition-all ${
                       attendance[student.id] === 'present'
                         ? 'bg-emerald-500 text-white ring-2 ring-emerald-300'
                         : 'bg-gray-100 text-gray-400 hover:bg-gray-200'
                     }`}
                     title="Present"
                   >
-                    <Check className="w-4 h-4" />
+                    <Check className="w-3.5 h-3.5 md:w-4 md:h-4" />
                   </button>
                   <button
                     onClick={() => handleStatusChange(student.id, 'absent')}
-                    className={`w-9 h-9 rounded-lg flex items-center justify-center transition-all ${
+                    className={`w-7 h-7 md:w-9 md:h-9 rounded-lg flex items-center justify-center transition-all ${
                       attendance[student.id] === 'absent'
                         ? 'bg-red-500 text-white ring-2 ring-red-300'
                         : 'bg-gray-100 text-gray-400 hover:bg-gray-200'
                     }`}
                     title="Absent"
                   >
-                    <X className="w-4 h-4" />
+                    <X className="w-3.5 h-3.5 md:w-4 md:h-4" />
                   </button>
                 </div>
               </div>

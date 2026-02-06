@@ -60,69 +60,66 @@ const TeacherCommunicationContent = () => {
   const totalUnread = parentConversations.reduce((acc, c) => acc + c.unread, 0);
 
   return (
-    <div className="flex flex-col h-[calc(100vh-8rem)] min-h-[500px]">
+    <div className="flex flex-col h-[calc(100vh-7rem)] md:h-[calc(100vh-8rem)] min-h-[400px]">
       {/* Page Header */}
-      <div className="mb-3">
-        <h1 className="text-lg md:text-xl font-bold text-gray-900">Messages & Inbox</h1>
-        <p className="text-xs md:text-sm text-gray-500 mt-0.5">
-          Client and team communications
+      <div className="mb-2 md:mb-3">
+        <h1 className="text-base md:text-lg font-bold text-gray-900">Messages</h1>
+        <p className="text-[10px] md:text-xs text-gray-500 mt-0.5">
+          {totalUnread} unread messages
         </p>
       </div>
 
-      {/* Messaging Interface */}
-      <div className="flex-1 grid grid-cols-1 lg:grid-cols-3 gap-3 min-h-0 overflow-hidden">
-        {/* Conversation List */}
-        <Card className="flex flex-col border-0 shadow-sm bg-gray-50/50 overflow-hidden rounded-2xl">
-          <div className="p-3 shrink-0">
+      {/* Messaging Interface - Mobile shows one panel at a time */}
+      <div className="flex-1 grid grid-cols-1 lg:grid-cols-3 gap-2 md:gap-3 min-h-0 overflow-hidden">
+        {/* Conversation List - Hidden on mobile when chat is selected */}
+        <Card className={`flex-col border-0 shadow-sm bg-gray-50/50 overflow-hidden rounded-lg md:rounded-2xl ${selectedConversation ? 'hidden lg:flex' : 'flex'}`}>
+          <div className="p-2 md:p-3 shrink-0">
             <div className="relative">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-gray-400" />
+              <Search className="absolute left-2.5 md:left-3 top-1/2 -translate-y-1/2 w-3 h-3 md:w-3.5 md:h-3.5 text-gray-400" />
               <Input
-                placeholder="Search ....."
+                placeholder="Search..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="pl-9 h-9 text-xs bg-white border-gray-200 rounded-xl"
+                className="pl-8 md:pl-9 h-8 md:h-9 text-xs bg-white border-gray-200 rounded-lg md:rounded-xl"
               />
             </div>
           </div>
           <ScrollArea className="flex-1">
-            <div className="px-2 pb-2 space-y-0.5">
+            <div className="px-1.5 md:px-2 pb-2 space-y-0.5">
               {filteredConversations.map((conv) => (
                 <button
                   key={conv.id}
                   onClick={() => setSelectedConversation(conv.id)}
-                  className={`w-full flex items-start gap-2.5 p-2.5 rounded-xl transition text-left ${
+                  className={`w-full flex items-start gap-2 md:gap-2.5 p-2 md:p-2.5 rounded-lg md:rounded-xl transition text-left ${
                     selectedConversation === conv.id 
                       ? 'bg-white shadow-sm' 
                       : 'hover:bg-white/60'
                   }`}
                 >
                   <div className="relative shrink-0">
-                    <Avatar className="w-9 h-9">
-                      <AvatarFallback className="bg-primary/10 text-primary font-semibold text-xs">
+                    <Avatar className="w-8 h-8 md:w-9 md:h-9">
+                      <AvatarFallback className="bg-primary/10 text-primary font-semibold text-[10px] md:text-xs">
                         {conv.avatar}
                       </AvatarFallback>
                     </Avatar>
-                    <div className="absolute -bottom-0.5 -right-0.5 w-2.5 h-2.5 bg-green-500 rounded-full border-2 border-white"></div>
+                    <div className="absolute -bottom-0.5 -right-0.5 w-2 h-2 md:w-2.5 md:h-2.5 bg-green-500 rounded-full border-2 border-white"></div>
                   </div>
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center justify-between gap-2 mb-0.5">
-                      <p className="font-semibold text-xs truncate text-gray-900">
+                      <p className="font-semibold text-[11px] md:text-xs truncate text-gray-900">
                         {(conv as typeof parentConversations[0]).parentName}
                       </p>
                       {conv.unread > 0 && (
                         <div className="w-4 h-4 rounded-full bg-yellow-400 flex items-center justify-center shrink-0">
-                          <span className="text-[10px] text-gray-900 font-semibold">{conv.unread}</span>
+                          <span className="text-[9px] md:text-[10px] text-gray-900 font-semibold">{conv.unread}</span>
                         </div>
                       )}
                     </div>
-                    <p className="text-[10px] text-gray-500 mb-0.5">
+                    <p className="text-[9px] md:text-[10px] text-gray-500 mb-0.5">
                       {conv.studentName}
                     </p>
-                    <p className="text-[10px] text-gray-600 truncate leading-tight">
+                    <p className="text-[9px] md:text-[10px] text-gray-600 truncate leading-tight">
                       {conv.lastMessage}
-                    </p>
-                    <p className="text-[10px] text-gray-400 mt-0.5">
-                      {conv.timestamp}
                     </p>
                   </div>
                 </button>
@@ -131,30 +128,34 @@ const TeacherCommunicationContent = () => {
           </ScrollArea>
         </Card>
 
-        {/* Chat Area */}
-        <Card className="lg:col-span-2 flex flex-col border-0 shadow-sm bg-white overflow-hidden rounded-2xl">
+        {/* Chat Area - Full width on mobile when selected */}
+        <Card className={`lg:col-span-2 flex-col border-0 shadow-sm bg-white overflow-hidden rounded-lg md:rounded-2xl ${selectedConversation ? 'flex' : 'hidden lg:flex'}`}>
           {selectedConversation && currentConversation ? (
             <>
-              <div className="p-3 border-b bg-white shrink-0">
+              <div className="p-2 md:p-3 border-b bg-white shrink-0">
                 <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-2.5">
+                  <div className="flex items-center gap-2 md:gap-2.5">
+                    {/* Back button - mobile only */}
+                    <button 
+                      className="h-7 w-7 rounded-lg flex items-center justify-center hover:bg-gray-100 lg:hidden"
+                      onClick={() => setSelectedConversation(null)}
+                    >
+                      <svg className="w-4 h-4 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+                      </svg>
+                    </button>
                     <div className="relative">
-                      <Avatar className="w-9 h-9">
-                        <AvatarFallback className="bg-primary/10 text-primary font-semibold text-xs">
+                      <Avatar className="w-8 h-8 md:w-9 md:h-9">
+                        <AvatarFallback className="bg-primary/10 text-primary font-semibold text-[10px] md:text-xs">
                           {currentConversation.avatar}
                         </AvatarFallback>
                       </Avatar>
-                      <div className="absolute -bottom-0.5 -right-0.5 w-2.5 h-2.5 bg-green-500 rounded-full border-2 border-white"></div>
+                      <div className="absolute -bottom-0.5 -right-0.5 w-2 h-2 md:w-2.5 md:h-2.5 bg-green-500 rounded-full border-2 border-white"></div>
                     </div>
                     <div>
-                      <p className="font-semibold text-xs text-gray-900">{displayName}</p>
-                      <p className="text-[10px] text-gray-500">{currentConversation.studentName}</p>
+                      <p className="font-semibold text-[11px] md:text-xs text-gray-900">{displayName}</p>
+                      <p className="text-[9px] md:text-[10px] text-gray-500">{currentConversation.studentName}</p>
                     </div>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <Button variant="ghost" size="icon" className="h-7 w-7 rounded-lg">
-                      <Search className="w-3.5 h-3.5 text-gray-600" />
-                    </Button>
                   </div>
                 </div>
               </div>
@@ -185,28 +186,21 @@ const TeacherCommunicationContent = () => {
                 </div>
               </ScrollArea>
 
-              <div className="p-3 border-t bg-white shrink-0">
+              <div className="p-2 md:p-3 border-t bg-white shrink-0">
                 <div className="flex items-center gap-2">
-                  <div className="flex-1 relative">
+                  <div className="flex-1">
                     <Input
-                      placeholder="Search ..."
+                      placeholder="Type a message..."
                       value={newMessage}
                       onChange={(e) => setNewMessage(e.target.value)}
                       onKeyDown={(e) => e.key === 'Enter' && handleSend()}
-                      className="h-9 pr-9 text-xs rounded-xl border-gray-200"
+                      className="h-8 md:h-9 text-xs rounded-lg md:rounded-xl border-gray-200"
                     />
-                    <Button 
-                      variant="ghost" 
-                      size="icon" 
-                      className="absolute right-1 top-1/2 -translate-y-1/2 h-7 w-7 rounded-lg"
-                    >
-                      <Search className="w-3.5 h-3.5 text-gray-400" />
-                    </Button>
                   </div>
                   <Button 
                     onClick={handleSend} 
                     size="icon"
-                    className="h-9 w-9 rounded-xl bg-gray-900 hover:bg-gray-800"
+                    className="h-8 w-8 md:h-9 md:w-9 rounded-lg md:rounded-xl bg-gray-900 hover:bg-gray-800"
                     disabled={!newMessage.trim()}
                   >
                     <Send className="w-3.5 h-3.5" />

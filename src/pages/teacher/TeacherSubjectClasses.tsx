@@ -35,11 +35,11 @@ const TeacherSubjectClassesContent = () => {
       {/* Page Header */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 md:gap-4">
         <div>
-          <h1 className="text-lg md:text-xl font-bold text-gray-900">My Classes</h1>
-          <p className="text-xs md:text-sm text-gray-500 mt-0.5">View all classes where you teach</p>
+          <h1 className="text-base md:text-lg font-bold text-gray-900">My Classes</h1>
+          <p className="text-[10px] md:text-xs text-gray-500 mt-0.5">View all classes where you teach</p>
         </div>
         <Select value={selectedSubject} onValueChange={setSelectedSubject}>
-          <SelectTrigger className="w-full sm:w-[160px] h-8 text-xs rounded-lg border-gray-200">
+          <SelectTrigger className="w-full sm:w-[140px] h-7 md:h-8 text-[10px] md:text-xs rounded-lg border-gray-200">
             <SelectValue />
           </SelectTrigger>
           <SelectContent>

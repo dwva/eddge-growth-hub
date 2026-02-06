@@ -130,12 +130,12 @@ const TeacherBehaviourContent = () => {
   };
 
   return (
-    <div className="space-y-6 max-w-[1600px]">
+    <div className="space-y-3 md:space-y-6 max-w-[1600px]">
       {/* Page Header - Clean */}
-      <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4 pb-4 border-b border-gray-100">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 md:gap-4 pb-3 md:pb-4 border-b border-gray-100">
         <div>
-          <h1 className="text-lg md:text-xl font-bold text-gray-900">Behaviour & Notes</h1>
-          <p className="text-xs md:text-sm text-gray-500 mt-0.5">Track and record student behavior observations</p>
+          <h1 className="text-base md:text-lg font-bold text-gray-900">Behaviour & Notes</h1>
+          <p className="text-[10px] md:text-xs text-gray-500 mt-0.5">Track and record student behavior</p>
         </div>
         <Dialog open={isDialogOpen} onOpenChange={(open) => {
           setIsDialogOpen(open);
@@ -145,8 +145,8 @@ const TeacherBehaviourContent = () => {
           }
         }}>
           <DialogTrigger asChild>
-            <Button size="sm" className="gap-2 h-10 rounded-xl">
-              <Plus className="w-4 h-4" />
+            <Button size="sm" className="gap-1.5 h-7 md:h-8 text-[10px] md:text-xs rounded-lg md:rounded-xl">
+              <Plus className="w-3 h-3 md:w-4 md:h-4" />
               Add Note
             </Button>
           </DialogTrigger>

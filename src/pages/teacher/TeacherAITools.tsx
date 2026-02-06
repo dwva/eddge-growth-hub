@@ -417,57 +417,57 @@ const TeacherAIToolsContent = () => {
 
   return (
     <div className="h-full">
-      {/* Page Header - Clean */}
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 sm:gap-4 mb-3">
-        <div>
-          <h1 className="text-lg md:text-xl font-bold text-gray-900">AI Tools</h1>
-          <p className="text-xs md:text-sm text-gray-500 mt-0.5">Generate CBSE-aligned questions and worksheets</p>
+      {/* Page Header - Mobile Optimized */}
+      <div className="flex items-center justify-between gap-2 mb-2 md:mb-3">
+        <div className="min-w-0 flex-1">
+          <h1 className="text-base md:text-lg font-bold text-gray-900 truncate">AI Tools</h1>
+          <p className="text-[10px] md:text-xs text-gray-500 mt-0.5 truncate">Generate CBSE-aligned questions</p>
         </div>
-        <Button variant="ghost" size="sm" className="h-7 md:h-8 text-xs rounded-lg" onClick={() => navigate('/teacher')}>
+        <Button variant="ghost" size="sm" className="h-7 text-[10px] md:text-xs rounded-lg flex-shrink-0 px-2" onClick={() => navigate('/teacher')}>
           <ArrowLeft className="w-3 h-3 mr-1" />
           Back
         </Button>
       </div>
 
       <Tabs value={activeTab} onValueChange={setActiveTab} className="h-full">
-        <TabsList className="h-7 md:h-8 p-0.5 md:p-1 rounded-lg bg-gray-100 overflow-x-auto flex-shrink-0 w-full md:w-auto">
-          <TabsTrigger value="questions" className="gap-1 md:gap-2 text-[9px] md:text-xs px-2 md:px-3 py-1 md:py-1.5 h-6 md:h-7 data-[state=active]:bg-white data-[state=active]:shadow-sm rounded-md whitespace-nowrap">
+        <TabsList className="h-7 p-0.5 rounded-lg bg-gray-100 flex w-full gap-0.5">
+          <TabsTrigger value="questions" className="flex-1 gap-1 text-[9px] md:text-xs px-1.5 md:px-3 py-1 h-6 data-[state=active]:bg-white data-[state=active]:shadow-sm rounded-md">
             <Sparkles className="w-3 h-3" />
-            <span className="hidden xs:inline">Question</span> Gen
+            <span className="hidden sm:inline">Question</span> Gen
           </TabsTrigger>
-          <TabsTrigger value="pdf-upload" className="gap-1 md:gap-2 text-[9px] md:text-xs px-2 md:px-3 py-1 md:py-1.5 h-6 md:h-7 data-[state=active]:bg-white data-[state=active]:shadow-sm rounded-md whitespace-nowrap">
+          <TabsTrigger value="pdf-upload" className="flex-1 gap-1 text-[9px] md:text-xs px-1.5 md:px-3 py-1 h-6 data-[state=active]:bg-white data-[state=active]:shadow-sm rounded-md">
             <Upload className="w-3 h-3" />
             PDF
           </TabsTrigger>
-          <TabsTrigger value="library" className="gap-1 md:gap-2 text-[9px] md:text-xs px-2 md:px-3 py-1 md:py-1.5 h-6 md:h-7 data-[state=active]:bg-white data-[state=active]:shadow-sm rounded-md whitespace-nowrap">
+          <TabsTrigger value="library" className="flex-1 gap-1 text-[9px] md:text-xs px-1.5 md:px-3 py-1 h-6 data-[state=active]:bg-white data-[state=active]:shadow-sm rounded-md">
             <Library className="w-3 h-3" />
             Library
           </TabsTrigger>
-          <TabsTrigger value="worksheet" className="gap-1 md:gap-2 text-[9px] md:text-xs px-2 md:px-3 py-1 md:py-1.5 h-6 md:h-7 data-[state=active]:bg-white data-[state=active]:shadow-sm rounded-md whitespace-nowrap">
+          <TabsTrigger value="worksheet" className="flex-1 gap-1 text-[9px] md:text-xs px-1.5 md:px-3 py-1 h-6 data-[state=active]:bg-white data-[state=active]:shadow-sm rounded-md">
             <FileText className="w-3 h-3" />
-            Worksheet
+            Sheet
           </TabsTrigger>
         </TabsList>
 
-        <TabsContent value="questions" className="pt-3 md:pt-4">
-          <div className="space-y-4 md:space-y-6">
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-3 md:gap-6">
+        <TabsContent value="questions" className="pt-2 md:pt-4">
+          <div className="space-y-3 md:space-y-6">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-2 md:gap-6">
             {/* Left: Parameters */}
-            <div className="space-y-6">
+            <div className="space-y-3 md:space-y-6">
               {/* Analytics Context */}
               {formData.chapter && selectedChapter && (
-                <Card className="bg-primary/5 border-primary/20">
-                  <CardContent className="pt-6">
-                    <div className="flex items-center gap-3 mb-3">
-                      <Brain className="w-5 h-5 text-primary" />
-                      <span className="font-medium">Analytics Context</span>
+                <Card className="bg-primary/5 border-primary/20 rounded-lg">
+                  <CardContent className="p-2.5 md:pt-6 md:p-4">
+                    <div className="flex items-center gap-2 mb-2">
+                      <Brain className="w-4 h-4 text-primary" />
+                      <span className="text-xs md:text-sm font-medium">Analytics Context</span>
                     </div>
-                    <div className="space-y-2 text-sm">
-                      <div className="flex justify-between">
-                        <span>Chapter: {selectedChapter.name}</span>
-                        <Badge variant="outline">{selectedChapter.masteryPercent}% mastery</Badge>
+                    <div className="space-y-1.5 text-xs md:text-sm">
+                      <div className="flex justify-between items-center">
+                        <span className="truncate">Chapter: {selectedChapter.name}</span>
+                        <Badge variant="outline" className="text-[10px] md:text-xs ml-2">{selectedChapter.masteryPercent}% mastery</Badge>
                       </div>
-                      <p className="text-muted-foreground">
+                      <p className="text-muted-foreground text-[10px] md:text-xs">
                         AI will use this context to generate targeted questions
                       </p>
                     </div>
@@ -476,26 +476,27 @@ const TeacherAIToolsContent = () => {
               )}
 
               {/* Parameters Form */}
-              <Card>
-                <CardHeader>
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <CardTitle>Question Parameters</CardTitle>
-                      <CardDescription>Configure the type of questions to generate</CardDescription>
+              <Card className="rounded-lg">
+                <CardHeader className="p-2.5 md:p-4 pb-2">
+                  <div className="flex items-center justify-between gap-2">
+                    <div className="min-w-0">
+                      <CardTitle className="text-sm md:text-base truncate">Question Parameters</CardTitle>
+                      <CardDescription className="text-[10px] md:text-xs truncate">Configure question settings</CardDescription>
                     </div>
-                    <div className="flex items-center gap-2">
-                      <Label htmlFor="blueprint-mode" className="text-xs text-muted-foreground cursor-pointer">
-                        Blueprint Mode
+                    <div className="flex items-center gap-1.5 flex-shrink-0">
+                      <Label htmlFor="blueprint-mode" className="text-[10px] text-muted-foreground cursor-pointer hidden sm:block">
+                        Blueprint
                       </Label>
                       <Switch
                         id="blueprint-mode"
                         checked={blueprintMode}
                         onCheckedChange={setBlueprintMode}
+                        className="scale-75 md:scale-100"
                       />
                     </div>
                   </div>
                 </CardHeader>
-                <CardContent className="space-y-4">
+                <CardContent className="p-2.5 md:p-4 pt-0 md:pt-0 space-y-2.5 md:space-y-4">
                   {blueprintMode ? (
                     // Blueprint Mode UI
                     <div className="space-y-4">
@@ -599,11 +600,11 @@ const TeacherAIToolsContent = () => {
                   ) : (
                     // Standard Mode UI
                     <>
-                  <div className="grid grid-cols-2 gap-4">
-                    <div className="space-y-2">
-                      <Label>Class *</Label>
+                  <div className="grid grid-cols-2 gap-2 md:gap-4">
+                    <div className="space-y-1 md:space-y-2">
+                      <Label className="text-[10px] md:text-xs">Class *</Label>
                       <Select value={formData.class} onValueChange={(v) => setFormData(prev => ({ ...prev, class: v }))}>
-                        <SelectTrigger>
+                        <SelectTrigger className="h-8 md:h-9 text-xs">
                           <SelectValue placeholder="Select" />
                         </SelectTrigger>
                         <SelectContent>
@@ -614,10 +615,10 @@ const TeacherAIToolsContent = () => {
                         </SelectContent>
                       </Select>
                     </div>
-                    <div className="space-y-2">
-                      <Label>Subject *</Label>
+                    <div className="space-y-1 md:space-y-2">
+                      <Label className="text-[10px] md:text-xs">Subject *</Label>
                       <Select value={formData.subject} onValueChange={(v) => setFormData(prev => ({ ...prev, subject: v }))}>
-                        <SelectTrigger>
+                        <SelectTrigger className="h-8 md:h-9 text-xs">
                           <SelectValue />
                         </SelectTrigger>
                         <SelectContent>
@@ -628,10 +629,10 @@ const TeacherAIToolsContent = () => {
                     </div>
                   </div>
 
-                  <div className="space-y-2">
+                  <div className="space-y-1 md:space-y-2">
                     <div className="flex items-center justify-between">
-                      <Label>Chapter</Label>
-                      <Button variant="link" size="sm" className="h-auto p-0 text-xs" onClick={() => {
+                      <Label className="text-[10px] md:text-xs">Chapter</Label>
+                      <Button variant="link" size="sm" className="h-auto p-0 text-[10px] md:text-xs" onClick={() => {
                         const weakest = chapters.reduce((a, b) => a.masteryPercent < b.masteryPercent ? a : b);
                         setFormData(prev => ({ ...prev, chapter: weakest.id }));
                       }}>
@@ -639,7 +640,7 @@ const TeacherAIToolsContent = () => {
                       </Button>
                     </div>
                     <Select value={formData.chapter} onValueChange={(v) => setFormData(prev => ({ ...prev, chapter: v }))}>
-                      <SelectTrigger>
+                      <SelectTrigger className="h-8 md:h-9 text-xs">
                         <SelectValue placeholder="Select chapter" />
                       </SelectTrigger>
                       <SelectContent>
@@ -652,11 +653,11 @@ const TeacherAIToolsContent = () => {
                     </Select>
                   </div>
 
-                  <div className="grid grid-cols-2 gap-4">
-                    <div className="space-y-2">
-                      <Label>Question Type *</Label>
+                  <div className="grid grid-cols-2 gap-2 md:gap-4">
+                    <div className="space-y-1 md:space-y-2">
+                      <Label className="text-[10px] md:text-xs">Type *</Label>
                       <Select value={formData.questionType} onValueChange={(v) => setFormData(prev => ({ ...prev, questionType: v }))}>
-                        <SelectTrigger>
+                        <SelectTrigger className="h-8 md:h-9 text-xs">
                           <SelectValue />
                         </SelectTrigger>
                         <SelectContent>
@@ -667,10 +668,10 @@ const TeacherAIToolsContent = () => {
                         </SelectContent>
                       </Select>
                     </div>
-                    <div className="space-y-2">
-                      <Label>Difficulty *</Label>
+                    <div className="space-y-1 md:space-y-2">
+                      <Label className="text-[10px] md:text-xs">Difficulty *</Label>
                       <Select value={formData.difficulty} onValueChange={(v) => setFormData(prev => ({ ...prev, difficulty: v }))}>
-                        <SelectTrigger>
+                        <SelectTrigger className="h-8 md:h-9 text-xs">
                           <SelectValue />
                         </SelectTrigger>
                         <SelectContent>
@@ -682,33 +683,34 @@ const TeacherAIToolsContent = () => {
                     </div>
                   </div>
 
-                  <div className="space-y-2">
-                    <Label>Number of Questions *</Label>
+                  <div className="space-y-1 md:space-y-2">
+                    <Label className="text-[10px] md:text-xs">Number of Questions *</Label>
                     <Input
                       type="number"
                       min="1"
                       max="50"
                       value={formData.numberOfQuestions}
                       onChange={(e) => setFormData(prev => ({ ...prev, numberOfQuestions: e.target.value }))}
+                      className="h-8 md:h-9 text-xs"
                     />
                   </div>
 
                   <div className="flex gap-2">
-                    <Button onClick={handleGenerate} disabled={isGenerating} className="gap-2 flex-1">
+                    <Button onClick={handleGenerate} disabled={isGenerating} className="gap-1.5 flex-1 h-8 md:h-9 text-xs">
                       {isGenerating ? (
                         <>
-                          <Loader2 className="w-4 h-4 animate-spin" />
+                          <Loader2 className="w-3.5 h-3.5 animate-spin" />
                           Generating...
                         </>
                       ) : (
                         <>
-                          <Sparkles className="w-4 h-4" />
-                          Generate Questions
+                          <Sparkles className="w-3.5 h-3.5" />
+                          Generate
                         </>
                       )}
                     </Button>
                     {generatedQuestions.length > 0 && (
-                      <Button variant="outline" onClick={handleReset}>Reset</Button>
+                      <Button variant="outline" onClick={handleReset} className="h-8 md:h-9 text-xs">Reset</Button>
                     )}
                   </div>
                   </>
@@ -720,85 +722,85 @@ const TeacherAIToolsContent = () => {
             {/* Right: Results */}
             <div>
               {isGenerating ? (
-                <Card className="h-full flex items-center justify-center min-h-[400px]">
+                <Card className="h-full flex items-center justify-center min-h-[200px] md:min-h-[400px] rounded-lg">
                   <CardContent className="text-center">
-                    <Loader2 className="w-12 h-12 animate-spin text-primary mx-auto mb-4" />
-                    <p className="font-medium">Generating questions...</p>
-                    <p className="text-sm text-muted-foreground">This may take a few moments</p>
+                    <Loader2 className="w-8 h-8 md:w-12 md:h-12 animate-spin text-primary mx-auto mb-3" />
+                    <p className="text-sm font-medium">Generating questions...</p>
+                    <p className="text-xs text-muted-foreground">This may take a few moments</p>
                   </CardContent>
                 </Card>
               ) : generatedQuestions.length > 0 ? (
-                <Card>
-                  <CardHeader>
-                    <div className="flex items-center justify-between">
-                      <div>
-                        <CardTitle>Generated Questions</CardTitle>
-                        <CardDescription>
+                <Card className="rounded-lg">
+                  <CardHeader className="p-2.5 md:p-4">
+                    <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                      <div className="min-w-0">
+                        <CardTitle className="text-sm md:text-base truncate">Generated Questions</CardTitle>
+                        <CardDescription className="text-[10px] md:text-xs truncate">
                           {generatedQuestions.length} questions for Class {formData.class} {formData.subject}
                         </CardDescription>
                       </div>
-                      <div className="flex gap-2">
-                        <Button variant="outline" size="sm" onClick={() => setIsSaveDialogOpen(true)}>
-                          <Save className="w-4 h-4 mr-1" />
+                      <div className="flex gap-1.5 flex-wrap">
+                        <Button variant="outline" size="sm" className="h-7 text-[10px] md:text-xs px-2" onClick={() => setIsSaveDialogOpen(true)}>
+                          <Save className="w-3 h-3 mr-1" />
                           Save
                         </Button>
-                        <Button variant="outline" size="sm" onClick={() => {
+                        <Button variant="outline" size="sm" className="h-7 text-[10px] md:text-xs px-2" onClick={() => {
                           saveGeneratedAsAssessment(generatedQuestions, {
                             subject: formData.subject,
                             chapter: formData.chapter,
                             topic: formData.topic,
                           });
                         }}>
-                          <FileText className="w-4 h-4 mr-1" />
-                          Create Assessment
+                          <FileText className="w-3 h-3 mr-1" />
+                          <span className="hidden sm:inline">Create </span>Test
                         </Button>
-                        <Button size="sm" onClick={() => setIsAssignDialogOpen(true)}>
-                          <Users className="w-4 h-4 mr-1" />
+                        <Button size="sm" className="h-7 text-[10px] md:text-xs px-2" onClick={() => setIsAssignDialogOpen(true)}>
+                          <Users className="w-3 h-3 mr-1" />
                           Assign
                         </Button>
                       </div>
                     </div>
                   </CardHeader>
-                  <CardContent className="space-y-4 max-h-[600px] overflow-y-auto">
+                  <CardContent className="p-2.5 md:p-4 pt-0 space-y-2.5 md:space-y-4 max-h-[400px] md:max-h-[600px] overflow-y-auto">
                     {generatedQuestions.map((q, index) => (
                       <div key={q.id} className={cn(
-                        "p-4 border rounded-lg transition-colors",
+                        "p-2.5 md:p-4 border rounded-lg transition-colors",
                         q.approved === true && "border-green-300 bg-green-50/30",
                         q.approved === false && "border-red-300 bg-red-50/30"
                       )}>
                         {/* Question Header with Quality Badges */}
-                        <div className="flex items-start justify-between mb-3">
-                          <div className="flex flex-wrap items-center gap-2">
-                            <Badge variant="outline">Q{index + 1}</Badge>
-                            <Badge>{q.type}</Badge>
-                            <Badge variant="secondary" className="capitalize">{q.difficulty}</Badge>
-                            <Badge variant={q.cbseAligned ? "default" : "destructive"} className="gap-1">
-                              <Shield className="w-3 h-3" />
-                              {q.cbseAligned ? "CBSE Aligned" : "Needs Review"}
+                        <div className="flex items-start justify-between mb-2 md:mb-3">
+                          <div className="flex flex-wrap items-center gap-1 md:gap-2">
+                            <Badge variant="outline" className="text-[9px] md:text-xs">Q{index + 1}</Badge>
+                            <Badge className="text-[9px] md:text-xs">{q.type}</Badge>
+                            <Badge variant="secondary" className="capitalize text-[9px] md:text-xs">{q.difficulty}</Badge>
+                            <Badge variant={q.cbseAligned ? "default" : "destructive"} className="gap-0.5 text-[9px] md:text-xs hidden sm:flex">
+                              <Shield className="w-2.5 h-2.5" />
+                              {q.cbseAligned ? "CBSE" : "Review"}
                             </Badge>
-                            <Badge variant="outline" className="gap-1">
-                              <Brain className="w-3 h-3" />
+                            <Badge variant="outline" className="gap-0.5 text-[9px] md:text-xs hidden md:flex">
+                              <Brain className="w-2.5 h-2.5" />
                               {q.bloomsLevel}
                             </Badge>
                             <Badge 
                               variant={q.aiConfidence >= 90 ? "default" : q.aiConfidence >= 75 ? "secondary" : "destructive"}
-                              className="gap-1"
+                              className="gap-0.5 text-[9px] md:text-xs"
                             >
-                              <TrendingUp className="w-3 h-3" />
-                              {q.aiConfidence}% confidence
+                              <TrendingUp className="w-2.5 h-2.5" />
+                              {q.aiConfidence}%
                             </Badge>
                           </div>
-                          <span className="text-sm font-medium whitespace-nowrap ml-2">{q.marks} mark{q.marks > 1 ? 's' : ''}</span>
+                          <span className="text-[10px] md:text-sm font-medium whitespace-nowrap ml-1">{q.marks}m</span>
                         </div>
 
                         {/* Issue Warnings */}
                         {q.issues && q.issues.length > 0 && (
-                          <div className="mb-3 p-3 bg-amber-50 border border-amber-200 rounded-lg">
-                            <div className="flex items-start gap-2">
-                              <AlertTriangle className="w-4 h-4 text-amber-600 mt-0.5 flex-shrink-0" />
+                          <div className="mb-2 p-2 bg-amber-50 border border-amber-200 rounded-lg">
+                            <div className="flex items-start gap-1.5">
+                              <AlertTriangle className="w-3.5 h-3.5 text-amber-600 mt-0.5 flex-shrink-0" />
                               <div className="flex-1">
-                                <p className="text-xs font-semibold text-amber-900 mb-1">Quality Issues Detected</p>
-                                <ul className="text-xs text-amber-700 space-y-0.5">
+                                <p className="text-[10px] font-semibold text-amber-900 mb-0.5">Issues</p>
+                                <ul className="text-[10px] text-amber-700 space-y-0.5">
                                   {q.issues.map((issue, idx) => (
                                     <li key={idx}>• {issue}</li>
                                   ))}
@@ -808,52 +810,52 @@ const TeacherAIToolsContent = () => {
                           </div>
                         )}
 
-                        <p className="font-medium mb-3">{q.question}</p>
+                        <p className="text-xs md:text-sm font-medium mb-2">{q.question}</p>
                         {q.options && (
-                          <div className="space-y-1 mb-3">
+                          <div className="space-y-1 mb-2">
                             {q.options.map((opt, i) => (
                               <div 
                                 key={i} 
-                                className={`text-sm p-2 rounded ${opt === q.correctAnswer ? 'bg-green-100 text-green-700' : 'bg-muted'}`}
+                                className={`text-[10px] md:text-xs p-1.5 md:p-2 rounded ${opt === q.correctAnswer ? 'bg-green-100 text-green-700' : 'bg-muted'}`}
                               >
                                 {String.fromCharCode(65 + i)}) {opt}
-                                {opt === q.correctAnswer && <CheckCircle className="w-4 h-4 inline ml-2" />}
+                                {opt === q.correctAnswer && <CheckCircle className="w-3 h-3 inline ml-1" />}
                               </div>
                             ))}
                           </div>
                         )}
-                        <div className="text-sm text-muted-foreground bg-muted/30 p-2 rounded mb-3">
+                        <div className="text-[10px] md:text-xs text-muted-foreground bg-muted/30 p-1.5 md:p-2 rounded mb-2">
                           <strong>Explanation:</strong> {q.explanation}
                         </div>
 
                         {/* Question Actions */}
-                        <div className="flex items-center gap-2 pt-3 border-t">
+                        <div className="flex flex-wrap items-center gap-1 md:gap-2 pt-2 border-t">
                           <Button
                             size="sm"
                             variant={q.approved === true ? "default" : "outline"}
                             onClick={() => handleApproveQuestion(q.id)}
-                            className="gap-1"
+                            className="gap-0.5 h-6 md:h-7 text-[9px] md:text-xs px-1.5 md:px-2"
                           >
-                            <ThumbsUp className="w-3.5 h-3.5" />
-                            {q.approved === true ? "Approved" : "Approve"}
+                            <ThumbsUp className="w-3 h-3" />
+                            <span className="hidden sm:inline">{q.approved === true ? "Approved" : "Approve"}</span>
                           </Button>
                           <Button
                             size="sm"
                             variant={q.approved === false ? "destructive" : "outline"}
                             onClick={() => handleFlagQuestion(q.id)}
-                            className="gap-1"
+                            className="gap-0.5 h-6 md:h-7 text-[9px] md:text-xs px-1.5 md:px-2"
                           >
-                            <ThumbsDown className="w-3.5 h-3.5" />
-                            {q.approved === false ? "Flagged" : "Flag"}
+                            <ThumbsDown className="w-3 h-3" />
+                            <span className="hidden sm:inline">{q.approved === false ? "Flagged" : "Flag"}</span>
                           </Button>
                           <Button
                             size="sm"
                             variant="outline"
                             onClick={() => handleSaveToLibrary(q)}
-                            className="gap-1"
+                            className="gap-0.5 h-6 md:h-7 text-[9px] md:text-xs px-1.5 md:px-2 hidden sm:flex"
                           >
-                            <BookmarkPlus className="w-3.5 h-3.5" />
-                            Save to Library
+                            <BookmarkPlus className="w-3 h-3" />
+                            Save
                           </Button>
                           <div className="flex-1" />
                           <Button 
@@ -861,20 +863,20 @@ const TeacherAIToolsContent = () => {
                             variant="outline" 
                             onClick={() => handleRegenerateQuestion(q.id)}
                             disabled={q.isRegenerating}
-                            className="gap-1"
+                            className="gap-0.5 h-6 md:h-7 text-[9px] md:text-xs px-1.5 md:px-2"
                           >
                             {q.isRegenerating ? (
-                              <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                              <Loader2 className="w-3 h-3 animate-spin" />
                             ) : (
-                              <RefreshCw className="w-3.5 h-3.5" />
+                              <RefreshCw className="w-3 h-3" />
                             )}
-                            {q.isRegenerating ? 'Regenerating...' : 'Regenerate'}
+                            <span className="hidden sm:inline">{q.isRegenerating ? 'Regen...' : 'Regen'}</span>
                           </Button>
-                          <Button size="sm" variant="ghost" className="gap-1">
-                            <Edit className="w-3.5 h-3.5" />
+                          <Button size="sm" variant="ghost" className="h-6 md:h-7 w-6 md:w-7 p-0">
+                            <Edit className="w-3 h-3" />
                           </Button>
-                          <Button size="sm" variant="ghost" className="gap-1 text-destructive hover:text-destructive">
-                            <Trash2 className="w-3.5 h-3.5" />
+                          <Button size="sm" variant="ghost" className="h-6 md:h-7 w-6 md:w-7 p-0 text-destructive hover:text-destructive">
+                            <Trash2 className="w-3 h-3" />
                           </Button>
                         </div>
                       </div>
@@ -882,12 +884,12 @@ const TeacherAIToolsContent = () => {
                   </CardContent>
                 </Card>
               ) : (
-                <Card className="h-full flex items-center justify-center min-h-[400px]">
-                  <CardContent className="text-center">
-                    <Sparkles className="w-12 h-12 text-muted-foreground mx-auto mb-4" />
-                    <p className="font-medium">No questions generated yet</p>
-                    <p className="text-sm text-muted-foreground">
-                      Configure parameters and click "Generate Questions"
+                <Card className="h-full flex items-center justify-center min-h-[150px] md:min-h-[400px] rounded-lg">
+                  <CardContent className="text-center p-4">
+                    <Sparkles className="w-8 h-8 md:w-12 md:h-12 text-muted-foreground mx-auto mb-2 md:mb-4" />
+                    <p className="text-sm font-medium">No questions generated yet</p>
+                    <p className="text-[10px] md:text-xs text-muted-foreground">
+                      Configure parameters and click "Generate"
                     </p>
                   </CardContent>
                 </Card>
@@ -897,36 +899,36 @@ const TeacherAIToolsContent = () => {
           </div>
         </TabsContent>
 
-        <TabsContent value="pdf-upload" className="p-4 md:p-6 pt-4">
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <FileUp className="w-5 h-5" />
+        <TabsContent value="pdf-upload" className="pt-2 md:pt-4">
+          <Card className="rounded-lg">
+            <CardHeader className="p-2.5 md:p-4">
+              <CardTitle className="flex items-center gap-2 text-sm md:text-base">
+                <FileUp className="w-4 h-4" />
                 PDF Question Extraction
               </CardTitle>
-              <CardDescription>
-                Upload existing question papers or study materials to extract questions automatically
+              <CardDescription className="text-[10px] md:text-xs">
+                Upload question papers to extract questions automatically
               </CardDescription>
             </CardHeader>
-            <CardContent className="space-y-6">
+            <CardContent className="p-2.5 md:p-4 pt-0 space-y-3 md:space-y-6">
               {/* File Upload Section */}
-              <div className="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center hover:border-primary transition-colors">
-                <div className="space-y-4">
-                  <div className="mx-auto w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center">
-                    <Upload className="w-8 h-8 text-primary" />
+              <div className="border-2 border-dashed border-gray-300 rounded-lg p-4 md:p-8 text-center hover:border-primary transition-colors">
+                <div className="space-y-2 md:space-y-4">
+                  <div className="mx-auto w-10 h-10 md:w-16 md:h-16 bg-primary/10 rounded-full flex items-center justify-center">
+                    <Upload className="w-5 h-5 md:w-8 md:h-8 text-primary" />
                   </div>
                   <div>
-                    <h3 className="font-medium text-lg mb-1">
+                    <h3 className="font-medium text-xs md:text-lg mb-0.5 md:mb-1 truncate">
                       {uploadedFile ? uploadedFile.name : 'Upload PDF Document'}
                     </h3>
-                    <p className="text-sm text-muted-foreground mb-4">
+                    <p className="text-[10px] md:text-sm text-muted-foreground mb-2 md:mb-4">
                       {uploadedFile 
                         ? `File size: ${(uploadedFile.size / 1024).toFixed(2)} KB`
-                        : 'Click to browse or drag and drop your PDF file here'
+                        : 'Click to browse or drag and drop'
                       }
                     </p>
                   </div>
-                  <div className="flex gap-3 justify-center">
+                  <div className="flex gap-2 justify-center flex-wrap">
                     <Input
                       type="file"
                       accept=".pdf"
@@ -935,24 +937,24 @@ const TeacherAIToolsContent = () => {
                       id="pdf-upload"
                     />
                     <label htmlFor="pdf-upload">
-                      <Button variant="outline" asChild>
+                      <Button variant="outline" asChild className="h-8 text-xs">
                         <span>
-                          <FileUp className="w-4 h-4 mr-2" />
-                          {uploadedFile ? 'Change File' : 'Choose File'}
+                          <FileUp className="w-3.5 h-3.5 mr-1.5" />
+                          {uploadedFile ? 'Change' : 'Choose File'}
                         </span>
                       </Button>
                     </label>
                     {uploadedFile && (
-                      <Button onClick={handleExtractQuestions} disabled={isExtracting}>
+                      <Button onClick={handleExtractQuestions} disabled={isExtracting} className="h-8 text-xs">
                         {isExtracting ? (
                           <>
-                            <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                            <Loader2 className="w-3.5 h-3.5 mr-1.5 animate-spin" />
                             Extracting...
                           </>
                         ) : (
                           <>
-                            <Sparkles className="w-4 h-4 mr-2" />
-                            Extract Questions
+                            <Sparkles className="w-3.5 h-3.5 mr-1.5" />
+                            Extract
                           </>
                         )}
                       </Button>
@@ -963,28 +965,28 @@ const TeacherAIToolsContent = () => {
 
               {/* Extracted Questions */}
               {extractedQuestions.length > 0 && (
-                <div className="space-y-4">
-                  <div className="flex items-center justify-between">
+                <div className="space-y-2 md:space-y-4">
+                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
                     <div className="flex items-center gap-2">
-                      <h3 className="font-semibold">Extracted Questions</h3>
-                      <Badge variant="secondary">{extractedQuestions.length} questions</Badge>
+                      <h3 className="text-xs md:text-sm font-semibold">Extracted Questions</h3>
+                      <Badge variant="secondary" className="text-[10px] md:text-xs">{extractedQuestions.length}</Badge>
                     </div>
-                    <div className="flex gap-2">
-                      <Button onClick={handleAddExtractedToGenerated} size="sm">
-                        <Plus className="w-4 h-4 mr-2" />
-                        Add to Generated
+                    <div className="flex gap-1.5">
+                      <Button onClick={handleAddExtractedToGenerated} size="sm" className="h-7 text-[10px] md:text-xs px-2">
+                        <Plus className="w-3 h-3 mr-1" />
+                        Add
                       </Button>
-                      <Button onClick={handleCombineQuestions} size="sm" variant="default">
-                        <CheckCircle className="w-4 h-4 mr-2" />
-                        Combine with AI Questions
+                      <Button onClick={handleCombineQuestions} size="sm" variant="default" className="h-7 text-[10px] md:text-xs px-2">
+                        <CheckCircle className="w-3 h-3 mr-1" />
+                        Combine
                       </Button>
                     </div>
                   </div>
 
-                  <div className="space-y-3">
+                  <div className="space-y-2">
                     {extractedQuestions.map((question, index) => (
-                      <Card key={question.id} className="border-l-4 border-l-blue-500">
-                        <CardContent className="p-4">
+                      <Card key={question.id} className="border-l-4 border-l-blue-500 rounded-lg">
+                        <CardContent className="p-2.5 md:p-4">
                           {editingQuestionId === question.id ? (
                             // Edit Mode
                             <div className="space-y-3">
@@ -1142,15 +1144,14 @@ const TeacherAIToolsContent = () => {
 
               {/* Help Text */}
               {extractedQuestions.length === 0 && !uploadedFile && (
-                <div className="text-center py-8">
-                  <Info className="w-12 h-12 text-muted-foreground mx-auto mb-3" />
-                  <h3 className="font-medium mb-2">How PDF Extraction Works</h3>
-                  <div className="text-sm text-muted-foreground max-w-2xl mx-auto space-y-2">
-                    <p>1. Upload a PDF containing questions (question papers, worksheets, practice sets)</p>
-                    <p>2. AI will automatically extract questions, answers, and explanations</p>
-                    <p>3. Review and edit extracted questions as needed</p>
-                    <p>4. Combine with AI-generated questions or use independently</p>
-                    <p>5. Save to library or assign directly to students</p>
+                <div className="text-center py-4 md:py-8">
+                  <Info className="w-8 h-8 md:w-12 md:h-12 text-muted-foreground mx-auto mb-2" />
+                  <h3 className="text-xs md:text-sm font-medium mb-1.5">How PDF Extraction Works</h3>
+                  <div className="text-[10px] md:text-xs text-muted-foreground max-w-2xl mx-auto space-y-1">
+                    <p>1. Upload a PDF with questions</p>
+                    <p>2. AI extracts questions automatically</p>
+                    <p>3. Review and edit as needed</p>
+                    <p>4. Save to library or assign</p>
                   </div>
                 </div>
               )}
@@ -1158,72 +1159,74 @@ const TeacherAIToolsContent = () => {
           </Card>
         </TabsContent>
 
-        <TabsContent value="library" className="p-4 md:p-6 pt-4">
-          <Card>
-            <CardHeader>
+        <TabsContent value="library" className="pt-2 md:pt-4">
+          <Card className="rounded-lg">
+            <CardHeader className="p-2.5 md:p-4">
               <div className="flex items-center justify-between">
                 <div>
-                  <CardTitle className="flex items-center gap-2">
-                    <Library className="w-5 h-5" />
+                  <CardTitle className="flex items-center gap-1.5 text-sm md:text-base">
+                    <Library className="w-4 h-4" />
                     Question Library
                   </CardTitle>
-                  <CardDescription>
-                    {savedQuestions.length} saved questions • Reuse high-quality questions
+                  <CardDescription className="text-[10px] md:text-xs">
+                    {savedQuestions.length} saved • Reuse high-quality questions
                   </CardDescription>
                 </div>
               </div>
             </CardHeader>
-            <CardContent className="space-y-4">
+            <CardContent className="p-2.5 md:p-4 pt-0 space-y-2 md:space-y-4">
               {/* Filters */}
-              <div className="flex flex-col sm:flex-row gap-3">
-                <div className="relative flex-1">
-                  <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+              <div className="flex flex-col gap-2">
+                <div className="relative">
+                  <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-gray-400" />
                   <Input
                     placeholder="Search questions..."
                     value={librarySearch}
                     onChange={(e) => setLibrarySearch(e.target.value)}
-                    className="pl-10"
+                    className="pl-8 h-8 text-xs"
                   />
                 </div>
-                <Select value={libraryFilters.class} onValueChange={(v) => setLibraryFilters(prev => ({ ...prev, class: v }))}>
-                  <SelectTrigger className="w-full sm:w-[150px]">
-                    <SelectValue placeholder="Class" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="all">All Classes</SelectItem>
-                    <SelectItem value="8">Class 8</SelectItem>
-                    <SelectItem value="9">Class 9</SelectItem>
-                    <SelectItem value="10">Class 10</SelectItem>
-                    <SelectItem value="11">Class 11</SelectItem>
-                    <SelectItem value="12">Class 12</SelectItem>
+                <div className="grid grid-cols-3 gap-1.5">
+                  <Select value={libraryFilters.class} onValueChange={(v) => setLibraryFilters(prev => ({ ...prev, class: v }))}>
+                    <SelectTrigger className="h-8 text-[10px] md:text-xs">
+                      <SelectValue placeholder="Class" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="all">All Classes</SelectItem>
+                      <SelectItem value="8">Class 8</SelectItem>
+                      <SelectItem value="9">Class 9</SelectItem>
+                      <SelectItem value="10">Class 10</SelectItem>
+                      <SelectItem value="11">Class 11</SelectItem>
+                      <SelectItem value="12">Class 12</SelectItem>
                   </SelectContent>
                 </Select>
                 <Select value={libraryFilters.difficulty} onValueChange={(v) => setLibraryFilters(prev => ({ ...prev, difficulty: v }))}>
-                  <SelectTrigger className="w-full sm:w-[150px]">
+                  <SelectTrigger className="h-8 text-[10px] md:text-xs">
                     <SelectValue placeholder="Difficulty" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="all">All Difficulties</SelectItem>
+                    <SelectItem value="all">All</SelectItem>
                     <SelectItem value="easy">Easy</SelectItem>
                     <SelectItem value="medium">Medium</SelectItem>
                     <SelectItem value="hard">Hard</SelectItem>
                   </SelectContent>
                 </Select>
                 <Select value={libraryFilters.type} onValueChange={(v) => setLibraryFilters(prev => ({ ...prev, type: v }))}>
-                  <SelectTrigger className="w-full sm:w-[150px]">
+                  <SelectTrigger className="h-8 text-[10px] md:text-xs">
                     <SelectValue placeholder="Type" />
                   </SelectTrigger>
                   <SelectContent>
                     <SelectItem value="all">All Types</SelectItem>
                     <SelectItem value="mcq">MCQ</SelectItem>
-                    <SelectItem value="short">Short Answer</SelectItem>
-                    <SelectItem value="long">Long Answer</SelectItem>
+                    <SelectItem value="short">Short</SelectItem>
+                    <SelectItem value="long">Long</SelectItem>
                   </SelectContent>
                 </Select>
+                </div>
               </div>
 
-              {/* Questions Grid/Table */}
-              <div className="border rounded-lg">
+              {/* Questions Grid/Table - Mobile Cards / Desktop Table */}
+              <div className="hidden md:block border rounded-lg overflow-x-auto">
                 <Table>
                   <TableHeader>
                     <TableRow>
@@ -1234,7 +1237,7 @@ const TeacherAIToolsContent = () => {
                       <TableHead>Type</TableHead>
                       <TableHead>Difficulty</TableHead>
                       <TableHead className="text-center">Quality</TableHead>
-                      <TableHead className="text-center">Times Used</TableHead>
+                      <TableHead className="text-center">Used</TableHead>
                       <TableHead className="text-right">Actions</TableHead>
                     </TableRow>
                   </TableHeader>
@@ -1308,12 +1311,12 @@ const TeacherAIToolsContent = () => {
                           </TableCell>
                           <TableCell className="text-right">
                             <div className="flex items-center justify-end gap-1">
-                              <Button size="sm" variant="outline" className="h-8 text-xs">
-                                <Eye className="w-3.5 h-3.5 mr-1" />
+                              <Button size="sm" variant="outline" className="h-7 text-xs px-2">
+                                <Eye className="w-3 h-3 mr-1" />
                                 View
                               </Button>
-                              <Button size="sm" variant="default" className="h-8 text-xs">
-                                Add to Assessment
+                              <Button size="sm" variant="default" className="h-7 text-xs px-2">
+                                Add
                               </Button>
                             </div>
                           </TableCell>
@@ -1321,13 +1324,13 @@ const TeacherAIToolsContent = () => {
                       ))
                     ) : (
                       <TableRow>
-                        <TableCell colSpan={8} className="text-center py-12">
-                          <Library className="w-12 h-12 text-muted-foreground mx-auto mb-3" />
-                          <p className="font-medium">No questions found</p>
-                          <p className="text-sm text-muted-foreground mt-1">
+                        <TableCell colSpan={9} className="text-center py-8">
+                          <Library className="w-8 h-8 text-muted-foreground mx-auto mb-2" />
+                          <p className="text-sm font-medium">No questions found</p>
+                          <p className="text-xs text-muted-foreground mt-1">
                             {librarySearch || libraryFilters.difficulty !== 'all' || libraryFilters.type !== 'all'
                               ? 'Try adjusting your filters'
-                              : 'Save questions from the generator to build your library'}
+                              : 'Save questions to build your library'}
                           </p>
                         </TableCell>
                       </TableRow>
@@ -1335,28 +1338,67 @@ const TeacherAIToolsContent = () => {
                   </TableBody>
                 </Table>
               </div>
+
+              {/* Mobile Card View */}
+              <div className="md:hidden space-y-2">
+                {filteredLibraryQuestions.length > 0 ? (
+                  filteredLibraryQuestions.slice(0, 10).map((q) => (
+                    <Card key={q.id} className="rounded-lg">
+                      <CardContent className="p-2.5">
+                        <div className="flex items-start gap-2">
+                          <Button
+                            size="sm"
+                            variant="ghost"
+                            onClick={() => handleToggleHighQuality(q.id)}
+                            className={cn("h-6 w-6 p-0 flex-shrink-0", q.markedHighQuality && "text-yellow-500")}
+                          >
+                            <Star className={cn("w-3.5 h-3.5", q.markedHighQuality && "fill-yellow-500")} />
+                          </Button>
+                          <div className="flex-1 min-w-0">
+                            <p className="text-xs font-medium line-clamp-2">{q.question}</p>
+                            <div className="flex flex-wrap items-center gap-1 mt-1.5">
+                              <Badge variant="secondary" className="text-[9px]">{q.class || 'N/A'}</Badge>
+                              <Badge variant="outline" className="text-[9px] uppercase">{q.type}</Badge>
+                              <Badge variant={q.difficulty === 'easy' ? 'secondary' : q.difficulty === 'hard' ? 'destructive' : 'default'} className="text-[9px] capitalize">{q.difficulty}</Badge>
+                              <span className="text-[9px] text-muted-foreground">{q.qualityScore}%</span>
+                            </div>
+                            <div className="flex gap-1 mt-2">
+                              <Button size="sm" variant="outline" className="h-6 text-[9px] px-2 flex-1">View</Button>
+                              <Button size="sm" variant="default" className="h-6 text-[9px] px-2 flex-1">Add</Button>
+                            </div>
+                          </div>
+                        </div>
+                      </CardContent>
+                    </Card>
+                  ))
+                ) : (
+                  <div className="text-center py-6">
+                    <Library className="w-8 h-8 text-muted-foreground mx-auto mb-2" />
+                    <p className="text-xs font-medium">No questions found</p>
+                  </div>
+                )}
+              </div>
             </CardContent>
           </Card>
         </TabsContent>
 
-        <TabsContent value="worksheet" className="p-4 md:p-6 pt-4">
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <FileText className="w-5 h-5" />
+        <TabsContent value="worksheet" className="pt-2 md:pt-4">
+          <Card className="rounded-lg">
+            <CardHeader className="p-2.5 md:p-4">
+              <CardTitle className="flex items-center gap-1.5 text-sm md:text-base">
+                <FileText className="w-4 h-4" />
                 Worksheet Generator
               </CardTitle>
-              <CardDescription>
-                Generate printable worksheets with mixed question types
+              <CardDescription className="text-[10px] md:text-xs">
+                Generate printable worksheets
               </CardDescription>
             </CardHeader>
-            <CardContent>
-              <div className="text-center py-12">
-                <FileText className="w-16 h-16 text-muted-foreground mx-auto mb-4" />
-                <h3 className="text-lg font-medium mb-2">Coming Soon!</h3>
-                <p className="text-muted-foreground max-w-md mx-auto">
-                  Worksheet generator with mixed question types, print-friendly formatting, 
-                  PDF export, and optional answer key is under development.
+            <CardContent className="p-2.5 md:p-4 pt-0">
+              <div className="text-center py-6 md:py-12">
+                <FileText className="w-10 h-10 md:w-16 md:h-16 text-muted-foreground mx-auto mb-2 md:mb-4" />
+                <h3 className="text-sm md:text-lg font-medium mb-1.5">Coming Soon!</h3>
+                <p className="text-[10px] md:text-sm text-muted-foreground max-w-md mx-auto">
+                  Worksheet generator with mixed question types and PDF export is under development.
                 </p>
               </div>
             </CardContent>

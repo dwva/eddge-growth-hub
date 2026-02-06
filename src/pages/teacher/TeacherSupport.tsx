@@ -59,45 +59,45 @@ const TeacherSupportContent = () => {
   };
 
   return (
-    <div className="space-y-6 max-w-[1600px]">
+    <div className="space-y-3 md:space-y-6 max-w-[1600px]">
       {/* Page Header - Clean */}
-      <div className="pb-4 border-b border-gray-100">
-        <h1 className="text-lg md:text-xl font-bold text-gray-900">Help & Support</h1>
-        <p className="text-xs md:text-sm text-gray-500 mt-0.5">Get help with using EDDGE Teacher Portal</p>
+      <div className="pb-3 md:pb-4 border-b border-gray-100">
+        <h1 className="text-base md:text-lg font-bold text-gray-900">Help & Support</h1>
+        <p className="text-[10px] md:text-xs text-gray-500 mt-0.5">Get help with using EDDGE Teacher Portal</p>
       </div>
 
       {/* Quick Links */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <Card className="hover:border-primary/50 transition-colors cursor-pointer">
-          <CardContent className="pt-6">
-            <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center">
-                <HelpCircle className="w-5 h-5 text-primary" />
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-2 md:gap-4">
+        <Card className="hover:border-primary/50 transition-colors cursor-pointer rounded-lg md:rounded-xl">
+          <CardContent className="pt-4 md:pt-6 p-3 md:p-6">
+            <div className="flex items-center gap-2 md:gap-3">
+              <div className="w-8 h-8 md:w-10 md:h-10 rounded-lg bg-primary/10 flex items-center justify-center">
+                <HelpCircle className="w-4 h-4 md:w-5 md:h-5 text-primary" />
               </div>
               <div>
-                <p className="font-medium">FAQs</p>
-                <p className="text-sm text-muted-foreground">Quick answers to common questions</p>
+                <p className="font-medium text-xs md:text-sm">FAQs</p>
+                <p className="text-[10px] md:text-sm text-muted-foreground">Quick answers</p>
               </div>
             </div>
           </CardContent>
         </Card>
-        <Card className="hover:border-primary/50 transition-colors cursor-pointer">
-          <CardContent className="pt-6">
-            <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-lg bg-blue-500/10 flex items-center justify-center">
-                <FileText className="w-5 h-5 text-blue-500" />
+        <Card className="hover:border-primary/50 transition-colors cursor-pointer rounded-lg md:rounded-xl">
+          <CardContent className="pt-4 md:pt-6 p-3 md:p-6">
+            <div className="flex items-center gap-2 md:gap-3">
+              <div className="w-8 h-8 md:w-10 md:h-10 rounded-lg bg-blue-500/10 flex items-center justify-center">
+                <FileText className="w-4 h-4 md:w-5 md:h-5 text-blue-500" />
               </div>
               <div>
-                <p className="font-medium">Documentation</p>
-                <p className="text-sm text-muted-foreground">Detailed guides and tutorials</p>
+                <p className="font-medium text-xs md:text-sm">Documentation</p>
+                <p className="text-[10px] md:text-sm text-muted-foreground">Detailed guides</p>
               </div>
             </div>
           </CardContent>
         </Card>
-        <Card className="hover:border-primary/50 transition-colors cursor-pointer">
-          <CardContent className="pt-6">
-            <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-lg bg-green-500/10 flex items-center justify-center">
+        <Card className="hover:border-primary/50 transition-colors cursor-pointer rounded-lg md:rounded-xl">
+          <CardContent className="pt-4 md:pt-6 p-3 md:p-6">
+            <div className="flex items-center gap-2 md:gap-3">
+              <div className="w-8 h-8 md:w-10 md:h-10 rounded-lg bg-green-500/10 flex items-center justify-center">
                 <MessageCircle className="w-5 h-5 text-green-500" />
               </div>
               <div>

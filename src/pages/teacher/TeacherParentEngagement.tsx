@@ -70,72 +70,72 @@ const TeacherParentEngagementContent = () => {
   };
 
   return (
-    <div className="space-y-6 max-w-[1600px]">
+    <div className="space-y-3 md:space-y-6 max-w-[1600px]">
       {/* Header */}
-      <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 md:gap-4">
         <div>
-          <h1 className="text-lg md:text-xl font-bold text-gray-900">Parent Engagement Analytics</h1>
-          <p className="text-xs md:text-sm text-gray-500 mt-0.5">Monitor parent communication and responsiveness</p>
+          <h1 className="text-base md:text-lg font-bold text-gray-900">Parent Engagement</h1>
+          <p className="text-[10px] md:text-xs text-gray-500 mt-0.5">Monitor parent communication</p>
         </div>
-        <Button variant="outline" className="gap-2" onClick={handleExport}>
-          <Download className="w-4 h-4" />
-          Export Report
+        <Button variant="outline" size="sm" className="gap-1.5 h-7 md:h-8 text-[10px] md:text-xs rounded-lg" onClick={handleExport}>
+          <Download className="w-3 h-3 md:w-4 md:h-4" />
+          Export
         </Button>
       </div>
 
       {/* Summary Cards */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-        <Card className="rounded-xl shadow-sm border-0">
-          <CardContent className="p-4">
-            <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-lg bg-emerald-100 flex items-center justify-center">
-                <TrendingUp className="w-5 h-5 text-emerald-600" />
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-2 md:gap-4">
+        <Card className="rounded-lg md:rounded-xl shadow-sm border-0">
+          <CardContent className="p-2.5 md:p-4">
+            <div className="flex items-center gap-2 md:gap-3">
+              <div className="w-7 h-7 md:w-10 md:h-10 rounded-lg bg-emerald-100 flex items-center justify-center">
+                <TrendingUp className="w-3.5 h-3.5 md:w-5 md:h-5 text-emerald-600" />
               </div>
               <div>
-                <p className="text-xs text-gray-500">High Engagement</p>
-                <p className="text-sm font-bold text-emerald-600">{highEngagement}</p>
+                <p className="text-[9px] md:text-xs text-gray-500">High</p>
+                <p className="text-xs md:text-sm font-bold text-emerald-600">{highEngagement}</p>
               </div>
             </div>
           </CardContent>
         </Card>
 
-        <Card className="rounded-xl shadow-sm border-0">
-          <CardContent className="p-4">
-            <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-lg bg-amber-100 flex items-center justify-center">
-                <Users className="w-5 h-5 text-amber-600" />
+        <Card className="rounded-lg md:rounded-xl shadow-sm border-0">
+          <CardContent className="p-2.5 md:p-4">
+            <div className="flex items-center gap-2 md:gap-3">
+              <div className="w-7 h-7 md:w-10 md:h-10 rounded-lg bg-amber-100 flex items-center justify-center">
+                <Users className="w-3.5 h-3.5 md:w-5 md:h-5 text-amber-600" />
               </div>
               <div>
-                <p className="text-xs text-gray-500">Medium Engagement</p>
-                <p className="text-sm font-bold text-amber-600">{mediumEngagement}</p>
+                <p className="text-[9px] md:text-xs text-gray-500">Medium</p>
+                <p className="text-xs md:text-sm font-bold text-amber-600">{mediumEngagement}</p>
               </div>
             </div>
           </CardContent>
         </Card>
 
-        <Card className="rounded-xl shadow-sm border-0 bg-red-50">
-          <CardContent className="p-4">
-            <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-lg bg-red-200 flex items-center justify-center">
-                <AlertTriangle className="w-5 h-5 text-red-600" />
+        <Card className="rounded-lg md:rounded-xl shadow-sm border-0 bg-red-50">
+          <CardContent className="p-2.5 md:p-4">
+            <div className="flex items-center gap-2 md:gap-3">
+              <div className="w-7 h-7 md:w-10 md:h-10 rounded-lg bg-red-200 flex items-center justify-center">
+                <AlertTriangle className="w-3.5 h-3.5 md:w-5 md:h-5 text-red-600" />
               </div>
               <div>
-                <p className="text-xs text-red-600">Low Engagement</p>
-                <p className="text-sm font-bold text-red-700">{lowEngagement}</p>
+                <p className="text-[9px] md:text-xs text-red-600">Low</p>
+                <p className="text-xs md:text-sm font-bold text-red-700">{lowEngagement}</p>
               </div>
             </div>
           </CardContent>
         </Card>
 
-        <Card className="rounded-xl shadow-sm border-0">
-          <CardContent className="p-4">
-            <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center">
-                <MessageCircle className="w-5 h-5 text-primary" />
+        <Card className="rounded-lg md:rounded-xl shadow-sm border-0">
+          <CardContent className="p-2.5 md:p-4">
+            <div className="flex items-center gap-2 md:gap-3">
+              <div className="w-7 h-7 md:w-10 md:h-10 rounded-lg bg-primary/10 flex items-center justify-center">
+                <MessageCircle className="w-3.5 h-3.5 md:w-5 md:h-5 text-primary" />
               </div>
               <div>
-                <p className="text-xs text-gray-500">Avg Response Rate</p>
-                <p className="text-sm font-bold text-primary">{avgResponseRate}%</p>
+                <p className="text-[9px] md:text-xs text-gray-500">Response</p>
+                <p className="text-xs md:text-sm font-bold text-primary">{avgResponseRate}%</p>
               </div>
             </div>
           </CardContent>
@@ -176,20 +176,20 @@ const TeacherParentEngagementContent = () => {
       )}
 
       {/* Filters */}
-      <Card className="rounded-xl shadow-sm border-0">
-        <CardContent className="p-4">
-          <div className="flex flex-col sm:flex-row gap-3">
+      <Card className="rounded-lg md:rounded-xl shadow-sm border-0">
+        <CardContent className="p-2.5 md:p-4">
+          <div className="flex flex-col sm:flex-row gap-2 md:gap-3">
             <div className="relative flex-1">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+              <Search className="absolute left-2.5 md:left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 md:w-4 md:h-4 text-gray-400" />
               <Input
                 placeholder="Search parents or students..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="pl-10"
+                className="pl-8 md:pl-10 h-8 md:h-9 text-xs rounded-lg"
               />
             </div>
             <Select value={engagementFilter} onValueChange={setEngagementFilter}>
-              <SelectTrigger className="w-full sm:w-48">
+              <SelectTrigger className="w-full sm:w-40 md:w-48 h-8 md:h-9 text-xs rounded-lg">
                 <SelectValue placeholder="Engagement Level" />
               </SelectTrigger>
               <SelectContent>

@@ -97,28 +97,28 @@ const Login = () => {
       </header>
 
       {/* Main Content */}
-      <main className="flex-1 flex items-center justify-center px-6 py-12">
+      <main className="flex-1 flex items-center justify-center px-4 md:px-6 py-6 md:py-12">
         <div className="w-full max-w-md">
           {/* Logo */}
-          <div className="flex items-center justify-center gap-2 mb-8">
-            <div className="w-12 h-12 rounded-xl gradient-primary flex items-center justify-center">
-              <GraduationCap className="w-7 h-7 text-white" />
+          <div className="flex items-center justify-center gap-2 mb-6 md:mb-8">
+            <div className="w-10 h-10 md:w-12 md:h-12 rounded-xl gradient-primary flex items-center justify-center">
+              <GraduationCap className="w-6 h-6 md:w-7 md:h-7 text-white" />
             </div>
-            <span className="text-3xl font-bold text-gradient">EDDGE</span>
+            <span className="text-2xl md:text-3xl font-bold text-gradient">EDDGE</span>
           </div>
 
           {/* Login Card */}
           <Card className="shadow-xl border-0">
-            <CardHeader className="text-center pb-4">
-              <CardTitle className="text-2xl">Welcome Back</CardTitle>
-              <CardDescription>
+            <CardHeader className="text-center pb-3 md:pb-4 p-4 md:p-6">
+              <CardTitle className="text-xl md:text-2xl">Welcome Back</CardTitle>
+              <CardDescription className="text-xs md:text-sm">
                 Sign in with your credentials to access your dashboard
               </CardDescription>
             </CardHeader>
-            <CardContent>
-              <form onSubmit={handleSubmit} className="space-y-4">
-                <div className="space-y-2">
-                  <Label htmlFor="email">Email</Label>
+            <CardContent className="p-4 md:p-6 pt-0">
+              <form onSubmit={handleSubmit} className="space-y-3 md:space-y-4">
+                <div className="space-y-1.5 md:space-y-2">
+                  <Label htmlFor="email" className="text-sm">Email</Label>
                   <Input
                     id="email"
                     type="email"
@@ -126,11 +126,11 @@ const Login = () => {
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     required
-                    className="h-11"
+                    className="h-10 md:h-11 text-sm"
                   />
                 </div>
-                <div className="space-y-2">
-                  <Label htmlFor="password">Password</Label>
+                <div className="space-y-1.5 md:space-y-2">
+                  <Label htmlFor="password" className="text-sm">Password</Label>
                   <div className="relative">
                     <Input
                       id="password"
@@ -139,7 +139,7 @@ const Login = () => {
                       value={password}
                       onChange={(e) => setPassword(e.target.value)}
                       required
-                      className="h-11 pr-10"
+                      className="h-10 md:h-11 pr-10 text-sm"
                     />
                     <button
                       type="button"
@@ -152,7 +152,7 @@ const Login = () => {
                 </div>
                 <Button 
                   type="submit" 
-                  className="w-full h-11 font-semibold"
+                  className="w-full h-10 md:h-11 font-semibold text-sm"
                   disabled={isLoading}
                 >
                   {isLoading ? (
@@ -167,16 +167,16 @@ const Login = () => {
               </form>
 
               {/* Demo Credentials */}
-              <div className="mt-6 pt-6 border-t">
-                <p className="text-sm text-muted-foreground text-center mb-3">
+              <div className="mt-4 md:mt-6 pt-4 md:pt-6 border-t">
+                <p className="text-xs md:text-sm text-muted-foreground text-center mb-2 md:mb-3">
                   Demo Credentials (click to fill)
                 </p>
-                <div className="grid grid-cols-2 gap-2">
+                <div className="grid grid-cols-2 gap-1.5 md:gap-2">
                   {demoCredentials.map((cred) => (
                     <button
                       key={cred.role}
                       onClick={() => fillCredentials(cred.email, cred.password)}
-                      className="text-xs px-3 py-2 rounded-lg bg-secondary hover:bg-accent transition-colors text-left"
+                      className="text-[10px] md:text-xs px-2 md:px-3 py-1.5 md:py-2 rounded-lg bg-secondary hover:bg-accent transition-colors text-left"
                     >
                       <span className="font-medium text-foreground">{cred.role}</span>
                     </button>

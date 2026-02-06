@@ -62,42 +62,43 @@ const TeacherSubjectStudentProfileContent = () => {
   };
 
   return (
-    <div className="space-y-4 max-w-[1600px]">
+    <div className="space-y-3 md:space-y-4 max-w-[1600px]">
       {/* Header with Back Button */}
-      <div className="flex items-center gap-3">
+      <div className="flex items-center gap-2 md:gap-3">
         <Button 
           variant="ghost" 
           size="sm" 
           onClick={() => navigate('/teacher/my-subject/students')}
-          className="gap-2"
+          className="gap-1.5 h-7 md:h-8 text-[10px] md:text-xs"
         >
-          <ArrowLeft className="w-4 h-4" />
-          Back to Students
+          <ArrowLeft className="w-3 h-3 md:w-4 md:h-4" />
+          <span className="hidden sm:inline">Back to Students</span>
+          <span className="sm:hidden">Back</span>
         </Button>
       </div>
 
       {/* Student Header Card */}
-      <Card className="border-0 shadow-sm">
-        <CardContent className="p-6">
+      <Card className="border-0 shadow-sm rounded-lg md:rounded-xl">
+        <CardContent className="p-3 md:p-6">
           <div className="flex items-start justify-between">
-            <div className="flex items-center gap-3">
-              <Avatar className="w-12 h-12">
-                <AvatarFallback className="bg-primary/10 text-primary text-sm font-bold">
+            <div className="flex items-center gap-2 md:gap-3">
+              <Avatar className="w-10 h-10 md:w-12 md:h-12">
+                <AvatarFallback className="bg-primary/10 text-primary text-xs md:text-sm font-bold">
                   {studentData.avatar}
                 </AvatarFallback>
               </Avatar>
               <div>
-                <h1 className="text-lg md:text-xl font-bold text-gray-900">{studentData.name}</h1>
-                <div className="flex items-center gap-3 mt-0.5">
-                  <p className="text-xs text-gray-500">{studentData.class}</p>
+                <h1 className="text-base md:text-lg font-bold text-gray-900">{studentData.name}</h1>
+                <div className="flex items-center gap-2 md:gap-3 mt-0.5">
+                  <p className="text-[10px] md:text-xs text-gray-500">{studentData.class}</p>
                   <span className="text-gray-300">•</span>
-                  <p className="text-sm text-gray-500">{studentData.subject}</p>
+                  <p className="text-[10px] md:text-xs text-gray-500">{studentData.subject}</p>
                 </div>
               </div>
             </div>
-            <div className="flex items-center gap-4">
+            <div className="flex items-center gap-3 md:gap-4">
               <div className="text-right">
-                <p className="text-xs text-gray-500 mb-1">Overall Score</p>
+                <p className="text-[9px] md:text-xs text-gray-500 mb-0.5 md:mb-1">Overall Score</p>
                 <div className="flex items-center gap-2">
                   <span className="text-base font-bold text-gray-900">{studentData.overallScore}%</span>
                   {getTrendIcon(studentData.trend)}

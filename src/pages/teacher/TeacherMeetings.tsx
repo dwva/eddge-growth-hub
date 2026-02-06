@@ -100,18 +100,18 @@ const TeacherMeetingsContent = () => {
   };
 
   return (
-    <div className="space-y-6 max-w-[1600px]">
+    <div className="space-y-3 md:space-y-6 max-w-[1600px]">
       {/* Page Header - Clean */}
-      <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4 pb-4 border-b border-gray-100">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 md:gap-4 pb-3 md:pb-4 border-b border-gray-100">
         <div>
-          <h1 className="text-lg md:text-xl font-bold text-gray-900">PTM Scheduling</h1>
-          <p className="text-xs md:text-sm text-gray-500 mt-0.5">Schedule and manage parent-teacher meetings</p>
+          <h1 className="text-base md:text-lg font-bold text-gray-900">PTM Scheduling</h1>
+          <p className="text-[10px] md:text-xs text-gray-500 mt-0.5">Schedule and manage parent-teacher meetings</p>
         </div>
         <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
           <DialogTrigger asChild>
-            <Button size="sm" className="gap-2 h-10 rounded-xl">
-              <Plus className="w-4 h-4" />
-              Schedule Meeting
+            <Button size="sm" className="gap-1.5 h-7 md:h-8 text-[10px] md:text-xs rounded-lg md:rounded-xl">
+              <Plus className="w-3 h-3 md:w-4 md:h-4" />
+              Schedule
             </Button>
           </DialogTrigger>
           <DialogContent>
@@ -195,9 +195,9 @@ const TeacherMeetingsContent = () => {
         </Dialog>
       </div>
 
-      <Tabs defaultValue="calendar" className="space-y-4">
-        <TabsList className="h-8 p-1 rounded-lg bg-gray-100 w-full sm:w-auto">
-          <TabsTrigger value="calendar" className="text-xs px-3 py-1.5 h-7 data-[state=active]:bg-white data-[state=active]:shadow-sm rounded-md">
+      <Tabs defaultValue="calendar" className="space-y-3 md:space-y-4">
+        <TabsList className="h-7 md:h-8 p-0.5 md:p-1 rounded-lg bg-gray-100 w-full sm:w-auto">
+          <TabsTrigger value="calendar" className="text-[10px] md:text-xs px-2.5 md:px-3 py-1 md:py-1.5 h-6 md:h-7 data-[state=active]:bg-white data-[state=active]:shadow-sm rounded-md">
             <Calendar className="w-3.5 h-3.5 mr-1.5" />
             Calendar
           </TabsTrigger>

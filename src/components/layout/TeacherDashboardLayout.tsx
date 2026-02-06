@@ -41,8 +41,7 @@ const ModeToggle = () => {
         )}
       >
         <Users className="w-3 h-3 md:w-3.5 md:h-3.5" />
-        <span className="hidden xs:inline md:inline">Class</span>
-        <span className="xs:hidden md:hidden">C</span>
+        <span>Class</span>
       </button>
       <button
         onClick={() => setCurrentMode('subject_teacher')}
@@ -54,8 +53,7 @@ const ModeToggle = () => {
         )}
       >
         <BookOpen className="w-3 h-3 md:w-3.5 md:h-3.5" />
-        <span className="hidden xs:inline md:inline">Subject</span>
-        <span className="xs:hidden md:hidden">S</span>
+        <span>Subject</span>
       </button>
     </div>
   );

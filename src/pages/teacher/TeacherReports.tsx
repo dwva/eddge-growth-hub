@@ -60,29 +60,29 @@ const TeacherReportsContent = () => {
   };
 
   return (
-    <div className="space-y-6 max-w-[1600px]">
+    <div className="space-y-3 md:space-y-6 max-w-[1600px]">
       {/* Page Header - Clean */}
-      <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4 pb-4 border-b border-gray-100">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 md:gap-4 pb-3 md:pb-4 border-b border-gray-100">
         <div>
-          <h1 className="text-lg md:text-xl font-bold text-gray-900">Reports</h1>
-          <p className="text-xs md:text-sm text-gray-500 mt-0.5">Generate and export reports</p>
+          <h1 className="text-base md:text-lg font-bold text-gray-900">Reports</h1>
+          <p className="text-[10px] md:text-xs text-gray-500 mt-0.5">Generate and export reports</p>
         </div>
-        <Button variant="outline" size="sm" className="h-10 px-4 rounded-xl border-gray-200 gap-2" onClick={handleExportPDF}>
-          <Download className="w-4 h-4" />
-          Export PDF
+        <Button variant="outline" size="sm" className="h-7 md:h-8 px-2.5 md:px-4 text-[10px] md:text-xs rounded-lg md:rounded-xl border-gray-200 gap-1.5" onClick={handleExportPDF}>
+          <Download className="w-3 h-3 md:w-4 md:h-4" />
+          Export
         </Button>
       </div>
 
       <Tabs value={activeTab} onValueChange={handleTabChange}>
         <TabsList className={cn(
-          "h-8 p-1 rounded-lg bg-gray-100 mb-6",
+          "h-7 md:h-8 p-0.5 md:p-1 rounded-lg bg-gray-100 mb-3 md:mb-6",
           currentMode === 'subject_teacher' ? "inline-flex" : "inline-flex"
         )}>
           {currentMode === 'class_teacher' && (
-            <TabsTrigger value="class-summary" className="text-xs px-2.5 py-1.5 h-7 data-[state=active]:bg-white data-[state=active]:shadow-sm rounded-md">Class Summary</TabsTrigger>
+            <TabsTrigger value="class-summary" className="text-[10px] md:text-xs px-2 md:px-2.5 py-1 md:py-1.5 h-6 md:h-7 data-[state=active]:bg-white data-[state=active]:shadow-sm rounded-md">Summary</TabsTrigger>
           )}
           {currentMode === 'subject_teacher' && (
-            <TabsTrigger value="subject-performance" className="text-xs px-2.5 py-1.5 h-7 data-[state=active]:bg-white data-[state=active]:shadow-sm rounded-md">Subject Performance</TabsTrigger>
+            <TabsTrigger value="subject-performance" className="text-[10px] md:text-xs px-2 md:px-2.5 py-1 md:py-1.5 h-6 md:h-7 data-[state=active]:bg-white data-[state=active]:shadow-sm rounded-md">Performance</TabsTrigger>
           )}
         </TabsList>
 

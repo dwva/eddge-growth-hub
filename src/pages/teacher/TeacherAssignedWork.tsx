@@ -99,98 +99,98 @@ const TeacherAssignedWorkContent = () => {
   return (
     <div className="space-y-4 max-w-[1600px]">
       {/* Page Header */}
-      <div className="flex items-center justify-between gap-4">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 md:gap-4">
         <div>
-          <h1 className="text-lg md:text-xl font-bold text-gray-900">Assigned Work Tracker</h1>
-          <p className="text-xs md:text-sm text-gray-500 mt-0.5">Track and evaluate all assigned assessments, assignments, and homework</p>
+          <h1 className="text-base md:text-lg font-bold text-gray-900">Assigned Work Tracker</h1>
+          <p className="text-[10px] md:text-xs text-gray-500 mt-0.5">Track and evaluate all assigned work</p>
         </div>
-        <Button onClick={() => navigate('/teacher/ai-tools/question-generator')} className="gap-2">
-          <Plus className="w-4 h-4" />
+        <Button size="sm" onClick={() => navigate('/teacher/ai-tools/question-generator')} className="gap-1.5 h-7 md:h-8 text-[10px] md:text-xs rounded-lg">
+          <Plus className="w-3 h-3 md:w-4 md:h-4" />
           Create New
         </Button>
       </div>
 
       {/* Stats Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-6 gap-4">
-        <Card className="border-0 shadow-sm">
-          <CardContent className="p-4">
-            <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-lg bg-blue-100 flex items-center justify-center">
-                <FileText className="w-5 h-5 text-blue-600" />
+      <div className="grid grid-cols-3 md:grid-cols-6 gap-2 md:gap-4">
+        <Card className="border-0 shadow-sm rounded-lg md:rounded-xl">
+          <CardContent className="p-2.5 md:p-4">
+            <div className="flex items-center gap-2 md:gap-3">
+              <div className="w-7 h-7 md:w-10 md:h-10 rounded-lg bg-blue-100 flex items-center justify-center">
+                <FileText className="w-3.5 h-3.5 md:w-5 md:h-5 text-blue-600" />
               </div>
               <div>
-                <p className="text-xs text-gray-500">Active</p>
-                <p className="text-base font-bold text-gray-900">{stats.active}</p>
+                <p className="text-[9px] md:text-xs text-gray-500">Active</p>
+                <p className="text-xs md:text-base font-bold text-gray-900">{stats.active}</p>
               </div>
             </div>
           </CardContent>
         </Card>
 
-        <Card className="border-0 shadow-sm">
-          <CardContent className="p-4">
-            <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-lg bg-amber-100 flex items-center justify-center">
-                <Edit className="w-5 h-5 text-amber-600" />
+        <Card className="border-0 shadow-sm rounded-lg md:rounded-xl">
+          <CardContent className="p-2.5 md:p-4">
+            <div className="flex items-center gap-2 md:gap-3">
+              <div className="w-7 h-7 md:w-10 md:h-10 rounded-lg bg-amber-100 flex items-center justify-center">
+                <Edit className="w-3.5 h-3.5 md:w-5 md:h-5 text-amber-600" />
               </div>
               <div>
-                <p className="text-xs text-gray-500">Draft</p>
-                <p className="text-base font-bold text-gray-900">{stats.draft}</p>
+                <p className="text-[9px] md:text-xs text-gray-500">Draft</p>
+                <p className="text-xs md:text-base font-bold text-gray-900">{stats.draft}</p>
               </div>
             </div>
           </CardContent>
         </Card>
 
-        <Card className="border-0 shadow-sm">
-          <CardContent className="p-4">
-            <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-lg bg-green-100 flex items-center justify-center">
-                <CheckCircle className="w-5 h-5 text-green-600" />
+        <Card className="border-0 shadow-sm rounded-lg md:rounded-xl">
+          <CardContent className="p-2.5 md:p-4">
+            <div className="flex items-center gap-2 md:gap-3">
+              <div className="w-7 h-7 md:w-10 md:h-10 rounded-lg bg-green-100 flex items-center justify-center">
+                <CheckCircle className="w-3.5 h-3.5 md:w-5 md:h-5 text-green-600" />
               </div>
               <div>
-                <p className="text-xs text-gray-500">Completed</p>
-                <p className="text-base font-bold text-gray-900">{stats.completed}</p>
+                <p className="text-[9px] md:text-xs text-gray-500">Completed</p>
+                <p className="text-xs md:text-base font-bold text-gray-900">{stats.completed}</p>
               </div>
             </div>
           </CardContent>
         </Card>
 
-        <Card className="border-0 shadow-sm">
-          <CardContent className="p-4">
-            <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-lg bg-purple-100 flex items-center justify-center">
-                <Users className="w-5 h-5 text-purple-600" />
+        <Card className="border-0 shadow-sm rounded-lg md:rounded-xl">
+          <CardContent className="p-2.5 md:p-4">
+            <div className="flex items-center gap-2 md:gap-3">
+              <div className="w-7 h-7 md:w-10 md:h-10 rounded-lg bg-purple-100 flex items-center justify-center">
+                <Users className="w-3.5 h-3.5 md:w-5 md:h-5 text-purple-600" />
               </div>
               <div>
-                <p className="text-xs text-gray-500">Total Submissions</p>
-                <p className="text-base font-bold text-gray-900">{stats.totalSubmissions}</p>
+                <p className="text-[9px] md:text-xs text-gray-500 truncate">Submissions</p>
+                <p className="text-xs md:text-base font-bold text-gray-900">{stats.totalSubmissions}</p>
               </div>
             </div>
           </CardContent>
         </Card>
 
-        <Card className="border-0 shadow-sm">
-          <CardContent className="p-4">
-            <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-lg bg-green-100 flex items-center justify-center">
-                <Award className="w-5 h-5 text-green-600" />
+        <Card className="border-0 shadow-sm rounded-lg md:rounded-xl">
+          <CardContent className="p-2.5 md:p-4">
+            <div className="flex items-center gap-2 md:gap-3">
+              <div className="w-7 h-7 md:w-10 md:h-10 rounded-lg bg-green-100 flex items-center justify-center">
+                <Award className="w-3.5 h-3.5 md:w-5 md:h-5 text-green-600" />
               </div>
               <div>
-                <p className="text-xs text-gray-500">Evaluated</p>
-                <p className="text-base font-bold text-gray-900">{stats.evaluatedSubmissions}</p>
+                <p className="text-[9px] md:text-xs text-gray-500">Evaluated</p>
+                <p className="text-xs md:text-base font-bold text-gray-900">{stats.evaluatedSubmissions}</p>
               </div>
             </div>
           </CardContent>
         </Card>
 
-        <Card className="border-0 shadow-sm">
-          <CardContent className="p-4">
-            <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-lg bg-red-100 flex items-center justify-center">
-                <Clock className="w-5 h-5 text-red-600" />
+        <Card className="border-0 shadow-sm rounded-lg md:rounded-xl">
+          <CardContent className="p-2.5 md:p-4">
+            <div className="flex items-center gap-2 md:gap-3">
+              <div className="w-7 h-7 md:w-10 md:h-10 rounded-lg bg-red-100 flex items-center justify-center">
+                <Clock className="w-3.5 h-3.5 md:w-5 md:h-5 text-red-600" />
               </div>
               <div>
-                <p className="text-xs text-gray-500">Pending</p>
-                <p className="text-base font-bold text-gray-900">{stats.pendingEvaluation}</p>
+                <p className="text-[9px] md:text-xs text-gray-500">Pending</p>
+                <p className="text-xs md:text-base font-bold text-gray-900">{stats.pendingEvaluation}</p>
               </div>
             </div>
           </CardContent>
@@ -198,20 +198,20 @@ const TeacherAssignedWorkContent = () => {
       </div>
 
       {/* Search and Filters */}
-      <Card className="border-0 shadow-sm">
-        <CardContent className="p-4">
-          <div className="flex items-center gap-3">
+      <Card className="border-0 shadow-sm rounded-lg md:rounded-xl">
+        <CardContent className="p-2.5 md:p-4">
+          <div className="flex items-center gap-2 md:gap-3">
             <div className="relative flex-1">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+              <Search className="absolute left-2.5 md:left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 md:w-4 md:h-4 text-gray-400" />
               <Input
                 placeholder="Search by title or type..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="pl-10"
+                className="pl-8 md:pl-10 h-8 md:h-9 text-xs rounded-lg"
               />
             </div>
-            <Button variant="outline" size="icon">
-              <Filter className="w-4 h-4" />
+            <Button variant="outline" size="icon" className="h-8 w-8 md:h-9 md:w-9 rounded-lg">
+              <Filter className="w-3.5 h-3.5 md:w-4 md:h-4" />
             </Button>
           </div>
         </CardContent>

@@ -85,11 +85,11 @@ const TeacherSubjectAnalyticsContent = () => {
       {/* Page Header */}
       <div className="flex items-center justify-between gap-2 md:gap-4">
         <div>
-          <h1 className="text-lg md:text-xl font-bold text-gray-900">Subject Analytics</h1>
-          <p className="text-xs md:text-sm text-gray-500 mt-0.5">Analyze chapter and topic-level performance</p>
+          <h1 className="text-base md:text-lg font-bold text-gray-900">Subject Analytics</h1>
+          <p className="text-[10px] md:text-xs text-gray-500 mt-0.5">Analyze chapter and topic performance</p>
         </div>
-        <Button variant="ghost" size="sm" className="h-7 md:h-8 text-xs rounded-lg gap-1" onClick={() => navigate('/teacher')}>
-          <ArrowLeft className="w-3 h-3" />
+        <Button variant="ghost" size="sm" className="h-6 md:h-7 text-[10px] md:text-xs rounded-lg gap-1" onClick={() => navigate('/teacher')}>
+          <ArrowLeft className="w-2.5 h-2.5 md:w-3 md:h-3" />
           Back
         </Button>
       </div>
@@ -102,13 +102,13 @@ const TeacherSubjectAnalyticsContent = () => {
         </TabsList>
 
         {/* Chapters Tab */}
-        <TabsContent value="chapters" className="space-y-3 mt-3">
+        <TabsContent value="chapters" className="space-y-2 md:space-y-3 mt-2 md:mt-3">
           {/* Filters */}
-          <Card className="shadow-sm border-0 rounded-xl">
-            <CardContent className="p-3">
+          <Card className="shadow-sm border-0 rounded-lg md:rounded-xl">
+            <CardContent className="p-2.5 md:p-3">
               <div className="flex flex-col sm:flex-row gap-2">
                 <Select value={subjectFilter} onValueChange={setSubjectFilter}>
-                  <SelectTrigger className="w-full sm:w-40 h-8 text-xs rounded-lg">
+                  <SelectTrigger className="w-full sm:w-40 h-7 md:h-8 text-[10px] md:text-xs rounded-lg">
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
@@ -117,7 +117,7 @@ const TeacherSubjectAnalyticsContent = () => {
                   </SelectContent>
                 </Select>
                 <Select value={masteryFilter} onValueChange={setMasteryFilter}>
-                  <SelectTrigger className="w-full sm:w-40 h-8 text-xs rounded-lg">
+                  <SelectTrigger className="w-full sm:w-40 h-7 md:h-8 text-[10px] md:text-xs rounded-lg">
                     <SelectValue placeholder="Filter by mastery" />
                   </SelectTrigger>
                   <SelectContent>
@@ -132,55 +132,55 @@ const TeacherSubjectAnalyticsContent = () => {
           </Card>
 
           {/* Summary Stats */}
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
-            <Card className="shadow-sm border-0 rounded-2xl">
-              <CardContent className="p-4">
-                <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center">
-                    <BookOpen className="w-5 h-5 text-primary" />
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-2 md:gap-3">
+            <Card className="shadow-sm border-0 rounded-lg md:rounded-2xl">
+              <CardContent className="p-2.5 md:p-4">
+                <div className="flex items-center gap-2 md:gap-3">
+                  <div className="w-7 h-7 md:w-10 md:h-10 rounded-lg bg-primary/10 flex items-center justify-center">
+                    <BookOpen className="w-3.5 h-3.5 md:w-5 md:h-5 text-primary" />
                   </div>
                   <div>
-                    <p className="text-xs text-muted-foreground">Total Chapters</p>
-                    <p className="text-base font-bold">{filteredChapters.length}</p>
+                    <p className="text-[9px] md:text-xs text-muted-foreground">Total Chapters</p>
+                    <p className="text-xs md:text-base font-bold">{filteredChapters.length}</p>
                   </div>
                 </div>
               </CardContent>
             </Card>
-            <Card className="shadow-sm border-0 rounded-2xl">
-              <CardContent className="p-4">
-                <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-lg bg-red-500/10 flex items-center justify-center">
-                    <AlertTriangle className="w-5 h-5 text-red-500" />
+            <Card className="shadow-sm border-0 rounded-lg md:rounded-2xl">
+              <CardContent className="p-2.5 md:p-4">
+                <div className="flex items-center gap-2 md:gap-3">
+                  <div className="w-7 h-7 md:w-10 md:h-10 rounded-lg bg-red-500/10 flex items-center justify-center">
+                    <AlertTriangle className="w-3.5 h-3.5 md:w-5 md:h-5 text-red-500" />
                   </div>
                   <div>
-                    <p className="text-xs text-muted-foreground">High-Risk</p>
-                    <p className="text-base font-bold text-red-500">{highRiskChapters}</p>
+                    <p className="text-[9px] md:text-xs text-muted-foreground">High-Risk</p>
+                    <p className="text-xs md:text-base font-bold text-red-500">{highRiskChapters}</p>
                   </div>
                 </div>
               </CardContent>
             </Card>
-            <Card className="shadow-sm border-0 rounded-2xl">
-              <CardContent className="p-4">
-                <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-lg bg-green-500/10 flex items-center justify-center">
-                    <TrendingUp className="w-5 h-5 text-green-500" />
+            <Card className="shadow-sm border-0 rounded-lg md:rounded-2xl">
+              <CardContent className="p-2.5 md:p-4">
+                <div className="flex items-center gap-2 md:gap-3">
+                  <div className="w-7 h-7 md:w-10 md:h-10 rounded-lg bg-green-500/10 flex items-center justify-center">
+                    <TrendingUp className="w-3.5 h-3.5 md:w-5 md:h-5 text-green-500" />
                   </div>
                   <div>
-                    <p className="text-xs text-muted-foreground">Avg Mastery</p>
-                    <p className="text-base font-bold">{avgMastery}%</p>
+                    <p className="text-[9px] md:text-xs text-muted-foreground">Avg Mastery</p>
+                    <p className="text-xs md:text-base font-bold">{avgMastery}%</p>
                   </div>
                 </div>
               </CardContent>
             </Card>
-            <Card className="shadow-sm border-0 rounded-2xl">
-              <CardContent className="p-4">
-                <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-lg bg-yellow-500/10 flex items-center justify-center">
-                    <AlertCircle className="w-5 h-5 text-yellow-500" />
+            <Card className="shadow-sm border-0 rounded-lg md:rounded-2xl">
+              <CardContent className="p-2.5 md:p-4">
+                <div className="flex items-center gap-2 md:gap-3">
+                  <div className="w-7 h-7 md:w-10 md:h-10 rounded-lg bg-yellow-500/10 flex items-center justify-center">
+                    <AlertCircle className="w-3.5 h-3.5 md:w-5 md:h-5 text-yellow-500" />
                   </div>
                   <div>
-                    <p className="text-xs text-muted-foreground">Weakest</p>
-                    <p className="text-base font-bold truncate">{weakestChapter}</p>
+                    <p className="text-[9px] md:text-xs text-muted-foreground">Weakest</p>
+                    <p className="text-xs md:text-base font-bold truncate">{weakestChapter}</p>
                   </div>
                 </div>
               </CardContent>
@@ -188,27 +188,27 @@ const TeacherSubjectAnalyticsContent = () => {
           </div>
 
           {/* Chapters Grid */}
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-3">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-2 md:gap-3">
             {filteredChapters.map((chapter) => (
-              <Card key={chapter.id} className="shadow-sm border-0 rounded-2xl hover:shadow-md transition-shadow cursor-pointer">
-                <CardContent className="p-4">
-                  <div className="flex items-start justify-between mb-4">
-                    <div className="flex items-center gap-3">
-                      <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center">
-                        <BookOpen className="w-5 h-5 text-primary" />
+              <Card key={chapter.id} className="shadow-sm border-0 rounded-lg md:rounded-2xl hover:shadow-md transition-shadow cursor-pointer">
+                <CardContent className="p-3 md:p-4">
+                  <div className="flex items-start justify-between mb-2 md:mb-4">
+                    <div className="flex items-center gap-2 md:gap-3">
+                      <div className="w-8 h-8 md:w-10 md:h-10 rounded-lg bg-primary/10 flex items-center justify-center">
+                        <BookOpen className="w-4 h-4 md:w-5 md:h-5 text-primary" />
                       </div>
                       <div>
-                        <h3 className="font-semibold">{chapter.name}</h3>
-                        <div className="flex items-center gap-2 mt-1">
-                          <Users className="w-3 h-3 text-muted-foreground" />
-                          <span className="text-sm text-muted-foreground">{chapter.attempts} attempts</span>
+                        <h3 className="text-sm md:text-base font-semibold">{chapter.name}</h3>
+                        <div className="flex items-center gap-1.5 md:gap-2 mt-0.5 md:mt-1">
+                          <Users className="w-2.5 h-2.5 md:w-3 md:h-3 text-muted-foreground" />
+                          <span className="text-[10px] md:text-sm text-muted-foreground">{chapter.attempts} attempts</span>
                         </div>
                       </div>
                     </div>
-                    <div className="flex items-center gap-2">
+                    <div className="flex items-center gap-1.5 md:gap-2">
                       <Badge 
                         variant="outline" 
-                        className={`capitalize ${chapter.mastery === 'high' ? 'text-green-600 border-green-200' : chapter.mastery === 'medium' ? 'text-yellow-600 border-yellow-200' : 'text-red-600 border-red-200'}`}
+                        className={`capitalize text-[9px] md:text-xs h-5 md:h-6 px-1.5 md:px-2 ${chapter.mastery === 'high' ? 'text-green-600 border-green-200' : chapter.mastery === 'medium' ? 'text-yellow-600 border-yellow-200' : 'text-red-600 border-red-200'}`}
                       >
                         {chapter.mastery}
                       </Badge>
@@ -216,26 +216,26 @@ const TeacherSubjectAnalyticsContent = () => {
                     </div>
                   </div>
 
-                  <div className="space-y-2 mb-4">
-                    <div className="flex items-center justify-between text-sm">
+                  <div className="space-y-1.5 md:space-y-2 mb-2 md:mb-4">
+                    <div className="flex items-center justify-between text-[10px] md:text-sm">
                       <span className="text-muted-foreground">Mastery</span>
                       <span className="font-medium">{chapter.masteryPercent}%</span>
                     </div>
-                    <Progress value={chapter.masteryPercent} className={getMasteryColor(chapter.mastery)} />
+                    <Progress value={chapter.masteryPercent} className={`h-1.5 md:h-2 ${getMasteryColor(chapter.mastery)}`} />
                   </div>
 
-                  <div className="grid grid-cols-3 gap-4 text-center">
+                  <div className="grid grid-cols-3 gap-2 md:gap-4 text-center">
                     <div>
-                      <p className="text-sm font-bold">{chapter.avgScore}%</p>
-                      <p className="text-xs text-muted-foreground">Avg Score</p>
+                      <p className="text-xs md:text-sm font-bold">{chapter.avgScore}%</p>
+                      <p className="text-[9px] md:text-xs text-muted-foreground">Avg Score</p>
                     </div>
                     <div>
-                      <p className="text-sm font-bold">{chapter.accuracy}%</p>
-                      <p className="text-xs text-muted-foreground">Accuracy</p>
+                      <p className="text-xs md:text-sm font-bold">{chapter.accuracy}%</p>
+                      <p className="text-[9px] md:text-xs text-muted-foreground">Accuracy</p>
                     </div>
                     <div>
-                      <p className="text-sm font-bold">{chapter.completion}%</p>
-                      <p className="text-xs text-muted-foreground">Completion</p>
+                      <p className="text-xs md:text-sm font-bold">{chapter.completion}%</p>
+                      <p className="text-[9px] md:text-xs text-muted-foreground">Completion</p>
                     </div>
                   </div>
                 </CardContent>
@@ -245,25 +245,25 @@ const TeacherSubjectAnalyticsContent = () => {
         </TabsContent>
 
         {/* Topics Tab */}
-        <TabsContent value="topics" className="space-y-4 mt-4">
-          <Card className="shadow-sm border-0 rounded-2xl">
-            <CardHeader className="pb-3">
-              <CardTitle className="flex items-center gap-2 text-sm">
-                <BookOpen className="w-5 h-5" />
+        <TabsContent value="topics" className="space-y-3 md:space-y-4 mt-3 md:mt-4">
+          <Card className="shadow-sm border-0 rounded-lg md:rounded-2xl">
+            <CardHeader className="p-3 md:p-6 pb-2 md:pb-3">
+              <CardTitle className="flex items-center gap-1.5 md:gap-2 text-xs md:text-sm">
+                <BookOpen className="w-4 h-4 md:w-5 md:h-5" />
                 Topic Analysis
               </CardTitle>
             </CardHeader>
-            <CardContent className="pt-0">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <CardContent className="p-3 md:p-6 pt-0">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-2 md:gap-4">
                 {topics.map((topic) => (
-                  <div key={topic.id} className="p-4 rounded-xl border border-gray-100 bg-gray-50/50 hover:bg-gray-50 transition-colors">
-                    <div className="flex items-center justify-between mb-2">
-                      <h4 className="font-medium">{topic.name}</h4>
-                      <Badge variant={topic.avgAccuracy >= 60 ? 'secondary' : 'destructive'}>
+                  <div key={topic.id} className="p-2.5 md:p-4 rounded-lg md:rounded-xl border border-gray-100 bg-gray-50/50 hover:bg-gray-50 transition-colors">
+                    <div className="flex items-center justify-between mb-1.5 md:mb-2">
+                      <h4 className="text-xs md:text-base font-medium">{topic.name}</h4>
+                      <Badge variant={topic.avgAccuracy >= 60 ? 'secondary' : 'destructive'} className="text-[9px] md:text-xs h-5 md:h-6 px-1.5 md:px-2">
                         {topic.avgAccuracy}% accuracy
                       </Badge>
                     </div>
-                    <div className="space-y-2 text-sm">
+                    <div className="space-y-1 md:space-y-2 text-[10px] md:text-sm">
                       <div className="flex justify-between">
                         <span className="text-muted-foreground">Error Rate</span>
                         <span className="text-red-500">{topic.errorRate}%</span>
@@ -272,11 +272,11 @@ const TeacherSubjectAnalyticsContent = () => {
                         <span className="text-muted-foreground">Attempts</span>
                         <span>{topic.attempts}</span>
                       </div>
-                      <div className="pt-2">
-                        <p className="text-xs text-muted-foreground mb-1">Common Mistakes:</p>
+                      <div className="pt-1.5 md:pt-2">
+                        <p className="text-[9px] md:text-xs text-muted-foreground mb-1">Common Mistakes:</p>
                         <div className="flex flex-wrap gap-1">
                           {topic.commonMistakes.map((mistake, i) => (
-                            <Badge key={i} variant="outline" className="text-xs">{mistake}</Badge>
+                            <Badge key={i} variant="outline" className="text-[8px] md:text-xs h-4 md:h-5 px-1 md:px-1.5">{mistake}</Badge>
                           ))}
                         </div>
                       </div>
@@ -289,35 +289,35 @@ const TeacherSubjectAnalyticsContent = () => {
         </TabsContent>
 
         {/* Common Mistakes Tab */}
-        <TabsContent value="mistakes" className="space-y-4 mt-4">
-          <Card className="shadow-sm border-0 rounded-2xl">
-            <CardHeader className="pb-3">
-              <CardTitle className="flex items-center gap-2 text-sm">
-                <Brain className="w-5 h-5" />
+        <TabsContent value="mistakes" className="space-y-3 md:space-y-4 mt-3 md:mt-4">
+          <Card className="shadow-sm border-0 rounded-lg md:rounded-2xl">
+            <CardHeader className="p-3 md:p-6 pb-2 md:pb-3">
+              <CardTitle className="flex items-center gap-1.5 md:gap-2 text-xs md:text-sm">
+                <Brain className="w-4 h-4 md:w-5 md:h-5" />
                 Common Mistake Patterns
               </CardTitle>
             </CardHeader>
-            <CardContent className="space-y-3 pt-0">
+            <CardContent className="space-y-2 md:space-y-3 p-3 md:p-6 pt-0">
               {commonMistakes.map((mistake) => (
-                <div key={mistake.id} className="p-4 rounded-xl border border-gray-100 bg-gray-50/50 hover:bg-gray-50 transition-colors">
-                  <div className="flex items-start justify-between gap-4 mb-3">
+                <div key={mistake.id} className="p-2.5 md:p-4 rounded-lg md:rounded-xl border border-gray-100 bg-gray-50/50 hover:bg-gray-50 transition-colors">
+                  <div className="flex flex-col md:flex-row md:items-start justify-between gap-2 md:gap-4 mb-2 md:mb-3">
                     <div className="flex-1">
-                      <p className="font-medium">{mistake.description}</p>
-                      <div className="flex items-center gap-2 mt-1 text-sm text-muted-foreground">
+                      <p className="text-xs md:text-base font-medium">{mistake.description}</p>
+                      <div className="flex items-center gap-1.5 md:gap-2 mt-0.5 md:mt-1 text-[10px] md:text-sm text-muted-foreground">
                         <span>{mistake.chapter}</span>
                         <span>•</span>
                         <span>{mistake.topic}</span>
                       </div>
                     </div>
-                    <Badge variant="destructive">{mistake.frequency}% of students</Badge>
+                    <Badge variant="destructive" className="text-[9px] md:text-xs h-5 md:h-6 px-1.5 md:px-2 w-fit">{mistake.frequency}% of students</Badge>
                   </div>
-                  <div className="bg-muted/30 p-3 rounded-lg mb-3">
-                    <p className="text-sm">
+                  <div className="bg-muted/30 p-2 md:p-3 rounded-lg mb-2 md:mb-3">
+                    <p className="text-[10px] md:text-sm">
                       <span className="font-medium">Suggested Intervention:</span> {mistake.intervention}
                     </p>
                   </div>
-                  <Button variant="outline" size="sm" className="gap-2" onClick={() => navigate('/teacher/ai-tools/question-generator')}>
-                    <Sparkles className="w-4 h-4" />
+                  <Button variant="outline" size="sm" className="gap-1.5 md:gap-2 h-7 md:h-8 text-[10px] md:text-xs" onClick={() => navigate('/teacher/ai-tools/question-generator')}>
+                    <Sparkles className="w-3 h-3 md:w-4 md:h-4" />
                     Generate Practice Questions
                   </Button>
                 </div>
