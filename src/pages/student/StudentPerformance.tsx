@@ -446,7 +446,7 @@ function StrengthsAndBuilding() {
 const StudentPerformance = () => {
   return (
     <StudentDashboardLayout title="Performance">
-      <div className="space-y-8 pb-12 max-w-6xl mx-auto px-4 md:px-0">
+      <main className="container px-4 py-8 space-y-8">
         {/* 1. Hero — EPI */}
         <EPIGauge />
 
@@ -461,7 +461,7 @@ const StudentPerformance = () => {
 
         {/* 5. Strengths vs Building */}
         <StrengthsAndBuilding />
-      </div>
+      </main>
     </StudentDashboardLayout>
   );
 };

@@ -242,9 +242,9 @@ const StudentHome = () => {
                     <span className="text-xs text-gray-500 dark:text-muted-foreground">Ready</span>
                   </Button>
                   <Button
-                    variant="outline"
-                    className="h-auto py-4 px-4 flex flex-col items-center gap-1.5 rounded-xl border-gray-200 dark:border-border hover:border-primary hover:bg-primary/5 dark:hover:bg-primary/10 transition-all duration-200 hover:shadow-sm group"
-                    onClick={() => navigate('/student/achievements')}
+                  variant="outline"
+                  className="h-auto py-4 px-4 flex flex-col items-center gap-1.5 rounded-xl border-gray-200 dark:border-border hover:border-primary hover:bg-primary/5 dark:hover:bg-primary/10 transition-all duration-200 hover:shadow-sm group"
+                  onClick={() => navigate('/student/xp')}
                   >
                     <Award className="w-6 h-6 text-emerald-600 dark:text-emerald-400 transition-transform duration-200 group-hover:scale-110" />
                     <span className="text-sm font-medium text-gray-900 dark:text-foreground">Achievements</span>

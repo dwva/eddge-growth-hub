@@ -139,17 +139,10 @@ const achievements: Achievement[] = [
   { id: 'chapter-champion', title: 'Chapter Champion', description: 'Built a complete understanding of a chapter.', icon: <BookOpen className="w-6 h-6" />, earned: false, progress: 60 },
   // Consistency & Care
   { id: 'week-warrior', title: 'Week Warrior', description: 'You showed up 7 days in a row.', icon: <Flame className="w-6 h-6" />, earned: true },
-  { id: 'consistency-builder', title: 'Consistency Builder', description: 'Reach a 14-day consistency streak.', icon: <Flame className="w-6 h-6" />, earned: false, progress: 35, tooltip: 'Consistency matters more than perfection.' },
   // Mastery & Clarity
   { id: 'xp-explorer', title: 'Effort Explorer', description: 'Earned effort points through learning and revision.', icon: <Zap className="w-6 h-6" />, earned: true },
   { id: 'concept-clarity', title: 'Concept Clarity', description: 'Solved a topic cleanly with understanding.', icon: <Lightbulb className="w-6 h-6" />, earned: false, progress: 80, tooltip: 'Deep understanding over speed.' },
-  { id: 'doubt-crusher', title: 'Doubt Crusher', description: "You didn't ignore confusion — you cleared it.", icon: <Target className="w-6 h-6" />, earned: false, progress: 20 },
-  { id: 'planner-pro', title: 'Planner Pro', description: 'Completed 20 planner tasks.', icon: <CheckSquare className="w-6 h-6" />, earned: false, progress: 45 },
   // Comeback & Recovery
-  { id: 'century-club', title: 'Century Club', description: 'Earn 1000 effort points over time.', icon: <Crown className="w-6 h-6" />, earned: false, progress: 0 },
-  { id: 'back-on-track', title: 'Back on Track', description: 'Returned to learning after a break.', icon: <Heart className="w-6 h-6" />, earned: false, tooltip: 'Coming back is what counts.' },
-  { id: 'weak-to-strong', title: 'Weak → Strong', description: 'Revised and fixed a weak topic.', icon: <RotateCcw className="w-6 h-6" />, earned: false },
-  { id: 'revision-ready', title: 'Revision Ready', description: 'Completed a full revision cycle.', icon: <Trophy className="w-6 h-6" />, earned: false },
 ];
 
 // XP and level spine (mocked)
@@ -224,20 +217,20 @@ function AchievementCard({ a }: { a: Achievement }) {
   const card = (
     <Card
       className={cn(
-        'rounded-2xl border transition-all duration-200',
+        'h-full rounded-2xl border transition-all duration-200',
         earned
           ? 'border-emerald-200/60 dark:border-emerald-800/40 bg-emerald-50/40 dark:bg-emerald-950/25 shadow-sm'
           : 'border-gray-200 dark:border-border bg-card shadow-sm hover:shadow-md hover:border-gray-300/80 dark:hover:border-border'
       )}
     >
-      <CardContent className="p-5">
+      <CardContent className="h-full p-5 flex flex-col">
         <div className={cn('w-12 h-12 rounded-xl flex items-center justify-center mb-3 shrink-0', earned ? 'bg-emerald-100 dark:bg-emerald-900/50 text-emerald-700 dark:text-emerald-300' : 'bg-muted text-muted-foreground')}>
           {a.icon}
         </div>
         <h3 className="font-semibold text-foreground text-sm">{a.title}</h3>
         <p className="text-xs text-muted-foreground mt-1 leading-relaxed">{a.description}</p>
         {earned ? (
-          <p className="mt-3 inline-flex items-center text-[11px] font-semibold text-emerald-700 dark:text-emerald-300">
+            <p className="mt-3 inline-flex items-center text-[11px] font-semibold text-emerald-700 dark:text-emerald-300">
             ✓ Unlocked
           </p>
         ) : (
@@ -314,35 +307,32 @@ function MomentsYouEarned() {
 }
 
 const StudentAchievements = () => {
-  const totalEarned = achievements.filter((a) => a.earned).length;
+  const earnedBadges = achievements.filter((a) => a.earned);
+  const lockedBadges = achievements.filter((a) => !a.earned);
 
   return (
     <TooltipProvider>
       <StudentDashboardLayout title="Achievements">
-        <div className="space-y-8 pb-12 max-w-6xl mx-auto px-4 md:px-0">
-          {/* XP spine */}
+        <div className="pb-12 max-w-6xl mx-auto px-4 md:px-0 space-y-10">
+          {/* 1️⃣ Primary XP progress (spine of the page) */}
           <section>
             <Card className="rounded-2xl border border-border bg-card shadow-sm overflow-hidden">
               <CardContent className="p-6 space-y-4">
-                <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-3">
+                <div className="flex items-center justify-between gap-3">
                   <div>
-                    <p className="text-sm font-semibold text-foreground">
-                      Level {CURRENT_LEVEL} · {CURRENT_LEVEL_LABEL}
-                    </p>
-                    <p className="text-xs text-muted-foreground mt-1">
-                      Progress to Level {CURRENT_LEVEL + 1}
-                    </p>
+                    <p className="text-sm font-semibold text-foreground">Experience Progress</p>
+                    <p className="text-xs text-muted-foreground mt-1">Progress toward your next learning level</p>
                   </div>
-                  <p className="text-xs text-muted-foreground">
-                    XP is quality-weighted — driven by revision, improvement, and fixing mistakes.
+                  <p className="text-xs font-medium text-muted-foreground tabular-nums">
+                    {XP_PROGRESS_PCT}% of Level {CURRENT_LEVEL + 1}
                   </p>
                 </div>
-                <div className="relative w-full h-3 rounded-full bg-muted overflow-hidden">
+                <div className="relative w-full h-7 rounded-xl bg-muted overflow-hidden">
                   <div
-                    className="absolute inset-y-0 left-0 rounded-full bg-gradient-to-r from-indigo-500 via-purple-500 to-fuchsia-500"
+                    className="absolute inset-y-0 left-0 rounded-xl bg-gradient-to-r from-indigo-500 via-purple-500 to-fuchsia-500"
                     style={{ width: `${XP_PROGRESS_PCT}%` }}
                   />
-                  {/* checkpoint markers */}
+                  {/* Embedded badge markers */}
                   {XP_CHECKPOINTS.map((cp) => {
                     const left = (cp.xp / NEXT_LEVEL_XP) * 100;
                     const isPast = cp.unlocked;
@@ -351,24 +341,22 @@ const StudentAchievements = () => {
                         <TooltipTrigger asChild>
                           <button
                             type="button"
-                            className="absolute -top-1.5"
-                            style={{ left: `calc(${left}% - 8px)` }}
+                            className="absolute inset-y-0 flex items-center justify-center"
+                            style={{ left: `calc(${left}% - 10px)` }}
                           >
                             <span
                               className={cn(
-                                'block w-4 h-4 rounded-full border-2 bg-card',
+                                'block w-5 h-5 rounded-full border-2 bg-card/90',
                                 isPast
-                                  ? 'border-emerald-500'
-                                  : 'border-muted-foreground/40',
+                                  ? 'border-emerald-500 shadow-sm'
+                                  : 'border-muted-foreground/30 opacity-80',
                               )}
                             />
                           </button>
                         </TooltipTrigger>
                         <TooltipContent side="top" className="max-w-xs">
                           <p className="text-xs font-medium">{cp.label}</p>
-                          <p className="text-[11px] text-muted-foreground mt-0.5">
-                            {cp.reason}
-                          </p>
+                          <p className="text-[11px] text-muted-foreground mt-0.5">{cp.reason}</p>
                         </TooltipContent>
                       </Tooltip>
                     );
@@ -378,89 +366,181 @@ const StudentAchievements = () => {
             </Card>
           </section>
 
-          {/* Learning summary */}
-          <section className="grid grid-cols-1 md:grid-cols-3 gap-3">
-            <Card className="rounded-2xl border border-border bg-card shadow-sm">
-              <CardContent className="p-4">
+          {/* 2️⃣ Impact of your XP */}
+          <section>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <Card className="h-full rounded-2xl border border-border bg-card shadow-sm">
+                <CardContent className="h-full p-5 space-y-1 flex flex-col">
                 <p className="text-xs font-semibold uppercase text-muted-foreground">
-                  Learning level
+                  Predicted readiness
                 </p>
-                <p className="mt-1 text-sm font-medium text-foreground">
-                  Level {CURRENT_LEVEL} · {CURRENT_LEVEL_LABEL}
+                <p className="text-sm font-medium text-foreground">Trending towards exam-stable</p>
+                  <p className="text-xs text-muted-foreground leading-relaxed">
+                  As XP grows, your ability to handle mixed question sets becomes more reliable.
                 </p>
-              </CardContent>
-            </Card>
-            <Card className="rounded-2xl border border-border bg-card shadow-sm">
-              <CardContent className="p-4">
+                </CardContent>
+              </Card>
+              <Card className="h-full rounded-2xl border border-border bg-card shadow-sm">
+                <CardContent className="h-full p-5 space-y-1 flex flex-col">
                 <p className="text-xs font-semibold uppercase text-muted-foreground">
-                  Consistency state
+                  Exam preparation gain
                 </p>
-                <p className="mt-1 text-sm font-medium text-foreground">
-                  Building a steady streak
+                <p className="text-sm font-medium text-foreground">Better coverage, fewer gaps</p>
+                  <p className="text-xs text-muted-foreground leading-relaxed">
+                  XP reflects coverage of key chapters and revision, not just practice volume.
                 </p>
-              </CardContent>
-            </Card>
-            <Card className="rounded-2xl border border-border bg-card shadow-sm">
-              <CardContent className="p-4">
+                </CardContent>
+              </Card>
+              <Card className="h-full rounded-2xl border border-border bg-card shadow-sm">
+                <CardContent className="h-full p-5 space-y-1 flex flex-col">
                 <p className="text-xs font-semibold uppercase text-muted-foreground">
-                  Total achievements earned
+                  Momentum
                 </p>
-                <p className="mt-1 text-sm font-medium text-foreground">
-                  {totalEarned} badges unlocked so far
+                <p className="text-sm font-medium text-foreground">Building steadily</p>
+                  <p className="text-xs text-muted-foreground leading-relaxed">
+                  Consistent XP growth matters more than short bursts of intense study.
                 </p>
-              </CardContent>
-            </Card>
+                </CardContent>
+              </Card>
+            </div>
           </section>
 
-          {/* Grouped achievements */}
-          <section className="space-y-6">
-            <div className="space-y-1">
-              <h2 className="text-lg font-semibold text-foreground">Consistency & discipline</h2>
-              <p className="text-sm text-muted-foreground">
-                Badges that recognise how regularly you show up and stay on track.
+          {/* 3️⃣ How you earn XP */}
+          <section>
+            <div className="space-y-2 max-w-3xl">
+              <h2 className="text-base font-semibold text-foreground">How you earn XP</h2>
+              <p className="text-xs text-muted-foreground max-w-2xl">
+                XP is awarded for learning behaviours that actually improve your understanding and exam readiness.
               </p>
             </div>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-              {consistencyAchievements.map((a) => (
-                <AchievementCard key={a.id} a={a} />
-              ))}
-            </div>
+            <Card className="mt-3 rounded-2xl border border-border bg-card shadow-sm max-w-3xl">
+              <CardContent className="p-5">
+                <ul className="space-y-2 text-sm text-muted-foreground leading-relaxed">
+                  <li>Practising topics you currently find difficult, not just easy ones.</li>
+                  <li>Revising before you forget, especially for chapters that are cooling down.</li>
+                  <li>Fixing repeated mistakes after tests and practice sessions.</li>
+                  <li>Maintaining a steady learning rhythm across the week.</li>
+                  <li>Completing focused, distraction-free study and revision blocks.</li>
+                </ul>
+              </CardContent>
+            </Card>
           </section>
 
-          <section className="space-y-6">
+          {/* 4️⃣ Current level & momentum */}
+          <section>
+            <Card className="rounded-2xl border border-border bg-card shadow-sm">
+              <CardContent className="p-5">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 items-start">
+                  <div>
+                  <p className="text-xs font-semibold uppercase text-muted-foreground">Current level</p>
+                  <p className="mt-1 text-sm font-medium text-foreground">
+                    Level {CURRENT_LEVEL} · {CURRENT_LEVEL_LABEL}
+                  </p>
+                  </div>
+                  <div className="md:border-l md:border-border/60 md:pl-6">
+                  <p className="text-xs font-semibold uppercase text-muted-foreground">XP momentum</p>
+                  <p className="mt-1 text-sm font-medium text-foreground">Building steadily</p>
+                  <p className="mt-1 text-xs text-muted-foreground">
+                    You&apos;re progressing steadily. Keep the rhythm.
+                  </p>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          </section>
+
+          {/* 5️⃣ Badges you’ve earned */}
+          <section className="space-y-3">
             <div className="space-y-1">
-              <h2 className="text-lg font-semibold text-foreground">Learning quality</h2>
+              <h2 className="text-base font-semibold text-foreground">Badges you&apos;ve earned</h2>
               <p className="text-sm text-muted-foreground">
-                Evidence that you&apos;re building deep understanding and fixing weak spots.
+                These badges reflect learning behaviours you&apos;ve already shown.
               </p>
             </div>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-              {qualityAchievements.map((a) => (
-                <AchievementCard key={a.id} a={a} />
-              ))}
-            </div>
+            {earnedBadges.length > 0 ? (
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                {earnedBadges.map((a) => (
+                  <AchievementCard key={a.id} a={a} />
+                ))}
+              </div>
+            ) : (
+              <Card className="rounded-2xl border border-dashed border-border bg-card/40">
+                <CardContent className="p-5 text-sm text-muted-foreground text-center">
+                  As you continue learning, badges you earn will appear here.
+                </CardContent>
+              </Card>
+            )}
           </section>
 
-          <section className="space-y-6">
+          {/* 6️⃣ Badges you can unlock next */}
+          <section className="space-y-3">
             <div className="space-y-1">
-              <h2 className="text-lg font-semibold text-foreground">Exam readiness</h2>
+              <h2 className="text-base font-semibold text-foreground">Badges you can unlock next</h2>
               <p className="text-sm text-muted-foreground">
-                Badges that align directly with your chapter coverage and exam-style practice.
+                These are upcoming achievements. You&apos;ll unlock them naturally as you keep learning.
               </p>
             </div>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-              {examAchievements.map((a) => (
-                <AchievementCard key={a.id} a={a} />
-              ))}
-            </div>
+            {lockedBadges.length > 0 ? (
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                {lockedBadges.map((a) => (
+                  <AchievementCard key={a.id} a={a} />
+                ))}
+              </div>
+            ) : (
+              <Card className="rounded-2xl border border-dashed border-border bg-card/40">
+                <CardContent className="p-5 text-sm text-muted-foreground text-center">
+                  You&apos;ve unlocked all available badges for now. New ones will appear as we add more goals.
+                </CardContent>
+              </Card>
+            )}
           </section>
 
-          {/* Recently earned */}
-          <Card className="rounded-2xl border border-gray-200/90 dark:border-border bg-gray-50/50 dark:bg-muted/20 shadow-sm overflow-hidden">
-            <CardContent className="p-6 sm:p-8">
-              <MomentsYouEarned />
-            </CardContent>
-          </Card>
+          {/* 7️⃣ Level path */}
+          <section className="space-y-3">
+            <div className="space-y-1">
+              <h2 className="text-base font-semibold text-foreground">Level Path</h2>
+              <p className="text-sm text-muted-foreground">
+                Levels reflect stages of learning stability and focus, not competition with others.
+              </p>
+            </div>
+            <Card className="rounded-2xl border border-border bg-card shadow-sm">
+              <CardContent className="p-5 space-y-3">
+                <div className="space-y-2">
+                  {[
+                    { level: 3, label: 'Settling in', xp: 800, state: 'Past' as const },
+                    { level: 4, label: CURRENT_LEVEL_LABEL, xp: CURRENT_XP, state: 'Current' as const },
+                    { level: 5, label: 'Exam-ready learner', xp: NEXT_LEVEL_XP, state: 'Upcoming' as const },
+                  ].map((step) => (
+                    <div
+                      key={step.level}
+                      className={cn(
+                        'flex items-center justify-between rounded-xl px-3 py-2 text-sm',
+                        step.state === 'Current'
+                          ? 'bg-primary/5 border border-primary/20'
+                          : 'border border-transparent',
+                      )}
+                    >
+                      <div>
+                        <p className="font-medium text-foreground">
+                          Level {step.level} · {step.label}
+                        </p>
+                        <p className="text-xs text-muted-foreground">
+                          {step.state === 'Current'
+                            ? 'This is your present learning stage.'
+                            : step.state === 'Past'
+                              ? 'You&apos;ve already moved beyond this stage.'
+                              : 'You&apos;ll reach this stage as XP and understanding deepen.'}
+                        </p>
+                      </div>
+                      <p className="text-xs font-medium text-muted-foreground tabular-nums">
+                        {step.xp} XP
+                      </p>
+                    </div>
+                  ))}
+                </div>
+              </CardContent>
+            </Card>
+          </section>
         </div>
       </StudentDashboardLayout>
     </TooltipProvider>

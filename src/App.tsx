@@ -23,10 +23,10 @@ import StudentTests from "./pages/student/StudentTests";
 import StudentPerformance from "./pages/student/StudentPerformance";
 import StudentAttendance from "./pages/student/StudentAttendance";
 import StudentSettings from "./pages/student/StudentSettings";
-import StudentAchievements from "./pages/student/StudentAchievements";
 import StudentDoubtSolver from "./pages/student/StudentDoubtSolver";
 import StudentResources from "./pages/student/StudentResources";
 import StudentLeaderboard from "./pages/student/StudentLeaderboard";
+import StudentXpDashboard from "./pages/student/StudentXpDashboard";
 import StudentPYQ from "./pages/student/StudentPYQ";
 import StudentAnnouncements from "./pages/student/StudentAnnouncements";
 import StudentHomework from "./pages/student/StudentHomework";
@@ -155,6 +155,11 @@ const App = () => (
                 <StudentPerformance />
               </ProtectedRoute>
             } />
+            <Route path="/student/xp" element={
+              <ProtectedRoute allowedRoles={['student']}>
+                <StudentXpDashboard />
+              </ProtectedRoute>
+            } />
             <Route path="/student/leaderboard" element={
               <ProtectedRoute allowedRoles={['student']}>
                 <StudentLeaderboard />
@@ -163,11 +168,6 @@ const App = () => (
             <Route path="/student/attendance" element={
               <ProtectedRoute allowedRoles={['student']}>
                 <StudentAttendance />
-              </ProtectedRoute>
-            } />
-            <Route path="/student/achievements" element={
-              <ProtectedRoute allowedRoles={['student']}>
-                <StudentAchievements />
               </ProtectedRoute>
             } />
             <Route path="/student/settings" element={
