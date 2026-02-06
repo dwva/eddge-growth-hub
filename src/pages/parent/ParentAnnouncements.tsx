@@ -114,13 +114,7 @@ const ParentAnnouncementsContent = () => {
                 announcement.important && 'border-red-200 bg-red-50/50'
               )}
             >
-              <div
-                className={cn(
-                  'absolute left-0 top-0 bottom-0 w-1',
-                  announcement.important ? 'bg-red-500' : 'bg-primary'
-                )}
-              />
-              <CardContent className="p-4 pl-6 text-xs">
+              <CardContent className="p-4 text-xs">
                 <div className="flex items-start gap-4">
                   <div className={cn(
                     'p-2 rounded-lg',

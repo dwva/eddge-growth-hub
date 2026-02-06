@@ -79,6 +79,15 @@ const ClassTeacherModeView = () => {
                   {messagesOverview.unreadMessages}
                 </Badge>
               </Button>
+              <Button 
+                variant="outline" 
+                size="sm" 
+                className="border-white/20 bg-white/5 hover:bg-white/10 text-white rounded-lg md:rounded-xl px-2.5 md:px-3 h-6 md:h-7 text-[9px] md:text-[10px]"
+                onClick={() => navigate('/teacher/announcements/events')}
+              >
+                <FileText className="w-2.5 md:w-3 h-2.5 md:h-3 mr-1" />
+                Announcements
+              </Button>
             </div>
           </div>
 

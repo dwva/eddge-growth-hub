@@ -126,7 +126,7 @@ const ParentChildProgressContent = () => {
             </div>
 
             {/* Key stats */}
-            <div className="md:col-span-2 grid grid-cols-1 sm:grid-cols-3 gap-4">
+            <div className="md:col-span-2 grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div className="rounded-lg bg-white/70 p-4 flex flex-col items-start">
                 <div className="flex items-center gap-2 text-xs font-medium text-muted-foreground mb-1">
                   <Calendar className="w-4 h-4 text-green-600" />
@@ -135,16 +135,6 @@ const ParentChildProgressContent = () => {
                 <p className="text-2xl font-bold text-gray-900">{child.attendance}%</p>
                 <p className="text-[11px] text-muted-foreground mt-1">
                   Consistent presence in class.
-                </p>
-              </div>
-              <div className="rounded-lg bg-white/70 p-4 flex flex-col items-start">
-                <div className="flex items-center gap-2 text-xs font-medium text-muted-foreground mb-1">
-                  <Target className="w-4 h-4 text-blue-600" />
-                  <span>Study streak</span>
-                </div>
-                <p className="text-2xl font-bold text-gray-900">{child.streak}</p>
-                <p className="text-[11px] text-muted-foreground mt-1">
-                  Days of continuous effort.
                 </p>
               </div>
               <div className="rounded-lg bg-white/70 p-4 flex flex-col items-start">

@@ -58,7 +58,6 @@ import TeacherParentEngagement from "./pages/teacher/TeacherParentEngagement";
 // Parent Pages
 import ParentDashboardHome from "./pages/parent/ParentDashboardHome";
 import ParentChildProgress from "./pages/parent/ParentChildProgress";
-import ParentAchievements from "./pages/parent/ParentAchievements";
 import ParentMeetings from "./pages/parent/ParentMeetings";
 import ParentCommunications from "./pages/parent/ParentCommunications";
 import ParentCommunicationCenter from "./pages/parent/ParentCommunicationCenter";
@@ -255,11 +254,6 @@ const App = () => (
             <Route path="/parent/child-progress/:childId" element={
               <ProtectedRoute allowedRoles={['parent']}>
                 <ParentChildProgress />
-              </ProtectedRoute>
-            } />
-            <Route path="/parent/achievements" element={
-              <ProtectedRoute allowedRoles={['parent']}>
-                <ParentAchievements />
               </ProtectedRoute>
             } />
             <Route path="/parent/meetings" element={

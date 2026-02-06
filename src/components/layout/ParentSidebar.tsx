@@ -32,7 +32,6 @@ const navSections: NavSection[] = [
     icon: <TrendingUp className="w-5 h-5" />,
     items: [
       { label: 'Progress', icon: <TrendingUp className="w-4 h-4" />, path: '/parent/child-progress/1' },
-      { label: 'Achievements', icon: <Award className="w-4 h-4" />, path: '/parent/achievements' },
     ],
   },
   {

@@ -35,7 +35,6 @@ const ParentChildDetailsContent = () => {
 
   const quickLinks = [
     { label: 'View Progress', icon: TrendingUp, path: `/parent/child-progress/${child.id}`, color: 'bg-blue-100 text-blue-600' },
-    { label: 'Achievements', icon: Award, path: '/parent/achievements', color: 'bg-yellow-100 text-yellow-600' },
     { label: 'Homework', icon: BookOpen, path: '/parent/homework', color: 'bg-orange-100 text-orange-600' },
     { label: 'Messages', icon: MessageSquare, path: '/parent/communications', color: 'bg-purple-100 text-purple-600' },
     { label: 'Meetings', icon: Calendar, path: '/parent/meetings', color: 'bg-green-100 text-green-600' },
@@ -85,7 +84,7 @@ const ParentChildDetailsContent = () => {
       </Card>
 
       {/* Stats Grid */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+      <div className="grid grid-cols-2 lg:grid-cols-3 gap-4">
         <Card>
           <CardContent className="p-4 text-center">
             <TrendingUp className="w-8 h-8 mx-auto text-blue-600" />
@@ -98,13 +97,6 @@ const ParentChildDetailsContent = () => {
             <Calendar className="w-8 h-8 mx-auto text-green-600" />
             <p className="text-2xl font-bold mt-2">{child.attendance}%</p>
             <p className="text-xs text-muted-foreground">Attendance</p>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardContent className="p-4 text-center">
-            <Award className="w-8 h-8 mx-auto text-yellow-600" />
-            <p className="text-2xl font-bold mt-2">{child.achievements?.length || 0}</p>
-            <p className="text-xs text-muted-foreground">Achievements</p>
           </CardContent>
         </Card>
         <Card>

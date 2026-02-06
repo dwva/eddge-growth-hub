@@ -16,13 +16,12 @@ type XpSource = {
   xp: number;
 };
 
-type LevelStatus = 'completed' | 'active' | 'locked';
-
-type LevelStep = {
+type AchievementBadge = {
   id: string;
   name: string;
-  minXp: number;
-  status: LevelStatus;
+  description: string;
+  xpRequired: number;
+  icon: JSX.Element;
 };
 
 /* ── mock data ── */
@@ -40,11 +39,35 @@ const xpSources: XpSource[] = [
   { id: 'test-review', title: 'Review and correct recent test mistakes', emoji: '🧠', priority: 'high', xp: 100 },
 ];
 
-const levelsWithStatus: LevelStep[] = [
-  { id: 'level-1', name: 'New Explorer', minXp: 0, status: 'completed' },
-  { id: 'level-2', name: 'Active Learner', minXp: 600, status: 'completed' },
-  { id: 'level-3', name: 'Focused Learner', minXp: 1200, status: 'active' },
-  { id: 'level-4', name: 'Exam-Ready', minXp: 1600, status: 'locked' },
+const achievementBadges: AchievementBadge[] = [
+  {
+    id: 'steady-start',
+    name: 'Steady Start',
+    description: 'Crossed your first 500 quality-weighted XP.',
+    xpRequired: 500,
+    icon: <BookOpen className="w-4 h-4 text-purple-600" />,
+  },
+  {
+    id: 'focused-learner',
+    name: 'Focused Learner',
+    description: 'Reached the focus band for regular learning.',
+    xpRequired: 1200,
+    icon: <Flame className="w-4 h-4 text-orange-500" />,
+  },
+  {
+    id: 'exam-ready',
+    name: 'Exam-Ready',
+    description: 'Hit the XP target linked to your exam plan.',
+    xpRequired: 1600,
+    icon: <Award className="w-4 h-4 text-emerald-500" />,
+  },
+  {
+    id: 'xp-champion',
+    name: 'XP Champion',
+    description: 'Long-term XP growth with consistent effort.',
+    xpRequired: 2200,
+    icon: <Zap className="w-4 h-4 text-indigo-500" />,
+  },
 ];
 
 /* ── shared spacing tokens ── */
@@ -58,6 +81,8 @@ const StudentXpDashboard = () => {
   const [error, setError] = useState<string | null>(null);
 
   const highImpactXp = Math.max(...xpSources.map((s) => s.xp));
+  const earnedBadges = achievementBadges.filter((b) => mockCurrentXp >= b.xpRequired);
+  const lockedBadges = achievementBadges.filter((b) => mockCurrentXp < b.xpRequired);
 
   const handleRetry = () => {
     setError(null);
@@ -154,9 +179,21 @@ const StudentXpDashboard = () => {
         <section>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             {[
-              { label: 'Predicted Score Boost', value: '+6–9 marks', sub: 'From your current trajectory' },
-              { label: 'Class Rank Effect', value: '↑ Top 12%', sub: 'Keep earning XP to climb' },
-              { label: 'Readiness Gain', value: '+12%', sub: 'Exam preparation boost' },
+              {
+                label: 'How You Earn XP',
+                value: 'Learning behaviours',
+                sub: 'XP is awarded for actions that actually improve understanding and exam readiness.',
+              },
+              {
+                label: 'XP Momentum',
+                value: 'Steady growth',
+                sub: 'Consistent XP growth matters more than short bursts of intense study.',
+              },
+              {
+                label: 'Readiness Gain',
+                value: 'Exam boost',
+                sub: 'XP connects to your long-term exam preparation, not short-term points.',
+              },
             ].map((card) => (
               <Card key={card.label} className="h-full bg-white rounded-2xl border border-gray-200 shadow-sm">
                 <CardContent className={`h-full ${CARD_PAD} flex flex-col`}>
@@ -231,79 +268,84 @@ const StudentXpDashboard = () => {
           </Card>
         </section>
 
-        {/* ─── 4. XP Levels & Titles ─── */}
+        {/* ─── 4. Achievement Badges Earned ─── */}
         <section>
           <Card className="bg-white rounded-2xl border border-gray-200 shadow-sm">
             <CardContent className={`${CARD_PAD} space-y-4`}>
               <div className="flex items-center gap-2 mb-1">
                 <BookOpen className="w-5 h-5 text-purple-600 shrink-0" />
-                <h2 className="text-base font-bold text-gray-900">XP Levels &amp; Titles</h2>
+                <h2 className="text-base font-bold text-gray-900">Achievement badges earned</h2>
               </div>
-              <div className="space-y-2">
-                {levelsWithStatus.map((level) => {
-                  const isCompleted = level.status === 'completed';
-                  const isActive = level.status === 'active';
-                  return (
+              {earnedBadges.length > 0 ? (
+                <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+                  {earnedBadges.map((badge) => (
                     <div
-                      key={level.id}
-                      className={[
-                        'flex items-center gap-3 rounded-xl px-4 py-3',
-                        isActive
-                          ? 'bg-purple-50 border border-purple-200'
-                          : isCompleted
-                            ? 'bg-gray-50/80 border border-gray-200/80'
-                            : 'bg-white border border-gray-200/60 opacity-70',
-                      ].join(' ')}
+                      key={badge.id}
+                      className={`flex flex-col rounded-2xl px-4 py-4 shadow-[0_0_0_1px_rgba(148,163,184,0.12)] ${
+                        badge.id === 'steady-start' || badge.id === 'focused-learner'
+                          ? 'border border-purple-300 bg-purple-50/90'
+                          : 'border border-gray-200 bg-gray-50'
+                      }`}
                     >
-                      <div
-                        className={[
-                          'w-7 h-7 rounded-full flex items-center justify-center border-2 shrink-0',
-                          isActive
-                            ? 'border-purple-500 bg-purple-100'
-                            : isCompleted
-                              ? 'border-green-500 bg-green-50'
-                              : 'border-gray-300 bg-gray-50',
-                        ].join(' ')}
-                      >
-                        {isCompleted && <Flame className="w-3 h-3 text-green-600" />}
-                        {isActive && <Award className="w-3 h-3 text-purple-600" />}
-                        {level.status === 'locked' && <Zap className="w-3 h-3 text-gray-400" />}
+                      <div className="flex flex-col items-center text-center gap-2 mb-2">
+                        <div className="h-8 w-8 rounded-full bg-white flex items-center justify-center text-gray-700">
+                          {badge.icon}
+                        </div>
+                        <p className="text-sm font-semibold text-gray-900">{badge.name}</p>
+                        <p className="text-xs text-gray-600">{badge.description}</p>
                       </div>
-                      <div className="flex-1 flex items-baseline justify-between gap-3">
-                        <p className="text-sm font-semibold text-gray-900">{level.name}</p>
-                        <p className="text-xs font-medium text-gray-500 tabular-nums">{level.minXp} XP+</p>
+                      <div className="mt-1 text-[11px] text-gray-500 space-y-0.5">
+                        <p>Unlocked at {badge.xpRequired} XP</p>
+                        <p className="text-emerald-700 font-medium">✓ Earned</p>
                       </div>
                     </div>
-                  );
-                })}
-              </div>
+                  ))}
+                </div>
+              ) : (
+                <p className="text-sm text-gray-600">
+                  As you continue learning, badges you earn will appear here.
+                </p>
+              )}
             </CardContent>
           </Card>
         </section>
 
-        {/* ─── 5. XP Story ─── */}
+        {/* ─── 5. Badges You Can Unlock Next ─── */}
         <section>
           <Card className="bg-white rounded-2xl border border-gray-200 shadow-sm">
             <CardContent className={`${CARD_PAD} space-y-4`}>
               <div className="flex items-center gap-2 mb-1">
                 <Flame className="w-5 h-5 text-purple-600 shrink-0" />
-                <h2 className="text-base font-bold text-gray-900">XP Story</h2>
+                <h2 className="text-base font-bold text-gray-900">Badges you can unlock next</h2>
               </div>
-              <div className="space-y-3">
-                {[
-                  { icon: <Zap className="w-4 h-4 text-purple-500 shrink-0" />, text: '+40 XP – Completed daily learning plan', time: 'Today · 6:20 PM' },
-                  { icon: <Award className="w-4 h-4 text-purple-500 shrink-0" />, text: '+60 XP – Fixed mistakes from recent test', time: 'Yesterday · 8:10 PM' },
-                  { icon: <BookOpen className="w-4 h-4 text-purple-500 shrink-0" />, text: '+30 XP – Completed focused revision block', time: '2 days ago · 7:15 PM' },
-                ].map((entry, i) => (
-                  <div key={i} className="grid grid-cols-[minmax(0,1fr)_176px] items-center gap-4 py-1">
-                    <div className="flex items-center gap-2.5 min-w-0">
-                      {entry.icon}
-                      <p className="text-sm text-gray-800 truncate">{entry.text}</p>
-                    </div>
-                    <p className="text-xs text-gray-500 whitespace-nowrap text-right">{entry.time}</p>
-                  </div>
-                ))}
-              </div>
+              {lockedBadges.length > 0 ? (
+                <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+                  {lockedBadges.map((badge) => {
+                    const xpLeft = Math.max(0, badge.xpRequired - mockCurrentXp);
+                    return (
+                      <div
+                        key={badge.id}
+                        className="flex flex-col rounded-2xl border border-dashed border-gray-300 bg-white px-4 py-4"
+                      >
+                        <div className="flex flex-col items-center text-center gap-2 mb-2 opacity-80">
+                          <div className="h-8 w-8 rounded-full bg-gray-50 flex items-center justify-center text-gray-400">
+                            {badge.icon}
+                          </div>
+                          <p className="text-sm font-semibold text-gray-800">{badge.name}</p>
+                          <p className="text-xs text-gray-600">{badge.description}</p>
+                        </div>
+                        <div className="mt-1 text-[11px] text-gray-600 space-y-0.5">
+                          <p className="font-medium tabular-nums">{xpLeft} XP left to unlock</p>
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              ) : (
+                <p className="text-sm text-gray-600">
+                  You&apos;ve unlocked all current badges. New milestones will appear here soon.
+                </p>
+              )}
             </CardContent>
           </Card>
         </section>
