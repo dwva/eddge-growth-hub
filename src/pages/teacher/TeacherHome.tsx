@@ -60,14 +60,6 @@ const ClassTeacherModeView = () => {
             {/* Action Buttons */}
             <div className="flex items-center gap-2">
               <Button 
-                size="sm" 
-                className="bg-white text-primary hover:bg-white/90 rounded-lg md:rounded-xl px-2.5 md:px-3 h-6 md:h-7 text-[9px] md:text-[10px] font-medium shadow-lg"
-                onClick={() => navigate('/teacher/assessments')}
-              >
-                <ClipboardList className="w-2.5 md:w-3 h-2.5 md:h-3 mr-1" />
-                Assessment
-              </Button>
-              <Button 
                 variant="outline" 
                 size="sm" 
                 className="border-white/20 bg-white/5 hover:bg-white/10 text-white rounded-lg md:rounded-xl px-2.5 md:px-3 h-6 md:h-7 text-[9px] md:text-[10px]"
