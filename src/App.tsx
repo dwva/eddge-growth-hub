@@ -27,6 +27,7 @@ import StudentDoubtSolver from "./pages/student/StudentDoubtSolver";
 import StudentResources from "./pages/student/StudentResources";
 import StudentLeaderboard from "./pages/student/StudentLeaderboard";
 import StudentXpDashboard from "./pages/student/StudentXpDashboard";
+import StudentStreak from "./pages/student/StudentStreak";
 import StudentPYQ from "./pages/student/StudentPYQ";
 import StudentAnnouncements from "./pages/student/StudentAnnouncements";
 import StudentHomework from "./pages/student/StudentHomework";
@@ -157,6 +158,11 @@ const App = () => (
             <Route path="/student/xp" element={
               <ProtectedRoute allowedRoles={['student']}>
                 <StudentXpDashboard />
+              </ProtectedRoute>
+            } />
+            <Route path="/student/streak" element={
+              <ProtectedRoute allowedRoles={['student']}>
+                <StudentStreak />
               </ProtectedRoute>
             } />
             <Route path="/student/leaderboard" element={

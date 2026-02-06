@@ -43,40 +43,18 @@ function getMockContributions(): ContributionMap {
   return map;
 }
 
-/** Derive the current streak (consecutive days with contributions, ending today) from the contribution map. */
+/** Consecutive days with at least 1 contribution, ending today. */
 function getCurrentStreak(contributions: ContributionMap): number {
   const today = new Date();
   let streak = 0;
-
-  // Walk backwards from today while there is at least 1 contribution
   for (let offset = 0; ; offset++) {
     const d = new Date(today);
     d.setDate(today.getDate() - offset);
-    const key = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(
-      d.getDate(),
-    ).padStart(2, '0')}`;
-    const count = contributions[key] ?? 0;
-    if (count > 0) {
-      streak += 1;
-    } else {
-      break;
-    }
+    const key = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+    if ((contributions[key] ?? 0) > 0) streak += 1;
+    else break;
   }
-
   return streak;
-}
-
-function getStreakLabel(streakDays: number): string {
-  if (streakDays === 0) return 'Start your streak';
-  if (streakDays === 1) return '1-day streak';
-  return `${streakDays}-day streak`;
-}
-
-function getStreakSubtitle(streakDays: number): string {
-  if (streakDays === 0) return 'Complete 1 activity today to start your streak';
-  if (streakDays < 7) return 'You’re building momentum — keep it up';
-  if (streakDays < 21) return 'Strong consistency — your future self will thank you';
-  return 'Elite consistency — you’re in the top tier';
 }
 
 const StudentHome = () => {
@@ -85,7 +63,6 @@ const StudentHome = () => {
   const [showAllAiSuggestions, setShowAllAiSuggestions] = useState(false);
   const contributions = useMemo(() => getMockContributions(), []);
   const streakDays = useMemo(() => getCurrentStreak(contributions), [contributions]);
-  const xpProgress = Math.min(100, 40 + streakDays * 3); // simple streak-linked XP toward next level
 
   // Calculate overall progress from subjects
   const overallProgress = Math.round(
@@ -106,7 +83,7 @@ const StudentHome = () => {
         {/* Main Grid - Full Width; bottom padding so content doesn't touch screen edge */}
         <div className="space-y-6 pb-10">
           
-          {/* Hero Row: Focus Card + Stats Card */}
+          {/* Hero Row: Focus Card + Empty widget placeholder */}
           <div className="grid grid-cols-1 md:grid-cols-[minmax(0,1.4fr)_minmax(0,1fr)] lg:grid-cols-[1fr_360px] gap-4 items-stretch">
             
             {/* Hero Card - Exam countdown + daily plan (flexible width) */}
@@ -162,66 +139,34 @@ const StudentHome = () => {
                 </CardContent>
             </Card>
 
-            {/* Stats Card - Learning momentum (compact) */}
-            <Card className="relative overflow-hidden border-0 shadow-sm rounded-3xl bg-gradient-to-br from-purple-600 via-primary to-purple-700 text-white min-w-0">
-              <CardContent className="relative p-8 h-full min-h-[200px] flex flex-col">
-                <div className="flex h-full gap-6">
-                  {/* Left block – streak, XP, level */}
-                  <div className="flex-1 flex flex-col justify-between">
-                    {/* Primary metric – streak */}
-                    <div className="mt-2 flex items-start gap-3">
-                      {/* Streak icon */}
-                      <div className="relative flex items-center justify-center">
-                        <div className="h-10 w-10 rounded-2xl bg-white/15 flex items-center justify-center shadow-sm">
-                          <Flame className="w-5 h-5 text-amber-300" aria-hidden="true" />
-                        </div>
-                        {/* Glow ring for gamified feel */}
-                        <div className="pointer-events-none absolute inset-0 rounded-2xl bg-amber-300/20 blur-sm" />
-                      </div>
-                      <div>
-                        <p className="text-3xl font-semibold text-white leading-tight">
-                          {getStreakLabel(streakDays)}
-                        </p>
-                        <p className="text-xs text-white/80 mt-1">
-                          {getStreakSubtitle(streakDays)}
-                        </p>
-                      </div>
-                    </div>
-
-                    {/* XP progress */}
-                    <div className="mt-6 space-y-1.5">
-                      <div className="flex items-center justify-between text-[11px] text-white/80">
-                        <span>XP toward next level</span>
-                        <span>{xpProgress}%</span>
-                      </div>
-                      <div className="h-2.5 w-full rounded-full bg-white/20 overflow-hidden">
-                        <div
-                          className="h-full rounded-full bg-gradient-to-r from-purple-500 via-violet-500 to-fuchsia-500"
-                          style={{ width: `${xpProgress}%` }}
-                        />
-                      </div>
-                      <p className="text-[10px] text-white/80">
-                        Based on quality-weighted practice & revision
-                      </p>
-                    </div>
+            {/* Streak widget – tap to open Streak page */}
+            <Card
+              role="button"
+              tabIndex={0}
+              onClick={() => navigate('/student/streak')}
+              onKeyDown={(e) => e.key === 'Enter' && navigate('/student/streak')}
+              className="relative overflow-hidden border-0 shadow-sm rounded-3xl bg-gradient-to-br from-purple-100 via-violet-100 to-purple-200 dark:from-purple-950/40 dark:via-violet-950/30 dark:to-purple-900/50 min-w-0 min-h-[200px] border border-purple-200/60 dark:border-purple-800/40 cursor-pointer hover:shadow-md hover:border-purple-300/80 dark:hover:border-purple-700/60 transition-all active:scale-[0.99]"
+            >
+              <CardContent className="relative p-6 h-full min-h-[200px] flex flex-col justify-center">
+                <div className="flex items-start gap-3">
+                  <div className="rounded-2xl bg-purple-500/20 p-2.5 flex-shrink-0">
+                    <Flame className="w-8 h-8 text-purple-600 dark:text-purple-400" aria-hidden />
                   </div>
-
-                  {/* Right block – momentum + avatar */}
-                  <div className="w-24 sm:w-28 md:w-32 flex flex-col items-end justify-between">
-                    {/* Avatar assistant – disciplined self */}
-                    <div className="relative flex-1 flex items-end justify-end">
-                      <img
-                        src="/assets/image-1fc051e8-dfd5-4bec-b348-4ac4acebeee4.png"
-                        alt=""
-                        className="pointer-events-none select-none translate-y-2"
-                        style={{
-                          opacity: 0.12,          // Strong momentum, subtle
-                          mixBlendMode: 'soft-light',
-                          objectFit: 'contain',
-                          maxHeight: '100%',
-                        }}
-                      />
-                    </div>
+                  <div className="min-w-0">
+                    <p className="text-2xl font-bold text-purple-900 dark:text-purple-100 tabular-nums">
+                      {streakDays === 0 ? '0' : streakDays}-day streak
+                    </p>
+                    <p className="text-sm text-purple-600 dark:text-purple-300 mt-0.5">
+                      {streakDays === 0
+                        ? 'Do one activity today to start your streak'
+                        : streakDays < 7
+                        ? 'Keep it up — you’re building momentum'
+                        : 'Strong consistency! Tap to see your streak details.'}
+                    </p>
+                    <p className="text-xs text-purple-500 dark:text-purple-400/80 mt-2 flex items-center gap-1">
+                      <span>View streak</span>
+                      <ArrowRight className="w-3.5 h-3.5" />
+                    </p>
                   </div>
                 </div>
               </CardContent>
