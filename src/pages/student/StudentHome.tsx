@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import StudentDashboardLayout from '@/components/layout/StudentDashboardLayout';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { 
+import {
   BookOpen,
   Calculator,
   Atom,
@@ -15,7 +15,8 @@ import {
   CalendarDays,
   Target,
   Award,
-  Trophy
+  Trophy,
+  Flame,
 } from 'lucide-react';
 import { ContributionHeatmap, type ContributionMap } from '@/components/ContributionHeatmap';
 
@@ -42,11 +43,49 @@ function getMockContributions(): ContributionMap {
   return map;
 }
 
+/** Derive the current streak (consecutive days with contributions, ending today) from the contribution map. */
+function getCurrentStreak(contributions: ContributionMap): number {
+  const today = new Date();
+  let streak = 0;
+
+  // Walk backwards from today while there is at least 1 contribution
+  for (let offset = 0; ; offset++) {
+    const d = new Date(today);
+    d.setDate(today.getDate() - offset);
+    const key = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(
+      d.getDate(),
+    ).padStart(2, '0')}`;
+    const count = contributions[key] ?? 0;
+    if (count > 0) {
+      streak += 1;
+    } else {
+      break;
+    }
+  }
+
+  return streak;
+}
+
+function getStreakLabel(streakDays: number): string {
+  if (streakDays === 0) return 'Start your streak';
+  if (streakDays === 1) return '1-day streak';
+  return `${streakDays}-day streak`;
+}
+
+function getStreakSubtitle(streakDays: number): string {
+  if (streakDays === 0) return 'Complete 1 activity today to start your streak';
+  if (streakDays < 7) return 'You’re building momentum — keep it up';
+  if (streakDays < 21) return 'Strong consistency — your future self will thank you';
+  return 'Elite consistency — you’re in the top tier';
+}
+
 const StudentHome = () => {
   const navigate = useNavigate();
   const [completedSuggestions, setCompletedSuggestions] = useState<string[]>([]);
   const [showAllAiSuggestions, setShowAllAiSuggestions] = useState(false);
   const contributions = useMemo(() => getMockContributions(), []);
+  const streakDays = useMemo(() => getCurrentStreak(contributions), [contributions]);
+  const xpProgress = Math.min(100, 40 + streakDays * 3); // simple streak-linked XP toward next level
 
   // Calculate overall progress from subjects
   const overallProgress = Math.round(
@@ -130,26 +169,35 @@ const StudentHome = () => {
                   {/* Left block – streak, XP, level */}
                   <div className="flex-1 flex flex-col justify-between">
                     {/* Primary metric – streak */}
-                    <div className="mt-2">
-                      <p className="text-3xl font-semibold text-white">
-                        7-day streak
-                      </p>
-                      <p className="text-xs text-white/80 mt-1 flex items-center gap-1">
-                        <span aria-hidden="true">🔥</span>
-                        <span>Consistency streak</span>
-                      </p>
+                    <div className="mt-2 flex items-start gap-3">
+                      {/* Streak icon */}
+                      <div className="relative flex items-center justify-center">
+                        <div className="h-10 w-10 rounded-2xl bg-white/15 flex items-center justify-center shadow-sm">
+                          <Flame className="w-5 h-5 text-amber-300" aria-hidden="true" />
+                        </div>
+                        {/* Glow ring for gamified feel */}
+                        <div className="pointer-events-none absolute inset-0 rounded-2xl bg-amber-300/20 blur-sm" />
+                      </div>
+                      <div>
+                        <p className="text-3xl font-semibold text-white leading-tight">
+                          {getStreakLabel(streakDays)}
+                        </p>
+                        <p className="text-xs text-white/80 mt-1">
+                          {getStreakSubtitle(streakDays)}
+                        </p>
+                      </div>
                     </div>
 
                     {/* XP progress */}
                     <div className="mt-6 space-y-1.5">
                       <div className="flex items-center justify-between text-[11px] text-white/80">
                         <span>XP toward next level</span>
-                        <span>68%</span>
+                        <span>{xpProgress}%</span>
                       </div>
                       <div className="h-2.5 w-full rounded-full bg-white/20 overflow-hidden">
                         <div
                           className="h-full rounded-full bg-gradient-to-r from-purple-500 via-violet-500 to-fuchsia-500"
-                          style={{ width: '68%' }}
+                          style={{ width: `${xpProgress}%` }}
                         />
                       </div>
                       <p className="text-[10px] text-white/80">
