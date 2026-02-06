@@ -370,6 +370,161 @@ export const performanceDashboard = {
   },
 };
 
+// ─── Graph-first Student Performance Dashboard (EPI, trajectory, heatmap, etc.) ───
+export type TrajectoryPoint = {
+  date: string;
+  accuracy: number;
+  difficultyWeightedScore: number;
+  retention: number;
+  practiceType?: string;
+  topic?: string;
+};
+
+export type KnowledgeHealthCell = {
+  topicId: string;
+  topicName: string;
+  subject: string;
+  accuracy: number;
+  retention: number;
+  mistakeFrequency: number; // 0–100, higher = more mistakes
+};
+
+export type QuestionTypePerformance = {
+  type: string;
+  accuracy: number;
+  avgTimeSec: number;
+};
+
+export type TimePerSubject = {
+  subject: string;
+  timePct: number;
+  scoreReturnPct: number;
+};
+
+export type StrengthCard = {
+  id: string;
+  topic: string;
+  lastAccuracy: number;
+  retention14d: number;
+  label: string;
+};
+
+export type BuildingCard = {
+  id: string;
+  topic: string;
+  whatsMissing: string;
+};
+
+export type DailyActionData = {
+  action: string;
+  sparklineData: { day: string; retention: number }[];
+  whyMatters: string;
+};
+
+export type OverallPerformancePoint = {
+  month: string;
+  value: number;
+};
+
+export const studentPerformanceDashboard = {
+  epi: 78,
+  epiInsight: 'Learning is stable and improving. Geometry and Organic Chemistry need attention.',
+  overallPerformance: [
+    { month: 'Jan', value: 80 },
+    { month: 'Feb', value: 77 },
+    { month: 'Mar', value: 73 },
+    { month: 'Apr', value: 75 },
+    { month: 'May', value: 77 },
+    { month: 'Jun', value: 79 },
+    { month: 'Jul', value: 80 },
+  ] as OverallPerformancePoint[],
+  learningTrajectory: {
+    '30': [
+      { date: '2026-01-08', accuracy: 68, difficultyWeightedScore: 62, retention: 72, practiceType: 'Practice', topic: 'Algebra' },
+      { date: '2026-01-12', accuracy: 72, difficultyWeightedScore: 66, retention: 74, practiceType: 'Revision', topic: 'Geometry' },
+      { date: '2026-01-16', accuracy: 71, difficultyWeightedScore: 68, retention: 70, practiceType: 'Practice', topic: 'Chemistry' },
+      { date: '2026-01-20', accuracy: 75, difficultyWeightedScore: 71, retention: 76, practiceType: 'Practice', topic: 'Algebra' },
+      { date: '2026-01-24', accuracy: 74, difficultyWeightedScore: 72, retention: 75, practiceType: 'Revision', topic: 'Trigonometry' },
+      { date: '2026-01-28', accuracy: 76, difficultyWeightedScore: 74, retention: 77, practiceType: 'Practice', topic: 'Mixed' },
+      { date: '2026-02-01', accuracy: 78, difficultyWeightedScore: 76, retention: 78, practiceType: 'Practice', topic: 'Mixed' },
+    ] as TrajectoryPoint[],
+    '60': [
+      { date: '2025-12-10', accuracy: 62, difficultyWeightedScore: 56, retention: 65 },
+      { date: '2025-12-20', accuracy: 66, difficultyWeightedScore: 60, retention: 68 },
+      { date: '2025-12-30', accuracy: 68, difficultyWeightedScore: 64, retention: 70 },
+      { date: '2026-01-09', accuracy: 70, difficultyWeightedScore: 66, retention: 72 },
+      { date: '2026-01-19', accuracy: 74, difficultyWeightedScore: 70, retention: 75 },
+      { date: '2026-01-29', accuracy: 77, difficultyWeightedScore: 74, retention: 77 },
+      { date: '2026-02-04', accuracy: 78, difficultyWeightedScore: 76, retention: 78 },
+    ] as TrajectoryPoint[],
+    '90': [
+      { date: '2025-11-08', accuracy: 58, difficultyWeightedScore: 52, retention: 62 },
+      { date: '2025-11-25', accuracy: 62, difficultyWeightedScore: 56, retention: 65 },
+      { date: '2025-12-12', accuracy: 65, difficultyWeightedScore: 60, retention: 68 },
+      { date: '2025-12-28', accuracy: 68, difficultyWeightedScore: 63, retention: 70 },
+      { date: '2026-01-14', accuracy: 72, difficultyWeightedScore: 68, retention: 74 },
+      { date: '2026-01-28', accuracy: 76, difficultyWeightedScore: 73, retention: 76 },
+      { date: '2026-02-05', accuracy: 78, difficultyWeightedScore: 76, retention: 78 },
+    ] as TrajectoryPoint[],
+  },
+  knowledgeHealthHeatmap: [
+    { topicId: 'k1', topicName: 'Algebra', subject: 'Mathematics', accuracy: 88, retention: 85, mistakeFrequency: 12 },
+    { topicId: 'k2', topicName: 'Grammar', subject: 'English', accuracy: 90, retention: 88, mistakeFrequency: 8 },
+    { topicId: 'k3', topicName: 'World History', subject: 'History', accuracy: 85, retention: 82, mistakeFrequency: 15 },
+    { topicId: 'k4', topicName: 'Geometry', subject: 'Mathematics', accuracy: 62, retention: 61, mistakeFrequency: 38 },
+    { topicId: 'k5', topicName: 'Chemical Reactions', subject: 'Chemistry', accuracy: 58, retention: 55, mistakeFrequency: 42 },
+    { topicId: 'k6', topicName: 'Trigonometry', subject: 'Mathematics', accuracy: 48, retention: 45, mistakeFrequency: 55 },
+    { topicId: 'k7', topicName: 'Organic Chemistry', subject: 'Chemistry', accuracy: 44, retention: 42, mistakeFrequency: 58 },
+  ] as KnowledgeHealthCell[],
+  questionPatternPerformance: [
+    { type: 'MCQs', accuracy: 82, avgTimeSec: 45 },
+    { type: 'Assertion & Reason', accuracy: 68, avgTimeSec: 90 },
+    { type: 'Case Study', accuracy: 58, avgTimeSec: 180 },
+    { type: 'Short Answer', accuracy: 72, avgTimeSec: 120 },
+    { type: 'Long Answer', accuracy: 65, avgTimeSec: 300 },
+  ] as QuestionTypePerformance[],
+  timeRoi: {
+    timePerSubject: [
+      { subject: 'Physics', timePct: 20, scoreReturnPct: 22 },
+      { subject: 'Maths', timePct: 28, scoreReturnPct: 30 },
+      { subject: 'Chemistry', timePct: 25, scoreReturnPct: 16 },
+      { subject: 'English', timePct: 15, scoreReturnPct: 20 },
+      { subject: 'Biology', timePct: 12, scoreReturnPct: 12 },
+    ],
+    timeVsAccuracyGain: [
+      { timeMin: 30, accuracyGain: 2 },
+      { timeMin: 60, accuracyGain: 5 },
+      { timeMin: 90, accuracyGain: 8 },
+      { timeMin: 120, accuracyGain: 10 },
+      { timeMin: 150, accuracyGain: 11 },
+      { timeMin: 180, accuracyGain: 12 },
+    ],
+    roiInsight: 'Chemistry uses 25% of your study time but yields only 16% score return.',
+  },
+  strengths: [
+    { id: 's1', topic: 'Algebra', lastAccuracy: 88, retention14d: 85, label: 'Reliable — use for confidence' },
+    { id: 's2', topic: 'Grammar', lastAccuracy: 90, retention14d: 88, label: 'Reliable — use for confidence' },
+    { id: 's3', topic: 'World History', lastAccuracy: 85, retention14d: 82, label: 'Reliable — use for confidence' },
+  ] as StrengthCard[],
+  currentlyBuilding: [
+    { id: 'c1', topic: 'Geometry', whatsMissing: 'Concept clarity on similar triangles; one focused revision recommended.' },
+    { id: 'c2', topic: 'Organic Chemistry', whatsMissing: 'Practice depth on reaction mechanisms; 2–3 more sets needed.' },
+  ] as BuildingCard[],
+  dailyAction: {
+    action: 'Revise Geometry for 10 minutes',
+    sparklineData: [
+      { day: 'Day -7', retention: 78 },
+      { day: 'Day -6', retention: 76 },
+      { day: 'Day -5', retention: 74 },
+      { day: 'Day -4', retention: 70 },
+      { day: 'Day -3', retention: 66 },
+      { day: 'Day -2', retention: 63 },
+      { day: 'Day -1', retention: 61 },
+    ],
+    whyMatters: 'Retention dropped from 78% → 61% in the last 7 days.',
+  } as DailyActionData,
+};
+
 export const attendance = {
   totalDays: 180,
   presentDays: 165,
