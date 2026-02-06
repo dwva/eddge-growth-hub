@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect } from 'react';
 import StudentDashboardLayout from '@/components/layout/StudentDashboardLayout';
 import { ScrollArea } from '@/components/ui/scroll-area';
-import { PanelRightClose, PanelRightOpen, Sparkles } from 'lucide-react';
+import { Menu } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { ChatMessage } from '@/components/doubt-solver/ChatMessage';
 import { ThinkingIndicator } from '@/components/doubt-solver/ThinkingIndicator';
@@ -97,22 +97,15 @@ const StudentDoubtSolverContent = () => {
       {/* Main Chat Area */}
       <div className="flex-1 flex flex-col min-w-0 bg-background">
         {/* Header */}
-        <header className="flex-shrink-0 h-12 border-b border-border bg-card/50 flex items-center justify-between px-4">
-          <div className="flex items-center gap-2">
-            <div className="w-7 h-7 rounded-lg bg-gradient-to-br from-primary to-purple-600 flex items-center justify-center">
-              <Sparkles className="w-3.5 h-3.5 text-white" />
-            </div>
-            <div>
-              <h2 className="font-semibold text-sm text-foreground">AI Doubt Solver</h2>
-            </div>
-          </div>
+        <header className="flex-shrink-0 h-12 border-b border-border bg-card/50 flex items-center justify-end px-4">
           <Button
             variant="ghost"
             size="icon"
             onClick={() => setSidebarOpen(!sidebarOpen)}
             className="h-8 w-8 text-muted-foreground hover:text-foreground"
+            aria-label={sidebarOpen ? 'Close sidebar' : 'Open sidebar'}
           >
-            {sidebarOpen ? <PanelRightClose className="w-4 h-4" /> : <PanelRightOpen className="w-4 h-4" />}
+            <Menu className="w-5 h-5" />
           </Button>
         </header>
 

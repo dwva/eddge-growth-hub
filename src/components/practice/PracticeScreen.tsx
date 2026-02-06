@@ -73,6 +73,7 @@ const PRACTICE_TYPE_LABELS: Record<PracticeType, string> = {
   long: 'Long answers',
   'case-study': 'Case study',
   'very-short': 'Very short answer',
+  'full-exam': 'Full exam',
 };
 
 function getDifficultyColor(d: string) {
@@ -99,6 +100,10 @@ export function PracticeScreen({
   const glossaryItems = glossaryByChapter[chapterKey] ?? [];
 
   const { questions: rawQuestions, totalCount } = useMemo(() => {
+    if (practiceType === 'full-exam') {
+      const q = set.mcq;
+      return { questions: q, totalCount: q.length };
+    }
     if (practiceType === 'mcq') {
       const q = set.mcq;
       return { questions: q, totalCount: q.length };
@@ -291,7 +296,7 @@ export function PracticeScreen({
       {/* Question card by type */}
       <Card>
         <CardContent className="p-6">
-          {practiceType === 'mcq' && (
+          {(practiceType === 'mcq' || practiceType === 'full-exam') && (
             <MCQBlock
               question={currentItem as PracticeQuestionMCQ}
               selected={currentAnswer as number | undefined}

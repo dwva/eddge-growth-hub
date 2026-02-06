@@ -170,6 +170,9 @@ const StudentResources = () => {
                         src={resource.cover}
                         alt={resource.title}
                         className="w-full sm:w-32 h-40 sm:h-44 object-cover rounded-xl border border-gray-100 dark:border-border"
+                        onError={(e) => {
+                          (e.target as HTMLImageElement).src = '/placeholder.svg';
+                        }}
                       />
                     </div>
                     {/* Right: name + details + actions */}

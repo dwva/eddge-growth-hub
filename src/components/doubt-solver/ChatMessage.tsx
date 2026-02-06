@@ -1,5 +1,5 @@
 import ReactMarkdown from 'react-markdown';
-import { Sparkles } from 'lucide-react';
+import { MessageCircle } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Message } from './types';
 
@@ -13,8 +13,8 @@ export function ChatMessage({ message }: ChatMessageProps) {
   return (
     <div className={cn("flex gap-4 py-4", isUser ? "justify-end" : "justify-start")}>
       {!isUser && (
-        <div className="flex-shrink-0 w-8 h-8 rounded-full bg-gradient-to-br from-primary to-purple-600 flex items-center justify-center">
-          <Sparkles className="w-4 h-4 text-white" />
+        <div className="flex-shrink-0 w-8 h-8 rounded-full bg-muted flex items-center justify-center">
+          <MessageCircle className="w-4 h-4 text-muted-foreground" />
         </div>
       )}
       <div
