@@ -16,9 +16,9 @@ import {
   Target,
   Award,
   Trophy,
-  Flame,
 } from 'lucide-react';
 import { ContributionHeatmap, type ContributionMap } from '@/components/ContributionHeatmap';
+import { MotivationBar } from '@/components/shared/MotivationBar';
 
 const subjects = [
   { id: 1, name: 'Mathematics', icon: <Calculator className="w-8 h-8" />, color: 'bg-blue-50', iconColor: 'text-blue-500', progress: 65 },
@@ -139,39 +139,24 @@ const StudentHome = () => {
                 </CardContent>
             </Card>
 
-            {/* Streak widget – tap to open Streak page (multi-purple) */}
-            <Card
+            {/* Motivation bar – fills widget, tap to open Streak page */}
+            <div
               role="button"
               tabIndex={0}
               onClick={() => navigate('/student/streak')}
               onKeyDown={(e) => e.key === 'Enter' && navigate('/student/streak')}
-              className="relative overflow-hidden border-0 shadow-md rounded-3xl min-w-0 min-h-[200px] border-2 border-violet-200/80 dark:border-violet-700/50 cursor-pointer hover:shadow-lg hover:border-violet-400/90 dark:hover:border-violet-500/70 transition-all active:scale-[0.99] bg-[linear-gradient(135deg,#f5f3ff_0%,#ede9fe_25%,#e9d5ff_50%,#ddd6fe_75%,#c4b5fd_100%)] dark:bg-gradient-to-br dark:from-violet-950/90 dark:via-purple-900/80 dark:to-fuchsia-950/70"
+              className="min-w-0 h-full min-h-[200px] cursor-pointer rounded-3xl transition-all hover:shadow-lg active:scale-[0.99] focus:outline-none focus-visible:ring-2 focus-visible:ring-primary"
             >
-              <div className="absolute inset-0 bg-gradient-to-br from-violet-400/5 to-fuchsia-500/10 dark:from-violet-500/10 dark:to-fuchsia-600/15 pointer-events-none" />
-              <CardContent className="relative p-6 h-full min-h-[200px] flex flex-col justify-center">
-                <div className="flex items-start gap-3">
-                  <div className="rounded-2xl p-2.5 flex-shrink-0 bg-gradient-to-br from-violet-300/40 to-purple-500/30 dark:from-violet-600/40 dark:to-purple-600/30 ring-2 ring-violet-400/30 dark:ring-violet-500/40">
-                    <Flame className="w-8 h-8 text-violet-600 dark:text-violet-400" aria-hidden />
-                  </div>
-                  <div className="min-w-0">
-                    <p className="text-2xl font-bold tabular-nums text-violet-900 dark:text-violet-100">
-                      {streakDays === 0 ? '0' : streakDays}-day streak
-                    </p>
-                    <p className="text-sm mt-0.5 text-violet-700 dark:text-violet-300">
-                      {streakDays === 0
-                        ? 'Do one activity today to start your streak'
-                        : streakDays < 7
-                        ? 'Keep it up — you’re building momentum'
-                        : 'Strong consistency! Tap to see your streak details.'}
-                    </p>
-                    <p className="text-xs mt-2 flex items-center gap-1 font-medium text-violet-600 dark:text-violet-400">
-                      <span>View streak</span>
-                      <ArrowRight className="w-3.5 h-3.5" />
-                    </p>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
+              <MotivationBar
+                streak={streakDays}
+                timelineDays={7}
+                todaysDone={(() => {
+                  const today = new Date();
+                  const key = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`;
+                  return (contributions[key] ?? 0) > 0;
+                })()}
+              />
+            </div>
           </div>
 
           {/* Overall Progress Tracker Bar */}

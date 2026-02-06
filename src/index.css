@@ -254,4 +254,10 @@
   .animate-path-sparkle-once {
     animation: path-sparkle-once 0.5s ease-out forwards;
   }
+
+  /* Soft breathing for low-opacity accents */
+  @keyframes breathe {
+    0%, 100% { transform: scale(0.99); }
+    50% { transform: scale(1.01); }
+  }
 }
