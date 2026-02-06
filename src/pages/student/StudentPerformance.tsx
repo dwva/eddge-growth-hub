@@ -41,7 +41,7 @@ function EPIGauge() {
 
   return (
     <Card className="rounded-2xl border border-border bg-card shadow-sm overflow-hidden">
-      <CardContent className="pt-8 pb-6 px-6">
+      <CardContent className="pt-6 pb-5 px-6">
         <div className="flex flex-col items-center">
           <p className="text-sm font-medium text-muted-foreground uppercase tracking-wider mb-4">
             EDDGE Performance Index (EPI)
@@ -83,7 +83,7 @@ function EPIGauge() {
             </div>
           </div>
           {/* Readout — score and band */}
-          <div className="mt-4 flex flex-col items-center rounded-xl border border-border bg-muted/10 px-6 py-3 min-w-[140px]">
+          <div className="mt-3 flex flex-col items-center rounded-xl border border-border bg-muted/10 px-6 py-3 min-w-[140px]">
             <p className="text-3xl md:text-2xl font-bold tabular-nums">
               <span style={{ color: band.color }}>{epi}</span>
               <span className="text-muted-foreground font-normal"> / 100</span>
@@ -95,7 +95,7 @@ function EPIGauge() {
               {band.label}
             </p>
           </div>
-          <p className="text-xs md:text-sm text-muted-foreground mt-3 px-2 max-w-md text-center leading-relaxed">
+          <p className="text-xs md:text-sm text-muted-foreground mt-2 px-2 max-w-md text-center leading-relaxed">
             {epiInsight}
           </p>
         </div>
@@ -148,10 +148,10 @@ function OverallPerformance() {
           </ToggleGroup>
         </div>
       </CardHeader>
-      <CardContent>
+      <CardContent className="pt-3">
         <div className="h-64">
           <ResponsiveContainer width="100%" height="100%">
-            <AreaChart data={data} margin={{ top: 8, right: 8, left: -8, bottom: 0 }}>
+            <AreaChart data={data} margin={{ top: 6, right: 8, left: 0, bottom: 0 }}>
               <defs>
                 <linearGradient id="overallFill" x1="0" y1="0" x2="0" y2="1">
                   <stop offset="0%" stopColor={OVERALL_PURPLE} stopOpacity={0.35} />
@@ -245,7 +245,7 @@ function QuestionPatternRing({
       : 'bg-rose-50 text-rose-700';
 
   return (
-    <div className="flex flex-col items-center rounded-2xl border border-border bg-card/90 p-4 shadow-sm hover:shadow-md transition-shadow">
+    <div className="flex flex-col items-center rounded-2xl border border-border bg-card/90 p-4 shadow-sm hover:shadow-md transition-shadow h-full">
       <p className="text-xs font-semibold text-foreground text-center leading-tight min-h-[2rem]">
         {type}
       </p>
@@ -304,14 +304,14 @@ function QuestionPatternPerformance() {
 
   return (
     <Card className="rounded-2xl border border-border bg-card shadow-sm overflow-hidden">
-      <CardHeader>
+      <CardHeader className="pb-2">
         <CardTitle className="text-lg font-semibold">Question Pattern Performance</CardTitle>
         <p className="text-sm text-muted-foreground mt-0.5">
           Accuracy by CBSE question type (out of 100). Avg time per question below each.
         </p>
       </CardHeader>
-      <CardContent>
-        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-4">
+      <CardContent className="pt-3">
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-4 items-stretch">
           {data.map((item) => (
             <QuestionPatternRing
               key={item.type}
@@ -446,7 +446,7 @@ function StrengthsAndBuilding() {
 const StudentPerformance = () => {
   return (
     <StudentDashboardLayout title="Performance">
-      <div className="space-y-8 pb-12 max-w-5xl">
+      <div className="space-y-8 pb-12 max-w-6xl mx-auto px-4 md:px-0">
         {/* 1. Hero — EPI */}
         <EPIGauge />
 

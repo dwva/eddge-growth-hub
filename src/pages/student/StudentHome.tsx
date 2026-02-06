@@ -9,13 +9,13 @@ import {
   Atom,
   Brain,
   ArrowRight,
-  Flame,
   CheckCircle,
   MessageSquare,
   FileText,
   CalendarDays,
   Target,
-  Award
+  Award,
+  Trophy
 } from 'lucide-react';
 import { ContributionHeatmap, type ContributionMap } from '@/components/ContributionHeatmap';
 
@@ -77,7 +77,7 @@ const StudentHome = () => {
                 <div className="absolute top-1/2 right-1/4 w-32 h-32 bg-white/5 rounded-full" />
                 <div className="absolute bottom-0 right-0 w-64 h-64 bg-purple-500/20 rounded-full translate-y-1/2 translate-x-1/4" />
                 
-                <CardContent className="relative p-8 flex flex-col justify-between h-full min-h-[240px]">
+                <CardContent className="relative p-8 flex flex-col justify-between h-full min-h-[200px]">
                   {/* Top section - exam countdown headline */}
                   <div className="pt-2 space-y-2">
                     <h2 className="text-xl font-semibold text-white leading-tight">
@@ -102,8 +102,16 @@ const StudentHome = () => {
                     </p>
                   </div>
                   
-                  {/* Bottom section - Buttons */}
-                  <div className="flex gap-3 pt-6">
+                  {/* Bottom section - Rank + CTA */}
+                  <div className="flex flex-wrap items-center gap-3 pt-6">
+                    <Button
+                      variant="outline"
+                      className="inline-flex items-center gap-2 rounded-full border-white/60 text-white bg-white/10 hover:bg-white/20 px-4 h-11 text-xs font-semibold shadow-sm"
+                      onClick={() => navigate('/student/leaderboard')}
+                    >
+                      <Trophy className="w-4 h-4 text-amber-300" />
+                      <span>Rank #5</span>
+                    </Button>
                     <Button 
                       className="bg-white text-primary hover:bg-white/90 font-semibold rounded-xl px-6 h-11 shadow-md flex items-center gap-2"
                       onClick={() => navigate('/student/planner')}
@@ -111,55 +119,63 @@ const StudentHome = () => {
                       <span>⚡</span>
                       <span>Start Today&apos;s Plan</span>
                     </Button>
-                    <Button 
-                      variant="outline" 
-                      className="border-white/50 text-white hover:bg-white/10 rounded-xl px-6 h-11 bg-transparent"
-                      onClick={() => navigate('/student/performance')}
-                    >
-                      View Progress
-                    </Button>
                   </div>
                 </CardContent>
             </Card>
 
-            {/* Stats Card - My Stats (fixed width) */}
-            <Card className="relative overflow-hidden border-0 shadow-sm rounded-3xl bg-gradient-to-br from-amber-100 via-amber-50 to-orange-100 dark:from-card dark:via-card dark:to-card dark:border dark:border-border min-w-0">
-              {/* Decorative elements - balanced */}
-              <div className="absolute -top-6 -right-6 w-24 h-24 bg-primary/10 dark:bg-primary/20 rounded-full" />
-              <div className="absolute bottom-0 right-0 w-40 h-40 bg-orange-200/50 dark:bg-primary/10 rounded-full translate-y-1/3 translate-x-1/4" />
-              
-              <CardContent className="relative p-8 flex flex-col justify-between h-full min-h-[240px]">
-                {/* Top section - Title aligned with Today's Focus */}
-                <div className="pt-2">
-                  <h3 className="text-lg font-semibold text-gray-900 dark:text-foreground leading-tight">My Stats</h3>
-                  
-                  {/* Stats row - evenly aligned */}
-                  <div className="flex gap-10 mt-4">
-                    <div>
-                      <p className="text-xs text-gray-500 dark:text-muted-foreground">Today</p>
-                      <p className="text-xl font-semibold text-gray-900 dark:text-foreground mt-1">2.5 hrs</p>
+            {/* Stats Card - Learning momentum (compact) */}
+            <Card className="relative overflow-hidden border-0 shadow-sm rounded-3xl bg-white dark:bg-card dark:border dark:border-border min-w-0">
+              <CardContent className="relative p-8 h-full min-h-[200px] flex flex-col">
+                <div className="flex h-full gap-6">
+                  {/* Left block – streak, XP, level */}
+                  <div className="flex-1 flex flex-col justify-between">
+                    {/* Primary metric – streak */}
+                    <div className="mt-2">
+                      <p className="text-3xl font-semibold text-gray-900 dark:text-foreground">
+                        7-day streak
+                      </p>
+                      <p className="text-xs text-gray-500 dark:text-muted-foreground mt-1 flex items-center gap-1">
+                        <span aria-hidden="true">🔥</span>
+                        <span>Consistency streak</span>
+                      </p>
                     </div>
-                    <div>
-                      <p className="text-xs text-gray-500 dark:text-muted-foreground">This Week</p>
-                      <p className="text-xl font-semibold text-gray-900 dark:text-foreground mt-1">12 hrs</p>
+
+                    {/* XP progress */}
+                    <div className="mt-6 space-y-1.5">
+                      <div className="flex items-center justify-between text-[11px] text-gray-600 dark:text-muted-foreground">
+                        <span>XP toward next level</span>
+                        <span>68%</span>
+                      </div>
+                      <div className="h-2.5 w-full rounded-full bg-gray-100 dark:bg-muted overflow-hidden">
+                        <div
+                          className="h-full rounded-full bg-gradient-to-r from-indigo-500 to-purple-500"
+                          style={{ width: '68%' }}
+                        />
+                      </div>
+                      <p className="text-[10px] text-gray-500 dark:text-muted-foreground">
+                        Based on quality-weighted practice & revision
+                      </p>
                     </div>
                   </div>
-                  
-                  {/* Streak - aligned with stats content */}
-                  <div className="flex items-center gap-1.5 mt-3">
-                    <Flame className="w-4 h-4 text-orange-500 dark:text-orange-400" />
-                    <span className="text-xs font-medium text-gray-700 dark:text-muted-foreground">7 day streak</span>
+
+                  {/* Right block – momentum + avatar */}
+                  <div className="w-24 sm:w-28 md:w-32 flex flex-col items-end justify-between">
+                    {/* Avatar assistant – disciplined self */}
+                    <div className="relative flex-1 flex items-end justify-end">
+                      <img
+                        src="/assets/image-1fc051e8-dfd5-4bec-b348-4ac4acebeee4.png"
+                        alt=""
+                        className="pointer-events-none select-none translate-y-2"
+                        style={{
+                          opacity: 0.12,          // Strong momentum, subtle
+                          mixBlendMode: 'soft-light',
+                          objectFit: 'contain',
+                          maxHeight: '100%',
+                        }}
+                      />
+                    </div>
                   </div>
                 </div>
-                
-                {/* Bottom section - CTA aligned with buttons baseline */}
-                <button 
-                  className="flex items-center gap-2 text-sm font-medium text-gray-700 dark:text-muted-foreground hover:text-primary transition-colors group pt-6"
-                  onClick={() => navigate('/student/performance')}
-                >
-                  Go to my progress
-                  <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-                </button>
               </CardContent>
             </Card>
           </div>

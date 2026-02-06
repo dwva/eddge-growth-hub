@@ -26,6 +26,7 @@ import StudentSettings from "./pages/student/StudentSettings";
 import StudentAchievements from "./pages/student/StudentAchievements";
 import StudentDoubtSolver from "./pages/student/StudentDoubtSolver";
 import StudentResources from "./pages/student/StudentResources";
+import StudentLeaderboard from "./pages/student/StudentLeaderboard";
 import StudentPYQ from "./pages/student/StudentPYQ";
 import StudentAnnouncements from "./pages/student/StudentAnnouncements";
 import StudentHomework from "./pages/student/StudentHomework";
@@ -152,6 +153,11 @@ const App = () => (
             <Route path="/student/performance" element={
               <ProtectedRoute allowedRoles={['student']}>
                 <StudentPerformance />
+              </ProtectedRoute>
+            } />
+            <Route path="/student/leaderboard" element={
+              <ProtectedRoute allowedRoles={['student']}>
+                <StudentLeaderboard />
               </ProtectedRoute>
             } />
             <Route path="/student/attendance" element={

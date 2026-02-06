@@ -72,6 +72,7 @@ const navSections: NavSection[] = [
     icon: <TrendingUp className="w-5 h-5" />,
     items: [
       { label: 'Performance', icon: <TrendingUp className="w-4 h-4" />, path: '/student/performance' },
+      { label: 'Leaderboard', icon: <Award className="w-4 h-4" />, path: '/student/leaderboard' },
       { label: 'Achievements', icon: <Award className="w-4 h-4" />, path: '/student/achievements' },
     ],
   },
