@@ -4,7 +4,8 @@ import StudentDashboardLayout from '@/components/layout/StudentDashboardLayout';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Flame, ArrowLeft, Target, Zap, Calendar } from 'lucide-react';
-import { ContributionHeatmap, type ContributionMap } from '@/components/ContributionHeatmap';
+import { type ContributionMap } from '@/components/ContributionHeatmap';
+import { StreakTimeline } from '@/components/shared/StreakTimeline';
 
 /** Mock contributions for streak calculation (same logic as home). */
 function getMockContributions(): ContributionMap {
@@ -113,19 +114,19 @@ const StudentStreak = () => {
           </CardContent>
         </Card>
 
-        {/* Activity heatmap */}
+        {/* Streak timeline – don’t break the chain */}
         <Card className="rounded-2xl border border-border">
           <CardHeader>
             <CardTitle className="text-lg flex items-center gap-2">
               <Target className="w-5 h-5 text-primary" />
-              Your activity
+              Your streak timeline
             </CardTitle>
             <p className="text-sm text-muted-foreground">
-              Each day with activity counts toward your streak.
+              Each day with activity keeps your streak alive. Complete today to avoid breaking the chain.
             </p>
           </CardHeader>
           <CardContent>
-            <ContributionHeatmap contributions={contributions} variant="light" />
+            <StreakTimeline contributions={contributions} daysToShow={7} showDaysToggle />
           </CardContent>
         </Card>
       </main>
