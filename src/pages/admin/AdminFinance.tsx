@@ -134,13 +134,13 @@ const AdminFinance = () => {
                     </linearGradient>
                   </defs>
                   <CartesianGrid strokeDasharray="3 3" stroke="#f1f5f9" />
-                  <XAxis dataKey="month" stroke="#94a3b8" fontSize={12} />
-                  <YAxis stroke="#94a3b8" fontSize={12} tickFormatter={(value) => `₹${value/100000}L`} />
+                  <XAxis dataKey="month" stroke="#94a3b8" style={{ fontSize: '0.75rem' }} />
+                  <YAxis stroke="#94a3b8" style={{ fontSize: '0.75rem' }} tickFormatter={(value) => `₹${value/100000}L`} />
                   <Tooltip 
                     formatter={(value: number) => [`₹${(value/100000).toFixed(1)}L`, 'Revenue']}
-                    contentStyle={{ borderRadius: '12px', border: 'none', boxShadow: '0 10px 25px rgba(0,0,0,0.1)' }}
+                    contentStyle={{ borderRadius: '0.75rem', border: 'none', boxShadow: '0 0.625rem 1.5625rem rgba(0,0,0,0.1)' }}
                   />
-                  <Area type="monotone" dataKey="revenue" stroke="hsl(var(--primary))" fill="url(#colorRevenue)" strokeWidth={3} />
+                  <Area type="monotone" dataKey="revenue" stroke="hsl(var(--primary))" fill="url(#colorRevenue)" strokeWidth={2} />
                 </AreaChart>
               </ResponsiveContainer>
             </CardContent>

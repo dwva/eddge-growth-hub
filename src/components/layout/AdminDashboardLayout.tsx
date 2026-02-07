@@ -49,18 +49,18 @@ const AdminDashboardLayout = ({
   const firstName = user?.name?.split(' ')[0] || 'Admin';
 
   return (
-    <div className="min-h-screen bg-[#f8f9fb] flex font-sans">
+    <div className="min-h-screen bg-[#f8f9fb] flex font-sans w-full">
       {/* Desktop Sidebar */}
       <aside className={cn(
         "hidden md:flex flex-col h-screen sticky top-0 flex-shrink-0 transition-all duration-300 overflow-hidden",
-        collapsed ? "w-0" : "w-[260px]"
+        collapsed ? "w-0" : "w-[16.25rem] max-w-[16.25rem]"
       )}>
         <AdminSidebar collapsed={collapsed} />
       </aside>
 
       {/* Mobile Sidebar */}
       <Sheet open={mobileOpen} onOpenChange={setMobileOpen}>
-        <SheetContent side="left" className="w-72 p-0 border-0">
+        <SheetContent side="left" className="w-[18rem] max-w-[85vw] p-0 border-0">
           <AdminSidebar isMobile onMobileClose={() => setMobileOpen(false)} />
         </SheetContent>
       </Sheet>
@@ -68,7 +68,7 @@ const AdminDashboardLayout = ({
       {/* Main Content */}
       <div className="flex-1 flex flex-col min-w-0">
         {/* Top Bar - matching student dashboard */}
-        <header className="h-14 md:h-16 bg-white px-3 md:px-6 flex items-center justify-between sticky top-0 z-10 flex-shrink-0 border-b border-gray-100 shadow-sm">
+        <header className="h-14 md:h-16 bg-white px-3 md:px-4 lg:px-6 flex items-center justify-between sticky top-0 z-10 flex-shrink-0 border-b border-gray-100 shadow-sm w-full">
           {/* Left: Menu + Page Title */}
           <div className="flex items-center gap-3">
             {/* Mobile Menu */}
@@ -100,8 +100,8 @@ const AdminDashboardLayout = ({
           </div>
           
           {/* Center: Search */}
-          <div className="hidden lg:flex items-center flex-1 justify-center max-w-md mx-4">
-            <div className="relative w-full">
+          <div className="hidden lg:flex items-center flex-1 justify-center max-w-md mx-2 lg:mx-4">
+            <div className="relative w-full max-w-full">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
               <Input 
                 placeholder="Search teachers, students, classes..." 
@@ -160,7 +160,7 @@ const AdminDashboardLayout = ({
                   </Avatar>
                 </button>
               </PopoverTrigger>
-              <PopoverContent className="w-60 p-0 bg-white rounded-xl shadow-lg border-0" align="end">
+              <PopoverContent className="w-[15rem] max-w-[90vw] p-0 bg-white rounded-xl shadow-lg border-0" align="end">
                 <div className="p-4 border-b border-gray-100">
                   <div className="flex items-center gap-3">
                     <Avatar className="w-11 h-11 border-2 border-primary/20">
@@ -205,8 +205,10 @@ const AdminDashboardLayout = ({
         </header>
 
         {/* Page Content */}
-        <main className="flex-1 p-3 md:p-6 lg:p-8 overflow-y-auto">
-          {children}
+        <main className="flex-1 p-3 md:p-4 lg:p-6 xl:p-8 overflow-y-auto w-full max-w-full">
+          <div className="w-full max-w-full">
+            {children}
+          </div>
         </main>
       </div>
     </div>

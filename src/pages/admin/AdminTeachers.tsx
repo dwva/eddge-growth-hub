@@ -294,7 +294,7 @@ const AdminTeachers = () => {
                       </div>
                       <div className="space-y-2">
                         <Label>Subjects</Label>
-                        <div className="flex flex-wrap gap-2 p-3 border rounded-md min-h-[60px]">
+                        <div className="flex flex-wrap gap-2 p-3 border rounded-md min-h-[3.75rem]">
                           {formData.subjects.length === 0 ? (
                             <span className="text-sm text-muted-foreground">No subjects selected</span>
                           ) : (
@@ -379,7 +379,7 @@ const AdminTeachers = () => {
                       </div>
                       <div className="space-y-2">
                         <Label>Subjects</Label>
-                        <div className="flex flex-wrap gap-2 p-3 border rounded-md min-h-[60px]">
+                        <div className="flex flex-wrap gap-2 p-3 border rounded-md min-h-[3.75rem]">
                           {formData.subjects.length === 0 ? (
                             <span className="text-sm text-muted-foreground">No subjects selected</span>
                           ) : (

@@ -34,7 +34,7 @@ const ModeToggle = () => {
       <button
         onClick={() => setCurrentMode('class_teacher')}
         className={cn(
-          "flex items-center gap-1 md:gap-1.5 px-2 md:px-3 py-1.5 md:py-2 rounded-md text-[10px] md:text-xs font-medium transition-all duration-200",
+          "flex items-center gap-1 md:gap-1.5 px-2 md:px-3 py-1.5 md:py-2 rounded-md text-[0.625rem] md:text-xs font-medium transition-all duration-200",
           currentMode === 'class_teacher'
             ? "bg-primary text-white shadow-sm"
             : "text-gray-600 hover:bg-gray-50"
@@ -46,7 +46,7 @@ const ModeToggle = () => {
       <button
         onClick={() => setCurrentMode('subject_teacher')}
         className={cn(
-          "flex items-center gap-1 md:gap-1.5 px-2 md:px-3 py-1.5 md:py-2 rounded-md text-[10px] md:text-xs font-medium transition-all duration-200",
+          "flex items-center gap-1 md:gap-1.5 px-2 md:px-3 py-1.5 md:py-2 rounded-md text-[0.625rem] md:text-xs font-medium transition-all duration-200",
           currentMode === 'subject_teacher'
             ? "bg-primary text-white shadow-sm"
             : "text-gray-600 hover:bg-gray-50"
@@ -77,14 +77,14 @@ const TeacherDashboardContent = ({ children }: TeacherDashboardLayoutProps) => {
       {/* Desktop Sidebar */}
       <aside className={cn(
         "hidden md:flex flex-col h-screen sticky top-0 flex-shrink-0 transition-all duration-300 overflow-hidden",
-        collapsed ? "w-0" : "w-[260px]"
+        collapsed ? "w-0" : "w-[16.25rem] max-w-[16.25rem]"
       )}>
         <TeacherSidebar collapsed={collapsed} onCollapseChange={setCollapsed} />
       </aside>
 
       {/* Mobile Sidebar */}
       <Sheet open={mobileOpen} onOpenChange={setMobileOpen}>
-        <SheetContent side="left" className="w-72 p-0 border-0">
+        <SheetContent side="left" className="w-[18rem] max-w-[85vw] p-0 border-0">
           <TeacherSidebar isMobile onMobileClose={() => setMobileOpen(false)} />
         </SheetContent>
       </Sheet>
@@ -112,7 +112,7 @@ const TeacherDashboardContent = ({ children }: TeacherDashboardLayoutProps) => {
             </Button>
             <div className="hidden md:block">
               <h1 className="text-sm font-semibold text-gray-900">Welcome to EDDGE.</h1>
-              <p className="text-[10px] text-gray-500">Hello {firstName}, welcome back!</p>
+              <p className="text-[0.625rem] text-gray-500">Hello {firstName}, welcome back!</p>
             </div>
             {/* Mode Toggle - Mobile Compact */}
             <div className="flex md:hidden">
@@ -181,7 +181,7 @@ const TeacherDashboardContent = ({ children }: TeacherDashboardLayoutProps) => {
                   </Avatar>
                 </button>
               </PopoverTrigger>
-              <PopoverContent className="w-60 p-0 bg-white rounded-xl shadow-lg border-0" align="end">
+              <PopoverContent className="w-[15rem] max-w-[90vw] p-0 bg-white rounded-xl shadow-lg border-0" align="end">
                 <div className="p-4 border-b border-gray-100">
                   <div className="flex items-center gap-3">
                     <Avatar className="w-11 h-11 border-2 border-primary/20">
@@ -226,8 +226,10 @@ const TeacherDashboardContent = ({ children }: TeacherDashboardLayoutProps) => {
         </header>
 
         {/* Page Content */}
-        <main className="flex-1 overflow-y-auto px-2 md:px-4 py-3 md:py-4">
-          {children}
+        <main className="flex-1 overflow-y-auto px-2 md:px-4 py-3 md:py-4 w-full max-w-full">
+          <div className="w-full max-w-full">
+            {children}
+          </div>
         </main>
       </div>
     </div>

@@ -354,10 +354,10 @@ const AdminClassAnalysis = () => {
                   />
                   <Tooltip
                     contentStyle={{
-                      borderRadius: '12px',
+                      borderRadius: '0.75rem',
                       border: 'none',
-                      boxShadow: '0 10px 40px rgba(0,0,0,0.1)',
-                      padding: '12px 16px',
+                      boxShadow: '0 0.625rem 2.5rem rgba(0,0,0,0.1)',
+                      padding: '0.75rem 1rem',
                     }}
                     formatter={(v: number) => [`${v}%`, 'Score']}
                   />
@@ -385,7 +385,7 @@ const AdminClassAnalysis = () => {
               <p className="text-sm text-gray-500">Average scores by subject</p>
             </CardHeader>
             <CardContent>
-              <div className="h-72">
+              <div className="h-[18rem] min-h-[12.5rem]">
                 <ResponsiveContainer width="100%" height="100%">
                   <BarChart
                     data={[...selectedClass.subjectPerformance].sort(
@@ -397,21 +397,23 @@ const AdminClassAnalysis = () => {
                     <XAxis
                       dataKey="subject"
                       tick={{ fontSize: 12, fill: '#9ca3af' }}
+                      style={{ fontSize: '0.75rem' }}
                       axisLine={false}
                       tickLine={false}
                     />
                     <YAxis
                       domain={[0, 100]}
                       tick={{ fontSize: 13, fill: '#9ca3af' }}
+                      style={{ fontSize: '0.8125rem' }}
                       axisLine={false}
                       tickLine={false}
                     />
                     <Tooltip
                       contentStyle={{
-                        borderRadius: '12px',
+                        borderRadius: '0.75rem',
                         border: 'none',
-                        boxShadow: '0 10px 40px rgba(0,0,0,0.1)',
-                        padding: '12px 16px',
+                        boxShadow: '0 0.625rem 2.5rem rgba(0,0,0,0.1)',
+                        padding: '0.75rem 1rem',
                       }}
                       formatter={(v: number) => [`${v}%`, 'Avg Score']}
                     />
@@ -455,10 +457,10 @@ const AdminClassAnalysis = () => {
                       </Pie>
                       <Tooltip
                         contentStyle={{
-                          borderRadius: '12px',
+                          borderRadius: '0.75rem',
                           border: 'none',
-                          boxShadow: '0 10px 40px rgba(0,0,0,0.1)',
-                          padding: '12px 16px',
+                          boxShadow: '0 0.625rem 2.5rem rgba(0,0,0,0.1)',
+                          padding: '0.75rem 1rem',
                         }}
                         formatter={(v: number, name: string) => [`${v} students`, name]}
                       />

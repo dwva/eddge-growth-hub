@@ -31,14 +31,14 @@ const InternalAdminDashboardLayout = ({ children }: InternalAdminDashboardLayout
       {/* Desktop Sidebar */}
       <aside className={cn(
         "hidden md:flex flex-col h-screen sticky top-0 flex-shrink-0 transition-all duration-300 overflow-hidden",
-        collapsed ? "w-0" : "w-[260px]"
+        collapsed ? "w-0" : "w-[16.25rem] max-w-[16.25rem]"
       )}>
         <InternalAdminSidebar collapsed={collapsed} />
       </aside>
 
       {/* Mobile Sidebar */}
       <Sheet open={mobileOpen} onOpenChange={setMobileOpen}>
-        <SheetContent side="left" className="w-72 p-0 border-0">
+        <SheetContent side="left" className="w-[18rem] max-w-[85vw] p-0 border-0">
           <InternalAdminSidebar isMobile onMobileClose={() => setMobileOpen(false)} />
         </SheetContent>
       </Sheet>
@@ -108,7 +108,7 @@ const InternalAdminDashboardLayout = ({ children }: InternalAdminDashboardLayout
                   </Avatar>
                 </button>
               </PopoverTrigger>
-              <PopoverContent className="w-64 p-0 bg-white rounded-xl shadow-lg border-0" align="end">
+              <PopoverContent className="w-[16rem] max-w-[90vw] p-0 bg-white rounded-xl shadow-lg border-0" align="end">
                 <div className="p-4 border-b border-gray-100">
                   <div className="flex items-center gap-3">
                     <Avatar className="w-12 h-12 border-2 border-primary/20">
@@ -145,8 +145,10 @@ const InternalAdminDashboardLayout = ({ children }: InternalAdminDashboardLayout
         </header>
 
         {/* Page Content */}
-        <main className="flex-1 p-3 md:p-6 lg:p-8 overflow-y-auto">
-          {children}
+        <main className="flex-1 p-3 md:p-6 lg:p-8 overflow-y-auto w-full max-w-full">
+          <div className="w-full max-w-full">
+            {children}
+          </div>
         </main>
       </div>
     </div>

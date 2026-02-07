@@ -266,7 +266,7 @@ const AdminHome = () => {
             <CardHeader className="px-3 md:px-6 py-3 md:py-4 border-b border-gray-100 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 bg-gray-50/50">
               <div>
                 <CardTitle className="text-sm md:text-lg font-semibold text-gray-900">Performance Trends</CardTitle>
-                <p className="text-[10px] md:text-sm text-gray-500">Monthly average scores across all classes</p>
+                <p className="text-[0.625rem] md:text-sm text-gray-500">Monthly average scores across all classes</p>
               </div>
               <Tabs value={chartPeriod} onValueChange={setChartPeriod}>
                 <TabsList className="bg-gray-100/80 p-1 rounded-lg">
@@ -277,7 +277,7 @@ const AdminHome = () => {
               </Tabs>
             </CardHeader>
             <CardContent className="p-3 md:p-6">
-              <ResponsiveContainer width="100%" height={200}>
+              <ResponsiveContainer width="100%" height="100%" minHeight="12.5rem">
                 <AreaChart data={performanceData}>
                   <defs>
                     <linearGradient id="colorScore" x1="0" y1="0" x2="0" y2="1">
@@ -286,17 +286,17 @@ const AdminHome = () => {
                     </linearGradient>
                   </defs>
                   <CartesianGrid strokeDasharray="3 3" stroke="#f1f5f9" />
-                  <XAxis dataKey="name" stroke="#94a3b8" fontSize={12} tickLine={false} axisLine={false} />
-                  <YAxis stroke="#94a3b8" fontSize={12} tickLine={false} axisLine={false} domain={[60, 100]} />
+                  <XAxis dataKey="name" stroke="#94a3b8" style={{ fontSize: '0.75rem' }} tickLine={false} axisLine={false} />
+                  <YAxis stroke="#94a3b8" style={{ fontSize: '0.75rem' }} tickLine={false} axisLine={false} domain={[60, 100]} />
                   <Tooltip 
                     contentStyle={{ 
                       backgroundColor: 'white', 
                       border: 'none', 
-                      borderRadius: '12px', 
-                      boxShadow: '0 10px 25px rgba(0,0,0,0.1)' 
+                      borderRadius: '0.75rem', 
+                      boxShadow: '0 0.625rem 1.5625rem rgba(0,0,0,0.1)' 
                     }} 
                   />
-                  <Area type="monotone" dataKey="score" stroke="#3b82f6" fill="url(#colorScore)" strokeWidth={3} />
+                  <Area type="monotone" dataKey="score" stroke="#3b82f6" fill="url(#colorScore)" strokeWidth={2} />
                 </AreaChart>
               </ResponsiveContainer>
             </CardContent>
@@ -365,7 +365,7 @@ const AdminHome = () => {
                       <h4 className="text-xs md:text-sm font-semibold text-amber-800">
                         {alert.type === 'LowAttendance' ? 'Low Attendance Alert' : 'Low Performance Alert'}
                       </h4>
-                      <p className="text-[10px] md:text-sm text-amber-700 mt-0.5 md:mt-1">
+                      <p className="text-[0.625rem] md:text-sm text-amber-700 mt-0.5 md:mt-1">
                         {entityName}: {alert.reason}
                       </p>
                     </div>

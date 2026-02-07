@@ -46,14 +46,14 @@ const ParentDashboardLayoutInner = ({ children, title = "Parent Dashboard" }: Pa
         {/* Desktop Sidebar */}
         <aside className={cn(
           "hidden md:flex flex-col h-screen sticky top-0 flex-shrink-0 transition-all duration-300 ease-in-out overflow-hidden",
-          collapsed ? "w-0" : "w-[260px]"
+          collapsed ? "w-0" : "w-[16.25rem] max-w-[16.25rem]"
         )}>
           <ParentSidebar collapsed={collapsed} onCollapseChange={setCollapsed} />
         </aside>
 
         {/* Mobile Sidebar */}
         <Sheet open={mobileOpen} onOpenChange={setMobileOpen}>
-          <SheetContent side="left" className="w-72 p-0 border-0">
+          <SheetContent side="left" className="w-[18rem] max-w-[85vw] p-0 border-0">
             <ParentSidebar isMobile onMobileClose={() => setMobileOpen(false)} />
           </SheetContent>
         </Sheet>
@@ -81,7 +81,7 @@ const ParentDashboardLayoutInner = ({ children, title = "Parent Dashboard" }: Pa
               </Button>
               <div className="hidden sm:block">
                 <h1 className="text-base font-semibold text-gray-900">Welcome to EDDGE.</h1>
-                <p className="text-[11px] text-gray-500">Hello {firstName}, welcome back!</p>
+                <p className="text-[0.6875rem] text-gray-500">Hello {firstName}, welcome back!</p>
               </div>
             </div>
             
@@ -119,7 +119,7 @@ const ParentDashboardLayoutInner = ({ children, title = "Parent Dashboard" }: Pa
                     </Avatar>
                   </button>
                 </PopoverTrigger>
-                <PopoverContent className="w-60 p-0 bg-white rounded-xl shadow-lg border-0" align="end">
+                <PopoverContent className="w-[15rem] max-w-[90vw] p-0 bg-white rounded-xl shadow-lg border-0" align="end">
                   <div className="p-4 border-b border-gray-100">
                     <div className="flex items-center gap-3">
                       <Avatar className="w-11 h-11 border-2 border-primary/20">
@@ -162,8 +162,10 @@ const ParentDashboardLayoutInner = ({ children, title = "Parent Dashboard" }: Pa
           </header>
 
           {/* Content Area - Full width when sidebar is hidden */}
-          <main className="flex-1 p-3 md:p-6 lg:p-8 overflow-y-auto">
-            {children}
+          <main className="flex-1 p-3 md:p-6 lg:p-8 overflow-y-auto w-full max-w-full">
+            <div className="w-full max-w-full">
+              {children}
+            </div>
           </main>
         </div>
       </div>

@@ -34,7 +34,7 @@ const StudentDashboardLayout = ({ children }: StudentDashboardLayoutProps) => {
       <aside
         className={cn(
           "hidden md:flex flex-col h-screen sticky top-0 flex-shrink-0 transition-all duration-300 overflow-hidden",
-          collapsed ? "w-0" : "w-[260px]"
+          collapsed ? "w-0" : "w-[16.25rem] max-w-[16.25rem]"
         )}
       >
         <StudentSidebar collapsed={collapsed} />
@@ -42,7 +42,7 @@ const StudentDashboardLayout = ({ children }: StudentDashboardLayoutProps) => {
 
       {/* Mobile Sidebar */}
       <Sheet open={mobileOpen} onOpenChange={setMobileOpen}>
-        <SheetContent side="left" className="w-72 p-0 border-0">
+        <SheetContent side="left" className="w-[18rem] max-w-[85vw] p-0 border-0">
           <StudentSidebar isMobile onMobileClose={() => setMobileOpen(false)} />
         </SheetContent>
       </Sheet>
@@ -128,7 +128,7 @@ const StudentDashboardLayout = ({ children }: StudentDashboardLayoutProps) => {
                   </Avatar>
                 </button>
               </PopoverTrigger>
-              <PopoverContent className="w-64 p-0 bg-white dark:bg-card rounded-xl shadow-lg border-0 dark:border-border" align="end">
+              <PopoverContent className="w-[16rem] max-w-[90vw] p-0 bg-white dark:bg-card rounded-xl shadow-lg border-0 dark:border-border" align="end">
                 <div className="p-4 border-b border-gray-100 dark:border-border">
                   <div className="flex items-center gap-3">
                     <Avatar className="w-12 h-12 border-2 border-primary/20">
@@ -166,8 +166,10 @@ const StudentDashboardLayout = ({ children }: StudentDashboardLayoutProps) => {
         </header>
 
         {/* Page Content - scrolls within viewport height */}
-        <main className="flex-1 min-h-0 p-2.5 sm:p-4 md:p-6 lg:p-8 overflow-y-auto">
-          {children}
+        <main className="flex-1 min-h-0 p-2.5 sm:p-4 md:p-6 lg:p-8 overflow-y-auto w-full max-w-full">
+          <div className="w-full max-w-full">
+            {children}
+          </div>
         </main>
       </div>
     </div>

@@ -43,14 +43,14 @@ const SuperAdminDashboardLayout = ({ children }: SuperAdminDashboardLayoutProps)
       {/* Desktop Sidebar */}
       <aside className={cn(
         "hidden md:flex flex-col h-screen sticky top-0 flex-shrink-0 transition-all duration-300 overflow-hidden",
-        collapsed ? "w-0" : "w-[260px]"
+        collapsed ? "w-0" : "w-[16.25rem] max-w-[16.25rem]"
       )}>
         <SuperAdminSidebar collapsed={collapsed} />
       </aside>
 
       {/* Mobile Sidebar */}
       <Sheet open={mobileOpen} onOpenChange={setMobileOpen}>
-        <SheetContent side="left" className="w-72 p-0 border-0">
+        <SheetContent side="left" className="w-[18rem] max-w-[85vw] p-0 border-0">
           <SuperAdminSidebar isMobile onMobileClose={() => setMobileOpen(false)} />
         </SheetContent>
       </Sheet>
@@ -91,7 +91,7 @@ const SuperAdminDashboardLayout = ({ children }: SuperAdminDashboardLayoutProps)
           <div className="flex items-center gap-1 md:gap-2">
             {/* Environment Badge */}
             <div className="hidden sm:flex items-center">
-              <span className={`px-2 py-0.5 md:px-2.5 md:py-1 rounded-full text-[10px] md:text-[11px] font-semibold border uppercase tracking-wide ${envBadge.className}`}>
+              <span className={`px-2 py-0.5 md:px-2.5 md:py-1 rounded-full text-[0.625rem] md:text-[0.6875rem] font-semibold border uppercase tracking-wide ${envBadge.className}`}>
                 {envBadge.label}
               </span>
             </div>
@@ -127,7 +127,7 @@ const SuperAdminDashboardLayout = ({ children }: SuperAdminDashboardLayoutProps)
                   </Avatar>
                 </button>
               </PopoverTrigger>
-              <PopoverContent className="w-64 p-0 bg-white rounded-xl shadow-lg border-0" align="end">
+              <PopoverContent className="w-[16rem] max-w-[90vw] p-0 bg-white rounded-xl shadow-lg border-0" align="end">
                 <div className="p-4 border-b border-gray-100">
                   <div className="flex items-center gap-3">
                     <Avatar className="w-12 h-12 border-2 border-primary/20">
@@ -166,8 +166,10 @@ const SuperAdminDashboardLayout = ({ children }: SuperAdminDashboardLayoutProps)
         </header>
 
         {/* Page Content */}
-        <main className="flex-1 p-3 md:p-6 lg:p-8 overflow-y-auto">
-          {children}
+        <main className="flex-1 p-3 md:p-6 lg:p-8 overflow-y-auto w-full max-w-full">
+          <div className="w-full max-w-full">
+            {children}
+          </div>
         </main>
       </div>
     </div>
