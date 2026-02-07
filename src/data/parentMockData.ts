@@ -140,21 +140,6 @@ export const monthlyProgressData = [
   { month: 'Jan', progress: 78 },
 ];
 
-// Milestones data
-export const milestones = [
-  { id: 'ms1', icon: 'trophy', title: 'Excellent Progress', description: 'Achieved 90%+ in Mathematics', date: '2026-01-28' },
-  { id: 'ms2', icon: 'calendar', title: 'Perfect Attendance', description: 'No absences for entire month', date: '2026-01-31' },
-  { id: 'ms3', icon: 'book-open', title: 'Homework Champion', description: 'Submitted all homework on time', date: '2026-01-25' },
-];
-
-// Badges data
-export const badges = [
-  { id: 'b1', icon: 'star', title: 'Subject Master', description: 'Top scorer in Science', color: '#f59e0b' },
-  { id: 'b2', icon: 'medal', title: 'Test Excellence', description: 'Scored 90%+ in 5 tests', color: '#3b82f6' },
-  { id: 'b3', icon: 'sparkles', title: 'Reading Star', description: 'Read 10 library books', color: '#ec4899' },
-  { id: 'b4', icon: 'zap', title: 'Consistent Learner', description: '30-day study streak', color: '#8b5cf6' },
-];
-
 // Parent Action Center Alerts
 export interface ActionAlert {
   id: string;

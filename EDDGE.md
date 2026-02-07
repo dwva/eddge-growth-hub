@@ -242,7 +242,7 @@ Plus Settings, Support, Logout as applicable.
 ### Sidebar navigation (`ParentSidebar.tsx`)
 
 - **Dashboard** → `/parent`
-- **Performance:** Progress (→ `/parent/child-progress/1`), Achievements
+- **Performance:** Progress (→ `/parent/child-progress/1`)
 - **Communication:** Meetings, Messages (Communications)
 - **Learning:** Homework, Announcements
 - Help Center, Logout
@@ -253,7 +253,6 @@ Plus Settings, Support, Logout as applicable.
 |-------|----------------|------------------------|
 | `/parent` | ParentDashboardHome | Dashboard |
 | `/parent/child-progress/:childId` | ParentChildProgress | Child progress |
-| `/parent/achievements` | ParentAchievements | Achievements |
 | `/parent/meetings` | ParentMeetings | Meetings |
 | `/parent/communications` | ParentCommunications | Communications |
 | `/parent/homework` | ParentHomework | Homework |
