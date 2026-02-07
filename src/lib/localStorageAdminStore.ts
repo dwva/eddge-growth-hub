@@ -182,6 +182,7 @@ function generateSeedData(): AdminState {
     classes,
     attendanceRecords,
     riskAlerts: [], // Will be computed automatically by the context
+    syllabi: [], // Empty initially, will be added by admin
     version: 1,
   };
 }
@@ -194,6 +195,7 @@ const defaultState: AdminState = {
   classes: [],
   attendanceRecords: [],
   riskAlerts: [],
+  syllabi: [],
   version: 1,
 };
 
@@ -219,6 +221,11 @@ export function loadInitialAdminState(): AdminState {
       return seedData;
     }
     
+    // Ensure syllabi array exists (for backward compatibility)
+    if (!parsed.syllabi || !Array.isArray(parsed.syllabi)) {
+      parsed.syllabi = [];
+    }
+    
     // Check if the data is essentially empty (all arrays are empty)
     const isEmpty = isStateEmpty(parsed);
     
@@ -228,7 +235,7 @@ export function loadInitialAdminState(): AdminState {
       return seedData;
     }
     
-    // If we have valid saved data with content, use it
+    // If we have valid saved data with content, use it (with syllabi ensured)
     return parsed;
   } catch {
     // On error, return seed data and save it
@@ -261,7 +268,8 @@ export function isStateEmpty(state: AdminState): boolean {
   return (
     (!state.students || state.students.length === 0) &&
     (!state.teachers || state.teachers.length === 0) &&
-    (!state.classes || state.classes.length === 0)
+    (!state.classes || state.classes.length === 0) &&
+    (!state.syllabi || state.syllabi.length === 0)
   );
 }
 

@@ -52,6 +52,7 @@ const navSections: NavSection[] = [
     label: 'Administration',
     icon: <Settings className="w-5 h-5" />,
     items: [
+      { label: 'Syllabus', icon: <BookOpen className="w-4 h-4" />, path: '/admin/syllabus' },
       { label: 'Reports', icon: <FileText className="w-4 h-4" />, path: '/admin/reports' },
       { label: 'Announcements', icon: <Bell className="w-4 h-4" />, path: '/admin/announcements', badge: '3' },
       { label: 'Settings', icon: <Settings className="w-4 h-4" />, path: '/admin/settings' },

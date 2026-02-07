@@ -53,12 +53,42 @@ export interface RiskAlert {
   resolvedAt?: string;
 }
 
+export interface Topic {
+  id: string;
+  name: string;
+  weightage?: number;
+}
+
+export interface Chapter {
+  id: string;
+  name: string;
+  order: number;
+  topics: Topic[];
+}
+
+export type SyllabusBoard = 'CBSE' | 'ICSE' | 'STATE';
+export type SyllabusStatus = 'draft' | 'published';
+
+export interface Syllabus {
+  id: string;
+  board: SyllabusBoard;
+  academicYear: string;
+  class: string;
+  subject: string;
+  chapters: Chapter[];
+  status: SyllabusStatus;
+  createdAt: string;
+  updatedAt?: string;
+  publishedAt?: string;
+}
+
 export interface AdminState {
   students: Student[];
   teachers: Teacher[];
   classes: Class[];
   attendanceRecords: AttendanceRecord[];
   riskAlerts: RiskAlert[];
+  syllabi: Syllabus[];
   version: number;
 }
 
@@ -76,6 +106,10 @@ export type AdminAction =
   | { type: 'DELETE_ATTENDANCE_RECORD'; payload: { id: string } }
   | { type: 'SET_RISK_ALERTS'; payload: RiskAlert[] }
   | { type: 'RESOLVE_RISK_ALERT'; payload: { id: string } }
+  | { type: 'ADD_SYLLABUS'; payload: Syllabus }
+  | { type: 'UPDATE_SYLLABUS'; payload: Syllabus }
+  | { type: 'DELETE_SYLLABUS'; payload: { id: string } }
+  | { type: 'PUBLISH_SYLLABUS'; payload: { id: string } }
   | { type: 'HYDRATE_STATE'; payload: AdminState };
 
 

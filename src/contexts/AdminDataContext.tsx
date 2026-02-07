@@ -73,6 +73,31 @@ function adminReducer(state: AdminState, action: AdminAction): AdminState {
           alert.id === action.payload.id ? { ...alert, resolvedAt: new Date().toISOString() } : alert,
         ),
       };
+    case 'ADD_SYLLABUS':
+      return { ...state, syllabi: [...(state.syllabi || []), action.payload] };
+    case 'UPDATE_SYLLABUS':
+      return {
+        ...state,
+        syllabi: (state.syllabi || []).map((s) => (s.id === action.payload.id ? action.payload : s)),
+      };
+    case 'DELETE_SYLLABUS':
+      return {
+        ...state,
+        syllabi: (state.syllabi || []).filter((s) => s.id !== action.payload.id),
+      };
+    case 'PUBLISH_SYLLABUS': {
+      const syllabi = state.syllabi || [];
+      const syllabus = syllabi.find((s) => s.id === action.payload.id);
+      if (!syllabus) return state;
+      return {
+        ...state,
+        syllabi: syllabi.map((s) =>
+          s.id === action.payload.id
+            ? { ...s, status: 'published' as const, publishedAt: new Date().toISOString(), updatedAt: new Date().toISOString() }
+            : s,
+        ),
+      };
+    }
     case 'HYDRATE_STATE':
       return action.payload;
     default:
@@ -139,6 +164,10 @@ function computeRiskAlerts(state: AdminState): RiskAlert[] {
 export const AdminDataProvider = ({ children }: { children: ReactNode }) => {
   const [state, dispatch] = useReducer(adminReducer, undefined as unknown as AdminState, () => {
     const loaded = loadInitialAdminState();
+    // Ensure syllabi array exists (for backward compatibility)
+    if (!loaded.syllabi || !Array.isArray(loaded.syllabi)) {
+      loaded.syllabi = [];
+    }
     // Ensure seed data is saved if it was just loaded
     if (loaded.students.length > 100 && loaded.teachers.length > 10 && loaded.classes.length > 10) {
       // This is seed data, make sure it's saved

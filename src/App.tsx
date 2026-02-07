@@ -78,6 +78,7 @@ import AdminAttendance from "./pages/admin/AdminAttendance";
 import AdminReports from "./pages/admin/AdminReports";
 import AdminAnnouncements from "./pages/admin/AdminAnnouncements";
 import AdminSettings from "./pages/admin/AdminSettings";
+import AdminSyllabus from "./pages/admin/AdminSyllabus";
 import StudentProfile from "./pages/admin/StudentProfile";
 import TeacherProfile from "./pages/admin/TeacherProfile";
 import ClassDetail from "./pages/admin/ClassDetail";
@@ -362,6 +363,11 @@ const App = () => (
             <Route path="/admin/announcements" element={
               <ProtectedRoute allowedRoles={['admin']}>
                 <AdminAnnouncements />
+              </ProtectedRoute>
+            } />
+            <Route path="/admin/syllabus" element={
+              <ProtectedRoute allowedRoles={['admin']}>
+                <AdminSyllabus />
               </ProtectedRoute>
             } />
             <Route path="/admin/settings" element={
