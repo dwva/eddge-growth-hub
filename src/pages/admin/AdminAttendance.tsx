@@ -111,7 +111,7 @@ const AdminAttendance = () => {
       pageTitle="Attendance" 
       pageDescription="Track and manage student attendance"
     >
-      <div className="space-y-6">
+      <div className="space-y-3 md:space-y-6">
         {/* Overall Stats */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
           <Card className="bg-primary/5 border-primary/20">

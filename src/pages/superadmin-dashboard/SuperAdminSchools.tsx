@@ -112,12 +112,12 @@ const SuperAdminSchools = () => {
 
   return (
     <SuperAdminDashboardLayout>
-      <div className="space-y-6">
+      <div className="space-y-3 md:space-y-6">
         {/* Header */}
-        <div className="flex items-center justify-between gap-4 flex-wrap">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 md:gap-4 flex-wrap">
           <div>
-            <h1 className="text-3xl font-bold">School Registry</h1>
-            <p className="text-muted-foreground">Manage all schools on the platform</p>
+            <h1 className="text-lg md:text-2xl lg:text-3xl font-bold">School Registry</h1>
+            <p className="text-xs md:text-sm text-muted-foreground">Manage all schools on the platform</p>
           </div>
           <Button
             variant="outline"
@@ -159,7 +159,7 @@ const SuperAdminSchools = () => {
                 <CardTitle>All Schools</CardTitle>
                 <CardDescription>View and manage school accounts</CardDescription>
               </div>
-              <div className="flex items-center gap-2 flex-wrap">
+              <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 flex-wrap">
                 <div className="relative">
                   <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
                   <Input
@@ -169,12 +169,13 @@ const SuperAdminSchools = () => {
                       setSearch(e.target.value);
                       setPage(1);
                     }}
-                    className="pl-8 w-64"
+                    className="pl-8 w-full sm:w-64"
                   />
                 </div>
+                <div className="grid grid-cols-3 sm:flex gap-2">
                 <Select value={statusFilter} onValueChange={(value) => { setStatusFilter(value); setPage(1); }}>
-                  <SelectTrigger className="w-40">
-                    <SelectValue placeholder="Filter by status" />
+                  <SelectTrigger className="w-full sm:w-40">
+                    <SelectValue placeholder="Status" />
                   </SelectTrigger>
                   <SelectContent>
                     <SelectItem value="all">All Status</SelectItem>
@@ -184,8 +185,8 @@ const SuperAdminSchools = () => {
                   </SelectContent>
                 </Select>
                 <Select value={planFilter} onValueChange={(value) => { setPlanFilter(value); setPage(1); }}>
-                  <SelectTrigger className="w-40">
-                    <SelectValue placeholder="Filter by plan" />
+                  <SelectTrigger className="w-full sm:w-40">
+                    <SelectValue placeholder="Plan" />
                   </SelectTrigger>
                   <SelectContent>
                     <SelectItem value="all">All Plans</SelectItem>
@@ -195,8 +196,8 @@ const SuperAdminSchools = () => {
                   </SelectContent>
                 </Select>
                 <Select value={lifecycleFilter} onValueChange={(value) => { setLifecycleFilter(value); setPage(1); }}>
-                  <SelectTrigger className="w-40">
-                    <SelectValue placeholder="Filter by lifecycle" />
+                  <SelectTrigger className="w-full sm:w-40">
+                    <SelectValue placeholder="Lifecycle" />
                   </SelectTrigger>
                   <SelectContent>
                     <SelectItem value="all">All Lifecycle</SelectItem>
@@ -207,10 +208,11 @@ const SuperAdminSchools = () => {
                     <SelectItem value="CHURNED">Churned</SelectItem>
                   </SelectContent>
                 </Select>
+                </div>
               </div>
             </div>
           </CardHeader>
-          <CardContent>
+          <CardContent className="px-2 md:px-6">
             {isLoading ? (
               <LoadingState message="Loading schools..." />
             ) : filteredSchools.length === 0 ? (
@@ -221,6 +223,7 @@ const SuperAdminSchools = () => {
               </div>
             ) : (
               <>
+                <div className="overflow-x-auto -mx-2 md:mx-0">
                 <Table>
                   <TableHeader>
                     <TableRow>
@@ -283,11 +286,12 @@ const SuperAdminSchools = () => {
                     ))}
                   </TableBody>
                 </Table>
+                </div>
 
                 {/* Pagination */}
                 {filteredSchools.length > 0 && (
-                  <div className="flex items-center justify-between mt-4">
-                    <div className="text-sm text-muted-foreground">
+                  <div className="flex flex-col sm:flex-row items-center justify-between mt-3 md:mt-4 gap-2">
+                    <div className="text-xs md:text-sm text-muted-foreground">
                       Showing {filteredSchools.length} of {data?.total || 0} schools
                       {(statusFilter !== 'all' || planFilter !== 'all' || lifecycleFilter !== 'all') && ' (filtered)'}
                     </div>

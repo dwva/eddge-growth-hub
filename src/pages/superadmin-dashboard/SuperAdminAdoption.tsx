@@ -22,17 +22,17 @@ const SuperAdminAdoption = () => {
 
   return (
     <SuperAdminDashboardLayout>
-      <div className="space-y-6">
+      <div className="space-y-3 md:space-y-6">
         {/* Header */}
         <div>
-          <h1 className="text-3xl font-bold">Adoption &amp; Onboarding</h1>
-          <p className="text-muted-foreground">
+          <h1 className="text-lg md:text-2xl lg:text-3xl font-bold">Adoption &amp; Onboarding</h1>
+          <p className="text-xs md:text-sm text-muted-foreground">
             Read-only, aggregated signals about onboarding completion and feature adoption across schools.
           </p>
         </div>
 
         {/* Summary cards */}
-        <div className="grid gap-4 md:grid-cols-3">
+        <div className="grid gap-2 md:gap-4 md:grid-cols-3">
           <Card>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-sm font-medium">Onboarding Status</CardTitle>

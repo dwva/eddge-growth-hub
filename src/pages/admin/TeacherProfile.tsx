@@ -53,7 +53,7 @@ const TeacherProfile = () => {
       pageTitle={teacher.name}
       pageDescription="Teacher Profile"
     >
-      <div className="space-y-6">
+      <div className="space-y-3 md:space-y-6">
         <Button variant="ghost" onClick={() => navigate('/admin/teachers')} className="gap-2">
           <ArrowLeft className="w-4 h-4" />
           Back to Teachers

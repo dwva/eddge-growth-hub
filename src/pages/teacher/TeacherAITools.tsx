@@ -54,7 +54,7 @@ const TeacherAIToolsContent = () => {
   const [isSaveDialogOpen, setIsSaveDialogOpen] = useState(false);
   const [isAssignDialogOpen, setIsAssignDialogOpen] = useState(false);
   const [blueprintMode, setBlueprintMode] = useState(false);
-  const [savedQuestions, setSavedQuestions] = useState(questionLibrary);
+  const [savedQuestions, setSavedQuestions] = useState<any[]>(questionLibrary);
   const [librarySearch, setLibrarySearch] = useState('');
 
   // Handle return from Assessments to add more questions
@@ -221,7 +221,7 @@ const TeacherAIToolsContent = () => {
       ] : undefined,
       correctAnswer: formData.questionType === 'mcq' ? 'f\'(x) = 6x + 5' : 'f\'(x) = 6x + 5',
       explanation: 'Using the power rule: d/dx(3x²) = 6x, d/dx(5x) = 5, d/dx(-2) = 0',
-      marks: parseInt(formData.marks) || 2,
+      marks: formData.questionType === 'mcq' ? 1 : formData.questionType === 'short' ? 2 : 5,
       difficulty: formData.difficulty,
       cbseAligned: true,
       bloomsLevel: 'Apply' as const,

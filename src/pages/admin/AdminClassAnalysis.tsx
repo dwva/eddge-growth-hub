@@ -215,7 +215,7 @@ const AdminClassAnalysis = () => {
         {/* Header with Class Selector */}
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 pb-6 border-b border-gray-100">
           <div>
-            <h2 className="text-2xl font-bold text-gray-900">{selectedClass.name}</h2>
+            <h2 className="text-xl md:text-2xl font-bold text-gray-900">{selectedClass.name}</h2>
             <p className="text-sm text-gray-500 mt-1">Class Teacher: {selectedClass.teacher}</p>
           </div>
           <div className="flex items-center gap-3">
@@ -264,7 +264,7 @@ const AdminClassAnalysis = () => {
                 )}
               </div>
               <p className="text-sm text-gray-500 mb-1">Class Average</p>
-              <p className="text-3xl font-bold text-gray-900">{selectedClass.classAverage}%</p>
+              <p className="text-xl md:text-3xl font-bold text-gray-900">{selectedClass.classAverage}%</p>
             </CardContent>
           </Card>
 
@@ -274,7 +274,7 @@ const AdminClassAnalysis = () => {
                 <Users className="w-6 h-6 text-blue-600" />
               </div>
               <p className="text-sm text-gray-500 mb-1">Total Students</p>
-              <p className="text-3xl font-bold text-gray-900">{selectedClass.totalStudents}</p>
+              <p className="text-xl md:text-3xl font-bold text-gray-900">{selectedClass.totalStudents}</p>
             </CardContent>
           </Card>
 
@@ -284,7 +284,7 @@ const AdminClassAnalysis = () => {
                 <BarChart3 className="w-6 h-6 text-violet-600" />
               </div>
               <p className="text-sm text-gray-500 mb-1">Pass Rate</p>
-              <p className="text-3xl font-bold text-gray-900">{selectedClass.overallAccuracy}%</p>
+              <p className="text-xl md:text-3xl font-bold text-gray-900">{selectedClass.overallAccuracy}%</p>
             </CardContent>
           </Card>
 
@@ -294,7 +294,7 @@ const AdminClassAnalysis = () => {
                 <AlertTriangle className="w-6 h-6 text-red-600" />
               </div>
               <p className="text-sm text-gray-500 mb-1">At-Risk Students</p>
-              <p className="text-3xl font-bold text-gray-900">{selectedClass.atRiskCount}</p>
+              <p className="text-xl md:text-3xl font-bold text-gray-900">{selectedClass.atRiskCount}</p>
             </CardContent>
           </Card>
         </div>

@@ -57,11 +57,11 @@ const ParentMeetings = () => {
 
   return (
     <ParentDashboardLayout>
-      <div className="space-y-6">
+      <div className="space-y-3 md:space-y-6">
         {/* Header */}
         <div className="flex items-center justify-between">
           <div>
-            <h1 className="text-2xl font-bold">Teacher Meetings</h1>
+            <h1 className="text-xl md:text-2xl font-bold">Teacher Meetings</h1>
             <p className="text-muted-foreground">Schedule and manage PTM sessions</p>
           </div>
           <div className="flex items-center gap-2">

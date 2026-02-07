@@ -113,7 +113,7 @@ export function ChatHistory({
   };
 
   return (
-    <aside className="w-64 border-l border-border bg-card flex flex-col flex-shrink-0">
+    <aside className="w-[260px] md:w-64 border-l border-border bg-card flex flex-col flex-shrink-0 h-full">
       <ScrollArea className="flex-1">
         <div className="p-2 space-y-1">
           {/* New Chat Button */}

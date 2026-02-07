@@ -69,7 +69,7 @@ const AdminFinance = () => {
       pageTitle="Finance" 
       pageDescription="Manage fees and financial records"
     >
-      <div className="space-y-6">
+      <div className="space-y-3 md:space-y-6">
         {/* Stats Overview */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
           <Card className="bg-primary/5 border-primary/20">

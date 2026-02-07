@@ -94,21 +94,21 @@ const ParentDashboardHomeContent = () => {
     .slice(0, 2);
 
   return (
-    <div className="w-full space-y-4">
+    <div className="w-full space-y-3 md:space-y-4">
       {/* Hero Section - Full Width Gradient Card */}
-      <div className="relative bg-gradient-to-r from-indigo-600 via-purple-600 to-indigo-700 rounded-xl p-4 md:p-6 min-h-[200px] md:min-h-[240px] overflow-hidden z-0">
+      <div className="relative bg-gradient-to-r from-indigo-600 via-purple-600 to-indigo-700 rounded-xl p-3 md:p-4 lg:p-6 min-h-[160px] md:min-h-[240px] overflow-hidden z-0">
         {/* Decorative elements */}
-        <div className="absolute top-0 right-0 w-64 h-64 bg-white/5 rounded-full -translate-y-1/2 translate-x-1/2 z-0" />
-        <div className="absolute bottom-0 left-1/2 w-32 h-32 bg-white/5 rounded-full translate-y-1/2 z-0" />
+        <div className="absolute top-0 right-0 w-40 md:w-64 h-40 md:h-64 bg-white/5 rounded-full -translate-y-1/2 translate-x-1/2 z-0" />
+        <div className="absolute bottom-0 left-1/2 w-24 md:w-32 h-24 md:h-32 bg-white/5 rounded-full translate-y-1/2 z-0" />
         
-        <div className="relative z-10 grid grid-cols-1 lg:grid-cols-3 gap-4 md:gap-6">
+        <div className="relative z-10 grid grid-cols-1 lg:grid-cols-3 gap-3 md:gap-6">
           {/* Left: Parent Overview + Hero Announcements */}
-          <div className="lg:col-span-2 space-y-4 md:space-y-5">
+          <div className="lg:col-span-2 space-y-3 md:space-y-5">
             <div>
-              <p className="text-purple-200 text-[11px] font-medium tracking-wider uppercase mb-2 leading-relaxed">
+              <p className="text-purple-200 text-[10px] md:text-[11px] font-medium tracking-wider uppercase mb-1 md:mb-2 leading-relaxed">
                 Parent Portal
               </p>
-              <h1 className="text-xl md:text-2xl font-bold text-white mb-2 leading-tight">
+              <h1 className="text-base md:text-xl lg:text-2xl font-bold text-white mb-1 md:mb-2 leading-tight">
                 Track {selectedChild.name}'s Progress
               </h1>
               <div className="flex items-center gap-2 text-purple-200 text-xs md:text-sm leading-relaxed">
@@ -153,65 +153,65 @@ const ParentDashboardHomeContent = () => {
 
           {/* Right: Compact Stat Cards */}
           <div className="grid grid-cols-3 lg:grid-cols-1 gap-2 md:gap-3">
-            <div className="bg-white/10 backdrop-blur-sm rounded-lg p-3 md:p-4 border border-white/20">
-              <p className="text-purple-200 text-[10px] md:text-xs mb-1">Attendance</p>
-              <p className="text-lg md:text-xl font-bold text-white">{attendanceRate}%</p>
+            <div className="bg-white/10 backdrop-blur-sm rounded-lg p-2 md:p-4 border border-white/20">
+              <p className="text-purple-200 text-[9px] md:text-xs mb-0.5 md:mb-1">Attendance</p>
+              <p className="text-base md:text-xl font-bold text-white">{attendanceRate}%</p>
             </div>
-            <div className="bg-white/10 backdrop-blur-sm rounded-lg p-3 md:p-4 border border-white/20">
-              <p className="text-purple-200 text-[10px] md:text-xs mb-1">Subjects</p>
-              <p className="text-lg md:text-xl font-bold text-white">{subjectsCompleted}</p>
+            <div className="bg-white/10 backdrop-blur-sm rounded-lg p-2 md:p-4 border border-white/20">
+              <p className="text-purple-200 text-[9px] md:text-xs mb-0.5 md:mb-1">Subjects</p>
+              <p className="text-base md:text-xl font-bold text-white">{subjectsCompleted}</p>
             </div>
-            <div className="bg-white/10 backdrop-blur-sm rounded-lg p-3 md:p-4 border border-white/20">
-              <p className="text-purple-200 text-[10px] md:text-xs mb-1">Performance</p>
-              <p className="text-lg md:text-xl font-bold text-white">{overallPerformance}%</p>
+            <div className="bg-white/10 backdrop-blur-sm rounded-lg p-2 md:p-4 border border-white/20">
+              <p className="text-purple-200 text-[9px] md:text-xs mb-0.5 md:mb-1">Performance</p>
+              <p className="text-base md:text-xl font-bold text-white">{overallPerformance}%</p>
             </div>
           </div>
         </div>
       </div>
 
       {/* Quick Actions - Larger tiles */}
-      <div className="grid grid-cols-2 md:grid-cols-3 gap-3 md:gap-4">
+      <div className="grid grid-cols-3 gap-2 md:gap-4">
         <button
           onClick={() => navigate(`/parent/child-progress/${selectedChild.id}`)}
-          className="group p-3.5 md:p-4 rounded-xl bg-blue-50/70 hover:bg-blue-100 border border-blue-200/60 hover:border-blue-300 transition-all duration-200 shadow-sm hover:shadow-md"
+          className="group p-2.5 md:p-4 rounded-lg md:rounded-xl bg-blue-50/70 hover:bg-blue-100 border border-blue-200/60 hover:border-blue-300 transition-all duration-200 shadow-sm hover:shadow-md"
         >
-          <div className="flex items-center gap-3 md:gap-3.5">
-            <div className="w-9 h-9 md:w-10 md:h-10 rounded-lg bg-blue-100 group-hover:bg-blue-200 flex items-center justify-center flex-shrink-0 transition-colors">
-              <Calendar className="w-4.5 h-4.5 md:w-5 md:h-5 text-blue-600" />
+          <div className="flex flex-col md:flex-row items-center gap-1.5 md:gap-3.5">
+            <div className="w-8 h-8 md:w-10 md:h-10 rounded-lg bg-blue-100 group-hover:bg-blue-200 flex items-center justify-center flex-shrink-0 transition-colors">
+              <Calendar className="w-4 h-4 md:w-5 md:h-5 text-blue-600" />
             </div>
-            <div className="flex-1 min-w-0 text-left">
-              <h3 className="font-semibold text-xs md:text-sm text-gray-800 leading-tight">Attendance</h3>
-              <p className="text-[11px] md:text-xs text-gray-500 mt-0.5 truncate">View records</p>
+            <div className="text-center md:text-left">
+              <h3 className="font-semibold text-[10px] md:text-sm text-gray-800 leading-tight">Attendance</h3>
+              <p className="text-[9px] md:text-xs text-gray-500 mt-0.5 truncate hidden sm:block">View records</p>
             </div>
           </div>
         </button>
 
         <button
           onClick={() => navigate('/parent/homework')}
-          className="group p-3.5 md:p-4 rounded-xl bg-pink-50/70 hover:bg-pink-100 border border-pink-200/60 hover:border-pink-300 transition-all duration-200 shadow-sm hover:shadow-md"
+          className="group p-2.5 md:p-4 rounded-lg md:rounded-xl bg-pink-50/70 hover:bg-pink-100 border border-pink-200/60 hover:border-pink-300 transition-all duration-200 shadow-sm hover:shadow-md"
         >
-          <div className="flex items-center gap-3 md:gap-3.5">
-            <div className="w-9 h-9 md:w-10 md:h-10 rounded-lg bg-pink-100 group-hover:bg-pink-200 flex items-center justify-center flex-shrink-0 transition-colors">
-              <FileText className="w-4.5 h-4.5 md:w-5 md:h-5 text-pink-600" />
+          <div className="flex flex-col md:flex-row items-center gap-1.5 md:gap-3.5">
+            <div className="w-8 h-8 md:w-10 md:h-10 rounded-lg bg-pink-100 group-hover:bg-pink-200 flex items-center justify-center flex-shrink-0 transition-colors">
+              <FileText className="w-4 h-4 md:w-5 md:h-5 text-pink-600" />
             </div>
-            <div className="flex-1 min-w-0 text-left">
-              <h3 className="font-semibold text-xs md:text-sm text-gray-800 leading-tight">Homework</h3>
-              <p className="text-[11px] md:text-xs text-gray-500 mt-0.5 truncate">View assignments</p>
+            <div className="text-center md:text-left">
+              <h3 className="font-semibold text-[10px] md:text-sm text-gray-800 leading-tight">Homework</h3>
+              <p className="text-[9px] md:text-xs text-gray-500 mt-0.5 truncate hidden sm:block">View assignments</p>
             </div>
           </div>
         </button>
 
         <button
           onClick={() => navigate('/parent/communications')}
-          className="group p-3.5 md:p-4 rounded-xl bg-teal-50/70 hover:bg-teal-100 border border-teal-200/60 hover:border-teal-300 transition-all duration-200 shadow-sm hover:shadow-md"
+          className="group p-2.5 md:p-4 rounded-lg md:rounded-xl bg-teal-50/70 hover:bg-teal-100 border border-teal-200/60 hover:border-teal-300 transition-all duration-200 shadow-sm hover:shadow-md"
         >
-          <div className="flex items-center gap-3 md:gap-3.5">
-            <div className="w-9 h-9 md:w-10 md:h-10 rounded-lg bg-teal-100 group-hover:bg-teal-200 flex items-center justify-center flex-shrink-0 transition-colors">
-              <MessageSquare className="w-4.5 h-4.5 md:w-5 md:h-5 text-teal-600" />
+          <div className="flex flex-col md:flex-row items-center gap-1.5 md:gap-3.5">
+            <div className="w-8 h-8 md:w-10 md:h-10 rounded-lg bg-teal-100 group-hover:bg-teal-200 flex items-center justify-center flex-shrink-0 transition-colors">
+              <MessageSquare className="w-4 h-4 md:w-5 md:h-5 text-teal-600" />
             </div>
-            <div className="flex-1 min-w-0 text-left">
-              <h3 className="font-semibold text-xs md:text-sm text-gray-800 leading-tight">Messages</h3>
-              <p className="text-[11px] md:text-xs text-gray-500 mt-0.5 truncate">Communicate</p>
+            <div className="text-center md:text-left">
+              <h3 className="font-semibold text-[10px] md:text-sm text-gray-800 leading-tight">Messages</h3>
+              <p className="text-[9px] md:text-xs text-gray-500 mt-0.5 truncate hidden sm:block">Communicate</p>
             </div>
           </div>
         </button>
@@ -221,12 +221,12 @@ const ParentDashboardHomeContent = () => {
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-3 md:gap-4">
         {/* Left: Academic Performance (col-span-8) */}
         <Card className="lg:col-span-8 border-0 shadow-sm hover:shadow-md transition-shadow duration-300">
-          <CardHeader className="pb-2">
-            <CardTitle className="text-sm md:text-base font-semibold text-gray-800">Academic Performance</CardTitle>
+          <CardHeader className="pb-1 md:pb-2 px-3 md:px-6">
+            <CardTitle className="text-xs md:text-base font-semibold text-gray-800">Academic Performance</CardTitle>
           </CardHeader>
-          <CardContent className="space-y-1 md:space-y-1.5 pt-0">
+          <CardContent className="space-y-1 md:space-y-1.5 pt-0 px-2 md:px-6">
             {/* Subject Progress - Circular grid: 3 on first row, 2 on second */}
-            <div className="grid grid-cols-2 md:grid-cols-3 gap-2 md:gap-3">
+            <div className="grid grid-cols-3 md:grid-cols-3 gap-1.5 md:gap-3">
               {selectedChild.subjects?.map((subject, index) => {
                 const Icon = subjectIcons[subject.name] || BookOpen;
                 const colors = subjectColors[subject.name] || { bg: 'bg-gray-50', icon: 'text-gray-600' };
@@ -239,8 +239,8 @@ const ParentDashboardHomeContent = () => {
                   >
                     <CircularProgress
                       value={subject.score}
-                      size={100}
-                      strokeWidth={8}
+                      size={70}
+                      strokeWidth={6}
                     />
                     <div className="mt-1.5 flex items-center justify-center gap-1">
                       <div className={`w-5 h-5 md:w-6 md:h-6 rounded-md ${colors.bg} flex items-center justify-center flex-shrink-0`}>
@@ -264,9 +264,9 @@ const ParentDashboardHomeContent = () => {
 
         {/* Right: Homework Queue (col-span-4) */}
         <Card className="lg:col-span-4 border-0 shadow-sm">
-          <CardHeader>
+          <CardHeader className="px-3 md:px-6 py-2 md:py-4">
             <div className="flex items-center justify-between">
-              <CardTitle className="text-lg font-semibold text-gray-800">Homework Queue</CardTitle>
+              <CardTitle className="text-xs md:text-lg font-semibold text-gray-800">Homework Queue</CardTitle>
               <Button 
                 variant="ghost" 
                 size="sm"
@@ -277,8 +277,8 @@ const ParentDashboardHomeContent = () => {
               </Button>
             </div>
           </CardHeader>
-          <CardContent>
-            <div className="space-y-3">
+          <CardContent className="px-3 md:px-6">
+            <div className="space-y-2 md:space-y-3">
               {homeworkQueue.length > 0 ? (
                 homeworkQueue.map((homework) => (
                   <div 

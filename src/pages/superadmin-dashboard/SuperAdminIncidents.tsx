@@ -85,12 +85,12 @@ const SuperAdminIncidents = () => {
 
   return (
     <SuperAdminDashboardLayout>
-      <div className="space-y-6">
+      <div className="space-y-3 md:space-y-6">
         {/* Header */}
-        <div className="flex items-center justify-between">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
           <div>
-            <h1 className="text-3xl font-bold">Incidents</h1>
-            <p className="text-muted-foreground">
+            <h1 className="text-lg md:text-2xl lg:text-3xl font-bold">Incidents</h1>
+            <p className="text-xs md:text-sm text-muted-foreground">
               Manually log, track, and annotate platform incidents. Entries are audited and immutable after closure.
             </p>
           </div>
@@ -138,6 +138,7 @@ const SuperAdminIncidents = () => {
             ) : !data || data.length === 0 ? (
               <p className="text-sm text-muted-foreground">No incidents logged yet.</p>
             ) : (
+              <div className="overflow-x-auto">
               <Table>
                 <TableHeader>
                   <TableRow>
@@ -204,6 +205,7 @@ const SuperAdminIncidents = () => {
                   ))}
                 </TableBody>
               </Table>
+              </div>
             )}
           </CardContent>
         </Card>

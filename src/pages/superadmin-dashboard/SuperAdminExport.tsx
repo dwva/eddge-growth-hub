@@ -71,18 +71,18 @@ const SuperAdminExport = () => {
 
   return (
     <SuperAdminDashboardLayout>
-      <div className="space-y-6">
+      <div className="space-y-3 md:space-y-6">
         {/* Header */}
         <div>
-          <h1 className="text-3xl font-bold">Aggregated Data Export</h1>
-          <p className="text-muted-foreground">
+          <h1 className="text-lg md:text-2xl lg:text-3xl font-bold">Aggregated Data Export</h1>
+          <p className="text-xs md:text-sm text-muted-foreground">
             Download platform-level, aggregated datasets for offline analysis. No PII is included.
           </p>
         </div>
 
         {exporting && <LoadingState message="Preparing export summaries..." />}
 
-        <div className="grid gap-4 md:grid-cols-3">
+        <div className="grid gap-2 md:gap-4 md:grid-cols-3">
           {/* Usage Analytics summary */}
           <Card>
             <CardHeader>

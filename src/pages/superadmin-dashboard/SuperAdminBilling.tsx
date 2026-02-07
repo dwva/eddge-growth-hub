@@ -62,11 +62,11 @@ const SuperAdminBilling = () => {
 
   return (
     <SuperAdminDashboardLayout>
-      <div className="space-y-6">
+      <div className="space-y-3 md:space-y-6">
         {/* Header */}
         <div>
-          <h1 className="text-3xl font-bold">Billing & Plans</h1>
-          <p className="text-muted-foreground">Manage school subscriptions and billing</p>
+          <h1 className="text-lg md:text-2xl lg:text-3xl font-bold">Billing & Plans</h1>
+          <p className="text-xs md:text-sm text-muted-foreground">Manage school subscriptions and billing</p>
         </div>
 
         {/* Tabs */}
@@ -80,7 +80,7 @@ const SuperAdminBilling = () => {
 
           {/* Subscription Overview Tab */}
           <TabsContent value="overview" className="space-y-4">
-            <div className="grid gap-4 md:grid-cols-3">
+            <div className="grid gap-2 md:gap-4 md:grid-cols-3">
               <Card>
                 <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                   <CardTitle className="text-sm font-medium">Basic Plan</CardTitle>
@@ -137,7 +137,7 @@ const SuperAdminBilling = () => {
                 <CardDescription>Current invoice status counts</CardDescription>
               </CardHeader>
               <CardContent>
-                <div className="grid gap-4 md:grid-cols-3">
+                <div className="grid gap-2 md:gap-4 md:grid-cols-3">
                   <div>
                     <div className="text-2xl font-bold text-green-600">{invoiceStatusCounts.paid}</div>
                     <p className="text-xs text-muted-foreground mt-1">Paid</p>
@@ -166,7 +166,7 @@ const SuperAdminBilling = () => {
                 description="Subscription plans will appear here"
               />
             ) : (
-              <div className="grid gap-4 md:grid-cols-3">
+              <div className="grid gap-2 md:gap-4 md:grid-cols-3">
                 {plansData.map((plan) => (
                   <Card key={plan.id} className="relative">
                     <CardHeader>
@@ -214,6 +214,7 @@ const SuperAdminBilling = () => {
                   <CardDescription>Subscriptions renewing in the next 30 days</CardDescription>
                 </CardHeader>
                 <CardContent>
+                  <div className="overflow-x-auto">
                   <Table>
                     <TableHeader>
                       <TableRow>
@@ -238,6 +239,7 @@ const SuperAdminBilling = () => {
                       ))}
                     </TableBody>
                   </Table>
+                  </div>
                 </CardContent>
               </Card>
             )}
@@ -260,6 +262,7 @@ const SuperAdminBilling = () => {
                   <CardDescription>All billing invoices</CardDescription>
                 </CardHeader>
                 <CardContent>
+                  <div className="overflow-x-auto">
                   <Table>
                     <TableHeader>
                       <TableRow>
@@ -296,6 +299,7 @@ const SuperAdminBilling = () => {
                       ))}
                     </TableBody>
                   </Table>
+                  </div>
 
                   {/* Pagination */}
                   {invoicesData.total > 50 && (

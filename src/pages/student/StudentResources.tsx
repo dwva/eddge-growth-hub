@@ -108,7 +108,7 @@ const StudentResources = () => {
 
   return (
     <StudentDashboardLayout title="Study Resources">
-      <div className="space-y-6">
+      <div className="space-y-3 md:space-y-6">
         {/* Header: Search */}
         <div className="relative">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />

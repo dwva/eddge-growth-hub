@@ -61,7 +61,7 @@ const AdminReports = () => {
       pageTitle="Reports" 
       pageDescription="Generate and download school reports"
     >
-      <div className="space-y-6">
+      <div className="space-y-3 md:space-y-6">
         {/* Quick Generate Cards */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
           {reportTypes.map((type) => (

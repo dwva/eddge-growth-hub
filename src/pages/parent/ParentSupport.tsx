@@ -83,7 +83,7 @@ const ParentSupport = () => {
 
   return (
     <ParentDashboardLayout>
-      <div className="space-y-6">
+      <div className="space-y-3 md:space-y-6">
         {/* Search Section */}
         <Card className="bg-gradient-to-br from-purple-50 to-indigo-50 border-purple-100">
           <CardContent className="p-6 md:p-8">
@@ -102,7 +102,7 @@ const ParentSupport = () => {
         </Card>
 
         {/* Resource Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-2 md:gap-4">
           {resources.map((resource, index) => {
             const Icon = resource.icon;
             return (

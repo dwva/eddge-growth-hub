@@ -61,12 +61,12 @@ const ParentDashboardLayoutInner = ({ children, title = "Parent Dashboard" }: Pa
         {/* Main Content Area */}
         <div className="flex-1 flex flex-col min-w-0">
           {/* Top Bar */}
-          <header className="h-20 bg-white px-6 md:px-8 flex items-center justify-between sticky top-0 z-50 flex-shrink-0 border-b border-gray-100 shadow-sm">
+          <header className="h-14 md:h-20 bg-white px-3 md:px-6 lg:px-8 flex items-center justify-between sticky top-0 z-50 flex-shrink-0 border-b border-gray-100 shadow-sm">
             {/* Left: Menu + Welcome */}
-            <div className="flex items-center gap-4">
+            <div className="flex items-center gap-2 md:gap-4">
               <Sheet open={mobileOpen} onOpenChange={setMobileOpen}>
                 <SheetTrigger asChild className="md:hidden">
-                  <Button variant="ghost" size="icon" className="h-9 w-9">
+                  <Button variant="ghost" size="icon" className="h-8 w-8 md:h-9 md:w-9">
                     <Menu className="w-4 h-4" />
                   </Button>
                 </SheetTrigger>
@@ -102,7 +102,7 @@ const ParentDashboardLayoutInner = ({ children, title = "Parent Dashboard" }: Pa
               <Button 
                 variant="ghost" 
                 size="icon" 
-                className="relative h-9 w-9 hover:bg-gray-100 rounded-lg"
+                className="relative h-8 w-8 md:h-9 md:w-9 hover:bg-gray-100 rounded-lg"
               >
                 <Bell className="w-4 h-4 text-gray-500" />
                 <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-red-500 rounded-full"></span>
@@ -111,8 +111,8 @@ const ParentDashboardLayoutInner = ({ children, title = "Parent Dashboard" }: Pa
               {/* Avatar with Popover */}
               <Popover>
                 <PopoverTrigger asChild>
-                  <button className="ml-2">
-                    <Avatar className="w-9 h-9 border-2 border-primary/20 hover:border-primary/40 transition-colors cursor-pointer">
+                  <button className="ml-1 md:ml-2">
+                    <Avatar className="w-8 h-8 md:w-9 md:h-9 border-2 border-primary/20 hover:border-primary/40 transition-colors cursor-pointer">
                       <AvatarFallback className="bg-gradient-to-br from-primary to-purple-600 text-white font-semibold text-sm">
                         {firstName.charAt(0)}
                       </AvatarFallback>
@@ -162,7 +162,7 @@ const ParentDashboardLayoutInner = ({ children, title = "Parent Dashboard" }: Pa
           </header>
 
           {/* Content Area - Full width when sidebar is hidden */}
-          <main className="flex-1 p-6 md:p-8 overflow-y-auto">
+          <main className="flex-1 p-3 md:p-6 lg:p-8 overflow-y-auto">
             {children}
           </main>
         </div>

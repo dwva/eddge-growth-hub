@@ -46,14 +46,14 @@ const InternalAdminDashboardLayout = ({ children }: InternalAdminDashboardLayout
       {/* Main Content */}
       <div className="flex-1 flex flex-col min-w-0">
         {/* Top Bar */}
-        <header className="h-20 bg-white px-6 md:px-8 flex items-center justify-between sticky top-0 z-10 flex-shrink-0">
+        <header className="h-14 md:h-20 bg-white px-3 md:px-6 lg:px-8 flex items-center justify-between sticky top-0 z-10 flex-shrink-0 border-b border-gray-100 shadow-sm">
           {/* Left: Welcome Text */}
-          <div className="flex items-center gap-4">
+          <div className="flex items-center gap-2 md:gap-4">
             {/* Mobile Menu */}
             <Sheet open={mobileOpen} onOpenChange={setMobileOpen}>
               <SheetTrigger asChild className="md:hidden">
-                <Button variant="ghost" size="icon" className="h-10 w-10">
-                  <Menu className="w-5 h-5" />
+                <Button variant="ghost" size="icon" className="h-8 w-8 md:h-10 md:w-10">
+                  <Menu className="w-4 h-4 md:w-5 md:h-5" />
                 </Button>
               </SheetTrigger>
             </Sheet>
@@ -70,37 +70,37 @@ const InternalAdminDashboardLayout = ({ children }: InternalAdminDashboardLayout
 
             {/* Welcome Text */}
             <div className="hidden sm:block">
-              <h1 className="text-xl md:text-2xl font-bold text-gray-900">Internal Admin</h1>
-              <p className="text-sm text-gray-500">EDDGE Platform Management</p>
+              <h1 className="text-base md:text-xl lg:text-2xl font-bold text-gray-900">Internal Admin</h1>
+              <p className="text-xs md:text-sm text-gray-500">EDDGE Platform Management</p>
             </div>
           </div>
           
           {/* Right: Icons + Avatar */}
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-1 md:gap-2">
             {/* Messages */}
             <Button 
               variant="ghost" 
               size="icon" 
-              className="h-10 w-10 hover:bg-gray-100 rounded-xl"
+              className="h-8 w-8 md:h-10 md:w-10 hover:bg-gray-100 rounded-xl"
             >
-              <MessageSquare className="w-5 h-5 text-gray-500" />
+              <MessageSquare className="w-4 h-4 md:w-5 md:h-5 text-gray-500" />
             </Button>
 
             {/* Notifications */}
             <Button 
               variant="ghost" 
               size="icon" 
-              className="relative h-10 w-10 hover:bg-gray-100 rounded-xl"
+              className="relative h-8 w-8 md:h-10 md:w-10 hover:bg-gray-100 rounded-xl"
             >
-              <Bell className="w-5 h-5 text-gray-500" />
-              <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-red-500 rounded-full"></span>
+              <Bell className="w-4 h-4 md:w-5 md:h-5 text-gray-500" />
+              <span className="absolute top-1 right-1 md:top-1.5 md:right-1.5 w-2 h-2 bg-red-500 rounded-full"></span>
             </Button>
 
             {/* Avatar */}
             <Popover>
               <PopoverTrigger asChild>
-                <button className="ml-2">
-                  <Avatar className="w-10 h-10 border-2 border-primary/20 hover:border-primary/40 transition-colors cursor-pointer">
+                <button className="ml-1 md:ml-2">
+                  <Avatar className="w-8 h-8 md:w-10 md:h-10 border-2 border-primary/20 hover:border-primary/40 transition-colors cursor-pointer">
                     <AvatarImage src="" />
                     <AvatarFallback className="bg-gradient-to-br from-primary to-purple-600 text-white font-semibold">
                       {firstName.charAt(0)}
@@ -145,7 +145,7 @@ const InternalAdminDashboardLayout = ({ children }: InternalAdminDashboardLayout
         </header>
 
         {/* Page Content */}
-        <main className="flex-1 p-6 md:p-8 overflow-y-auto">
+        <main className="flex-1 p-3 md:p-6 lg:p-8 overflow-y-auto">
           {children}
         </main>
       </div>

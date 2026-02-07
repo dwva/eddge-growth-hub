@@ -67,10 +67,10 @@ const ParentAnnouncementsContent = () => {
     });
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-3 md:space-y-6">
       {/* Header */}
       <div>
-        <h1 className="text-2xl font-bold">{t('nav.announcements')}</h1>
+        <h1 className="text-xl md:text-2xl font-bold">{t('nav.announcements')}</h1>
         <p className="text-muted-foreground">Stay updated with school announcements</p>
       </div>
 

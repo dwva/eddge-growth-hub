@@ -37,7 +37,7 @@ const AdminSettings = () => {
       pageTitle="Settings" 
       pageDescription="Configure school and system settings"
     >
-      <Tabs defaultValue="general" className="space-y-6">
+      <Tabs defaultValue="general" className="space-y-3 md:space-y-6">
         <TabsList className="bg-muted/50 p-1">
           <TabsTrigger value="general" className="gap-2 data-[state=active]:bg-white">
             <School className="w-4 h-4" />

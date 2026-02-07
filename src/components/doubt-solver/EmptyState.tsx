@@ -14,25 +14,25 @@ interface EmptyStateProps {
 
 export function EmptyState({ onSuggestionClick }: EmptyStateProps) {
   return (
-    <div className="flex-1 flex flex-col items-center justify-center px-4">
-      <div className="max-w-xl w-full text-center space-y-6">
+    <div className="flex-1 flex flex-col items-center justify-center px-3 md:px-4">
+      <div className="max-w-xl w-full text-center space-y-4 md:space-y-6">
         <div>
-          <h1 className="text-2xl md:text-3xl font-bold text-foreground mb-1">
+          <h1 className="text-lg md:text-2xl lg:text-3xl font-bold text-foreground mb-1">
             What can I help with?
           </h1>
-          <p className="text-muted-foreground text-sm">
+          <p className="text-muted-foreground text-xs md:text-sm">
             Ask me anything about your studies
           </p>
         </div>
 
-        <div className="flex flex-wrap justify-center gap-2">
+        <div className="flex flex-wrap justify-center gap-1.5 md:gap-2">
           {suggestions.map((suggestion, index) => (
             <button
               key={index}
               onClick={() => onSuggestionClick(suggestion.label)}
-              className="flex items-center gap-2 px-4 py-2 rounded-full bg-muted hover:bg-muted/80 text-sm text-foreground transition-colors border border-border"
+              className="flex items-center gap-1.5 md:gap-2 px-3 py-1.5 md:px-4 md:py-2 rounded-full bg-muted hover:bg-muted/80 text-xs md:text-sm text-foreground transition-colors border border-border"
             >
-              <suggestion.icon className={cn("w-4 h-4", suggestion.color)} />
+              <suggestion.icon className={cn("w-3.5 h-3.5 md:w-4 md:h-4", suggestion.color)} />
               {suggestion.label}
             </button>
           ))}

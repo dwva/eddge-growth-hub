@@ -53,11 +53,11 @@ const SuperAdminSecurity = () => {
 
   return (
     <SuperAdminDashboardLayout>
-      <div className="space-y-6">
+      <div className="space-y-3 md:space-y-6">
         {/* Header */}
         <div>
-          <h1 className="text-3xl font-bold">Security & Compliance</h1>
-          <p className="text-muted-foreground">Admin audit trail, access logs, and DPDP compliance logs</p>
+          <h1 className="text-lg md:text-2xl lg:text-3xl font-bold">Security & Compliance</h1>
+          <p className="text-xs md:text-sm text-muted-foreground">Admin audit trail, access logs, and DPDP compliance logs</p>
         </div>
 
         {/* Tabs */}
@@ -113,6 +113,7 @@ const SuperAdminSecurity = () => {
                   />
                 ) : (
                   <>
+                    <div className="overflow-x-auto">
                     <Table>
                       <TableHeader>
                         <TableRow>
@@ -137,6 +138,7 @@ const SuperAdminSecurity = () => {
                         ))}
                       </TableBody>
                     </Table>
+                    </div>
 
                     {auditData.total > 20 && (
                       <div className="flex items-center justify-between mt-4">
@@ -204,6 +206,7 @@ const SuperAdminSecurity = () => {
                   />
                 ) : (
                   <>
+                    <div className="overflow-x-auto">
                     <Table>
                       <TableHeader>
                         <TableRow>
@@ -242,6 +245,7 @@ const SuperAdminSecurity = () => {
                         ))}
                       </TableBody>
                     </Table>
+                    </div>
 
                     {accessData.total > 20 && (
                       <div className="flex items-center justify-between mt-4">
@@ -309,6 +313,7 @@ const SuperAdminSecurity = () => {
                   />
                 ) : (
                   <>
+                    <div className="overflow-x-auto">
                     <Table>
                       <TableHeader>
                         <TableRow>
@@ -333,6 +338,7 @@ const SuperAdminSecurity = () => {
                         ))}
                       </TableBody>
                     </Table>
+                    </div>
 
                     {complianceData.total > 20 && (
                       <div className="flex items-center justify-between mt-4">

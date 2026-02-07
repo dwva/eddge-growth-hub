@@ -77,12 +77,12 @@ const SuperAdminSupport = () => {
 
   return (
     <SuperAdminDashboardLayout>
-      <div className="space-y-6">
+      <div className="space-y-3 md:space-y-6">
         {/* Header */}
-        <div className="flex items-center justify-between">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
           <div>
-            <h1 className="text-3xl font-bold">Support &amp; Escalations</h1>
-            <p className="text-muted-foreground">
+            <h1 className="text-lg md:text-2xl lg:text-3xl font-bold">Support &amp; Escalations</h1>
+            <p className="text-xs md:text-sm text-muted-foreground">
               Internal view of escalated tickets, with severity tags and links to incidents. No direct messaging to schools.
             </p>
           </div>
@@ -124,6 +124,7 @@ const SuperAdminSupport = () => {
             ) : !escalations || escalations.length === 0 ? (
               <p className="text-sm text-muted-foreground">No escalations currently open.</p>
             ) : (
+              <div className="overflow-x-auto">
               <Table>
                 <TableHeader>
                   <TableRow>
@@ -193,6 +194,7 @@ const SuperAdminSupport = () => {
                   ))}
                 </TableBody>
               </Table>
+              </div>
             )}
           </CardContent>
         </Card>

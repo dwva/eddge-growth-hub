@@ -86,7 +86,7 @@ const StudentAttendance = () => {
 
   return (
     <StudentDashboardLayout title="Attendance">
-      <div className="space-y-6">
+      <div className="space-y-3 md:space-y-6">
         {/* Overall Stats */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
           <StatCard
@@ -125,7 +125,7 @@ const StudentAttendance = () => {
                     <p className="text-[11px] font-semibold text-muted-foreground uppercase tracking-wide">
                       Overall attendance
                     </p>
-                    <p className="text-3xl font-bold text-gray-900 leading-tight">
+                    <p className="text-xl md:text-3xl font-bold text-gray-900 leading-tight">
                       {attendance.percentage}%
                     </p>
                   </div>

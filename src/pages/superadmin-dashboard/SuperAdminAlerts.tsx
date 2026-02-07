@@ -83,12 +83,12 @@ const SuperAdminAlerts = () => {
 
   return (
     <SuperAdminDashboardLayout>
-      <div className="space-y-6">
+      <div className="space-y-3 md:space-y-6">
         {/* Header */}
-        <div className="flex items-center justify-between">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
           <div>
-            <h1 className="text-3xl font-bold">Alerts & Thresholds</h1>
-            <p className="text-muted-foreground">
+            <h1 className="text-lg md:text-2xl lg:text-3xl font-bold">Alerts & Thresholds</h1>
+            <p className="text-xs md:text-sm text-muted-foreground">
               Configure platform-level alert thresholds. This is configuration-only in Phase 2; no real notifications are sent.
             </p>
           </div>
@@ -103,7 +103,7 @@ const SuperAdminAlerts = () => {
           </Button>
         </div>
 
-        <div className="grid gap-4 md:grid-cols-2">
+        <div className="grid gap-2 md:gap-4 md:grid-cols-2">
           {/* DAU Threshold */}
           <Card>
             <CardHeader>

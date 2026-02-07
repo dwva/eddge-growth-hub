@@ -139,7 +139,7 @@ const StudentXpDashboard = () => {
                 <div className="flex-1 space-y-4">
                   <div>
                     <p className="text-xs font-bold uppercase tracking-wide text-purple-600 mb-1">Current Progress</p>
-                    <p className="text-3xl font-black text-gray-900 leading-tight">{mockCurrentXp} XP</p>
+                    <p className="text-xl md:text-3xl font-black text-gray-900 leading-tight">{mockCurrentXp} XP</p>
                     <p className="text-sm font-medium text-gray-700 mt-0.5">
                       {xpRemaining > 0
                         ? `${xpRemaining} XP to ${mockNextLevelName}`

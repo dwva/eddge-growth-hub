@@ -238,12 +238,12 @@ const SuperAdminOnboarding = () => {
 
   return (
     <SuperAdminDashboardLayout>
-      <div className="space-y-6">
+      <div className="space-y-3 md:space-y-6">
         {/* Operations Header */}
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
           <div>
-            <h1 className="text-3xl font-bold">School Onboarding</h1>
-            <p className="text-muted-foreground">
+            <h1 className="text-lg md:text-2xl lg:text-3xl font-bold">School Onboarding</h1>
+            <p className="text-xs md:text-sm text-muted-foreground">
               Manage new school onboarding and activation
             </p>
           </div>
@@ -323,6 +323,7 @@ const SuperAdminOnboarding = () => {
                 description="No schools match the selected filter."
               />
             ) : (
+              <div className="overflow-x-auto">
               <Table>
                 <TableHeader>
                   <TableRow>
@@ -472,6 +473,7 @@ const SuperAdminOnboarding = () => {
                   })}
                 </TableBody>
               </Table>
+              </div>
             )}
           </CardContent>
         </Card>

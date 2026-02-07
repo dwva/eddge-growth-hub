@@ -96,7 +96,7 @@ const ClassDetail = () => {
       pageTitle={`Class ${classData.grade}-${classData.section}`}
       pageDescription="Class Detail View"
     >
-      <div className="space-y-6">
+      <div className="space-y-3 md:space-y-6">
         <Button variant="ghost" onClick={() => navigate('/admin/classes')} className="gap-2">
           <ArrowLeft className="w-4 h-4" />
           Back to Classes

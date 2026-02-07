@@ -113,7 +113,7 @@ const StudentHomework = () => {
 
   return (
     <StudentDashboardLayout title="Homework">
-      <div className="space-y-6">
+      <div className="space-y-3 md:space-y-6">
         {/* Stats Overview – compact KPIs for quick status glance */}
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 md:gap-5">
           <Card className="h-full rounded-2xl border border-amber-200 bg-background/80 shadow-sm">

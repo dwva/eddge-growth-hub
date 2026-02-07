@@ -33,7 +33,7 @@ const StudentTests = () => {
 
   return (
     <StudentDashboardLayout title="Tests & Exams">
-      <div className="space-y-6">
+      <div className="space-y-3 md:space-y-6">
         {/* Upcoming Tests */}
         <div>
           <h2 className="text-lg font-semibold mb-4">Upcoming Tests</h2>

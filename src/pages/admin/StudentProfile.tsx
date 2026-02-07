@@ -129,7 +129,7 @@ const StudentProfile = () => {
       pageTitle={`${student.name}`}
       pageDescription={`Student Profile - ${studentClass ? `Class ${studentClass.grade}-${studentClass.section}` : 'No Class Assigned'}`}
     >
-      <div className="space-y-6">
+      <div className="space-y-3 md:space-y-6">
         {/* Back Button */}
         <Button variant="ghost" onClick={() => navigate('/admin/students')} className="gap-2">
           <ArrowLeft className="w-4 h-4" />

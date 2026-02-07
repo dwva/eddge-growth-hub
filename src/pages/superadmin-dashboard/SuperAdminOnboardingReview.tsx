@@ -132,12 +132,12 @@ const SuperAdminOnboardingReview = () => {
 
   return (
     <SuperAdminDashboardLayout>
-      <div className="space-y-6">
+      <div className="space-y-3 md:space-y-6">
         {/* Header */}
-        <div className="flex items-center justify-between">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
           <div>
-            <h1 className="text-3xl font-bold">Onboarding Review</h1>
-            <p className="text-muted-foreground">
+            <h1 className="text-lg md:text-2xl lg:text-3xl font-bold">Onboarding Review</h1>
+            <p className="text-xs md:text-sm text-muted-foreground">
               Review and approve submitted school onboarding applications. Only SuperAdmin can approve schools.
             </p>
           </div>
@@ -168,6 +168,7 @@ const SuperAdminOnboardingReview = () => {
                 description="Schools that complete onboarding will appear here for review."
               />
             ) : (
+              <div className="overflow-x-auto">
               <Table>
                 <TableHeader>
                   <TableRow>
@@ -221,6 +222,7 @@ const SuperAdminOnboardingReview = () => {
                   ))}
                 </TableBody>
               </Table>
+              </div>
             )}
           </CardContent>
         </Card>

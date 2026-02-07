@@ -50,12 +50,12 @@ const SuperAdminHealth = () => {
 
   return (
     <SuperAdminDashboardLayout>
-      <div className="space-y-6">
+      <div className="space-y-3 md:space-y-6">
         {/* Header */}
-        <div className="flex items-center justify-between">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
           <div>
-            <h1 className="text-3xl font-bold">System Health</h1>
-            <p className="text-muted-foreground">Platform health and monitoring</p>
+            <h1 className="text-lg md:text-2xl lg:text-3xl font-bold">System Health</h1>
+            <p className="text-xs md:text-sm text-muted-foreground">Platform health and monitoring</p>
           </div>
           <Button
             onClick={handleRefresh}
@@ -97,7 +97,7 @@ const SuperAdminHealth = () => {
         </Card>
 
         {/* Statistics Cards */}
-        <div className="grid gap-4 md:grid-cols-3">
+        <div className="grid gap-2 md:gap-4 md:grid-cols-3">
           {/* API Status */}
           <Card>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">

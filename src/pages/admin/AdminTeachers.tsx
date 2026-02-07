@@ -192,7 +192,7 @@ const AdminTeachers = () => {
       pageTitle="Teachers" 
       pageDescription="Manage all teaching staff"
     >
-      <div className="space-y-6">
+      <div className="space-y-3 md:space-y-6">
         {/* Stats Cards */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
           <Card className="bg-primary/5 border-primary/20">

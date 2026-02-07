@@ -11,15 +11,15 @@ export function ChatMessage({ message }: ChatMessageProps) {
   const isUser = message.role === 'user';
 
   return (
-    <div className={cn("flex gap-4 py-4", isUser ? "justify-end" : "justify-start")}>
+    <div className={cn("flex gap-2 md:gap-4 py-2 md:py-4", isUser ? "justify-end" : "justify-start")}>
       {!isUser && (
-        <div className="flex-shrink-0 w-8 h-8 rounded-full bg-muted flex items-center justify-center">
-          <MessageCircle className="w-4 h-4 text-muted-foreground" />
+        <div className="flex-shrink-0 w-6 h-6 md:w-8 md:h-8 rounded-full bg-muted flex items-center justify-center">
+          <MessageCircle className="w-3 h-3 md:w-4 md:h-4 text-muted-foreground" />
         </div>
       )}
       <div
         className={cn(
-          "max-w-[75%] rounded-2xl px-4 py-3",
+          "max-w-[85%] md:max-w-[75%] rounded-2xl px-3 py-2 md:px-4 md:py-3",
           isUser
             ? "bg-primary text-primary-foreground"
             : "bg-muted text-foreground"
@@ -54,7 +54,7 @@ export function ChatMessage({ message }: ChatMessageProps) {
         )}
       </div>
       {isUser && (
-        <div className="flex-shrink-0 w-8 h-8 rounded-full bg-muted flex items-center justify-center text-sm font-medium text-foreground">
+        <div className="flex-shrink-0 w-6 h-6 md:w-8 md:h-8 rounded-full bg-muted flex items-center justify-center text-xs md:text-sm font-medium text-foreground">
           S
         </div>
       )}

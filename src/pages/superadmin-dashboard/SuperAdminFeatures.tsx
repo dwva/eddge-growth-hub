@@ -87,12 +87,12 @@ const SuperAdminFeatures = () => {
 
   return (
     <SuperAdminDashboardLayout>
-      <div className="space-y-6">
+      <div className="space-y-3 md:space-y-6">
         {/* Header */}
-        <div className="flex items-center justify-between">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
           <div>
-            <h1 className="text-3xl font-bold">Feature Flags & Rollouts</h1>
-            <p className="text-muted-foreground">
+            <h1 className="text-lg md:text-2xl lg:text-3xl font-bold">Feature Flags & Rollouts</h1>
+            <p className="text-xs md:text-sm text-muted-foreground">
               Safely control platform features, beta programs, and gradual rollouts. Changes do not affect school
               dashboards in this phase.
             </p>
@@ -125,6 +125,7 @@ const SuperAdminFeatures = () => {
                 description="Feature flags configured for the platform will appear here."
               />
             ) : (
+              <div className="overflow-x-auto">
               <Table>
                 <TableHeader>
                   <TableRow>
@@ -191,6 +192,7 @@ const SuperAdminFeatures = () => {
                   ))}
                 </TableBody>
               </Table>
+              </div>
             )}
           </CardContent>
         </Card>

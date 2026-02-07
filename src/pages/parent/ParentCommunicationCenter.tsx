@@ -30,10 +30,10 @@ const ParentCommunicationCenter = () => {
 
   return (
     <ParentDashboardLayout>
-      <div className="space-y-6">
+      <div className="space-y-3 md:space-y-6">
         {/* Header */}
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">Communication Center</h1>
+          <h1 className="text-xl md:text-2xl font-bold text-gray-900">Communication Center</h1>
           <p className="text-sm text-gray-500 mt-1">
             View important alerts, respond to teacher notes, and acknowledge updates from school.
           </p>

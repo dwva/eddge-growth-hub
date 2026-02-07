@@ -30,7 +30,7 @@ const ParentAchievementsContent = () => {
   const recentAchievements = selectedChild?.achievements || [];
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-3 md:space-y-6">
       {/* Header */}
       <div className="px-1">
         <h1 className="text-xl lg:text-2xl font-bold">{selectedChild?.name}'s Achievements</h1>

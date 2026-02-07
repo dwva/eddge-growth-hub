@@ -42,7 +42,7 @@ const ParentChildDetailsContent = () => {
   ];
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-3 md:space-y-6">
       {/* Header */}
       <div className="flex items-center gap-3">
         <button
@@ -52,7 +52,7 @@ const ParentChildDetailsContent = () => {
           <ArrowLeft className="w-5 h-5" />
         </button>
         <div>
-          <h1 className="text-2xl font-bold">{child.name}'s Profile</h1>
+          <h1 className="text-xl md:text-2xl font-bold">{child.name}'s Profile</h1>
           <p className="text-muted-foreground">{child.class}</p>
         </div>
       </div>

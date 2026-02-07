@@ -173,34 +173,34 @@ const AdminHome = () => {
         </Button>
       }
     >
-      <div className="space-y-6">
+      <div className="space-y-3 md:space-y-6">
         {/* Welcome Banner */}
-        <div className="relative overflow-hidden rounded-2xl p-6 md:p-8 gradient-primary text-white">
-          <div className="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full -translate-y-1/2 translate-x-1/3 blur-3xl" />
-          <div className="absolute bottom-0 left-0 w-48 h-48 bg-white/5 rounded-full translate-y-1/2 -translate-x-1/4 blur-2xl" />
+        <div className="relative overflow-hidden rounded-xl md:rounded-2xl p-4 md:p-6 lg:p-8 gradient-primary text-white">
+          <div className="absolute top-0 right-0 w-40 md:w-64 h-40 md:h-64 bg-white/10 rounded-full -translate-y-1/2 translate-x-1/3 blur-3xl" />
+          <div className="absolute bottom-0 left-0 w-32 md:w-48 h-32 md:h-48 bg-white/5 rounded-full translate-y-1/2 -translate-x-1/4 blur-2xl" />
           
           <div className="relative z-10">
-            <h2 className="text-2xl md:text-3xl font-bold mb-2">
+            <h2 className="text-lg md:text-2xl lg:text-3xl font-bold mb-1 md:mb-2">
               Welcome back, {user?.name?.split(' ')[0]}! 👋
             </h2>
-            <p className="text-white/80 text-lg max-w-xl">
+            <p className="text-white/80 text-xs md:text-base lg:text-lg max-w-xl">
               Here's what's happening at your school today. You have 3 pending approvals and 2 new announcements to review.
             </p>
             
-            <div className="flex flex-wrap gap-3 mt-6">
+            <div className="flex flex-wrap gap-2 md:gap-3 mt-3 md:mt-6">
               <Button 
-                className="bg-white text-primary hover:bg-white/90 rounded-xl font-semibold shadow-lg"
+                className="bg-white text-primary hover:bg-white/90 rounded-lg md:rounded-xl font-semibold shadow-lg h-8 md:h-10 text-xs md:text-sm px-3 md:px-4"
                 onClick={() => navigate('/admin/students')}
               >
-                <ClipboardList className="w-4 h-4 mr-2" />
+                <ClipboardList className="w-3.5 h-3.5 md:w-4 md:h-4 mr-1.5 md:mr-2" />
                 View Students
               </Button>
               <Button 
                 variant="outline" 
-                className="border-white/30 text-white hover:bg-white/10 rounded-xl"
+                className="border-white/30 text-white hover:bg-white/10 rounded-lg md:rounded-xl h-8 md:h-10 text-xs md:text-sm px-3 md:px-4"
                 onClick={() => navigate('/admin/announcements')}
               >
-                <Bell className="w-4 h-4 mr-2" />
+                <Bell className="w-3.5 h-3.5 md:w-4 md:h-4 mr-1.5 md:mr-2" />
                 Announcements
               </Button>
             </div>
@@ -208,7 +208,7 @@ const AdminHome = () => {
         </div>
 
         {/* Stats Row */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-3 md:gap-6">
           <div 
             className="cursor-pointer"
             onClick={() => navigate('/admin/students')}
@@ -260,13 +260,13 @@ const AdminHome = () => {
         </div>
 
         {/* Charts Row */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-3 md:gap-6">
           {/* Performance Chart - 2/3 width */}
-          <Card className="lg:col-span-2 shadow-sm border-gray-100 rounded-xl overflow-hidden">
-            <CardHeader className="px-6 py-4 border-b border-gray-100 flex flex-row items-center justify-between bg-gray-50/50">
+          <Card className="lg:col-span-2 shadow-sm border-gray-100 rounded-lg md:rounded-xl overflow-hidden">
+            <CardHeader className="px-3 md:px-6 py-3 md:py-4 border-b border-gray-100 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 bg-gray-50/50">
               <div>
-                <CardTitle className="text-lg font-semibold text-gray-900">Performance Trends</CardTitle>
-                <p className="text-sm text-gray-500">Monthly average scores across all classes</p>
+                <CardTitle className="text-sm md:text-lg font-semibold text-gray-900">Performance Trends</CardTitle>
+                <p className="text-[10px] md:text-sm text-gray-500">Monthly average scores across all classes</p>
               </div>
               <Tabs value={chartPeriod} onValueChange={setChartPeriod}>
                 <TabsList className="bg-gray-100/80 p-1 rounded-lg">
@@ -276,8 +276,8 @@ const AdminHome = () => {
                 </TabsList>
               </Tabs>
             </CardHeader>
-            <CardContent className="p-6">
-              <ResponsiveContainer width="100%" height={280}>
+            <CardContent className="p-3 md:p-6">
+              <ResponsiveContainer width="100%" height={200}>
                 <AreaChart data={performanceData}>
                   <defs>
                     <linearGradient id="colorScore" x1="0" y1="0" x2="0" y2="1">
@@ -303,11 +303,11 @@ const AdminHome = () => {
           </Card>
 
           {/* Quick Actions - 1/3 width */}
-          <Card className="shadow-sm border-gray-100 rounded-xl">
-            <CardHeader className="px-6 py-4 border-b border-gray-100 bg-gray-50/50">
-              <CardTitle className="text-lg font-semibold text-gray-900">Quick Actions</CardTitle>
+          <Card className="shadow-sm border-gray-100 rounded-lg md:rounded-xl">
+            <CardHeader className="px-3 md:px-6 py-3 md:py-4 border-b border-gray-100 bg-gray-50/50">
+              <CardTitle className="text-sm md:text-lg font-semibold text-gray-900">Quick Actions</CardTitle>
             </CardHeader>
-            <CardContent className="p-4 space-y-3">
+            <CardContent className="p-3 md:p-4 space-y-2 md:space-y-3">
               {[
                 { icon: <UserPlus className="w-5 h-5" />, label: 'Add Student', color: 'blue' },
                 { icon: <Users className="w-5 h-5" />, label: 'Add Teacher', color: 'purple' },
@@ -316,9 +316,9 @@ const AdminHome = () => {
               ].map((action, idx) => (
                 <button
                   key={idx}
-                  className="w-full flex items-center gap-4 p-4 rounded-xl bg-gray-50 hover:bg-blue-50 border border-gray-100 hover:border-blue-200 transition-all duration-200 group"
+                  className="w-full flex items-center gap-2.5 md:gap-4 p-2.5 md:p-4 rounded-lg md:rounded-xl bg-gray-50 hover:bg-blue-50 border border-gray-100 hover:border-blue-200 transition-all duration-200 group"
                 >
-                  <div className={`w-10 h-10 rounded-lg flex items-center justify-center ${
+                  <div className={`w-8 h-8 md:w-10 md:h-10 rounded-lg flex items-center justify-center flex-shrink-0 ${
                     action.color === 'blue' ? 'bg-blue-100 text-blue-600' :
                     action.color === 'purple' ? 'bg-purple-100 text-purple-600' :
                     action.color === 'amber' ? 'bg-amber-100 text-amber-600' :
@@ -326,8 +326,8 @@ const AdminHome = () => {
                   }`}>
                     {action.icon}
                   </div>
-                  <span className="font-medium text-gray-700 group-hover:text-blue-600 transition-colors">{action.label}</span>
-                  <ArrowUpRight className="w-4 h-4 ml-auto text-gray-400 group-hover:text-blue-500 transition-colors" />
+                  <span className="font-medium text-xs md:text-sm text-gray-700 group-hover:text-blue-600 transition-colors">{action.label}</span>
+                  <ArrowUpRight className="w-3.5 h-3.5 md:w-4 md:h-4 ml-auto text-gray-400 group-hover:text-blue-500 transition-colors" />
                 </button>
               ))}
             </CardContent>
@@ -335,10 +335,10 @@ const AdminHome = () => {
         </div>
 
         {/* Bottom Row */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-3 md:gap-6">
           {/* Alerts/Notices */}
-          <div className="space-y-4">
-            <h3 className="text-lg font-semibold text-gray-900">Recent Alerts</h3>
+          <div className="space-y-2 md:space-y-4">
+            <h3 className="text-sm md:text-lg font-semibold text-gray-900">Recent Alerts</h3>
             
             {recentAlerts.length === 0 ? (
               <div className="text-center py-8 text-muted-foreground">
@@ -356,16 +356,16 @@ const AdminHome = () => {
                 return (
                   <div 
                     key={alert.id}
-                    className="flex items-start gap-4 p-4 rounded-xl bg-gradient-to-r from-amber-50 to-orange-50 border border-amber-200"
+                    className="flex flex-col sm:flex-row sm:items-start gap-2 md:gap-4 p-3 md:p-4 rounded-lg md:rounded-xl bg-gradient-to-r from-amber-50 to-orange-50 border border-amber-200"
                   >
-                    <div className="w-10 h-10 rounded-full bg-amber-100 flex items-center justify-center flex-shrink-0">
-                      <AlertTriangle className="w-5 h-5 text-amber-600" />
+                    <div className="w-8 h-8 md:w-10 md:h-10 rounded-full bg-amber-100 flex items-center justify-center flex-shrink-0">
+                      <AlertTriangle className="w-4 h-4 md:w-5 md:h-5 text-amber-600" />
                     </div>
                     <div className="flex-1">
-                      <h4 className="font-semibold text-amber-800">
+                      <h4 className="text-xs md:text-sm font-semibold text-amber-800">
                         {alert.type === 'LowAttendance' ? 'Low Attendance Alert' : 'Low Performance Alert'}
                       </h4>
-                      <p className="text-sm text-amber-700 mt-1">
+                      <p className="text-[10px] md:text-sm text-amber-700 mt-0.5 md:mt-1">
                         {entityName}: {alert.reason}
                       </p>
                     </div>
@@ -455,12 +455,12 @@ const AdminHome = () => {
         </div>
 
         {/* Class Distribution */}
-        <Card className="shadow-sm border-gray-100 rounded-xl">
-          <CardHeader className="px-6 py-4 border-b border-gray-100 bg-gray-50/50">
-            <CardTitle className="text-lg font-semibold text-gray-900">Class Distribution</CardTitle>
+        <Card className="shadow-sm border-gray-100 rounded-lg md:rounded-xl">
+          <CardHeader className="px-3 md:px-6 py-3 md:py-4 border-b border-gray-100 bg-gray-50/50">
+            <CardTitle className="text-sm md:text-lg font-semibold text-gray-900">Class Distribution</CardTitle>
           </CardHeader>
-          <CardContent className="p-6">
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+          <CardContent className="p-3 md:p-6">
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-2 md:gap-4">
               {classDistribution.length === 0 ? (
                 <div className="col-span-4 text-center py-8 text-muted-foreground">
                   No classes yet
@@ -469,7 +469,7 @@ const AdminHome = () => {
                 classDistribution.map((cls) => (
                   <div 
                     key={cls.name} 
-                    className={`p-6 rounded-xl text-center transition-all duration-200 hover:-translate-y-1 cursor-pointer ${
+                    className={`p-3 md:p-6 rounded-lg md:rounded-xl text-center transition-all duration-200 hover:-translate-y-1 cursor-pointer ${
                       cls.color === 'blue' ? 'bg-gradient-to-br from-blue-50 to-indigo-50 hover:shadow-lg hover:shadow-blue-100' :
                       cls.color === 'purple' ? 'bg-gradient-to-br from-purple-50 to-violet-50 hover:shadow-lg hover:shadow-purple-100' :
                       cls.color === 'emerald' ? 'bg-gradient-to-br from-emerald-50 to-green-50 hover:shadow-lg hover:shadow-emerald-100' :
@@ -480,7 +480,7 @@ const AdminHome = () => {
                       navigate(`/admin/classes?grade=${grade}`);
                     }}
                   >
-                    <p className={`text-3xl font-bold ${
+                    <p className={`text-xl md:text-3xl font-bold ${
                       cls.color === 'blue' ? 'text-blue-600' :
                       cls.color === 'purple' ? 'text-purple-600' :
                       cls.color === 'emerald' ? 'text-emerald-600' :
@@ -488,7 +488,7 @@ const AdminHome = () => {
                     }`}>
                       {cls.count}
                     </p>
-                    <p className="text-sm text-gray-600 mt-1 font-medium">{cls.name}</p>
+                    <p className="text-xs md:text-sm text-gray-600 mt-0.5 md:mt-1 font-medium">{cls.name}</p>
                     <p className="text-xs text-gray-400 mt-0.5">students</p>
                   </div>
                 ))

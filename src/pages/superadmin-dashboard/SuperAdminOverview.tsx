@@ -65,24 +65,24 @@ const SuperAdminOverview = () => {
 
   return (
     <SuperAdminDashboardLayout>
-      <div className="space-y-6">
+      <div className="space-y-3 md:space-y-6">
         {/* Header */}
         <div>
-          <h1 className="text-3xl font-bold text-gray-900">Platform Overview</h1>
-          <p className="text-muted-foreground mt-1">High-level snapshot of platform growth, usage, and health</p>
+          <h1 className="text-lg md:text-2xl lg:text-3xl font-bold text-gray-900">Platform Overview</h1>
+          <p className="text-xs md:text-sm text-muted-foreground mt-0.5 md:mt-1">High-level snapshot of platform growth, usage, and health</p>
         </div>
 
         {/* Primary Metrics - 4 Main Widgets */}
-        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+        <div className="grid gap-2 md:gap-4 grid-cols-2 lg:grid-cols-4">
           {/* Total Schools Widget */}
           <Card className="border-l-4 border-l-blue-500">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-sm font-medium text-gray-600">Total Schools</CardTitle>
               <Building2 className="h-4 w-4 text-gray-400" />
             </CardHeader>
-            <CardContent>
-              <div className="text-3xl font-bold text-gray-900">{data?.total_schools?.toLocaleString() || "0"}</div>
-              <div className="mt-2 space-y-1">
+            <CardContent className="p-3 md:p-6 pt-0 md:pt-0">
+              <div className="text-xl md:text-3xl font-bold text-gray-900">{data?.total_schools?.toLocaleString() || "0"}</div>
+              <div className="mt-1 md:mt-2 space-y-0.5 md:space-y-1">
                 <div className="flex items-center justify-between text-xs">
                   <span className="text-gray-500">Active</span>
                   <span className="font-medium text-gray-900">{data?.schools_breakdown?.active || 0}</span>
@@ -106,9 +106,9 @@ const SuperAdminOverview = () => {
               <CardTitle className="text-sm font-medium text-gray-600">Total Users</CardTitle>
               <Users className="h-4 w-4 text-gray-400" />
             </CardHeader>
-            <CardContent>
-              <div className="text-3xl font-bold text-gray-900">{data?.total_users?.toLocaleString() || "0"}</div>
-              <p className="text-xs text-muted-foreground mt-2">Aggregated across all roles and schools</p>
+            <CardContent className="p-3 md:p-6 pt-0 md:pt-0">
+              <div className="text-xl md:text-3xl font-bold text-gray-900">{data?.total_users?.toLocaleString() || "0"}</div>
+              <p className="text-[10px] md:text-xs text-muted-foreground mt-1 md:mt-2">Aggregated across all roles and schools</p>
             </CardContent>
           </Card>
 
@@ -118,9 +118,9 @@ const SuperAdminOverview = () => {
               <CardTitle className="text-sm font-medium text-gray-600">Daily Active Users</CardTitle>
               <Activity className="h-4 w-4 text-gray-400" />
             </CardHeader>
-            <CardContent>
-              <div className="text-3xl font-bold text-gray-900">{data?.daily_active_users?.toLocaleString() || "0"}</div>
-              <p className="text-xs text-muted-foreground mt-2">Unique users active today</p>
+            <CardContent className="p-3 md:p-6 pt-0 md:pt-0">
+              <div className="text-xl md:text-3xl font-bold text-gray-900">{data?.daily_active_users?.toLocaleString() || "0"}</div>
+              <p className="text-[10px] md:text-xs text-muted-foreground mt-1 md:mt-2">Unique users active today</p>
             </CardContent>
           </Card>
 
@@ -134,8 +134,8 @@ const SuperAdminOverview = () => {
               <CardTitle className="text-sm font-medium text-gray-600">System Uptime</CardTitle>
               <Server className="h-4 w-4 text-gray-400" />
             </CardHeader>
-            <CardContent>
-              <div className="text-3xl font-bold text-gray-900">{data?.system_uptime_percentage?.toFixed(1) || "0.0"}%</div>
+            <CardContent className="p-3 md:p-6 pt-0 md:pt-0">
+              <div className="text-xl md:text-3xl font-bold text-gray-900">{data?.system_uptime_percentage?.toFixed(1) || "0.0"}%</div>
               <div className="mt-2">
                 {data?.system_status && getSystemStatusBadge(data.system_status)}
               </div>
@@ -146,7 +146,7 @@ const SuperAdminOverview = () => {
 
         {/* Optional Read-Only Signals */}
         {(data?.new_schools_today !== undefined || data?.new_users_today !== undefined || data?.total_errors_24h !== undefined) && (
-          <div className="grid gap-4 md:grid-cols-3">
+          <div className="grid gap-2 md:gap-4 grid-cols-1 md:grid-cols-3">
             {/* New Schools Today */}
             {data?.new_schools_today !== undefined && (
               <Card>

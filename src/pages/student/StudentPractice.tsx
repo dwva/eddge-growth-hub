@@ -216,7 +216,7 @@ const StudentPractice = () => {
   // --- New flow: Subject → Chapter → Topic → Practice type → Practice screen ---
   return (
     <StudentDashboardLayout title="Practice">
-      <div className="space-y-6">
+      <div className="space-y-3 md:space-y-6">
         {view === 'selection' && (
           <PracticeFirstView
             selection={selection}

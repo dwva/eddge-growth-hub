@@ -93,19 +93,19 @@ const StudentDoubtSolverContent = () => {
   };
 
   return (
-    <div className="flex h-[calc(100vh-7rem)] -m-6 md:-m-8">
+    <div className="flex h-[calc(100vh-5rem)] md:h-[calc(100vh-7rem)] -m-2.5 sm:-m-4 md:-m-6 lg:-m-8">
       {/* Main Chat Area */}
       <div className="flex-1 flex flex-col min-w-0 bg-background">
         {/* Header */}
-        <header className="flex-shrink-0 h-12 border-b border-border bg-card/50 flex items-center justify-end px-4">
+        <header className="flex-shrink-0 h-10 md:h-12 border-b border-border bg-card/50 flex items-center justify-end px-2 md:px-4">
           <Button
             variant="ghost"
             size="icon"
             onClick={() => setSidebarOpen(!sidebarOpen)}
-            className="h-8 w-8 text-muted-foreground hover:text-foreground"
+            className="h-7 w-7 md:h-8 md:w-8 text-muted-foreground hover:text-foreground"
             aria-label={sidebarOpen ? 'Close sidebar' : 'Open sidebar'}
           >
-            <Menu className="w-5 h-5" />
+            <Menu className="w-4 h-4 md:w-5 md:h-5" />
           </Button>
         </header>
 
@@ -115,7 +115,7 @@ const StudentDoubtSolverContent = () => {
             <EmptyState onSuggestionClick={handleSuggestionClick} />
           ) : (
             <ScrollArea ref={scrollAreaRef} className="flex-1">
-              <div className="max-w-3xl mx-auto px-4 py-4">
+              <div className="max-w-3xl mx-auto px-2 md:px-4 py-2 md:py-4">
                 {messages.map((message) => (
                   <ChatMessage key={message.id} message={message} />
                 ))}
@@ -137,14 +137,19 @@ const StudentDoubtSolverContent = () => {
         </div>
       </div>
 
-      {/* Right Sidebar - Chat History */}
+      {/* Right Sidebar - Chat History (overlay on mobile) */}
       {sidebarOpen && (
-        <ChatHistory
-          conversations={conversations}
-          activeConversation={activeConversation}
-          onNewChat={handleNewChat}
-          onSelectConversation={handleSelectConversation}
-        />
+        <>
+          <div className="md:hidden fixed inset-0 bg-black/40 z-30" onClick={() => setSidebarOpen(false)} />
+          <div className="fixed md:relative right-0 top-0 h-full z-40 md:z-auto">
+            <ChatHistory
+              conversations={conversations}
+              activeConversation={activeConversation}
+              onNewChat={handleNewChat}
+              onSelectConversation={handleSelectConversation}
+            />
+          </div>
+        </>
       )}
     </div>
   );

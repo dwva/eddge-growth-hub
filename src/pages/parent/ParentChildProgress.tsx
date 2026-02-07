@@ -87,7 +87,7 @@ const ParentChildProgressContent = () => {
   const highestScore = Math.max(...recentTests.map(t => t.score));
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-3 md:space-y-6">
       {/* Header */}
       <div className="flex items-center justify-between gap-3 flex-wrap">
         <div className="flex items-center gap-3">
@@ -98,7 +98,7 @@ const ParentChildProgressContent = () => {
             <ArrowLeft className="w-5 h-5" />
           </button>
           <div>
-            <h1 className="text-2xl font-bold">{child.name}'s Progress</h1>
+            <h1 className="text-xl md:text-2xl font-bold">{child.name}'s Progress</h1>
             <p className="text-sm text-muted-foreground">{child.class}</p>
           </div>
         </div>

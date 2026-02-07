@@ -185,7 +185,7 @@ const StudentAnnouncements = () => {
 
   return (
     <StudentDashboardLayout title="Events & Announcements">
-      <div className="space-y-6">
+      <div className="space-y-3 md:space-y-6">
         {/* Upcoming Events */}
         <div>
           <div className="flex items-center justify-between mb-3">
