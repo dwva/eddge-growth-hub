@@ -35,12 +35,12 @@ const StatCard = ({
 
   return (
     <div className={cn(baseStyles, variantStyles[variant], className)}>
-      <div className="p-5">
-        <div className="flex items-start justify-between gap-4">
-          <div className="space-y-2 flex-1 min-w-0">
-            <p className="text-[13px] font-medium text-gray-500 tracking-wide">{title}</p>
+      <div className="p-3 sm:p-5">
+        <div className="flex items-start justify-between gap-2 sm:gap-4">
+          <div className="space-y-1 sm:space-y-2 flex-1 min-w-0">
+            <p className="text-xs sm:text-[13px] font-medium text-gray-500 tracking-wide">{title}</p>
             <div className="flex items-baseline gap-2">
-              <p className="text-2xl font-bold text-gray-900 tracking-tight">{value}</p>
+              <p className="text-lg sm:text-2xl font-bold text-gray-900 tracking-tight">{value}</p>
               {trend && (
                 <span className={cn(
                   "inline-flex items-center gap-0.5 text-xs font-semibold px-1.5 py-0.5 rounded-full",
@@ -57,7 +57,7 @@ const StatCard = ({
             )}
           </div>
           <div className={cn(
-            "w-12 h-12 rounded-xl flex items-center justify-center flex-shrink-0",
+            "w-9 h-9 sm:w-12 sm:h-12 rounded-lg sm:rounded-xl flex items-center justify-center flex-shrink-0 [&>svg]:w-4 [&>svg]:h-4 sm:[&>svg]:w-5 sm:[&>svg]:h-5",
             iconBg || "bg-primary/10 text-primary"
           )}>
             {icon}

@@ -124,50 +124,50 @@ const AdminSyllabus = () => {
       pageTitle="Syllabus Management"
       pageDescription="Manage curriculum and syllabus for all classes"
     >
-      <div className="space-y-3 md:space-y-6">
+      <div className="space-y-2 sm:space-y-4 md:space-y-6">
         {/* Stats Cards */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-1.5 sm:gap-4">
           <Card className="bg-primary/5 border-primary/20">
-            <CardContent className="p-4 flex items-center gap-4">
-              <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center">
-                <BookOpen className="w-6 h-6 text-primary" />
+            <CardContent className="p-2.5 sm:p-4 flex items-center gap-2 sm:gap-4">
+              <div className="w-8 h-8 sm:w-12 sm:h-12 rounded-lg sm:rounded-xl bg-primary/10 flex items-center justify-center flex-shrink-0">
+                <BookOpen className="w-4 h-4 sm:w-6 sm:h-6 text-primary" />
               </div>
-              <div>
-                <div className="text-2xl font-bold">{totalSyllabi}</div>
-                <div className="text-sm text-muted-foreground">Total Syllabi</div>
-              </div>
-            </CardContent>
-          </Card>
-          <Card>
-            <CardContent className="p-4 flex items-center gap-4">
-              <div className="w-12 h-12 rounded-xl bg-green-100 flex items-center justify-center">
-                <CheckCircle className="w-6 h-6 text-green-600" />
-              </div>
-              <div>
-                <div className="text-2xl font-bold">{publishedCount}</div>
-                <div className="text-sm text-muted-foreground">Published</div>
+              <div className="min-w-0">
+                <div className="text-base sm:text-2xl font-bold">{totalSyllabi}</div>
+                <div className="text-xs sm:text-sm text-muted-foreground">Total Syllabi</div>
               </div>
             </CardContent>
           </Card>
           <Card>
-            <CardContent className="p-4 flex items-center gap-4">
-              <div className="w-12 h-12 rounded-xl bg-amber-100 flex items-center justify-center">
-                <FileText className="w-6 h-6 text-amber-600" />
+            <CardContent className="p-2.5 sm:p-4 flex items-center gap-2 sm:gap-4">
+              <div className="w-8 h-8 sm:w-12 sm:h-12 rounded-lg sm:rounded-xl bg-green-100 flex items-center justify-center flex-shrink-0">
+                <CheckCircle className="w-4 h-4 sm:w-6 sm:h-6 text-green-600" />
               </div>
-              <div>
-                <div className="text-2xl font-bold">{draftCount}</div>
-                <div className="text-sm text-muted-foreground">Drafts</div>
+              <div className="min-w-0">
+                <div className="text-base sm:text-2xl font-bold">{publishedCount}</div>
+                <div className="text-xs sm:text-sm text-muted-foreground">Published</div>
               </div>
             </CardContent>
           </Card>
           <Card>
-            <CardContent className="p-4 flex items-center gap-4">
-              <div className="w-12 h-12 rounded-xl bg-blue-100 flex items-center justify-center">
-                <BookOpen className="w-6 h-6 text-blue-600" />
+            <CardContent className="p-2.5 sm:p-4 flex items-center gap-2 sm:gap-4">
+              <div className="w-8 h-8 sm:w-12 sm:h-12 rounded-lg sm:rounded-xl bg-amber-100 flex items-center justify-center flex-shrink-0">
+                <FileText className="w-4 h-4 sm:w-6 sm:h-6 text-amber-600" />
               </div>
-              <div>
-                <div className="text-2xl font-bold">{boards.length}</div>
-                <div className="text-sm text-muted-foreground">Boards</div>
+              <div className="min-w-0">
+                <div className="text-base sm:text-2xl font-bold">{draftCount}</div>
+                <div className="text-xs sm:text-sm text-muted-foreground">Drafts</div>
+              </div>
+            </CardContent>
+          </Card>
+          <Card>
+            <CardContent className="p-2.5 sm:p-4 flex items-center gap-2 sm:gap-4">
+              <div className="w-8 h-8 sm:w-12 sm:h-12 rounded-lg sm:rounded-xl bg-blue-100 flex items-center justify-center flex-shrink-0">
+                <BookOpen className="w-4 h-4 sm:w-6 sm:h-6 text-blue-600" />
+              </div>
+              <div className="min-w-0">
+                <div className="text-base sm:text-2xl font-bold">{boards.length}</div>
+                <div className="text-xs sm:text-sm text-muted-foreground">Boards</div>
               </div>
             </CardContent>
           </Card>
@@ -175,20 +175,20 @@ const AdminSyllabus = () => {
 
         {/* Search and Filters */}
         <Card>
-          <CardContent className="p-4">
-            <div className="flex flex-col lg:flex-row gap-4">
-              <div className="relative flex-1">
-                <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+          <CardContent className="p-3 sm:p-4">
+            <div className="flex flex-col sm:flex-row gap-2 sm:gap-4">
+              <div className="relative flex-1 min-w-0">
+                <Search className="absolute left-2.5 sm:left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 sm:w-4 sm:h-4 text-muted-foreground" />
                 <Input
                   placeholder="Search by subject, class, or year..."
-                  className="pl-10"
+                  className="pl-8 sm:pl-10 text-sm"
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                 />
               </div>
-              <div className="flex gap-3">
+              <div className="flex flex-wrap gap-2">
                 <Select value={selectedBoard} onValueChange={setSelectedBoard}>
-                  <SelectTrigger className="w-32">
+                  <SelectTrigger className="h-9 w-full sm:w-28 min-w-0 text-sm">
                     <SelectValue placeholder="Board" />
                   </SelectTrigger>
                   <SelectContent>
@@ -199,7 +199,7 @@ const AdminSyllabus = () => {
                   </SelectContent>
                 </Select>
                 <Select value={selectedStatus} onValueChange={setSelectedStatus}>
-                  <SelectTrigger className="w-32">
+                  <SelectTrigger className="h-9 w-full sm:w-28 min-w-0 text-sm">
                     <SelectValue placeholder="Status" />
                   </SelectTrigger>
                   <SelectContent>
@@ -208,12 +208,13 @@ const AdminSyllabus = () => {
                     <SelectItem value="published">Published</SelectItem>
                   </SelectContent>
                 </Select>
-                <Button variant="outline" className="gap-2">
-                  <Filter className="w-4 h-4" />
+                <Button variant="outline" size="sm" className="gap-1.5 sm:gap-2 text-xs sm:text-sm h-9">
+                  <Filter className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
                   More Filters
                 </Button>
                 <Button
-                  className="gap-2 bg-primary hover:bg-primary/90"
+                  size="sm"
+                  className="gap-1.5 sm:gap-2 text-xs sm:text-sm h-9 bg-primary hover:bg-primary/90 flex-1 sm:flex-initial"
                   onClick={() => {
                     setEditingSyllabus(null);
                     setIsCreateWizardOpen(true);
@@ -230,45 +231,45 @@ const AdminSyllabus = () => {
         {/* Syllabus Table */}
         <Card>
           <CardContent className="p-0">
-            <div className="overflow-x-auto">
-              <table className="w-full">
+            <div className="overflow-x-auto -mx-1 sm:mx-0">
+              <table className="w-full min-w-[500px]">
                 <thead>
                   <tr className="bg-muted/50 border-b">
-                    <th className="px-6 py-4 text-left text-xs font-semibold text-muted-foreground uppercase tracking-wider">
+                    <th className="px-2 py-2 sm:px-6 sm:py-4 text-left text-[10px] sm:text-xs font-semibold text-muted-foreground uppercase tracking-wider whitespace-nowrap">
                       Board
                     </th>
-                    <th className="px-6 py-4 text-left text-xs font-semibold text-muted-foreground uppercase tracking-wider">
-                      Academic Year
+                    <th className="px-2 py-2 sm:px-6 sm:py-4 text-left text-[10px] sm:text-xs font-semibold text-muted-foreground uppercase tracking-wider whitespace-nowrap hidden md:table-cell">
+                      Year
                     </th>
-                    <th className="px-6 py-4 text-left text-xs font-semibold text-muted-foreground uppercase tracking-wider">
+                    <th className="px-2 py-2 sm:px-6 sm:py-4 text-left text-[10px] sm:text-xs font-semibold text-muted-foreground uppercase tracking-wider whitespace-nowrap">
                       Class
                     </th>
-                    <th className="px-6 py-4 text-left text-xs font-semibold text-muted-foreground uppercase tracking-wider">
+                    <th className="px-2 py-2 sm:px-6 sm:py-4 text-left text-[10px] sm:text-xs font-semibold text-muted-foreground uppercase tracking-wider whitespace-nowrap">
                       Subject
                     </th>
-                    <th className="px-6 py-4 text-left text-xs font-semibold text-muted-foreground uppercase tracking-wider">
-                      Chapters
+                    <th className="px-2 py-2 sm:px-6 sm:py-4 text-left text-[10px] sm:text-xs font-semibold text-muted-foreground uppercase tracking-wider whitespace-nowrap hidden sm:table-cell">
+                      Ch.
                     </th>
-                    <th className="px-6 py-4 text-left text-xs font-semibold text-muted-foreground uppercase tracking-wider">
+                    <th className="px-2 py-2 sm:px-6 sm:py-4 text-left text-[10px] sm:text-xs font-semibold text-muted-foreground uppercase tracking-wider whitespace-nowrap">
                       Status
                     </th>
-                    <th className="px-6 py-4 text-left text-xs font-semibold text-muted-foreground uppercase tracking-wider">
-                      Actions
+                    <th className="px-2 py-2 sm:px-6 sm:py-4 text-left w-10">
                     </th>
                   </tr>
                 </thead>
                 <tbody className="divide-y">
                   {filteredSyllabi.length === 0 ? (
                     <tr>
-                      <td colSpan={7} className="px-6 py-12 text-center text-muted-foreground">
-                        <BookOpen className="w-12 h-12 mx-auto mb-4 opacity-50" />
-                        <p className="text-lg font-medium">No syllabus found</p>
-                        <p className="text-sm mt-2">Create your first syllabus to get started</p>
+                      <td colSpan={7} className="px-3 sm:px-6 py-6 sm:py-12 text-center text-muted-foreground">
+                        <BookOpen className="w-8 h-8 sm:w-10 sm:h-10 mx-auto mb-2 sm:mb-4 opacity-50" />
+                        <p className="text-sm sm:text-base font-medium">No syllabus found</p>
+                        <p className="text-xs sm:text-sm mt-1 sm:mt-2">Create your first syllabus to get started</p>
                         <Button
-                          className="mt-4 gap-2"
+                          size="sm"
+                          className="mt-3 sm:mt-4 gap-1.5 h-8 text-xs sm:text-sm"
                           onClick={() => setIsCreateWizardOpen(true)}
                         >
-                          <Plus className="w-4 h-4" />
+                          <Plus className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
                           Add New Syllabus
                         </Button>
                       </td>
@@ -276,39 +277,38 @@ const AdminSyllabus = () => {
                   ) : (
                     filteredSyllabi.map((syllabus) => (
                       <tr key={syllabus.id} className="hover:bg-muted/30 transition-colors">
-                        <td className="px-6 py-4">
+                        <td className="px-2 py-2 sm:px-6 sm:py-4">
                           <Badge variant="outline">{syllabus.board}</Badge>
                         </td>
-                        <td className="px-6 py-4">
-                          <div className="font-medium">{syllabus.academicYear}</div>
+                        <td className="px-2 py-2 sm:px-6 sm:py-4 hidden md:table-cell">
+                          <div className="font-medium text-sm">{syllabus.academicYear}</div>
                         </td>
-                        <td className="px-6 py-4">
-                          <div className="font-medium">Class {syllabus.class}</div>
+                        <td className="px-2 py-2 sm:px-6 sm:py-4">
+                          <div className="font-medium text-xs sm:text-sm">Class {syllabus.class}</div>
                         </td>
-                        <td className="px-6 py-4">
-                          <div className="font-medium">{syllabus.subject}</div>
+                        <td className="px-2 py-2 sm:px-6 sm:py-4">
+                          <div className="font-medium text-xs sm:text-sm truncate max-w-[80px] sm:max-w-none">{syllabus.subject}</div>
                         </td>
-                        <td className="px-6 py-4">
-                          <div className="text-sm text-muted-foreground">
+                        <td className="px-2 py-2 sm:px-6 sm:py-4 hidden sm:table-cell">
+                          <div className="text-xs sm:text-sm text-muted-foreground">
                             {syllabus.chapters.length} chapter{syllabus.chapters.length !== 1 ? 's' : ''}
                           </div>
                         </td>
-                        <td className="px-6 py-4">
+                        <td className="px-2 py-2 sm:px-6 sm:py-4">
                           <Badge
-                            className={
-                              syllabus.status === 'published'
-                                ? 'bg-green-100 text-green-700 hover:bg-green-100'
-                                : 'bg-amber-100 text-amber-700 hover:bg-amber-100'
-                            }
+                            className={`text-[10px] sm:text-xs ${syllabus.status === 'published'
+                              ? 'bg-green-100 text-green-700 hover:bg-green-100'
+                              : 'bg-amber-100 text-amber-700 hover:bg-amber-100'
+                            }`}
                           >
                             {syllabus.status === 'published' ? 'Published' : 'Draft'}
                           </Badge>
                         </td>
-                        <td className="px-6 py-4">
+                        <td className="px-2 py-2 sm:px-6 sm:py-4">
                           <DropdownMenu>
                             <DropdownMenuTrigger asChild>
-                              <Button variant="ghost" size="icon">
-                                <MoreHorizontal className="w-4 h-4" />
+                              <Button variant="ghost" size="icon" className="h-8 w-8 sm:h-10 sm:w-10">
+                                <MoreHorizontal className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
                               </Button>
                             </DropdownMenuTrigger>
                             <DropdownMenuContent align="end">

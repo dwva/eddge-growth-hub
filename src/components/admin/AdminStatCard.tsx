@@ -43,27 +43,27 @@ const AdminStatCard = ({
 }: AdminStatCardProps) => {
   return (
     <div className={cn(
-      "bg-white rounded-xl p-6 shadow-sm hover:shadow-lg transition-all duration-300 border border-gray-100/50 group card-hover",
+      "bg-white rounded-lg sm:rounded-xl p-4 sm:p-6 shadow-sm hover:shadow-lg transition-all duration-300 border border-gray-100/50 group card-hover",
       className
     )}>
       {/* Icon Container with Gradient */}
       <div className={cn(
-        "w-14 h-14 rounded-xl bg-gradient-to-br flex items-center justify-center mb-4 group-hover:scale-105 transition-transform shadow-lg",
+        "w-10 h-10 sm:w-14 sm:h-14 rounded-lg sm:rounded-xl bg-gradient-to-br flex items-center justify-center mb-2 sm:mb-4 group-hover:scale-105 transition-transform shadow-lg",
         gradientClasses[gradient],
         shadowClasses[gradient]
       )}>
-        <div className="w-7 h-7 text-white">
+        <div className="w-5 h-5 sm:w-7 sm:h-7 text-white">
           {icon}
         </div>
       </div>
 
       {/* Large Number */}
-      <div className="text-3xl font-bold text-gray-900 tracking-tight">
+      <div className="text-xl sm:text-3xl font-bold text-gray-900 tracking-tight">
         {value}
       </div>
 
       {/* Label */}
-      <div className="text-sm text-gray-500 mt-1">{title}</div>
+      <div className="text-xs sm:text-sm text-gray-500 mt-0.5 sm:mt-1">{title}</div>
 
       {/* Trend Indicator */}
       {trend && (

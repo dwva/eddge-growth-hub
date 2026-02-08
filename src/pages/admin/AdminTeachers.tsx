@@ -41,6 +41,7 @@ import {
 } from '@/components/ui/select';
 import { useAdminData } from '@/contexts/AdminDataContext';
 import { toast } from '@/hooks/use-toast';
+import { cn } from '@/lib/utils';
 
 const AdminTeachers = () => {
   const navigate = useNavigate();
@@ -192,51 +193,51 @@ const AdminTeachers = () => {
       pageTitle="Teachers" 
       pageDescription="Manage all teaching staff"
     >
-      <div className="space-y-3 md:space-y-6">
+      <div className="space-y-2 sm:space-y-4 md:space-y-6">
         {/* Stats Cards */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-2 sm:gap-4">
           <Card className="bg-primary/5 border-primary/20">
-            <CardContent className="p-4">
-              <div className="text-2xl font-bold text-primary">{stats.total}</div>
-              <div className="text-sm text-muted-foreground">Total Teachers</div>
+            <CardContent className="p-3 sm:p-4">
+              <div className="text-lg sm:text-2xl font-bold text-primary">{stats.total}</div>
+              <div className="text-xs sm:text-sm text-muted-foreground">Total Teachers</div>
             </CardContent>
           </Card>
           <Card>
-            <CardContent className="p-4">
-              <div className="text-2xl font-bold text-green-600">{stats.active}</div>
-              <div className="text-sm text-muted-foreground">Active</div>
+            <CardContent className="p-3 sm:p-4">
+              <div className="text-lg sm:text-2xl font-bold text-green-600">{stats.active}</div>
+              <div className="text-xs sm:text-sm text-muted-foreground">Active</div>
             </CardContent>
           </Card>
           <Card>
-            <CardContent className="p-4">
-              <div className="text-2xl font-bold text-amber-600">{stats.onLeave}</div>
-              <div className="text-sm text-muted-foreground">On Leave</div>
+            <CardContent className="p-3 sm:p-4">
+              <div className="text-lg sm:text-2xl font-bold text-amber-600">{stats.onLeave}</div>
+              <div className="text-xs sm:text-sm text-muted-foreground">On Leave</div>
             </CardContent>
           </Card>
           <Card>
-            <CardContent className="p-4">
-              <div className="text-2xl font-bold text-blue-600">{stats.newThisMonth}</div>
-              <div className="text-sm text-muted-foreground">New This Month</div>
+            <CardContent className="p-3 sm:p-4">
+              <div className="text-lg sm:text-2xl font-bold text-blue-600">{stats.newThisMonth}</div>
+              <div className="text-xs sm:text-sm text-muted-foreground">New This Month</div>
             </CardContent>
           </Card>
         </div>
 
         {/* Search and Filters */}
         <Card>
-          <CardContent className="p-4">
-            <div className="flex flex-col lg:flex-row gap-4">
-              <div className="relative flex-1">
-                <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+          <CardContent className="p-3 sm:p-4">
+            <div className="flex flex-col sm:flex-row gap-2 sm:gap-4">
+              <div className="relative flex-1 min-w-0">
+                <Search className="absolute left-2.5 sm:left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 sm:w-4 sm:h-4 text-muted-foreground" />
                 <Input 
                   placeholder="Search teachers by name or email..."
-                  className="pl-10"
+                  className="pl-8 sm:pl-10 text-sm"
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                 />
               </div>
-              <div className="flex gap-3">
+              <div className="flex flex-wrap gap-2">
                 <Select value={selectedSubject} onValueChange={setSelectedSubject}>
-                  <SelectTrigger className="w-40">
+                  <SelectTrigger className="h-9 w-full sm:w-36 min-w-0 text-sm">
                     <SelectValue placeholder="Subject" />
                   </SelectTrigger>
                   <SelectContent>
@@ -246,14 +247,14 @@ const AdminTeachers = () => {
                     ))}
                   </SelectContent>
                 </Select>
-                <Button variant="outline" className="gap-2">
-                  <Filter className="w-4 h-4" />
+                <Button variant="outline" size="sm" className="gap-1.5 sm:gap-2 text-xs sm:text-sm h-9">
+                  <Filter className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
                   More Filters
                 </Button>
                 <Dialog open={isAddDialogOpen} onOpenChange={setIsAddDialogOpen}>
                   <DialogTrigger asChild>
-                    <Button className="gap-2 bg-primary hover:bg-primary/90">
-                      <Plus className="w-4 h-4" />
+                    <Button size="sm" className="gap-1.5 sm:gap-2 text-xs sm:text-sm h-9 bg-primary hover:bg-primary/90 flex-1 sm:flex-initial">
+                      <Plus className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
                       Add Teacher
                     </Button>
                   </DialogTrigger>
@@ -435,52 +436,52 @@ const AdminTeachers = () => {
         {/* Teachers Table */}
         <Card>
           <CardContent className="p-0">
-            <div className="overflow-x-auto">
-              <table className="w-full">
+            <div className="overflow-x-auto -mx-1 sm:mx-0">
+              <table className="w-full min-w-[640px]">
                 <thead>
                   <tr className="bg-muted/50 border-b">
-                    <th className="px-6 py-4 text-left text-xs font-semibold text-muted-foreground uppercase tracking-wider">Teacher</th>
-                    <th className="px-6 py-4 text-left text-xs font-semibold text-muted-foreground uppercase tracking-wider">Contact</th>
-                    <th className="px-6 py-4 text-left text-xs font-semibold text-muted-foreground uppercase tracking-wider">Subject</th>
-                    <th className="px-6 py-4 text-left text-xs font-semibold text-muted-foreground uppercase tracking-wider">Classes</th>
-                    <th className="px-6 py-4 text-left text-xs font-semibold text-muted-foreground uppercase tracking-wider">Status</th>
-                    <th className="px-6 py-4 text-left text-xs font-semibold text-muted-foreground uppercase tracking-wider">Actions</th>
+                    <th className="px-3 py-2 sm:px-6 sm:py-4 text-left text-[10px] sm:text-xs font-semibold text-muted-foreground uppercase tracking-wider">Teacher</th>
+                    <th className="px-3 py-2 sm:px-6 sm:py-4 text-left text-[10px] sm:text-xs font-semibold text-muted-foreground uppercase tracking-wider">Contact</th>
+                    <th className="px-3 py-2 sm:px-6 sm:py-4 text-left text-[10px] sm:text-xs font-semibold text-muted-foreground uppercase tracking-wider hidden md:table-cell">Subject</th>
+                    <th className="px-3 py-2 sm:px-6 sm:py-4 text-left text-[10px] sm:text-xs font-semibold text-muted-foreground uppercase tracking-wider hidden lg:table-cell">Classes</th>
+                    <th className="px-3 py-2 sm:px-6 sm:py-4 text-left text-[10px] sm:text-xs font-semibold text-muted-foreground uppercase tracking-wider">Status</th>
+                    <th className="px-3 py-2 sm:px-6 sm:py-4 text-left text-[10px] sm:text-xs font-semibold text-muted-foreground uppercase tracking-wider w-10">Actions</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y">
                   {filteredTeachers.map((teacher) => (
                     <tr key={teacher.id} className="hover:bg-muted/30 transition-colors">
-                      <td className="px-6 py-4">
-                        <div className="flex items-center gap-3">
-                          <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center text-primary font-semibold">
+                      <td className="px-3 py-2 sm:px-6 sm:py-4">
+                        <div className="flex items-center gap-2 sm:gap-3">
+                          <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-primary/10 flex items-center justify-center text-primary font-semibold text-xs sm:text-sm flex-shrink-0">
                             {teacher.name.split(' ').map(n => n[0]).join('').slice(0, 2)}
                           </div>
-                          <div>
-                            <div className="font-medium">{teacher.name}</div>
-                            <div className="text-sm text-muted-foreground">Joined {new Date(teacher.joinDate).toLocaleDateString()}</div>
+                          <div className="min-w-0">
+                            <div className="font-medium text-sm sm:text-base truncate">{teacher.name}</div>
+                            <div className="text-xs sm:text-sm text-muted-foreground hidden sm:block">Joined {new Date(teacher.joinDate).toLocaleDateString()}</div>
                           </div>
                         </div>
                       </td>
-                      <td className="px-6 py-4">
-                        <div className="space-y-1">
-                          <div className="flex items-center gap-2 text-sm">
-                            <Mail className="w-3 h-3 text-muted-foreground" />
-                            {teacher.email}
+                      <td className="px-3 py-2 sm:px-6 sm:py-4">
+                        <div className="space-y-0.5 sm:space-y-1">
+                          <div className="flex items-center gap-1.5 sm:gap-2 text-xs sm:text-sm truncate">
+                            <Mail className="w-2.5 h-2.5 sm:w-3 sm:h-3 text-muted-foreground flex-shrink-0" />
+                            <span className="truncate">{teacher.email}</span>
                           </div>
-                          <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                            <Phone className="w-3 h-3" />
+                          <div className="flex items-center gap-1.5 sm:gap-2 text-xs text-muted-foreground hidden md:flex">
+                            <Phone className="w-2.5 h-2.5 sm:w-3 sm:h-3 flex-shrink-0" />
                             {teacher.phone}
                           </div>
                         </div>
                       </td>
-                      <td className="px-6 py-4">
+                      <td className="px-3 py-2 sm:px-6 sm:py-4 hidden md:table-cell">
                         <div className="flex flex-wrap gap-1">
                           {teacher.subjects.map((subject) => (
                             <Badge key={subject} variant="secondary" className="text-xs">{subject}</Badge>
                           ))}
                         </div>
                       </td>
-                      <td className="px-6 py-4">
+                      <td className="px-3 py-2 sm:px-6 sm:py-4 hidden lg:table-cell">
                         <div className="flex flex-wrap gap-1">
                           {getTeacherClasses(teacher.id).map((cls) => (
                             <Badge key={cls} variant="outline" className="text-xs">{cls}</Badge>
@@ -490,21 +491,23 @@ const AdminTeachers = () => {
                           )}
                         </div>
                       </td>
-                      <td className="px-6 py-4">
+                      <td className="px-3 py-2 sm:px-6 sm:py-4">
                         <Badge 
-                          className={teacher.status === 'Active' 
-                            ? 'bg-green-100 text-green-700 hover:bg-green-100' 
-                            : 'bg-amber-100 text-amber-700 hover:bg-amber-100'
-                          }
+                          className={cn(
+                            teacher.status === 'Active' 
+                              ? 'bg-green-100 text-green-700 hover:bg-green-100' 
+                              : 'bg-amber-100 text-amber-700 hover:bg-amber-100',
+                            'text-[10px] sm:text-xs'
+                          )}
                         >
                           {teacher.status === 'Active' ? 'Active' : 'On Leave'}
                         </Badge>
                       </td>
-                      <td className="px-6 py-4">
+                      <td className="px-2 py-2 sm:px-6 sm:py-4">
                         <DropdownMenu>
                           <DropdownMenuTrigger asChild>
-                            <Button variant="ghost" size="icon">
-                              <MoreHorizontal className="w-4 h-4" />
+                            <Button variant="ghost" size="icon" className="h-8 w-8 sm:h-10 sm:w-10">
+                              <MoreHorizontal className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
                             </Button>
                           </DropdownMenuTrigger>
                           <DropdownMenuContent align="end">

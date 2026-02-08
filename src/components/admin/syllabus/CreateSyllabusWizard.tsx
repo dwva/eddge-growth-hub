@@ -211,12 +211,12 @@ const CreateSyllabusWizard = ({
 
   return (
     <Dialog open={open} onOpenChange={onClose}>
-      <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
-        <DialogHeader>
-          <DialogTitle className="text-2xl">
+      <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto w-[95vw] sm:w-full max-sm:p-4 max-sm:max-h-[85vh]">
+        <DialogHeader className="max-sm:space-y-1">
+          <DialogTitle className="text-lg sm:text-2xl">
             {editingSyllabus ? 'Edit Syllabus' : 'Create New Syllabus'}
           </DialogTitle>
-          <DialogDescription>
+          <DialogDescription className="text-xs sm:text-sm">
             {currentStep === 1 && 'Step 1: Enter basic information'}
             {currentStep === 2 && 'Step 2: Add chapters and topics'}
             {currentStep === 3 && 'Step 3: Review and save'}
@@ -224,20 +224,20 @@ const CreateSyllabusWizard = ({
         </DialogHeader>
 
         {/* Progress Steps */}
-        <div className="flex items-center justify-between mb-6">
+        <div className="flex items-center justify-between mb-4 sm:mb-6">
           {[1, 2, 3].map((step) => (
             <div key={step} className="flex items-center flex-1">
               <div className="flex flex-col items-center flex-1">
                 <div
-                  className={`w-10 h-10 rounded-full flex items-center justify-center font-semibold ${
+                  className={`w-8 h-8 sm:w-10 sm:h-10 rounded-full flex items-center justify-center font-semibold text-sm sm:text-base ${
                     currentStep >= step
                       ? 'bg-primary text-white'
                       : 'bg-muted text-muted-foreground'
                   }`}
                 >
-                  {currentStep > step ? <Check className="w-5 h-5" /> : step}
+                  {currentStep > step ? <Check className="w-3.5 h-3.5 sm:w-5 sm:h-5" /> : step}
                 </div>
-                <div className="mt-2 text-xs text-center">
+                <div className="mt-1 sm:mt-2 text-[10px] sm:text-xs text-center">
                   {step === 1 && 'Basic Info'}
                   {step === 2 && 'Chapters'}
                   {step === 3 && 'Review'}
@@ -256,17 +256,17 @@ const CreateSyllabusWizard = ({
 
         {/* Step 1: Basic Info */}
         {currentStep === 1 && (
-          <div className="space-y-4 py-4">
-            <div className="grid grid-cols-2 gap-4">
-              <div className="space-y-2">
-                <Label htmlFor="board">Board *</Label>
+          <div className="space-y-3 sm:space-y-4 py-2 sm:py-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
+              <div className="space-y-1.5 sm:space-y-2">
+                <Label htmlFor="board" className="text-xs sm:text-sm">Board *</Label>
                 <Select
                   value={basicInfo.board}
                   onValueChange={(value) =>
                     setBasicInfo({ ...basicInfo, board: value as SyllabusBoard })
                   }
                 >
-                  <SelectTrigger id="board">
+                  <SelectTrigger id="board" className="h-9 sm:h-10 text-sm">
                     <SelectValue placeholder="Select board" />
                   </SelectTrigger>
                   <SelectContent>
@@ -276,8 +276,8 @@ const CreateSyllabusWizard = ({
                   </SelectContent>
                 </Select>
               </div>
-              <div className="space-y-2">
-                <Label htmlFor="academicYear">Academic Year *</Label>
+              <div className="space-y-1.5 sm:space-y-2">
+                <Label htmlFor="academicYear" className="text-xs sm:text-sm">Academic Year *</Label>
                 <Input
                   id="academicYear"
                   placeholder="e.g., 2024-25"
@@ -285,26 +285,29 @@ const CreateSyllabusWizard = ({
                   onChange={(e) =>
                     setBasicInfo({ ...basicInfo, academicYear: e.target.value })
                   }
+                  className="h-9 sm:h-10 text-sm"
                 />
               </div>
             </div>
-            <div className="grid grid-cols-2 gap-4">
-              <div className="space-y-2">
-                <Label htmlFor="class">Class *</Label>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
+              <div className="space-y-1.5 sm:space-y-2">
+                <Label htmlFor="class" className="text-xs sm:text-sm">Class *</Label>
                 <Input
                   id="class"
-                  placeholder="e.g., 9, 10, 11, 12"
+                  placeholder="e.g., 9, 10"
                   value={basicInfo.class}
                   onChange={(e) => setBasicInfo({ ...basicInfo, class: e.target.value })}
+                  className="h-9 sm:h-10 text-sm"
                 />
               </div>
-              <div className="space-y-2">
-                <Label htmlFor="subject">Subject *</Label>
+              <div className="space-y-1.5 sm:space-y-2">
+                <Label htmlFor="subject" className="text-xs sm:text-sm">Subject *</Label>
                 <Input
                   id="subject"
-                  placeholder="e.g., Mathematics, Science"
+                  placeholder="e.g., Mathematics"
                   value={basicInfo.subject}
                   onChange={(e) => setBasicInfo({ ...basicInfo, subject: e.target.value })}
+                  className="h-9 sm:h-10 text-sm min-w-0"
                 />
               </div>
             </div>
@@ -313,21 +316,21 @@ const CreateSyllabusWizard = ({
 
         {/* Step 2: Chapters & Topics */}
         {currentStep === 2 && (
-          <div className="space-y-4 py-4">
-            <div className="flex items-center justify-between">
+          <div className="space-y-3 sm:space-y-4 py-2 sm:py-4">
+            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
               <div>
-                <h3 className="text-lg font-semibold">Chapters & Topics</h3>
-                <p className="text-sm text-muted-foreground">
+                <h3 className="text-base sm:text-lg font-semibold">Chapters & Topics</h3>
+                <p className="text-xs sm:text-sm text-muted-foreground">
                   {chapters.length} chapter{chapters.length !== 1 ? 's' : ''} • {totalTopics} topic{totalTopics !== 1 ? 's' : ''}
                 </p>
               </div>
-              <Button onClick={handleAddChapter} size="sm" className="gap-2">
-                <Plus className="w-4 h-4" />
+              <Button onClick={handleAddChapter} size="sm" className="gap-1.5 sm:gap-2 h-8 text-xs sm:text-sm">
+                <Plus className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
                 Add Chapter
               </Button>
             </div>
 
-            <div className="space-y-4 max-h-[60vh] overflow-y-auto">
+            <div className="space-y-3 sm:space-y-4 max-h-[50vh] sm:max-h-[60vh] overflow-y-auto">
               {chapters.length === 0 ? (
                 <div className="text-center py-8 text-muted-foreground">
                   <p>No chapters added yet. Click "Add Chapter" to get started.</p>
@@ -337,8 +340,8 @@ const CreateSyllabusWizard = ({
                   .sort((a, b) => a.order - b.order)
                   .map((chapter) => (
                     <Card key={chapter.id}>
-                      <CardHeader className="pb-3">
-                        <div className="flex items-center gap-2">
+                      <CardHeader className="pb-2 sm:pb-3 p-3 sm:p-6">
+                        <div className="flex items-center gap-1.5 sm:gap-2 flex-wrap">
                           <GripVertical className="w-5 h-5 text-muted-foreground" />
                           <Input
                             placeholder="Chapter name"
@@ -346,27 +349,27 @@ const CreateSyllabusWizard = ({
                             onChange={(e) =>
                               handleUpdateChapter(chapter.id, { name: e.target.value })
                             }
-                            className="flex-1"
+                            className="flex-1 min-w-0 h-9 text-sm"
                           />
-                          <Badge variant="outline">Chapter {chapter.order}</Badge>
+                          <Badge variant="outline" className="text-[10px] sm:text-xs shrink-0">Ch {chapter.order}</Badge>
                           <Button
                             variant="ghost"
                             size="icon"
                             onClick={() => handleDeleteChapter(chapter.id)}
-                            className="text-destructive"
+                            className="text-destructive h-8 w-8 sm:h-10 sm:w-10 shrink-0"
                           >
-                            <Trash2 className="w-4 h-4" />
+                            <Trash2 className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
                           </Button>
                         </div>
                       </CardHeader>
-                      <CardContent className="space-y-3">
-                        <div className="flex items-center justify-between">
-                          <Label className="text-sm font-medium">Topics</Label>
+                      <CardContent className="space-y-2 sm:space-y-3 p-3 sm:p-6 pt-0">
+                        <div className="flex items-center justify-between gap-2">
+                          <Label className="text-xs sm:text-sm font-medium">Topics</Label>
                           <Button
                             size="sm"
                             variant="outline"
                             onClick={() => handleAddTopic(chapter.id)}
-                            className="gap-2"
+                            className="gap-1.5 h-8 text-xs"
                           >
                             <Plus className="w-3 h-3" />
                             Add Topic
@@ -377,7 +380,7 @@ const CreateSyllabusWizard = ({
                         ) : (
                           <div className="space-y-2">
                             {chapter.topics.map((topic) => (
-                              <div key={topic.id} className="flex items-center gap-2">
+                              <div key={topic.id} className="flex items-center gap-1.5 sm:gap-2 flex-wrap sm:flex-nowrap">
                                 <Input
                                   placeholder="Topic name"
                                   value={topic.name}
@@ -386,11 +389,11 @@ const CreateSyllabusWizard = ({
                                       name: e.target.value,
                                     })
                                   }
-                                  className="flex-1"
+                                  className="flex-1 min-w-0 h-9 text-sm"
                                 />
                                 <Input
                                   type="number"
-                                  placeholder="Weightage %"
+                                  placeholder="%"
                                   value={topic.weightage || ''}
                                   onChange={(e) =>
                                     handleUpdateTopic(chapter.id, topic.id, {
@@ -399,7 +402,7 @@ const CreateSyllabusWizard = ({
                                         : undefined,
                                     })
                                   }
-                                  className="w-24"
+                                  className="w-14 sm:w-24 h-9 text-sm shrink-0"
                                   min="0"
                                   max="100"
                                 />
@@ -407,9 +410,9 @@ const CreateSyllabusWizard = ({
                                   variant="ghost"
                                   size="icon"
                                   onClick={() => handleDeleteTopic(chapter.id, topic.id)}
-                                  className="text-destructive"
+                                  className="text-destructive h-8 w-8 shrink-0"
                                 >
-                                  <Trash2 className="w-4 h-4" />
+                                  <Trash2 className="w-3.5 h-3.5" />
                                 </Button>
                               </div>
                             ))}
@@ -425,13 +428,13 @@ const CreateSyllabusWizard = ({
 
         {/* Step 3: Review */}
         {currentStep === 3 && (
-          <div className="space-y-4 py-4">
+          <div className="space-y-3 sm:space-y-4 py-2 sm:py-4">
             <Card>
-              <CardHeader>
-                <CardTitle>Basic Information</CardTitle>
+              <CardHeader className="p-3 sm:p-6">
+                <CardTitle className="text-sm sm:text-base">Basic Information</CardTitle>
               </CardHeader>
-              <CardContent className="space-y-2">
-                <div className="grid grid-cols-2 gap-4">
+              <CardContent className="space-y-2 p-3 sm:p-6 pt-0">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
                   <div>
                     <Label className="text-muted-foreground">Board</Label>
                     <p className="font-medium">{basicInfo.board}</p>
@@ -453,10 +456,10 @@ const CreateSyllabusWizard = ({
             </Card>
 
             <Card>
-              <CardHeader>
-                <CardTitle>Chapters & Topics</CardTitle>
+              <CardHeader className="p-3 sm:p-6">
+                <CardTitle className="text-sm sm:text-base">Chapters & Topics</CardTitle>
               </CardHeader>
-              <CardContent>
+              <CardContent className="p-3 sm:p-6 pt-0">
                 <div className="space-y-4">
                   {chapters
                     .sort((a, b) => a.order - b.order)
@@ -485,35 +488,36 @@ const CreateSyllabusWizard = ({
           </div>
         )}
 
-        <DialogFooter className="flex items-center justify-between">
-          <div className="flex gap-2">
+        <DialogFooter className="flex flex-col-reverse sm:flex-row sm:items-center sm:justify-between gap-2 sm:gap-0 pt-4">
+          <div className="flex gap-2 w-full sm:w-auto justify-center sm:justify-start">
             {currentStep > 1 && (
-              <Button variant="outline" onClick={handleBack}>
-                <ArrowLeft className="w-4 h-4 mr-2" />
+              <Button variant="outline" size="sm" onClick={handleBack} className="h-9 text-sm flex-1 sm:flex-initial">
+                <ArrowLeft className="w-3.5 h-3.5 sm:w-4 sm:h-4 mr-1.5 sm:mr-2" />
                 Back
               </Button>
             )}
           </div>
-          <div className="flex gap-2">
-            <Button variant="outline" onClick={onClose}>
+          <div className="flex gap-2 w-full sm:w-auto flex-wrap sm:flex-nowrap justify-center sm:justify-end">
+            <Button variant="outline" size="sm" onClick={onClose} className="h-9 text-sm flex-1 sm:flex-initial">
               Cancel
             </Button>
             {currentStep < 3 ? (
-              <Button onClick={handleNext}>
+              <Button size="sm" onClick={handleNext} className="h-9 text-sm flex-1 sm:flex-initial">
                 Next
-                <ArrowRight className="w-4 h-4 ml-2" />
+                <ArrowRight className="w-3.5 h-3.5 sm:w-4 sm:h-4 ml-1.5 sm:ml-2" />
               </Button>
             ) : (
               <>
                 <Button
                   variant="outline"
+                  size="sm"
                   onClick={() => handleSave('draft')}
-                  className="border-amber-200 text-amber-700 hover:bg-amber-50"
+                  className="h-9 text-sm border-amber-200 text-amber-700 hover:bg-amber-50 flex-1 sm:flex-initial"
                 >
                   Save as Draft
                 </Button>
-                <Button onClick={() => handleSave('published')} className="bg-primary">
-                  <Check className="w-4 h-4 mr-2" />
+                <Button size="sm" onClick={() => handleSave('published')} className="h-9 text-sm bg-primary flex-1 sm:flex-initial">
+                  <Check className="w-3.5 h-3.5 sm:w-4 sm:h-4 mr-1.5 sm:mr-2" />
                   Publish
                 </Button>
               </>

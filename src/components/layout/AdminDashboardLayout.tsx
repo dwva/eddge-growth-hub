@@ -68,14 +68,14 @@ const AdminDashboardLayout = ({
       {/* Main Content */}
       <div className="flex-1 flex flex-col min-w-0">
         {/* Top Bar - matching student dashboard */}
-        <header className="h-14 md:h-16 bg-white px-3 md:px-4 lg:px-6 flex items-center justify-between sticky top-0 z-10 flex-shrink-0 border-b border-gray-100 shadow-sm w-full">
+        <header className="h-12 sm:h-14 md:h-16 bg-white px-2 sm:px-3 md:px-4 lg:px-6 flex items-center justify-between sticky top-0 z-10 flex-shrink-0 border-b border-gray-100 shadow-sm w-full">
           {/* Left: Menu + Page Title */}
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-2 sm:gap-3 min-w-0 flex-1">
             {/* Mobile Menu */}
             <Sheet open={mobileOpen} onOpenChange={setMobileOpen}>
-              <SheetTrigger asChild className="md:hidden">
-                <Button variant="ghost" size="icon" className="h-9 w-9">
-                  <Menu className="w-5 h-5" />
+              <SheetTrigger asChild className="md:hidden flex-shrink-0">
+                <Button variant="ghost" size="icon" className="h-8 w-8 sm:h-9 sm:w-9">
+                  <Menu className="w-4 h-4 sm:w-5 sm:h-5" />
                 </Button>
               </SheetTrigger>
             </Sheet>
@@ -90,11 +90,11 @@ const AdminDashboardLayout = ({
               <Menu className="w-5 h-5 text-gray-500" />
             </Button>
 
-            {/* Page Title */}
-            <div className="hidden sm:block">
-              <h1 className="text-lg font-bold text-gray-900">{pageTitle}</h1>
+            {/* Page Title - visible on all screens, compact on mobile */}
+            <div className="min-w-0">
+              <h1 className="text-sm sm:text-base md:text-lg font-bold text-gray-900 truncate">{pageTitle}</h1>
               {pageDescription && (
-                <p className="text-xs text-gray-500">{pageDescription}</p>
+                <p className="text-[10px] sm:text-xs text-gray-500 truncate hidden sm:block">{pageDescription}</p>
               )}
             </div>
           </div>
@@ -114,7 +114,7 @@ const AdminDashboardLayout = ({
           </div>
           
           {/* Right: Icons + Avatar */}
-          <div className="flex items-center gap-1.5">
+          <div className="flex items-center gap-1 sm:gap-1.5 flex-shrink-0">
             {/* Support */}
             <Button 
               variant="ghost" 
@@ -130,18 +130,18 @@ const AdminDashboardLayout = ({
             <Button 
               variant="ghost" 
               size="icon" 
-              className="h-9 w-9 hover:bg-gray-100 rounded-lg"
+              className="h-8 w-8 sm:h-9 sm:w-9 hover:bg-gray-100 rounded-lg"
             >
-              <MessageSquare className="w-4 h-4 text-gray-500" />
+              <MessageSquare className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-gray-500" />
             </Button>
 
             {/* Notifications */}
             <Button 
               variant="ghost" 
               size="icon" 
-              className="relative h-9 w-9 hover:bg-gray-100 rounded-lg"
+              className="relative h-8 w-8 sm:h-9 sm:w-9 hover:bg-gray-100 rounded-lg"
             >
-              <Bell className="w-4 h-4 text-gray-500" />
+              <Bell className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-gray-500" />
               <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-red-500 rounded-full"></span>
             </Button>
 
@@ -151,10 +151,10 @@ const AdminDashboardLayout = ({
             {/* Avatar */}
             <Popover>
               <PopoverTrigger asChild>
-                <button className="ml-1">
-                  <Avatar className="w-9 h-9 border-2 border-primary/20 hover:border-primary/40 transition-colors cursor-pointer">
+                <button className="ml-0.5 sm:ml-1">
+                  <Avatar className="w-7 h-7 sm:w-8 sm:h-8 md:w-9 md:h-9 border-2 border-primary/20 hover:border-primary/40 transition-colors cursor-pointer">
                     <AvatarImage src="" />
-                    <AvatarFallback className="bg-gradient-to-br from-primary to-purple-600 text-white font-semibold text-sm">
+                    <AvatarFallback className="bg-gradient-to-br from-primary to-purple-600 text-white font-semibold text-xs sm:text-sm">
                       {firstName.charAt(0)}
                     </AvatarFallback>
                   </Avatar>
@@ -205,7 +205,7 @@ const AdminDashboardLayout = ({
         </header>
 
         {/* Page Content */}
-        <main className="flex-1 p-3 md:p-4 lg:p-6 xl:p-8 overflow-y-auto w-full max-w-full">
+        <main className="flex-1 p-2 sm:p-3 md:p-4 lg:p-6 xl:p-8 overflow-y-auto w-full max-w-full">
           <div className="w-full max-w-full">
             {children}
           </div>

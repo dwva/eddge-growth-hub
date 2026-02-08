@@ -286,14 +286,14 @@
 /* Tablet and below (768px and below) */
 @media (max-width: 48rem) {
   html {
-    font-size: 15px;
+    font-size: 13px;
   }
 
   /* Reduce base heading sizes on mobile */
-  h1 { @apply text-xl; }
-  h2 { @apply text-lg; }
-  h3 { @apply text-base; }
-  h4 { @apply text-sm; }
+  h1 { @apply text-lg; }
+  h2 { @apply text-base; }
+  h3 { @apply text-sm; }
+  h4 { @apply text-xs; }
 
   /* Compact cards on mobile */
   .mobile-compact-card {
@@ -303,6 +303,14 @@
   /* Tighter spacing for mobile grids */
   .mobile-tight-grid {
     @apply gap-2;
+  }
+
+  /* Admin stat card compact - smaller numbers and labels */
+  .stat-value-mobile {
+    @apply text-lg;
+  }
+  .stat-label-mobile {
+    @apply text-xs;
   }
 }
 

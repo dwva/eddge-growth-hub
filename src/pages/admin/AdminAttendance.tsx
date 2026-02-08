@@ -111,71 +111,73 @@ const AdminAttendance = () => {
       pageTitle="Attendance" 
       pageDescription="Track and manage student attendance"
     >
-      <div className="space-y-3 md:space-y-6">
+      <div className="space-y-2 sm:space-y-4 md:space-y-6">
         {/* Overall Stats */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-1.5 sm:gap-4">
           <Card className="bg-primary/5 border-primary/20">
-            <CardContent className="p-4 flex items-center gap-4">
-              <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center">
-                <Users className="w-6 h-6 text-primary" />
+            <CardContent className="p-2.5 sm:p-4 flex items-center gap-2 sm:gap-4">
+              <div className="w-8 h-8 sm:w-12 sm:h-12 rounded-lg sm:rounded-xl bg-primary/10 flex items-center justify-center flex-shrink-0">
+                <Users className="w-4 h-4 sm:w-6 sm:h-6 text-primary" />
               </div>
-              <div>
-                <div className="text-2xl font-bold">{stats.overallPercentage}%</div>
-                <div className="text-sm text-muted-foreground">Overall Attendance</div>
-              </div>
-            </CardContent>
-          </Card>
-          <Card>
-            <CardContent className="p-4 flex items-center gap-4">
-              <div className="w-12 h-12 rounded-xl bg-green-100 flex items-center justify-center">
-                <UserCheck className="w-6 h-6 text-green-600" />
-              </div>
-              <div>
-                <div className="text-2xl font-bold">{stats.totalPresent}</div>
-                <div className="text-sm text-muted-foreground">Present Today</div>
+              <div className="min-w-0">
+                <div className="text-base sm:text-2xl font-bold">{stats.overallPercentage}%</div>
+                <div className="text-xs sm:text-sm text-muted-foreground">Overall Attendance</div>
               </div>
             </CardContent>
           </Card>
           <Card>
-            <CardContent className="p-4 flex items-center gap-4">
-              <div className="w-12 h-12 rounded-xl bg-red-100 flex items-center justify-center">
-                <UserX className="w-6 h-6 text-red-600" />
+            <CardContent className="p-2.5 sm:p-4 flex items-center gap-2 sm:gap-4">
+              <div className="w-8 h-8 sm:w-12 sm:h-12 rounded-lg sm:rounded-xl bg-green-100 flex items-center justify-center flex-shrink-0">
+                <UserCheck className="w-4 h-4 sm:w-6 sm:h-6 text-green-600" />
               </div>
-              <div>
-                <div className="text-2xl font-bold">{stats.totalAbsent}</div>
-                <div className="text-sm text-muted-foreground">Absent Today</div>
+              <div className="min-w-0">
+                <div className="text-base sm:text-2xl font-bold">{stats.totalPresent}</div>
+                <div className="text-xs sm:text-sm text-muted-foreground">Present Today</div>
               </div>
             </CardContent>
           </Card>
           <Card>
-            <CardContent className="p-4 flex items-center gap-4">
-              <div className="w-12 h-12 rounded-xl bg-amber-100 flex items-center justify-center">
-                <Clock className="w-6 h-6 text-amber-600" />
+            <CardContent className="p-2.5 sm:p-4 flex items-center gap-2 sm:gap-4">
+              <div className="w-8 h-8 sm:w-12 sm:h-12 rounded-lg sm:rounded-xl bg-red-100 flex items-center justify-center flex-shrink-0">
+                <UserX className="w-4 h-4 sm:w-6 sm:h-6 text-red-600" />
               </div>
-              <div>
-                <div className="text-2xl font-bold">{stats.totalLate}</div>
-                <div className="text-sm text-muted-foreground">Late Arrivals</div>
+              <div className="min-w-0">
+                <div className="text-base sm:text-2xl font-bold">{stats.totalAbsent}</div>
+                <div className="text-xs sm:text-sm text-muted-foreground">Absent Today</div>
+              </div>
+            </CardContent>
+          </Card>
+          <Card>
+            <CardContent className="p-2.5 sm:p-4 flex items-center gap-2 sm:gap-4">
+              <div className="w-8 h-8 sm:w-12 sm:h-12 rounded-lg sm:rounded-xl bg-amber-100 flex items-center justify-center flex-shrink-0">
+                <Clock className="w-4 h-4 sm:w-6 sm:h-6 text-amber-600" />
+              </div>
+              <div className="min-w-0">
+                <div className="text-base sm:text-2xl font-bold">{stats.totalLate}</div>
+                <div className="text-xs sm:text-sm text-muted-foreground">Late Arrivals</div>
               </div>
             </CardContent>
           </Card>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-3 sm:gap-6">
           {/* Calendar & Controls */}
           <Card>
-            <CardHeader>
-              <CardTitle className="text-lg">Select Date</CardTitle>
+            <CardHeader className="p-2 sm:p-6 pb-1 sm:pb-2">
+              <CardTitle className="text-sm sm:text-lg">Select Date</CardTitle>
             </CardHeader>
-            <CardContent>
-              <Calendar
-                mode="single"
-                selected={selectedDate}
-                onSelect={setSelectedDate}
-                className="rounded-md border"
-              />
-              <div className="mt-4 space-y-3">
+            <CardContent className="p-2 sm:p-6 pt-0">
+              <div className="w-full overflow-hidden">
+                <Calendar
+                  mode="single"
+                  selected={selectedDate}
+                  onSelect={setSelectedDate}
+                  className="rounded-md border p-2 sm:p-3 w-full [&_.rdp-months]:flex [&_.rdp-month]:w-full [&_.rdp-month]:min-w-0"
+                />
+              </div>
+              <div className="mt-2 sm:mt-4 space-y-2 sm:space-y-3">
                 <Select value={selectedClass} onValueChange={setSelectedClass}>
-                  <SelectTrigger>
+                  <SelectTrigger className="h-8 sm:h-10 text-xs sm:text-sm">
                     <SelectValue placeholder="Select Class" />
                   </SelectTrigger>
                   <SelectContent>
@@ -187,8 +189,8 @@ const AdminAttendance = () => {
                     ))}
                   </SelectContent>
                 </Select>
-                <Button className="w-full gap-2 bg-primary hover:bg-primary/90">
-                  <Download className="w-4 h-4" />
+                <Button size="sm" className="w-full gap-1.5 sm:gap-2 h-8 sm:h-10 text-xs sm:text-sm bg-primary hover:bg-primary/90">
+                  <Download className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
                   Export Report
                 </Button>
               </div>
@@ -197,9 +199,9 @@ const AdminAttendance = () => {
 
           {/* Class-wise Attendance */}
           <Card className="lg:col-span-2">
-            <CardHeader className="flex flex-row items-center justify-between">
-              <CardTitle className="text-lg">Class-wise Attendance</CardTitle>
-              <div className="text-sm text-muted-foreground">
+            <CardHeader className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-1 sm:gap-2 p-2 sm:p-6">
+              <CardTitle className="text-sm sm:text-lg">Class-wise Attendance</CardTitle>
+              <div className="text-xs sm:text-sm text-muted-foreground">
                 {selectedDate?.toLocaleDateString('en-US', { 
                   weekday: 'long', 
                   year: 'numeric', 
@@ -208,8 +210,8 @@ const AdminAttendance = () => {
                 })}
               </div>
             </CardHeader>
-            <CardContent>
-              <div className="space-y-4">
+            <CardContent className="p-2 sm:p-6 pt-0">
+              <div className="space-y-2 sm:space-y-4">
                 {classAttendanceData.length === 0 ? (
                   <div className="text-center py-8 text-muted-foreground">
                     No attendance data for selected date
@@ -218,17 +220,17 @@ const AdminAttendance = () => {
                   classAttendanceData.map((cls) => (
                     <div 
                       key={cls.classId} 
-                      className="p-4 rounded-xl bg-muted/30 hover:bg-muted/50 transition-colors cursor-pointer"
+                      className="p-2.5 sm:p-4 rounded-lg sm:rounded-xl bg-muted/30 hover:bg-muted/50 transition-colors cursor-pointer"
                       onClick={() => navigate(`/admin/classes/${cls.classId}`)}
                     >
-                      <div className="flex items-center justify-between mb-3">
-                        <div className="flex items-center gap-3">
-                          <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center">
-                            <Users className="w-5 h-5 text-primary" />
+                      <div className="flex items-center justify-between mb-2 sm:mb-3">
+                        <div className="flex items-center gap-2 sm:gap-3">
+                          <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-lg bg-primary/10 flex items-center justify-center flex-shrink-0">
+                            <Users className="w-4 h-4 sm:w-5 sm:h-5 text-primary" />
                           </div>
-                          <div>
-                            <div className="font-medium">Class {cls.className}</div>
-                            <div className="text-sm text-muted-foreground">{cls.total} students</div>
+                          <div className="min-w-0">
+                            <div className="font-medium text-sm sm:text-base">Class {cls.className}</div>
+                            <div className="text-xs sm:text-sm text-muted-foreground">{cls.total} students</div>
                           </div>
                         </div>
                         <Badge 
@@ -242,8 +244,8 @@ const AdminAttendance = () => {
                           {cls.percentage}%
                         </Badge>
                       </div>
-                      <Progress value={cls.percentage} className="h-2 mb-2" />
-                      <div className="flex gap-4 text-sm">
+                      <Progress value={cls.percentage} className="h-1.5 sm:h-2 mb-1.5 sm:mb-2" />
+                      <div className="flex flex-wrap gap-2 sm:gap-4 text-xs sm:text-sm">
                         <span className="text-green-600">✓ {cls.present} Present</span>
                         <span className="text-red-600">✗ {cls.absent} Absent</span>
                         <span className="text-amber-600">⏱ {cls.late} Late</span>

@@ -96,9 +96,9 @@ const ClassDetail = () => {
       pageTitle={`Class ${classData.grade}-${classData.section}`}
       pageDescription="Class Detail View"
     >
-      <div className="space-y-3 md:space-y-6">
-        <Button variant="ghost" onClick={() => navigate('/admin/classes')} className="gap-2">
-          <ArrowLeft className="w-4 h-4" />
+      <div className="space-y-2 sm:space-y-4 md:space-y-6">
+        <Button variant="ghost" onClick={() => navigate('/admin/classes')} className="gap-1.5 sm:gap-2 text-sm h-8 sm:h-10">
+          <ArrowLeft className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
           Back to Classes
         </Button>
 
@@ -108,10 +108,10 @@ const ClassDetail = () => {
             <CardTitle>Class Overview</CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-3 sm:gap-4">
               <div>
-                <Label className="text-muted-foreground">Grade & Section</Label>
-                <p className="font-medium text-lg">Class {classData.grade}-{classData.section}</p>
+                <Label className="text-muted-foreground text-xs sm:text-sm">Grade & Section</Label>
+                <p className="font-medium text-base sm:text-lg">Class {classData.grade}-{classData.section}</p>
               </div>
               <div>
                 <Label className="text-muted-foreground">Class Teacher</Label>
@@ -129,50 +129,50 @@ const ClassDetail = () => {
                 </p>
               </div>
               <div>
-                <Label className="text-muted-foreground">Student Count</Label>
-                <p className="font-medium text-lg">{studentCount}</p>
+                <Label className="text-muted-foreground text-xs sm:text-sm">Student Count</Label>
+                <p className="font-medium text-base sm:text-lg">{studentCount}</p>
               </div>
             </div>
           </CardContent>
         </Card>
 
         {/* Stats Row */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div className="grid grid-cols-3 gap-2 sm:gap-4">
           <Card>
-            <CardContent className="p-4">
-              <div className="flex items-center gap-3">
-                <div className="w-12 h-12 rounded-xl bg-blue-100 flex items-center justify-center">
-                  <Users className="w-6 h-6 text-blue-600" />
+            <CardContent className="p-3 sm:p-4">
+              <div className="flex flex-col sm:flex-row items-center sm:items-start gap-2 sm:gap-3">
+                <div className="w-9 h-9 sm:w-12 sm:h-12 rounded-lg sm:rounded-xl bg-blue-100 flex items-center justify-center flex-shrink-0">
+                  <Users className="w-4 h-4 sm:w-6 sm:h-6 text-blue-600" />
                 </div>
-                <div>
-                  <p className="text-2xl font-bold">{studentCount}</p>
-                  <p className="text-sm text-muted-foreground">Students</p>
+                <div className="text-center sm:text-left">
+                  <p className="text-lg sm:text-2xl font-bold">{studentCount}</p>
+                  <p className="text-xs sm:text-sm text-muted-foreground">Students</p>
                 </div>
               </div>
             </CardContent>
           </Card>
           <Card>
-            <CardContent className="p-4">
-              <div className="flex items-center gap-3">
-                <div className="w-12 h-12 rounded-xl bg-green-100 flex items-center justify-center">
-                  <Calendar className="w-6 h-6 text-green-600" />
+            <CardContent className="p-3 sm:p-4">
+              <div className="flex flex-col sm:flex-row items-center sm:items-start gap-2 sm:gap-3">
+                <div className="w-9 h-9 sm:w-12 sm:h-12 rounded-lg sm:rounded-xl bg-green-100 flex items-center justify-center flex-shrink-0">
+                  <Calendar className="w-4 h-4 sm:w-6 sm:h-6 text-green-600" />
                 </div>
-                <div>
-                  <p className="text-2xl font-bold">{averageAttendance}%</p>
-                  <p className="text-sm text-muted-foreground">Avg. Attendance</p>
+                <div className="text-center sm:text-left">
+                  <p className="text-lg sm:text-2xl font-bold">{averageAttendance}%</p>
+                  <p className="text-xs sm:text-sm text-muted-foreground">Avg. Attendance</p>
                 </div>
               </div>
             </CardContent>
           </Card>
           <Card>
-            <CardContent className="p-4">
-              <div className="flex items-center gap-3">
-                <div className="w-12 h-12 rounded-xl bg-purple-100 flex items-center justify-center">
-                  <TrendingUp className="w-6 h-6 text-purple-600" />
+            <CardContent className="p-3 sm:p-4">
+              <div className="flex flex-col sm:flex-row items-center sm:items-start gap-2 sm:gap-3">
+                <div className="w-9 h-9 sm:w-12 sm:h-12 rounded-lg sm:rounded-xl bg-purple-100 flex items-center justify-center flex-shrink-0">
+                  <TrendingUp className="w-4 h-4 sm:w-6 sm:h-6 text-purple-600" />
                 </div>
-                <div>
-                  <p className="text-2xl font-bold">{averagePerformance}%</p>
-                  <p className="text-sm text-muted-foreground">Avg. Performance</p>
+                <div className="text-center sm:text-left">
+                  <p className="text-lg sm:text-2xl font-bold">{averagePerformance}%</p>
+                  <p className="text-xs sm:text-sm text-muted-foreground">Avg. Performance</p>
                 </div>
               </div>
             </CardContent>

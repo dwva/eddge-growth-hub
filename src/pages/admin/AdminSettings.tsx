@@ -37,39 +37,39 @@ const AdminSettings = () => {
       pageTitle="Settings" 
       pageDescription="Configure school and system settings"
     >
-      <Tabs defaultValue="general" className="space-y-3 md:space-y-6">
-        <TabsList className="bg-muted/50 p-1">
-          <TabsTrigger value="general" className="gap-2 data-[state=active]:bg-white">
-            <School className="w-4 h-4" />
+      <Tabs defaultValue="general" className="space-y-2 sm:space-y-4 md:space-y-6">
+        <TabsList className="bg-muted/50 p-0.5 sm:p-1 flex flex-wrap h-auto gap-0.5">
+          <TabsTrigger value="general" className="gap-1 sm:gap-2 px-2 sm:px-3 py-1.5 sm:py-2 text-xs sm:text-sm data-[state=active]:bg-white">
+            <School className="w-3 h-3 sm:w-4 sm:h-4" />
             General
           </TabsTrigger>
-          <TabsTrigger value="notifications" className="gap-2 data-[state=active]:bg-white">
-            <Bell className="w-4 h-4" />
+          <TabsTrigger value="notifications" className="gap-1 sm:gap-2 px-2 sm:px-3 py-1.5 sm:py-2 text-xs sm:text-sm data-[state=active]:bg-white">
+            <Bell className="w-3 h-3 sm:w-4 sm:h-4" />
             Notifications
           </TabsTrigger>
-          <TabsTrigger value="security" className="gap-2 data-[state=active]:bg-white">
-            <Shield className="w-4 h-4" />
+          <TabsTrigger value="security" className="gap-1 sm:gap-2 px-2 sm:px-3 py-1.5 sm:py-2 text-xs sm:text-sm data-[state=active]:bg-white">
+            <Shield className="w-3 h-3 sm:w-4 sm:h-4" />
             Security
           </TabsTrigger>
-          <TabsTrigger value="academic" className="gap-2 data-[state=active]:bg-white">
-            <Calendar className="w-4 h-4" />
+          <TabsTrigger value="academic" className="gap-1 sm:gap-2 px-2 sm:px-3 py-1.5 sm:py-2 text-xs sm:text-sm data-[state=active]:bg-white">
+            <Calendar className="w-3 h-3 sm:w-4 sm:h-4" />
             Academic
           </TabsTrigger>
         </TabsList>
 
         {/* General Settings */}
-        <TabsContent value="general" className="space-y-6">
+        <TabsContent value="general" className="space-y-4 sm:space-y-6">
           <Card>
             <CardHeader>
-              <CardTitle className="text-lg flex items-center gap-2">
+              <CardTitle className="text-base sm:text-lg flex items-center gap-2">
                 <School className="w-5 h-5 text-primary" />
                 School Information
               </CardTitle>
-              <CardDescription>
+              <CardDescription className="text-xs sm:text-sm">
                 Basic information about your school
               </CardDescription>
             </CardHeader>
-            <CardContent className="space-y-4">
+            <CardContent className="space-y-3 sm:space-y-4">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="space-y-2">
                   <Label>School Name</Label>

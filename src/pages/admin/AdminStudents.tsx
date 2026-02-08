@@ -205,50 +205,50 @@ const AdminStudents = () => {
       pageTitle="Students" 
       pageDescription="Manage all enrolled students"
     >
-      <div className="space-y-3 md:space-y-6">
+      <div className="space-y-2 sm:space-y-4 md:space-y-6">
         {/* Stats Cards */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-2 sm:gap-4">
           <Card className="bg-primary/5 border-primary/20">
-            <CardContent className="p-4 flex items-center gap-4">
-              <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center">
-                <GraduationCap className="w-6 h-6 text-primary" />
+            <CardContent className="p-3 sm:p-4 flex items-center gap-2 sm:gap-4">
+              <div className="w-9 h-9 sm:w-12 sm:h-12 rounded-lg sm:rounded-xl bg-primary/10 flex items-center justify-center flex-shrink-0">
+                <GraduationCap className="w-4 h-4 sm:w-6 sm:h-6 text-primary" />
               </div>
-              <div>
-                <div className="text-2xl font-bold">{totalStudents}</div>
-                <div className="text-sm text-muted-foreground">Total Students</div>
-              </div>
-            </CardContent>
-          </Card>
-          <Card>
-            <CardContent className="p-4 flex items-center gap-4">
-              <div className="w-12 h-12 rounded-xl bg-green-100 flex items-center justify-center">
-                <TrendingUp className="w-6 h-6 text-green-600" />
-              </div>
-              <div>
-                <div className="text-2xl font-bold">{avgAttendance}%</div>
-                <div className="text-sm text-muted-foreground">Avg. Attendance</div>
+              <div className="min-w-0">
+                <div className="text-lg sm:text-2xl font-bold">{totalStudents}</div>
+                <div className="text-xs sm:text-sm text-muted-foreground">Total Students</div>
               </div>
             </CardContent>
           </Card>
           <Card>
-            <CardContent className="p-4 flex items-center gap-4">
-              <div className="w-12 h-12 rounded-xl bg-blue-100 flex items-center justify-center">
-                <Users className="w-6 h-6 text-blue-600" />
+            <CardContent className="p-3 sm:p-4 flex items-center gap-2 sm:gap-4">
+              <div className="w-9 h-9 sm:w-12 sm:h-12 rounded-lg sm:rounded-xl bg-green-100 flex items-center justify-center flex-shrink-0">
+                <TrendingUp className="w-4 h-4 sm:w-6 sm:h-6 text-green-600" />
               </div>
-              <div>
-                <div className="text-2xl font-bold">{totalClasses}</div>
-                <div className="text-sm text-muted-foreground">Total Classes</div>
+              <div className="min-w-0">
+                <div className="text-lg sm:text-2xl font-bold">{avgAttendance}%</div>
+                <div className="text-xs sm:text-sm text-muted-foreground">Avg. Attendance</div>
               </div>
             </CardContent>
           </Card>
           <Card>
-            <CardContent className="p-4 flex items-center gap-4">
-              <div className="w-12 h-12 rounded-xl bg-amber-100 flex items-center justify-center">
-                <Calendar className="w-6 h-6 text-amber-600" />
+            <CardContent className="p-3 sm:p-4 flex items-center gap-2 sm:gap-4">
+              <div className="w-9 h-9 sm:w-12 sm:h-12 rounded-lg sm:rounded-xl bg-blue-100 flex items-center justify-center flex-shrink-0">
+                <Users className="w-4 h-4 sm:w-6 sm:h-6 text-blue-600" />
               </div>
-              <div>
-                <div className="text-2xl font-bold">{atRiskCount}</div>
-                <div className="text-sm text-muted-foreground">At Risk</div>
+              <div className="min-w-0">
+                <div className="text-lg sm:text-2xl font-bold">{totalClasses}</div>
+                <div className="text-xs sm:text-sm text-muted-foreground">Total Classes</div>
+              </div>
+            </CardContent>
+          </Card>
+          <Card>
+            <CardContent className="p-3 sm:p-4 flex items-center gap-2 sm:gap-4">
+              <div className="w-9 h-9 sm:w-12 sm:h-12 rounded-lg sm:rounded-xl bg-amber-100 flex items-center justify-center flex-shrink-0">
+                <Calendar className="w-4 h-4 sm:w-6 sm:h-6 text-amber-600" />
+              </div>
+              <div className="min-w-0">
+                <div className="text-lg sm:text-2xl font-bold">{atRiskCount}</div>
+                <div className="text-xs sm:text-sm text-muted-foreground">At Risk</div>
               </div>
             </CardContent>
           </Card>
@@ -256,20 +256,20 @@ const AdminStudents = () => {
 
         {/* Search and Filters */}
         <Card>
-          <CardContent className="p-4">
-            <div className="flex flex-col lg:flex-row gap-4">
-              <div className="relative flex-1">
-                <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+          <CardContent className="p-3 sm:p-4">
+            <div className="flex flex-col sm:flex-row gap-2 sm:gap-4">
+              <div className="relative flex-1 min-w-0">
+                <Search className="absolute left-2.5 sm:left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 sm:w-4 sm:h-4 text-muted-foreground" />
                 <Input 
                   placeholder="Search students by name or email..."
-                  className="pl-10"
+                  className="pl-8 sm:pl-10 text-sm"
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                 />
               </div>
-              <div className="flex gap-3">
+              <div className="flex flex-wrap gap-2">
                 <Select value={selectedClass} onValueChange={setSelectedClass}>
-                  <SelectTrigger className="w-32">
+                  <SelectTrigger className="h-9 w-full sm:w-32 min-w-0 text-sm">
                     <SelectValue placeholder="Class" />
                   </SelectTrigger>
                   <SelectContent>
@@ -281,14 +281,14 @@ const AdminStudents = () => {
                     <SelectItem value="11-A">Class 11-A</SelectItem>
                   </SelectContent>
                 </Select>
-                <Button variant="outline" className="gap-2">
-                  <Filter className="w-4 h-4" />
+                <Button variant="outline" size="sm" className="gap-1.5 sm:gap-2 text-xs sm:text-sm h-9">
+                  <Filter className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
                   Filters
                 </Button>
                 <Dialog open={isAddDialogOpen} onOpenChange={setIsAddDialogOpen}>
                   <DialogTrigger asChild>
-                    <Button className="gap-2 bg-primary hover:bg-primary/90">
-                      <Plus className="w-4 h-4" />
+                    <Button size="sm" className="gap-1.5 sm:gap-2 text-xs sm:text-sm h-9 bg-primary hover:bg-primary/90 flex-1 sm:flex-initial">
+                      <Plus className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
                       Enroll Student
                     </Button>
                   </DialogTrigger>
@@ -388,12 +388,12 @@ const AdminStudents = () => {
         {/* Bulk Actions Toolbar */}
         {selectedStudents.size > 0 && (
           <Card>
-            <CardContent className="p-4">
-              <div className="flex items-center justify-between">
-                <p className="text-sm font-medium">
+            <CardContent className="p-3 sm:p-4">
+              <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-2">
+                <p className="text-xs sm:text-sm font-medium">
                   {selectedStudents.size} student(s) selected
                 </p>
-                <div className="flex gap-2">
+                <div className="flex flex-wrap gap-1.5 sm:gap-2">
                   <Button 
                     variant="outline" 
                     size="sm"
@@ -431,62 +431,62 @@ const AdminStudents = () => {
         {/* Students Table */}
         <Card>
           <CardContent className="p-0">
-            <div className="overflow-x-auto">
-              <table className="w-full">
+            <div className="overflow-x-auto -mx-1 sm:mx-0">
+              <table className="w-full min-w-[640px]">
                 <thead>
                   <tr className="bg-muted/50 border-b">
-                    <th className="px-6 py-4 text-left text-xs font-semibold text-muted-foreground uppercase tracking-wider">
+                    <th className="px-2 py-2 sm:px-6 sm:py-4 text-left">
                       <input
                         type="checkbox"
                         checked={selectedStudents.size === filteredStudents.length && filteredStudents.length > 0}
                         onChange={handleSelectAll}
-                        className="rounded"
+                        className="rounded w-3.5 h-3.5 sm:w-4 sm:h-4"
                       />
                     </th>
-                    <th className="px-6 py-4 text-left text-xs font-semibold text-muted-foreground uppercase tracking-wider">Student</th>
-                    <th className="px-6 py-4 text-left text-xs font-semibold text-muted-foreground uppercase tracking-wider">Class</th>
-                    <th className="px-6 py-4 text-left text-xs font-semibold text-muted-foreground uppercase tracking-wider">Attendance</th>
-                    <th className="px-6 py-4 text-left text-xs font-semibold text-muted-foreground uppercase tracking-wider">Performance</th>
-                    <th className="px-6 py-4 text-left text-xs font-semibold text-muted-foreground uppercase tracking-wider">Parent</th>
-                    <th className="px-6 py-4 text-left text-xs font-semibold text-muted-foreground uppercase tracking-wider">Status</th>
-                    <th className="px-6 py-4 text-left text-xs font-semibold text-muted-foreground uppercase tracking-wider">Actions</th>
+                    <th className="px-3 py-2 sm:px-6 sm:py-4 text-left text-[10px] sm:text-xs font-semibold text-muted-foreground uppercase tracking-wider">Student</th>
+                    <th className="px-3 py-2 sm:px-6 sm:py-4 text-left text-[10px] sm:text-xs font-semibold text-muted-foreground uppercase tracking-wider hidden sm:table-cell">Class</th>
+                    <th className="px-3 py-2 sm:px-6 sm:py-4 text-left text-[10px] sm:text-xs font-semibold text-muted-foreground uppercase tracking-wider hidden md:table-cell">Attendance</th>
+                    <th className="px-3 py-2 sm:px-6 sm:py-4 text-left text-[10px] sm:text-xs font-semibold text-muted-foreground uppercase tracking-wider hidden md:table-cell">Performance</th>
+                    <th className="px-3 py-2 sm:px-6 sm:py-4 text-left text-[10px] sm:text-xs font-semibold text-muted-foreground uppercase tracking-wider hidden lg:table-cell">Parent</th>
+                    <th className="px-3 py-2 sm:px-6 sm:py-4 text-left text-[10px] sm:text-xs font-semibold text-muted-foreground uppercase tracking-wider">Status</th>
+                    <th className="px-2 py-2 sm:px-6 sm:py-4 text-left text-[10px] sm:text-xs font-semibold text-muted-foreground uppercase tracking-wider w-10">Actions</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y">
                   {filteredStudents.map((student) => (
                     <tr key={student.id} className="hover:bg-muted/30 transition-colors">
-                      <td className="px-6 py-4">
+                      <td className="px-2 py-2 sm:px-6 sm:py-4">
                         <input
                           type="checkbox"
                           checked={selectedStudents.has(student.id)}
                           onChange={() => handleToggleSelection(student.id)}
-                          className="rounded"
+                          className="rounded w-3.5 h-3.5 sm:w-4 sm:h-4"
                         />
                       </td>
-                      <td className="px-6 py-4">
-                        <div className="flex items-center gap-3">
-                          <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center text-primary font-semibold">
+                      <td className="px-3 py-2 sm:px-6 sm:py-4">
+                        <div className="flex items-center gap-2 sm:gap-3">
+                          <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-primary/10 flex items-center justify-center text-primary font-semibold text-xs sm:text-sm flex-shrink-0">
                             {student.name
                               .split(' ')
                               .map((n) => n[0])
                               .join('')
                               .slice(0, 2)}
                           </div>
-                          <div>
-                            <div className="font-medium">{student.name}</div>
-                            <div className="text-sm text-muted-foreground">{student.email}</div>
+                          <div className="min-w-0">
+                            <div className="font-medium text-sm sm:text-base truncate">{student.name}</div>
+                            <div className="text-xs sm:text-sm text-muted-foreground truncate">{student.email}</div>
                           </div>
                         </div>
                       </td>
-                      <td className="px-6 py-4">
+                      <td className="px-3 py-2 sm:px-6 sm:py-4 hidden sm:table-cell">
                         <div>
                           <div className="font-medium">{student.classId || '-'}</div>
-                          <div className="text-sm text-muted-foreground">Roll #{student.rollNumber}</div>
+                          <div className="text-xs sm:text-sm text-muted-foreground">Roll #{student.rollNumber}</div>
                         </div>
                       </td>
-                      <td className="px-6 py-4">
-                        <div className="w-32">
-                          <div className="flex justify-between text-sm mb-1">
+                      <td className="px-3 py-2 sm:px-6 sm:py-4 hidden md:table-cell">
+                        <div className="w-24 sm:w-32">
+                          <div className="flex justify-between text-xs sm:text-sm mb-1">
                             <span>{student.attendancePercentage}%</span>
                           </div>
                           <Progress 
@@ -495,32 +495,32 @@ const AdminStudents = () => {
                           />
                         </div>
                       </td>
-                      <td className="px-6 py-4">
-                        <div className="w-32">
-                          <div className="flex justify-between text-sm mb-1">
+                      <td className="px-3 py-2 sm:px-6 sm:py-4 hidden md:table-cell">
+                        <div className="w-24 sm:w-32">
+                          <div className="flex justify-between text-xs sm:text-sm mb-1">
                             <span>{student.performanceScore}%</span>
                           </div>
                           <Progress value={student.performanceScore} className="h-2" />
                         </div>
                       </td>
-                      <td className="px-6 py-4">
-                        <div className="text-sm">{student.parentContact}</div>
+                      <td className="px-3 py-2 sm:px-6 sm:py-4 hidden lg:table-cell">
+                        <div className="text-xs sm:text-sm truncate">{student.parentContact}</div>
                       </td>
-                      <td className="px-6 py-4">
+                      <td className="px-3 py-2 sm:px-6 sm:py-4">
                         <Badge 
-                          className={student.status === 'Active' 
+                          className={`text-[10px] sm:text-xs ${student.status === 'Active' 
                             ? 'bg-green-100 text-green-700 hover:bg-green-100' 
                             : 'bg-red-100 text-red-700 hover:bg-red-100'
-                          }
+                          }`}
                         >
                           {student.status === 'Active' ? 'Active' : 'At Risk'}
                         </Badge>
                       </td>
-                      <td className="px-6 py-4">
+                      <td className="px-2 py-2 sm:px-6 sm:py-4">
                         <DropdownMenu>
                           <DropdownMenuTrigger asChild>
-                            <Button variant="ghost" size="icon">
-                              <MoreHorizontal className="w-4 h-4" />
+                            <Button variant="ghost" size="icon" className="h-8 w-8 sm:h-10 sm:w-10">
+                              <MoreHorizontal className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
                             </Button>
                           </DropdownMenuTrigger>
                           <DropdownMenuContent align="end">

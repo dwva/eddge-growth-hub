@@ -42,10 +42,10 @@ const reportsData = [
 ];
 
 const reportTypes = [
-  { name: 'Performance Report', icon: <TrendingUp className="w-5 h-5" />, description: 'Student academic performance analysis', color: 'blue' },
-  { name: 'Attendance Report', icon: <Calendar className="w-5 h-5" />, description: 'Daily/Monthly attendance summary', color: 'green' },
-  { name: 'Financial Report', icon: <FileText className="w-5 h-5" />, description: 'Fee collection and expenses', color: 'amber' },
-  { name: 'Staff Report', icon: <Users className="w-5 h-5" />, description: 'Teacher and staff analytics', color: 'purple' },
+  { name: 'Performance Report', icon: <TrendingUp className="w-4 h-4 sm:w-5 sm:h-5" />, description: 'Student academic performance analysis', color: 'blue' },
+  { name: 'Attendance Report', icon: <Calendar className="w-4 h-4 sm:w-5 sm:h-5" />, description: 'Daily/Monthly attendance summary', color: 'green' },
+  { name: 'Financial Report', icon: <FileText className="w-4 h-4 sm:w-5 sm:h-5" />, description: 'Fee collection and expenses', color: 'amber' },
+  { name: 'Staff Report', icon: <Users className="w-4 h-4 sm:w-5 sm:h-5" />, description: 'Teacher and staff analytics', color: 'purple' },
 ];
 
 const AdminReports = () => {
@@ -61,17 +61,17 @@ const AdminReports = () => {
       pageTitle="Reports" 
       pageDescription="Generate and download school reports"
     >
-      <div className="space-y-3 md:space-y-6">
+      <div className="space-y-2 sm:space-y-4 md:space-y-6">
         {/* Quick Generate Cards */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2 sm:gap-4">
           {reportTypes.map((type) => (
             <Card 
               key={type.name} 
               className="cursor-pointer hover:shadow-md transition-all hover:-translate-y-1"
               onClick={() => setIsGenerateOpen(true)}
             >
-              <CardContent className="p-4">
-                <div className={`w-12 h-12 rounded-xl mb-3 flex items-center justify-center ${
+              <CardContent className="p-2.5 sm:p-4">
+                <div className={`w-8 h-8 sm:w-12 sm:h-12 rounded-lg sm:rounded-xl mb-1.5 sm:mb-3 flex items-center justify-center ${
                   type.color === 'blue' ? 'bg-blue-100 text-blue-600' :
                   type.color === 'green' ? 'bg-green-100 text-green-600' :
                   type.color === 'amber' ? 'bg-amber-100 text-amber-600' :
@@ -79,45 +79,45 @@ const AdminReports = () => {
                 }`}>
                   {type.icon}
                 </div>
-                <h3 className="font-semibold">{type.name}</h3>
-                <p className="text-sm text-muted-foreground mt-1">{type.description}</p>
+                <h3 className="font-semibold text-xs sm:text-base">{type.name}</h3>
+                <p className="text-[10px] sm:text-sm text-muted-foreground mt-0.5 sm:mt-1 line-clamp-2">{type.description}</p>
               </CardContent>
             </Card>
           ))}
         </div>
 
         {/* Stats */}
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+        <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 sm:gap-4">
           <Card className="bg-primary/5 border-primary/20">
-            <CardContent className="p-4 flex items-center gap-4">
-              <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center">
-                <FileText className="w-6 h-6 text-primary" />
+            <CardContent className="p-3 sm:p-4 flex items-center gap-2 sm:gap-4">
+              <div className="w-9 h-9 sm:w-12 sm:h-12 rounded-lg sm:rounded-xl bg-primary/10 flex items-center justify-center flex-shrink-0">
+                <FileText className="w-4 h-4 sm:w-6 sm:h-6 text-primary" />
               </div>
-              <div>
-                <div className="text-2xl font-bold">24</div>
-                <div className="text-sm text-muted-foreground">Reports Generated</div>
-              </div>
-            </CardContent>
-          </Card>
-          <Card>
-            <CardContent className="p-4 flex items-center gap-4">
-              <div className="w-12 h-12 rounded-xl bg-green-100 flex items-center justify-center">
-                <CheckCircle className="w-6 h-6 text-green-600" />
-              </div>
-              <div>
-                <div className="text-2xl font-bold">22</div>
-                <div className="text-sm text-muted-foreground">Ready to Download</div>
+              <div className="min-w-0">
+                <div className="text-lg sm:text-2xl font-bold">24</div>
+                <div className="text-xs sm:text-sm text-muted-foreground">Reports Generated</div>
               </div>
             </CardContent>
           </Card>
           <Card>
-            <CardContent className="p-4 flex items-center gap-4">
-              <div className="w-12 h-12 rounded-xl bg-amber-100 flex items-center justify-center">
-                <Clock className="w-6 h-6 text-amber-600" />
+            <CardContent className="p-3 sm:p-4 flex items-center gap-2 sm:gap-4">
+              <div className="w-9 h-9 sm:w-12 sm:h-12 rounded-lg sm:rounded-xl bg-green-100 flex items-center justify-center flex-shrink-0">
+                <CheckCircle className="w-4 h-4 sm:w-6 sm:h-6 text-green-600" />
               </div>
-              <div>
-                <div className="text-2xl font-bold">2</div>
-                <div className="text-sm text-muted-foreground">Processing</div>
+              <div className="min-w-0">
+                <div className="text-lg sm:text-2xl font-bold">22</div>
+                <div className="text-xs sm:text-sm text-muted-foreground">Ready to Download</div>
+              </div>
+            </CardContent>
+          </Card>
+          <Card>
+            <CardContent className="p-3 sm:p-4 flex items-center gap-2 sm:gap-4">
+              <div className="w-9 h-9 sm:w-12 sm:h-12 rounded-lg sm:rounded-xl bg-amber-100 flex items-center justify-center flex-shrink-0">
+                <Clock className="w-4 h-4 sm:w-6 sm:h-6 text-amber-600" />
+              </div>
+              <div className="min-w-0">
+                <div className="text-lg sm:text-2xl font-bold">2</div>
+                <div className="text-xs sm:text-sm text-muted-foreground">Processing</div>
               </div>
             </CardContent>
           </Card>
@@ -125,11 +125,11 @@ const AdminReports = () => {
 
         {/* Reports List */}
         <Card>
-          <CardHeader className="flex flex-row items-center justify-between">
-            <CardTitle className="text-lg">Recent Reports</CardTitle>
-            <div className="flex gap-3">
+          <CardHeader className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 p-3 sm:p-6">
+            <CardTitle className="text-sm sm:text-lg">Recent Reports</CardTitle>
+            <div className="flex flex-wrap gap-2 w-full sm:w-auto">
               <Select value={selectedType} onValueChange={setSelectedType}>
-                <SelectTrigger className="w-40">
+                <SelectTrigger className="h-8 sm:h-10 w-full sm:w-36 min-w-0 text-xs sm:text-sm">
                   <SelectValue placeholder="Filter by type" />
                 </SelectTrigger>
                 <SelectContent>
@@ -142,8 +142,8 @@ const AdminReports = () => {
               </Select>
               <Dialog open={isGenerateOpen} onOpenChange={setIsGenerateOpen}>
                 <DialogTrigger asChild>
-                  <Button className="gap-2 bg-primary hover:bg-primary/90">
-                    <Plus className="w-4 h-4" />
+                  <Button size="sm" className="gap-1.5 sm:gap-2 h-8 sm:h-10 text-xs sm:text-sm bg-primary hover:bg-primary/90 flex-1 sm:flex-initial">
+                    <Plus className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
                     Generate Report
                   </Button>
                 </DialogTrigger>
@@ -211,34 +211,34 @@ const AdminReports = () => {
           <CardContent className="p-0">
             <div className="divide-y">
               {filteredReports.map((report) => (
-                <div key={report.id} className="flex items-center justify-between p-4 hover:bg-muted/30 transition-colors">
-                  <div className="flex items-center gap-4">
-                    <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center">
-                      <FileText className="w-5 h-5 text-primary" />
+                <div key={report.id} className="flex items-center justify-between p-2.5 sm:p-4 hover:bg-muted/30 transition-colors gap-2">
+                  <div className="flex items-center gap-2 sm:gap-4 min-w-0 flex-1">
+                    <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-lg bg-primary/10 flex items-center justify-center flex-shrink-0">
+                      <FileText className="w-4 h-4 sm:w-5 sm:h-5 text-primary" />
                     </div>
-                    <div>
-                      <div className="font-medium">{report.name}</div>
-                      <div className="text-sm text-muted-foreground">
+                    <div className="min-w-0">
+                      <div className="font-medium text-sm sm:text-base truncate">{report.name}</div>
+                      <div className="text-xs sm:text-sm text-muted-foreground truncate">
                         {report.type} • {new Date(report.date).toLocaleDateString()} • {report.size}
                       </div>
                     </div>
                   </div>
-                  <div className="flex items-center gap-3">
+                  <div className="flex items-center gap-1.5 sm:gap-3 flex-shrink-0">
                     <Badge 
-                      className={report.status === 'ready' 
+                      className={`text-[10px] sm:text-xs ${report.status === 'ready' 
                         ? 'bg-green-100 text-green-700 hover:bg-green-100' 
                         : 'bg-amber-100 text-amber-700 hover:bg-amber-100'
-                      }
+                      }`}
                     >
                       {report.status === 'ready' ? 'Ready' : 'Processing'}
                     </Badge>
                     {report.status === 'ready' && (
                       <>
-                        <Button variant="ghost" size="icon">
-                          <Eye className="w-4 h-4" />
+                        <Button variant="ghost" size="icon" className="h-8 w-8 sm:h-10 sm:w-10">
+                          <Eye className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
                         </Button>
-                        <Button variant="ghost" size="icon">
-                          <Download className="w-4 h-4" />
+                        <Button variant="ghost" size="icon" className="h-8 w-8 sm:h-10 sm:w-10">
+                          <Download className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
                         </Button>
                       </>
                     )}

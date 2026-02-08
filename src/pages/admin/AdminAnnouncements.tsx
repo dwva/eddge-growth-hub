@@ -84,50 +84,50 @@ const AdminAnnouncements = () => {
       pageTitle="Announcements" 
       pageDescription="Create and manage school announcements"
     >
-      <div className="space-y-3 md:space-y-6">
+      <div className="space-y-2 sm:space-y-4 md:space-y-6">
         {/* Stats */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-2 sm:gap-4">
           <Card className="bg-primary/5 border-primary/20">
-            <CardContent className="p-4 flex items-center gap-4">
-              <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center">
-                <Bell className="w-6 h-6 text-primary" />
+            <CardContent className="p-3 sm:p-4 flex items-center gap-2 sm:gap-4">
+              <div className="w-9 h-9 sm:w-12 sm:h-12 rounded-lg sm:rounded-xl bg-primary/10 flex items-center justify-center flex-shrink-0">
+                <Bell className="w-4 h-4 sm:w-6 sm:h-6 text-primary" />
               </div>
-              <div>
-                <div className="text-2xl font-bold">12</div>
-                <div className="text-sm text-muted-foreground">Total Announcements</div>
-              </div>
-            </CardContent>
-          </Card>
-          <Card>
-            <CardContent className="p-4 flex items-center gap-4">
-              <div className="w-12 h-12 rounded-xl bg-green-100 flex items-center justify-center">
-                <Send className="w-6 h-6 text-green-600" />
-              </div>
-              <div>
-                <div className="text-2xl font-bold">8</div>
-                <div className="text-sm text-muted-foreground">Published</div>
+              <div className="min-w-0">
+                <div className="text-lg sm:text-2xl font-bold">12</div>
+                <div className="text-xs sm:text-sm text-muted-foreground">Total Announcements</div>
               </div>
             </CardContent>
           </Card>
           <Card>
-            <CardContent className="p-4 flex items-center gap-4">
-              <div className="w-12 h-12 rounded-xl bg-amber-100 flex items-center justify-center">
-                <Calendar className="w-6 h-6 text-amber-600" />
+            <CardContent className="p-3 sm:p-4 flex items-center gap-2 sm:gap-4">
+              <div className="w-9 h-9 sm:w-12 sm:h-12 rounded-lg sm:rounded-xl bg-green-100 flex items-center justify-center flex-shrink-0">
+                <Send className="w-4 h-4 sm:w-6 sm:h-6 text-green-600" />
               </div>
-              <div>
-                <div className="text-2xl font-bold">3</div>
-                <div className="text-sm text-muted-foreground">Scheduled</div>
+              <div className="min-w-0">
+                <div className="text-lg sm:text-2xl font-bold">8</div>
+                <div className="text-xs sm:text-sm text-muted-foreground">Published</div>
               </div>
             </CardContent>
           </Card>
           <Card>
-            <CardContent className="p-4 flex items-center gap-4">
-              <div className="w-12 h-12 rounded-xl bg-gray-100 flex items-center justify-center">
-                <Edit className="w-6 h-6 text-gray-600" />
+            <CardContent className="p-3 sm:p-4 flex items-center gap-2 sm:gap-4">
+              <div className="w-9 h-9 sm:w-12 sm:h-12 rounded-lg sm:rounded-xl bg-amber-100 flex items-center justify-center flex-shrink-0">
+                <Calendar className="w-4 h-4 sm:w-6 sm:h-6 text-amber-600" />
               </div>
-              <div>
-                <div className="text-2xl font-bold">1</div>
-                <div className="text-sm text-muted-foreground">Drafts</div>
+              <div className="min-w-0">
+                <div className="text-lg sm:text-2xl font-bold">3</div>
+                <div className="text-xs sm:text-sm text-muted-foreground">Scheduled</div>
+              </div>
+            </CardContent>
+          </Card>
+          <Card>
+            <CardContent className="p-3 sm:p-4 flex items-center gap-2 sm:gap-4">
+              <div className="w-9 h-9 sm:w-12 sm:h-12 rounded-lg sm:rounded-xl bg-gray-100 flex items-center justify-center flex-shrink-0">
+                <Edit className="w-4 h-4 sm:w-6 sm:h-6 text-gray-600" />
+              </div>
+              <div className="min-w-0">
+                <div className="text-lg sm:text-2xl font-bold">1</div>
+                <div className="text-xs sm:text-sm text-muted-foreground">Drafts</div>
               </div>
             </CardContent>
           </Card>
@@ -135,20 +135,20 @@ const AdminAnnouncements = () => {
 
         {/* Search and Filters */}
         <Card>
-          <CardContent className="p-4">
-            <div className="flex flex-col lg:flex-row gap-4">
-              <div className="relative flex-1">
-                <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+          <CardContent className="p-3 sm:p-4">
+            <div className="flex flex-col sm:flex-row gap-2 sm:gap-4">
+              <div className="relative flex-1 min-w-0">
+                <Search className="absolute left-2.5 sm:left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 sm:w-4 sm:h-4 text-muted-foreground" />
                 <Input 
                   placeholder="Search announcements..."
-                  className="pl-10"
+                  className="pl-8 sm:pl-10 text-sm"
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                 />
               </div>
-              <div className="flex gap-3">
+              <div className="flex flex-wrap gap-2">
                 <Select value={selectedType} onValueChange={setSelectedType}>
-                  <SelectTrigger className="w-32">
+                  <SelectTrigger className="h-9 w-full sm:w-32 min-w-0 text-sm">
                     <SelectValue placeholder="Type" />
                   </SelectTrigger>
                   <SelectContent>
@@ -161,8 +161,8 @@ const AdminAnnouncements = () => {
                 </Select>
                 <Dialog open={isCreateOpen} onOpenChange={setIsCreateOpen}>
                   <DialogTrigger asChild>
-                    <Button className="gap-2 bg-primary hover:bg-primary/90">
-                      <Plus className="w-4 h-4" />
+                    <Button size="sm" className="gap-1.5 sm:gap-2 text-xs sm:text-sm h-9 bg-primary hover:bg-primary/90 flex-1 sm:flex-initial">
+                      <Plus className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
                       New Announcement
                     </Button>
                   </DialogTrigger>

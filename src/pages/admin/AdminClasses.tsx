@@ -183,50 +183,50 @@ const AdminClasses = () => {
       pageTitle="Classes" 
       pageDescription="Manage all classes and sections"
     >
-      <div className="space-y-3 md:space-y-6">
+      <div className="space-y-2 sm:space-y-4 md:space-y-6">
         {/* Stats */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-2 sm:gap-4">
           <Card className="bg-primary/5 border-primary/20">
-            <CardContent className="p-4 flex items-center gap-4">
-              <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center">
-                <BookOpen className="w-6 h-6 text-primary" />
+            <CardContent className="p-3 sm:p-4 flex items-center gap-2 sm:gap-4">
+              <div className="w-9 h-9 sm:w-12 sm:h-12 rounded-lg sm:rounded-xl bg-primary/10 flex items-center justify-center flex-shrink-0">
+                <BookOpen className="w-4 h-4 sm:w-6 sm:h-6 text-primary" />
               </div>
-              <div>
-                <div className="text-2xl font-bold">{stats.totalClasses}</div>
-                <div className="text-sm text-muted-foreground">Total Classes</div>
-              </div>
-            </CardContent>
-          </Card>
-          <Card>
-            <CardContent className="p-4 flex items-center gap-4">
-              <div className="w-12 h-12 rounded-xl bg-green-100 flex items-center justify-center">
-                <Users className="w-6 h-6 text-green-600" />
-              </div>
-              <div>
-                <div className="text-2xl font-bold">{stats.totalStudents.toLocaleString()}</div>
-                <div className="text-sm text-muted-foreground">Total Students</div>
+              <div className="min-w-0">
+                <div className="text-lg sm:text-2xl font-bold">{stats.totalClasses}</div>
+                <div className="text-xs sm:text-sm text-muted-foreground">Total Classes</div>
               </div>
             </CardContent>
           </Card>
           <Card>
-            <CardContent className="p-4 flex items-center gap-4">
-              <div className="w-12 h-12 rounded-xl bg-blue-100 flex items-center justify-center">
-                <Clock className="w-6 h-6 text-blue-600" />
+            <CardContent className="p-3 sm:p-4 flex items-center gap-2 sm:gap-4">
+              <div className="w-9 h-9 sm:w-12 sm:h-12 rounded-lg sm:rounded-xl bg-green-100 flex items-center justify-center flex-shrink-0">
+                <Users className="w-4 h-4 sm:w-6 sm:h-6 text-green-600" />
               </div>
-              <div>
-                <div className="text-2xl font-bold">{stats.avgStudentsPerClass}</div>
-                <div className="text-sm text-muted-foreground">Avg. Students/Class</div>
+              <div className="min-w-0">
+                <div className="text-lg sm:text-2xl font-bold">{stats.totalStudents.toLocaleString()}</div>
+                <div className="text-xs sm:text-sm text-muted-foreground">Total Students</div>
               </div>
             </CardContent>
           </Card>
           <Card>
-            <CardContent className="p-4 flex items-center gap-4">
-              <div className="w-12 h-12 rounded-xl bg-amber-100 flex items-center justify-center">
-                <BookOpen className="w-6 h-6 text-amber-600" />
+            <CardContent className="p-3 sm:p-4 flex items-center gap-2 sm:gap-4">
+              <div className="w-9 h-9 sm:w-12 sm:h-12 rounded-lg sm:rounded-xl bg-blue-100 flex items-center justify-center flex-shrink-0">
+                <Clock className="w-4 h-4 sm:w-6 sm:h-6 text-blue-600" />
               </div>
-              <div>
-                <div className="text-2xl font-bold">{stats.avgPerformance}%</div>
-                <div className="text-sm text-muted-foreground">Avg. Performance</div>
+              <div className="min-w-0">
+                <div className="text-lg sm:text-2xl font-bold">{stats.avgStudentsPerClass}</div>
+                <div className="text-xs sm:text-sm text-muted-foreground">Avg. Students/Class</div>
+              </div>
+            </CardContent>
+          </Card>
+          <Card>
+            <CardContent className="p-3 sm:p-4 flex items-center gap-2 sm:gap-4">
+              <div className="w-9 h-9 sm:w-12 sm:h-12 rounded-lg sm:rounded-xl bg-amber-100 flex items-center justify-center flex-shrink-0">
+                <BookOpen className="w-4 h-4 sm:w-6 sm:h-6 text-amber-600" />
+              </div>
+              <div className="min-w-0">
+                <div className="text-lg sm:text-2xl font-bold">{stats.avgPerformance}%</div>
+                <div className="text-xs sm:text-sm text-muted-foreground">Avg. Performance</div>
               </div>
             </CardContent>
           </Card>
@@ -234,20 +234,20 @@ const AdminClasses = () => {
 
         {/* Search and Filters */}
         <Card>
-          <CardContent className="p-4">
-            <div className="flex flex-col lg:flex-row gap-4">
-              <div className="relative flex-1">
-                <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+          <CardContent className="p-3 sm:p-4">
+            <div className="flex flex-col sm:flex-row gap-2 sm:gap-4">
+              <div className="relative flex-1 min-w-0">
+                <Search className="absolute left-2.5 sm:left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 sm:w-4 sm:h-4 text-muted-foreground" />
                 <Input 
                   placeholder="Search classes or teachers..."
-                  className="pl-10"
+                  className="pl-8 sm:pl-10 text-sm"
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                 />
               </div>
-              <div className="flex gap-3">
+              <div className="flex flex-wrap gap-2">
                 <Select value={selectedGrade} onValueChange={setSelectedGrade}>
-                  <SelectTrigger className="w-32">
+                  <SelectTrigger className="h-9 w-full sm:w-32 min-w-0 text-sm">
                     <SelectValue placeholder="Grade" />
                   </SelectTrigger>
                   <SelectContent>
@@ -260,8 +260,8 @@ const AdminClasses = () => {
                 </Select>
                 <Dialog open={isAddDialogOpen} onOpenChange={setIsAddDialogOpen}>
                   <DialogTrigger asChild>
-                    <Button className="gap-2 bg-primary hover:bg-primary/90">
-                      <Plus className="w-4 h-4" />
+                    <Button size="sm" className="gap-1.5 sm:gap-2 text-xs sm:text-sm h-9 bg-primary hover:bg-primary/90 flex-1 sm:flex-initial">
+                      <Plus className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
                       Add Class
                     </Button>
                   </DialogTrigger>
