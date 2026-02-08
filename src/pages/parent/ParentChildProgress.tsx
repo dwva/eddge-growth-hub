@@ -98,7 +98,7 @@ const ParentChildProgressContent = () => {
             <ArrowLeft className="w-5 h-5" />
           </button>
           <div>
-            <h1 className="text-xl md:text-2xl font-bold">{child.name}'s Progress</h1>
+            <h1 className="text-base sm:text-xl md:text-2xl font-bold">{child.name}'s Progress</h1>
             <p className="text-sm text-muted-foreground">{child.class}</p>
           </div>
         </div>
@@ -109,11 +109,11 @@ const ParentChildProgressContent = () => {
 
       {/* Overview section */}
       <Card className="border-0 shadow-sm bg-gradient-to-r from-primary/10 to-primary/5">
-        <CardContent className="p-5 md:p-6">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 items-center">
+        <CardContent className="p-3 sm:p-5 md:p-6">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-6 items-center">
             {/* Main score */}
-            <div className="text-center md:text-left space-y-3">
-              <p className={`text-5xl font-bold ${getProgressColor(child.progress || 0)}`}>
+            <div className="text-center md:text-left space-y-2 sm:space-y-3">
+              <p className={`text-3xl sm:text-5xl font-bold ${getProgressColor(child.progress || 0)}`}>
                 {child.progress}%
               </p>
               <div className="inline-flex items-center gap-2 rounded-full bg-white/70 px-3 py-1">
@@ -126,23 +126,23 @@ const ParentChildProgressContent = () => {
             </div>
 
             {/* Key stats */}
-            <div className="md:col-span-2 grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <div className="rounded-lg bg-white/70 p-4 flex flex-col items-start">
-                <div className="flex items-center gap-2 text-xs font-medium text-muted-foreground mb-1">
-                  <Calendar className="w-4 h-4 text-green-600" />
+            <div className="md:col-span-2 grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-4">
+              <div className="rounded-lg bg-white/70 p-3 sm:p-4 flex flex-col items-start">
+                <div className="flex items-center gap-2 text-[10px] sm:text-xs font-medium text-muted-foreground mb-0.5 sm:mb-1">
+                  <Calendar className="w-3 h-3 sm:w-4 sm:h-4 text-green-600" />
                   <span>Attendance</span>
                 </div>
-                <p className="text-2xl font-bold text-gray-900">{child.attendance}%</p>
-                <p className="text-[11px] text-muted-foreground mt-1">
+                <p className="text-lg sm:text-2xl font-bold text-gray-900">{child.attendance}%</p>
+                <p className="text-[10px] sm:text-[11px] text-muted-foreground mt-0.5 sm:mt-1">
                   Consistent presence in class.
                 </p>
               </div>
-              <div className="rounded-lg bg-white/70 p-4 flex flex-col items-start">
-                <div className="flex items-center gap-2 text-xs font-medium text-muted-foreground mb-1">
-                  <Award className="w-4 h-4 text-yellow-600" />
+              <div className="rounded-lg bg-white/70 p-3 sm:p-4 flex flex-col items-start">
+                <div className="flex items-center gap-2 text-[10px] sm:text-xs font-medium text-muted-foreground mb-0.5 sm:mb-1">
+                  <Award className="w-3 h-3 sm:w-4 sm:h-4 text-yellow-600" />
                   <span>Average test score</span>
                 </div>
-                <p className="text-2xl font-bold text-gray-900">{Math.round(averageScore)}%</p>
+                <p className="text-lg sm:text-2xl font-bold text-gray-900">{Math.round(averageScore)}%</p>
                 <p className="text-[11px] text-muted-foreground mt-1">
                   Based on recent assessments.
                 </p>
@@ -312,12 +312,12 @@ const ParentChildProgressContent = () => {
 
         {/* Attendance overview */}
         <Card className="lg:col-span-1 border-0 shadow-sm">
-          <CardHeader className="pb-3">
-            <CardTitle className="text-lg">Attendance</CardTitle>
+          <CardHeader className="pb-2 sm:pb-3 p-4 sm:p-6">
+            <CardTitle className="text-base sm:text-lg">Attendance</CardTitle>
           </CardHeader>
-          <CardContent className="p-6 pt-0 flex flex-col items-center justify-center">
-            <div className="relative w-40 h-40 md:w-48 md:h-48">
-              <svg className="w-full h-full transform -rotate-90">
+          <CardContent className="p-3 sm:p-6 pt-0 flex flex-col items-center justify-center">
+            <div className="relative w-28 h-28 sm:w-36 sm:h-36 md:w-48 md:h-48">
+              <svg className="w-full h-full transform -rotate-90" viewBox="0 0 192 192">
                 <circle cx="96" cy="96" r="88" fill="none" stroke="#e5e7eb" strokeWidth="12" />
                 <circle
                   cx="96"
@@ -331,19 +331,19 @@ const ParentChildProgressContent = () => {
                 />
               </svg>
               <div className="absolute inset-0 flex flex-col items-center justify-center">
-                <span className="text-3xl md:text-4xl font-bold">{child.attendance}%</span>
+                <span className="text-xl sm:text-3xl md:text-4xl font-bold">{child.attendance}%</span>
                 <Badge
-                  className={
+                  className={`text-[10px] sm:text-xs ${
                     (child.attendance || 0) >= 90
                       ? 'bg-green-100 text-green-700'
                       : 'bg-blue-100 text-blue-700'
-                  }
+                  }`}
                 >
                   {(child.attendance || 0) >= 90 ? 'Excellent' : 'Good'}
                 </Badge>
               </div>
             </div>
-            <p className="text-xs text-muted-foreground mt-4 text-center max-w-xs">
+            <p className="text-[10px] sm:text-xs text-muted-foreground mt-2 sm:mt-4 text-center max-w-xs leading-snug">
               Good attendance is crucial for academic success. {child.name} has maintained a strong
               presence in class.
             </p>

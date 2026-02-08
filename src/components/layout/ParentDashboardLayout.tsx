@@ -61,7 +61,7 @@ const ParentDashboardLayoutInner = ({ children, title = "Parent Dashboard" }: Pa
         {/* Main Content Area */}
         <div className="flex-1 flex flex-col min-w-0">
           {/* Top Bar */}
-          <header className="h-14 md:h-20 bg-white px-3 md:px-6 lg:px-8 flex items-center justify-between sticky top-0 z-50 flex-shrink-0 border-b border-gray-100 shadow-sm">
+          <header className="h-12 sm:h-14 md:h-20 bg-white px-2 sm:px-3 md:px-6 lg:px-8 flex items-center justify-between sticky top-0 z-50 flex-shrink-0 border-b border-gray-100 shadow-sm">
             {/* Left: Menu + Welcome */}
             <div className="flex items-center gap-2 md:gap-4">
               <Sheet open={mobileOpen} onOpenChange={setMobileOpen}>
@@ -162,7 +162,7 @@ const ParentDashboardLayoutInner = ({ children, title = "Parent Dashboard" }: Pa
           </header>
 
           {/* Content Area - Full width when sidebar is hidden */}
-          <main className="flex-1 p-3 md:p-6 lg:p-8 overflow-y-auto w-full max-w-full">
+          <main className="flex-1 p-2 sm:p-3 md:p-6 lg:p-8 overflow-y-auto w-full max-w-full">
             <div className="w-full max-w-full">
               {children}
             </div>
